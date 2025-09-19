@@ -1,0 +1,22 @@
+---
+title: "Class Raw"
+author: "yuki"
+date: "2025-09-19"
+output: html_document
+---
+
+## arguments
+
+```{r}
+sub <- "Subject"
+time_line <- c("Block", "Trial")
+```
+
+## functions
+
+```{r}
+data <- data[do.call(order, data[c(sub, time_line)]), ]
+
+multiRL.input <- base::split(x = data, f = data$Subject)
+```
+
