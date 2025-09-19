@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rbuildignore
+
+# MacOS
+.DS_Store
+# Windows
+desktop.ini
+
+# temp
+~*

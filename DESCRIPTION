@@ -1,0 +1,31 @@
+Package: multiRL
+Version: 0.0.0
+Title: Reinforcement Learning Tools for Multi-Armed Bandit
+Description: 
+Authors@R:
+  c(person(
+    given = "YuKi",
+    role = c("aut", "cre"),
+    email = "hmz1969a@gmail.com",
+    comment = c(ORCID = "0009-0000-1378-1318")
+  ))
+Maintainer: YuKi <hmz1969a@gmail.com>
+URL: https://yuki-961004.github.io/multiRL/
+BugReports: https://github.com/yuki-961004/multiRL/issues
+License: GPL-3
+Encoding: UTF-8
+LazyData: TRUE
+ByteCompile: TRUE
+RoxygenNote: 7.3.2
+Depends: R (>= 4.0.0)
+Imports: Rcpp, compiler, future, doFuture, foreach, doRNG, progressr
+LinkingTo: Rcpp
+Suggests: 
+  stats,
+  GenSA, 
+  GA, 
+  DEoptim, 
+  pso, 
+  mlrMBO, mlr, ParamHelpers, smoof, lhs, DiceKriging, rgenoud,
+  cmaes,
+  nloptr

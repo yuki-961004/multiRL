@@ -1,0 +1,27 @@
+import(Rcpp)
+useDynLib(binaryRL, .registration = TRUE)
+import(compiler)
+
+import(doRNG)
+
+export(func_gamma)
+export(func_eta)
+export(func_epsilon)
+export(func_pi)
+export(func_tau)
+export(func_logl)
+
+export(run_m)
+export(rcv_d)
+export(fit_p)
+export(rpl_e)
+
+export(optimize_para)
+export(simulate_list)
+export(recovery_data)
+
+export(TD)
+export(RSTD)
+export(Utility)
+
+S3method(summary, binaryRL)
