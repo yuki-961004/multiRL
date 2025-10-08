@@ -161,9 +161,20 @@ rm(generate_reward_block, verification_rewards, n_total_blocks)
 ```
 
 ```{r}
+set.seed(123)
 data <- df_reward %>%
-  dplyr::mutate(Sub_Choose = NA_character_)
+  dplyr::mutate(
+    Action = base::sample(
+      x = c("Up", "Down", "Left", "Right"),
+      size = dplyr::n(),
+      replace = TRUE
+    )
+  )
 
 rm(df_base, df_object, df_reward)
+```
+
+```{r}
+write.csv(x = data, file = "../DATA/DATA.csv", row.names = FALSE)
 ```
 

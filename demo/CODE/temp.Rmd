@@ -1,0 +1,59 @@
+---
+title: "temp"
+author: "yuki"
+date: "2025-10-08"
+output: html_document
+---
+
+```{r}
+temp <- data |>
+  tidyr::pivot_longer(
+    cols = tidyselect::all_of(c(colnames$object, colnames$reward)),
+    names_to = c(".value", "Object_id"),
+    names_pattern = "([A-Za-z]+)_(\\d+)"
+  ) |>
+  dplyr::mutate(
+    Element = stringr::str_split(Object, pattern = "_")
+  ) |>
+  tidyr::unnest_wider(
+    col = Element,
+    names_sep = "_" 
+  ) |>
+  dplyr::select(-Object) |> 
+  dplyr::rename(Object = Object_id)
+```
+
+
+```{r}
+n_subid <- length(unique(data[[colnames$subid]]))
+n_block <- length(unique(data[[colnames$block]]))
+n_trial <- length(unique(data[[colnames$trial]]))
+
+n_object <- length(colnames$object)
+n_action <- length(unique(data[[colnames$action]]))
+
+array <- array(
+  data = NA,
+  dim = c(
+    n_subid, 
+    n_block, 
+    n_trial, 
+    1, 
+    n_element + 1
+  ),
+)
+
+for (i in 1:n_subid){
+  for (j in 1:n_block) {
+    for (k in 1:n_trial) {
+      idx <- which(
+        data[[colnames$subid]] == i & 
+        data[[colnames$block]] == j & 
+        data[[colnames$trial]] == k
+      )
+      #array[i, j, k, 1] <- action[[idx]]
+      array[i, j, k, 1, ] <- element[idx, , ]
+    }
+  }
+}
+```
