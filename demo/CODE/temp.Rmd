@@ -57,3 +57,28 @@ for (i in 1:n_subid){
   }
 }
 ```
+
+```{r}
+methods::setClass(
+  Class = "multiRL.colnames",
+  slots = list(
+    subid = "character", 
+    block = "character",
+    trial = "character",
+    object = "character", 
+    reward = "character",
+    action = "character"
+  )
+)
+
+colnames <- methods::new(
+  Class = "multiRL.colnames",
+  subid = "Subject", 
+  block = "Block",
+  trial = "Trial",
+  object = c("Object_1", "Object_2", "Object_3", "Object_4"), 
+  reward = c("Reward_1", "Reward_2", "Reward_3", "Reward_4"),
+  action = "Action"
+)
+```
+

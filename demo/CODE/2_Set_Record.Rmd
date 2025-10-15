@@ -1,0 +1,59 @@
+---
+title: "2_"
+author: "yuki"
+date: "2025-10-08"
+output: html_document
+---
+```{r}
+behrules <- list(
+  cue = c("Red", "Yellow", "Green", "Blue"),
+  rsp = c("Up", "Down", "Left", "Right")
+)
+
+key_names <- c("cue", "rsp")
+# 检查colnames的元素名称是否一致
+check_key <- all(sort(names(behrules)) == sort(key_names))
+if (!(check_key)) {message("Invalid behrules keys")}
+# 检查colnames的元素类型是否一致
+check_type <- all(sapply(behrules, is.character))
+if (!(check_type)) {message("Invalid behrules key type")}
+
+methods::setClass(
+  Class = "multiRL.behrules",
+  slots = list(
+    cue = "character", 
+    rsp = "character"
+  )
+)
+
+multiRL.behrules <- methods::new(
+  Class = "multiRL.behrules",
+  cue = behrules$cue,
+  rsp = behrules$rsp
+)
+
+record <- matrix(
+  data = NA_real_,
+  nrow = length(input@n_trial) * length(input@n_block) + 1,
+  ncol = length(multiRL.behrules@cue)
+)
+
+colnames(record) <- multiRL.behrules@cue
+
+methods::setClass(
+  Class = "multiRL.record",
+  slots = list(
+    input = "multiRL.input",
+    behrules = "multiRL.behrules",
+    record = "matrix"
+  )
+)
+
+multiRL.record <- methods::new(
+  Class = "multiRL.record",
+  input = input,
+  behrules = multiRL.behrules,
+  record = record
+)
+
+```

@@ -1,0 +1,88 @@
+---
+title: "Untitled"
+author: "yuki"
+date: "2025-10-15"
+output: html_document
+---
+# multiRL
+```{r}
+multiRL.input <- process_1_input(
+  data = read.csv("../DATA/DATA.csv") |> dplyr::filter(Subject == 1),
+  colnames = list(
+    subid = "Subject", 
+    block = "Block",
+    trial = "Trial",
+    
+    object = c("Object_1", "Object_2", "Object_3", "Object_4"), 
+    reward = c("Reward_1", "Reward_2", "Reward_3", "Reward_4"),
+    action = "Action"
+  )
+)
+```
+
+```{r}
+multiRL.behrules <- process_2_rule(
+  rule = list(
+    cue = c("Red", "Yellow", "Green", "Blue"),
+    rsp = c("Up", "Down", "Left", "Right")
+  )
+)
+```
+
+```{r}
+multiRL.record <- process_3_record(
+  input = multiRL.input,
+  behrules = multiRL.behrules
+)
+```
+
+```{r}
+multiRL.output <- process_4_loop(
+  record = multiRL.record,
+  rate_func = func_alpha,
+  util_func = func_gamma,
+  prob_func = func_beta
+)
+```
+
+## binaryRL
+
+```{r}
+multiRL.input <- process_1_input(
+  data = binaryRL::Mason_2024_G2 |> dplyr::filter(Subject == 1),
+  colnames = list(
+    subid = "Subject", 
+    block = "Block",
+    trial = "Trial",
+    
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  )
+)
+```
+
+```{r}
+multiRL.behrules <- process_2_rule(
+  rule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  )
+)
+```
+
+```{r}
+multiRL.record <- process_3_record(
+  input = multiRL.input,
+  behrules = multiRL.behrules
+)
+```
+
+```{r}
+multiRL.output <- process_4_loop(
+  record = multiRL.record,
+  rate_func = func_alpha,
+  util_func = func_gamma,
+  prob_func = func_beta
+)
+```
