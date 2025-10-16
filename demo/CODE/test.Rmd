@@ -16,13 +16,34 @@ multiRL.input <- process_1_input(
     object = c("Object_1", "Object_2", "Object_3", "Object_4"), 
     reward = c("Reward_1", "Reward_2", "Reward_3", "Reward_4"),
     action = "Action"
+  ),
+  params = list(
+    fixed = list(
+      Q0 = 0,
+      gamma = 1,
+      delta = 0.1,
+      epsilon = 0.1,
+      zeta = 1,
+      eta = NA_real_
+    ),
+    free = list(
+      alpha = c(0.3, 0.7),
+      beta = 0.5
+    )
+  ),
+  funcs = list(
+    rate_func = func_alpha,
+    prob_func = func_beta,
+    util_func = func_gamma,
+    bias_func = func_delta,
+    expl_func = func_epsilon
   )
 )
 ```
 
 ```{r}
-multiRL.behrules <- process_2_rule(
-  rule = list(
+multiRL.behrule <- process_2_behrule(
+  behrule = list(
     cue = c("Red", "Yellow", "Green", "Blue"),
     rsp = c("Up", "Down", "Left", "Right")
   )
@@ -32,20 +53,95 @@ multiRL.behrules <- process_2_rule(
 ```{r}
 multiRL.record <- process_3_record(
   input = multiRL.input,
-  behrules = multiRL.behrules
+  behrule = multiRL.behrule
 )
 ```
 
 ```{r}
-multiRL.output <- process_4_loop(
-  record = multiRL.record,
-  rate_func = func_alpha,
-  util_func = func_gamma,
-  prob_func = func_beta
+multiRL.output <- process_4_output(
+  record = multiRL.record
 )
 ```
 
+```{r}
+View(multiRL.output@result@value)
+View(multiRL.output@result@reward)
+View(multiRL.output@result@utility)
+View(multiRL.output@result@count)
+View(multiRL.output@result@bias)
+View(multiRL.output@result@shown)
+View(multiRL.output@result@exploration)
+View(multiRL.output@result@prob)
+```
+
+```{r}
+profvis::profvis({
+  multiRL.input <- process_1_input(
+    data = read.csv("../DATA/DATA.csv") |> dplyr::filter(Subject == 1),
+    colnames = list(
+      subid = "Subject", 
+      block = "Block",
+      trial = "Trial",
+      
+      object = c("Object_1", "Object_2", "Object_3", "Object_4"), 
+      reward = c("Reward_1", "Reward_2", "Reward_3", "Reward_4"),
+      action = "Action"
+    ),
+    params = list(
+      Q0 = 0,
+      alpha = c(0.3),
+      beta = c(0.5),
+      gamma = c(0.8),
+      delta = c(0.5),
+      epsilon = c(0.1)
+    ),
+    funcs = list(
+      rate_func = func_alpha,
+      prob_func = func_beta,
+      util_func = func_gamma,
+      bias_func = func_delta
+    )
+  )
+  
+  multiRL.behrule <- process_2_behrule(
+    behrule = list(
+      cue = c("Red", "Yellow", "Green", "Blue"),
+      rsp = c("Up", "Down", "Left", "Right")
+    )
+  )
+  
+  multiRL.record <- process_3_record(
+    input = multiRL.input,
+    behrule = multiRL.behrule
+  )
+  
+  multiRL.output <- process_4_output(
+    record = multiRL.record
+  )
+})
+```
+
 ## binaryRL
+
+```{r}
+binaryRL.res <- binaryRL::run_m(
+  mode = "replay",
+  data = binaryRL::Mason_2024_G2,
+  id = 1,
+  n_params = 3,
+  n_trials = 360,
+  initial_value = 100,
+  threshold = 1,
+  pi = 0.1,
+  epsilon = NA_real_,
+  eta = c(0.123, 0.456),
+  tau = c(0.789), 
+  priors = NULL
+)
+
+summary(binaryRL.res)
+```
+
 
 ```{r}
 multiRL.input <- process_1_input(
@@ -58,13 +154,34 @@ multiRL.input <- process_1_input(
     object = c("L_choice", "R_choice"), 
     reward = c("L_reward", "R_reward"),
     action = "Sub_Choose"
+  ),
+  params = list(
+    fixed = list(
+      Q0 = 100,
+      gamma = 1,
+      delta = 0.1,
+      epsilon = NA_real_,
+      zeta = 1,
+      eta = NA_real_
+    ),
+    free = list(
+      alpha = c(0.123, 0.456),
+      beta = 0.789
+    )
+  ),
+  funcs = list(
+    rate_func = func_alpha,
+    prob_func = func_beta,
+    util_func = func_gamma,
+    bias_func = func_delta,
+    expl_func = func_epsilon
   )
 )
 ```
 
 ```{r}
-multiRL.behrules <- process_2_rule(
-  rule = list(
+multiRL.behrule <- process_2_behrule(
+  behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
   )
@@ -74,15 +191,29 @@ multiRL.behrules <- process_2_rule(
 ```{r}
 multiRL.record <- process_3_record(
   input = multiRL.input,
-  behrules = multiRL.behrules
+  behrule = multiRL.behrule
 )
 ```
 
 ```{r}
-multiRL.output <- process_4_loop(
-  record = multiRL.record,
-  rate_func = func_alpha,
-  util_func = func_gamma,
-  prob_func = func_beta
+multiRL.output <- process_4_output(
+  record = multiRL.record
 )
+```
+
+```{r}
+multiRL.metric <- process_5_metric(
+  output = multiRL.output
+)
+```
+
+
+```{r}
+View(multiRL.output@result@value)
+View(multiRL.output@result@reward)
+View(multiRL.output@result@utility)
+View(multiRL.output@result@count)
+View(multiRL.output@result@bias)
+View(multiRL.output@result@shown)
+View(multiRL.output@result@prob)
 ```

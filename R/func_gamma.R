@@ -1,11 +1,9 @@
 func_gamma <- function(
-    x,
-    gamma = 1,
+    reward,
+    params,
     ...
 ){
-  if(!(is.numeric(x))) {
-    stop("x must be a numeric vector")
-  }
-  
-  utility <- x^gamma
+  gamma     <-  get_param(params, "gamma")
+
+  utility <- sign(reward) * (abs(reward) ^ gamma)
 }

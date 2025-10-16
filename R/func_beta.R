@@ -1,21 +1,28 @@
 func_beta <- function(
-    x, 
-    beta,
+    qvalue, 
+    explor,
+    params,
     ...
 ){
+  beta      <-  get_param(params, "beta")
   
-  if(!(is.numeric(x))) {
-    stop("x must be a numeric vector")
-  }
+  n_options <- length(qvalue)
+  prob      <- rep(x = NA_real_, times = n_options)
+  index     <- which(!is.na(qvalue))
+  n_shown   <- length(index)
+  lapse     <- 0.01 * n_shown
   
-  if (beta == 0) {
-    prob <- rep(1 / length(x), length(x))
-  }
-  else {
-    exp_stable <- exp(beta * (x - max(x, na.rm = TRUE)))
-    
+  if (explor == 1) {
+    # Exploration
+    prob[index] <- 1 / n_shown
+  } else {
+    # Exploitation
+    exp_stable <- exp(beta * (qvalue - max(qvalue, na.rm = TRUE)))
     prob <- exp_stable / sum(exp_stable, na.rm = TRUE)
   }
-
+  
+  # lapse
+  prob <- (1 - lapse) * prob + (lapse / n_shown)
+  
   return(prob)
 }

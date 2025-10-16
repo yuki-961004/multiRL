@@ -1,9 +1,13 @@
 process_1_input <- function(
-  data,
-  colnames,
-  ...
+    data,
+    colnames,
+    params,
+    funcs,
+    ...
 ){
-  # 额外信息
+
+################################## [check] #####################################
+  
   extra <- list(...)
   
   key_names <- c("subid", "block", "trial", "object", "reward", "action")
@@ -13,9 +17,10 @@ process_1_input <- function(
   # 检查colnames的元素类型是否一致
   check_type <- all(sapply(colnames, is.character))
   if (!(check_type)) {message("Invalid colnames key type")}
-  
   # 如果没有输入block, 则block自动变成1
   if (is.null(colnames$block)) {data$Block = 1}
+  
+################################# [colnames] ###################################
   
   methods::setClass(
     Class = "multiRL.colnames",
@@ -39,6 +44,56 @@ process_1_input <- function(
     action = colnames$action
   )
   
+################################## [params] ####################################
+  
+  # 检查params是否是数值
+  check_type <- all(sapply(params$fixed, is.numeric))
+  if (!(check_type)) {message("Invalid fixed params key type")}
+  check_type <- all(sapply(params$free, is.numeric))
+  if (!(check_type)) {message("Invalid free params key type")}
+  
+  methods::setClass(
+    Class = "multiRL.params",
+    slots = list(
+      fixed = "list", 
+      free = "list"
+    )
+  )
+  
+  params <- methods::new(
+    Class = "multiRL.params",
+    fixed = params$fixed, 
+    free = params$free
+  )
+
+################################### [funcs] ####################################
+
+    # 检查funcs是否是函数
+  check_type <- all(sapply(funcs, is.function))
+  if (!(check_type)) {message("Invalid funcs key type")}
+  
+  methods::setClass(
+    Class = "multiRL.funcs",
+    slots = list(
+      rate_func = "function", 
+      prob_func = "function",
+      util_func = "function",
+      bias_func = "function",
+      expl_func = "function"
+    )
+  )
+  
+  funcs <- methods::new(
+    Class = "multiRL.funcs",
+    rate_func = funcs$rate_func, 
+    prob_func = funcs$prob_func,
+    util_func = funcs$util_func,
+    bias_func = funcs$bias_func,
+    expl_func = funcs$expl_func
+  )
+  
+################################# [features] ###################################
+    
   # id info
   idinfo <- as.matrix(
     data[, c(colnames@subid, colnames@block, colnames@trial)]
@@ -102,7 +157,9 @@ process_1_input <- function(
     state = state,
     action = action
   )
-  
+ 
+################################### [input] ####################################
+   
   # S4 method定义一个类
   methods::setClass(
     Class = "multiRL.input",
@@ -110,8 +167,10 @@ process_1_input <- function(
       data = "data.frame",
       colnames = "multiRL.colnames",
       features = "multiRL.features",
+      params = "multiRL.params",
+      funcs = "multiRL.funcs",
       elements = "numeric",
-      subid = "ANY",
+      subid = "character",
       n_block = "numeric",
       n_trial = "numeric",
       n_rows = "numeric",
@@ -129,6 +188,8 @@ process_1_input <- function(
     data = data,
     colnames = colnames,
     features = features,
+    params = params,
+    funcs = funcs,
     elements = n_element,
     subid = subid,
     n_rows = n_rows,

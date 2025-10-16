@@ -1,19 +1,19 @@
 process_3_record <- function(
-  input,
-  behrules,
-  ...
+    input,
+    behrule,
+    ...
 ){
+  
 ################################## [check] #####################################
   
-  # 额外信息
   extra <- list(...)
   
   if (!is(input, "multiRL.input")) {
     stop("'input' must be an object of class 'multiRL.input'.")
   }
   
-  if (!is(behrules, "multiRL.behrules")) {
-    stop("'behrules' must be an object of class 'multiRL.behrules'.")
+  if (!is(behrule, "multiRL.behrule")) {
+    stop("'behrule' must be an object of class 'multiRL.behrule'.")
   }
   
 ############################### [null matrix] ##################################
@@ -22,9 +22,9 @@ process_3_record <- function(
   nulldf <- matrix(
     data = NA_real_,
     nrow = input@n_trial * input@n_block,
-    ncol = length(multiRL.behrules@cue)
+    ncol = length(behrule@cue)
   )
-  colnames(nulldf) <- multiRL.behrules@cue
+  colnames(nulldf) <- behrule@cue
   
   singledf <- matrix(
     data = NA_real_,
@@ -32,39 +32,47 @@ process_3_record <- function(
     ncol = 1
   )
   
-  value <- nulldf
-  bias <- nulldf
-  utility <- nulldf
-  shown <- nulldf
-  prob <- nulldf
+  value       <- nulldf
+  bias        <- nulldf
+  shown       <- nulldf
+  prob        <- nulldf
+  count       <- nulldf
   
-  latent <- singledf
-  reward <- singledf
-  simulation <- singledf
+  exploration <- singledf
+  latent      <- singledf
+  reward      <- singledf
+  utility     <- singledf
+  simulation  <- singledf
   
   methods::setClass(
-    Class = "multiRL.output",
+    Class = "multiRL.result",
     slots = list(
       value = "matrix",
       bias = "matrix",
-      utility = "matrix",
       shown = "matrix",
       prob = "matrix",
+      count = "matrix",
+      
+      exploration = "matrix",
       latent = "matrix",
       reward = "matrix",
+      utility = "matrix",
       simulation = "matrix"
     )
   )
   
-  multiRL.output <- methods::new(
-    Class = "multiRL.output",
+  result <- methods::new(
+    Class = "multiRL.result",
     value = value,
     bias = bias,
-    utility = utility,
     shown = shown,
     prob = prob,
+    count = count,
+    
+    exploration = exploration,
     latent = latent,
     reward = reward,
+    utility = utility,
     simulation = simulation
   )
   
@@ -74,8 +82,8 @@ process_3_record <- function(
     Class = "multiRL.record",
     slots = list(
       input = "multiRL.input",
-      behrules = "multiRL.behrules",
-      output = "multiRL.output",
+      behrule = "multiRL.behrule",
+      result = "multiRL.result",
       extra = "list"
     )
   )
@@ -83,8 +91,8 @@ process_3_record <- function(
   multiRL.record <- methods::new(
     Class = "multiRL.record",
     input = input,
-    behrules = behrules,
-    output = multiRL.output,
+    behrule = behrule,
+    result = result,
     extra = extra
   )
   
