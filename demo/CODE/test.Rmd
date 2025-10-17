@@ -352,17 +352,17 @@ multiRL.model <- run_m(
     rsp = c("A", "B", "C", "D")
   ),
   priors = list(
-    
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
     mode = "fit",
     policy = "off"
   ),
-  whatyousay = c(1, 2, 3)
+  anythingelse = c(1, 2, 3)
 )
-```
 
-```{r}
 multiRL.summary <- summary(multiRL.model)
 ```
+
 

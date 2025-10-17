@@ -37,7 +37,7 @@ library(multiRL)
 
 ```r
 multiRL.model <- multiRL::run_m(
-  data = binaryRL::Mason_2024_G2 |> dplyr::filter(Subject == 1),
+  data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   colnames = list(
     subid = "Subject", 
     block = "Block",
@@ -71,18 +71,59 @@ multiRL.model <- multiRL::run_m(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
   ),
+  priors = list(
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  settings = list(
+    mode = "fit",
+    policy = "off"
+  ),
   anythingelse = c(1, 2, 3)
 )
 
-result <- summary(multiRL.model)
+multiRL.summary <- summary(multiRL.model)
 ```
 
 ```
 Model Fit:
-  Accuracy: 54.44%
-  Log-Likelihood: -484.81
-  Log-Prior Probability: 
-  Log-Posterior Probability: 
-  AIC: 973.61
-  BIC: 981.39
+  Accuracy: 100%
+  Log-Likelihood: -671.03
+  Log-Prior Probability: -0.83
+  Log-Posterior Probability: -671.86
+  AIC: 1346.06
+  BIC: 1353.84
+```
+
+```r
+binaryRL.res <- binaryRL::run_m(
+  mode = "fit",
+  data = binaryRL::Mason_2024_G2,
+  id = 1,
+  n_params = 3,
+  n_trials = 360,
+  initial_value = 100,
+  threshold = 1,
+  pi = 0.1,
+  epsilon = NA_real_,
+  eta = c(0.123, 0.456),
+  tau = c(0.789), 
+  priors = list(
+    eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  policy = "off"
+)
+
+summary(binaryRL.res)
+```
+
+```
+Model Fit:
+  Accuracy: 100%
+  Log-Likelihood: -671.03
+  Log-Prior Probability: -0.83
+  Log-Posterior Probability: -671.86
+  AIC: 1348.06
+  BIC: 1359.72
 ```
