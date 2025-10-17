@@ -1,3 +1,13 @@
+#' multiRL.input
+#'
+#' @param data data
+#' @param colnames colnames
+#' @param params params
+#' @param funcs funcs
+#' @param ... extra
+#'
+#' @returns multiRL.input
+#'
 process_1_input <- function(
     data,
     colnames,
@@ -22,18 +32,6 @@ process_1_input <- function(
   
 ################################# [colnames] ###################################
   
-  methods::setClass(
-    Class = "multiRL.colnames",
-    slots = list(
-      subid = "character", 
-      block = "character",
-      trial = "character",
-      object = "character", 
-      reward = "character",
-      action = "character"
-    )
-  )
-  
   colnames <- methods::new(
     Class = "multiRL.colnames",
     subid = colnames$subid, 
@@ -52,14 +50,6 @@ process_1_input <- function(
   check_type <- all(sapply(params$free, is.numeric))
   if (!(check_type)) {message("Invalid free params key type")}
   
-  methods::setClass(
-    Class = "multiRL.params",
-    slots = list(
-      fixed = "list", 
-      free = "list"
-    )
-  )
-  
   params <- methods::new(
     Class = "multiRL.params",
     fixed = params$fixed, 
@@ -71,17 +61,6 @@ process_1_input <- function(
     # 检查funcs是否是函数
   check_type <- all(sapply(funcs, is.function))
   if (!(check_type)) {message("Invalid funcs key type")}
-  
-  methods::setClass(
-    Class = "multiRL.funcs",
-    slots = list(
-      rate_func = "function", 
-      prob_func = "function",
-      util_func = "function",
-      bias_func = "function",
-      expl_func = "function"
-    )
-  )
   
   funcs <- methods::new(
     Class = "multiRL.funcs",
@@ -142,15 +121,6 @@ process_1_input <- function(
   state <- base::aperm(a = state, perm = c(1, 3, 2))
   
   # 整合拆分后的数据, 分别是id, state和action
-  methods::setClass(
-    Class = "multiRL.features",
-    slots = list(
-      idinfo = "array",
-      state = "array",
-      action = "array"
-    )
-  )
-  
   features <- methods::new(
     Class = "multiRL.features",
     idinfo = idinfo,
@@ -159,24 +129,6 @@ process_1_input <- function(
   )
  
 ################################### [input] ####################################
-   
-  # S4 method定义一个类
-  methods::setClass(
-    Class = "multiRL.input",
-    slots = list(
-      data = "data.frame",
-      colnames = "multiRL.colnames",
-      features = "multiRL.features",
-      params = "multiRL.params",
-      funcs = "multiRL.funcs",
-      elements = "numeric",
-      subid = "character",
-      n_block = "numeric",
-      n_trial = "numeric",
-      n_rows = "numeric",
-      extra = "list"
-    )
-  )
   
   subid <- as.character(unique(data[[colnames@subid]]))
   n_block <- length(unique(data[[colnames@block]]))

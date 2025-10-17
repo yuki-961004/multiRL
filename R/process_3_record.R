@@ -1,3 +1,11 @@
+#' multiRL.record
+#'
+#' @param input input
+#' @param behrule behrule
+#' @param ... extra
+#'
+#' @returns multiRL.record
+#' 
 process_3_record <- function(
     input,
     behrule,
@@ -8,11 +16,11 @@ process_3_record <- function(
   
   extra <- list(...)
   
-  if (!is(input, "multiRL.input")) {
+  if (!methods::is(input, "multiRL.input")) {
     stop("'input' must be an object of class 'multiRL.input'.")
   }
   
-  if (!is(behrule, "multiRL.behrule")) {
+  if (!methods::is(behrule, "multiRL.behrule")) {
     stop("'behrule' must be an object of class 'multiRL.behrule'.")
   }
   
@@ -44,23 +52,6 @@ process_3_record <- function(
   utility     <- singledf
   simulation  <- singledf
   
-  methods::setClass(
-    Class = "multiRL.result",
-    slots = list(
-      value = "matrix",
-      bias = "matrix",
-      shown = "matrix",
-      prob = "matrix",
-      count = "matrix",
-      
-      exploration = "matrix",
-      latent = "matrix",
-      reward = "matrix",
-      utility = "matrix",
-      simulation = "matrix"
-    )
-  )
-  
   result <- methods::new(
     Class = "multiRL.result",
     value = value,
@@ -77,17 +68,7 @@ process_3_record <- function(
   )
   
 ################################## [record] ####################################
-  
-  methods::setClass(
-    Class = "multiRL.record",
-    slots = list(
-      input = "multiRL.input",
-      behrule = "multiRL.behrule",
-      result = "multiRL.result",
-      extra = "list"
-    )
-  )
-  
+
   multiRL.record <- methods::new(
     Class = "multiRL.record",
     input = input,

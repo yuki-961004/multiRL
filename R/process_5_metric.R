@@ -1,3 +1,10 @@
+#' multiRL.metric
+#'
+#' @param output output
+#' @param ... extra
+#'
+#' @returns multiRL.metric
+#' 
 process_5_metric <- function(
     output,
     ...
@@ -6,45 +13,54 @@ process_5_metric <- function(
   
   extra <- list(...)
   
-  if (!is(output, "multiRL.output")) {
+  if (!methods::is(output, "multiRL.output")) {
     stop("'output' must be an object of class 'multiRL.output'.")
   }
+
+################################### [ACC] ######################################
   
   action      <- output@input@features@action
   simulation  <- output@result@simulation
   n_rows      <- output@input@n_rows
   ACC         <- sum(rowSums(action == simulation) == ncol(action)) / n_rows
   
+################################### [LL] #######################################
+  
   match       <- identical(output@behrule@cue, output@behrule@rsp)
-  prob        <- output@result@prob
   n_params    <- length(output@input@params@free)
+  prob        <- output@result@prob
+  LL          <- NA_real_
+  AIC         <- NA_real_
+  BIC         <- NA_real_
   
   if (match) {
-    prob <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
-    
-    # 计算 logP
-    logP <- base::log(prob)
-    
+    P <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
+    logP <- base::log(P)
     LL <- sum(logP)
-    AIC <- round(2 * n_params - 2 * LL, digits = 2)
-    BIC <- round(n_params * log(n_rows) - 2 * LL, digits = 2)
+    AIC <- 2 * n_params - 2 * LL
+    BIC <- n_params * log(n_rows) - 2 * LL
   }
-  else {
-    LL <- NA_real_
-    AIC <- NA_real_
-    BIC <- NA_real_
-  }
+
+################################ [pattern] #####################################
+ 
+  idinfo      <- output@input@features@idinfo
+  latent      <- output@result@latent
+  simulation  <- output@result@simulation
+  behavior    <- as.data.frame(base::cbind(idinfo, latent, simulation))
+  colnames(behavior) <- c("Subject", "Block", "Trial", "Latent", "Simulation")
   
-  methods::setClass(
-    Class = "multiRL.sumstat",
-    slots = list(
-      ACC = "numeric",
-      LL = "numeric",
-      AIC = "numeric",
-      BIC = "numeric",
-      extra = "list"
-    )
-  )
+  # 计算每个block中latent和simulation的选择比率
+  ratio <- lapply(X = split(behavior, behavior[, "Block"]), FUN = function(x) {
+    latent_prop <- .block_ratio(x, "Latent")
+    simul_prop  <- .block_ratio(x, "Simulation")
+    list(Latent = latent_prop, Simulation = simul_prop)
+  })
+  
+  onerow <- .for_abc(ratio)
+  
+  ABC <- list(ratio = ratio, onerow = onerow)
+  
+################################# [return] ##################################### 
   
   sumstat <- methods::new(
     Class = "multiRL.sumstat",
@@ -52,18 +68,8 @@ process_5_metric <- function(
     LL = LL,
     AIC = AIC,
     BIC = BIC,
+    ABC = ABC,
     extra = extra
-  )
-  
-  methods::setClass(
-    Class = "multiRL.metric",
-    slots = list(
-      input = "multiRL.input",
-      behrule = "multiRL.behrule",
-      result = "multiRL.result",
-      sumstat = "multiRL.sumstat",
-      extra = "list"
-    )
   )
   
   metric <- methods::new(

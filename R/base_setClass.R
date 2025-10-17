@@ -1,0 +1,149 @@
+################################## [input] #####################################
+
+methods::setClass(
+  Class = "multiRL.colnames",
+  slots = list(
+    subid = "character", 
+    block = "character",
+    trial = "character",
+    object = "character", 
+    reward = "character",
+    action = "character"
+  )
+)
+
+methods::setClass(
+  Class = "multiRL.params",
+  slots = list(
+    fixed = "list", 
+    free = "list"
+  )
+)
+
+methods::setClass(
+  Class = "multiRL.funcs",
+  slots = list(
+    rate_func = "function", 
+    prob_func = "function",
+    util_func = "function",
+    bias_func = "function",
+    expl_func = "function"
+  )
+)
+
+methods::setClass(
+  Class = "multiRL.features",
+  slots = list(
+    idinfo = "array",
+    state = "array",
+    action = "array"
+  )
+)
+
+methods::setClass(
+  Class = "multiRL.input",
+  slots = list(
+    data = "data.frame",
+    colnames = "multiRL.colnames",
+    features = "multiRL.features",
+    params = "multiRL.params",
+    funcs = "multiRL.funcs",
+    elements = "numeric",
+    subid = "character",
+    n_block = "numeric",
+    n_trial = "numeric",
+    n_rows = "numeric",
+    extra = "list"
+  )
+)
+
+################################# [behrule] ####################################
+
+methods::setClass(
+  Class = "multiRL.behrule",
+  slots = list(
+    cue = "character", 
+    rsp = "character",
+    extra = "list"
+  )
+)
+
+################################# [record] #####################################
+
+methods::setClass(
+  Class = "multiRL.result",
+  slots = list(
+    value = "matrix",
+    bias = "matrix",
+    shown = "matrix",
+    prob = "matrix",
+    count = "matrix",
+    
+    exploration = "matrix",
+    latent = "matrix",
+    reward = "matrix",
+    utility = "matrix",
+    simulation = "matrix"
+  )
+)
+
+
+methods::setClass(
+  Class = "multiRL.record",
+  slots = list(
+    input = "multiRL.input",
+    behrule = "multiRL.behrule",
+    result = "multiRL.result",
+    extra = "list"
+  )
+)
+
+################################# [output] #####################################
+
+methods::setClass(
+  Class = "multiRL.output",
+  slots = methods::getSlots("multiRL.record"),
+  contains = "multiRL.record"
+)
+
+################################# [metric] #####################################
+
+methods::setClass(
+  Class = "multiRL.sumstat",
+  slots = list(
+    ACC = "numeric",
+    LL = "numeric",
+    AIC = "numeric",
+    BIC = "numeric",
+    ABC = "list",
+    extra = "list"
+  )
+)
+
+methods::setClass(
+  Class = "multiRL.metric",
+  slots = list(
+    input = "multiRL.input",
+    behrule = "multiRL.behrule",
+    result = "multiRL.result",
+    sumstat = "multiRL.sumstat",
+    extra = "list"
+  )
+)
+
+################################## [model] #####################################
+
+methods::setClass(
+  Class = "multiRL.model",
+  slots = methods::getSlots("multiRL.metric"),
+  contains = "multiRL.metric"
+)
+
+methods::setClass(
+  Class = "multiRL.summary",
+  slots = list(
+    data = "data.frame",
+    params = "multiRL.params",
+    metrics = "multiRL.sumstat"
+  )
+)

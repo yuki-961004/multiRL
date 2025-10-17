@@ -1,3 +1,10 @@
+#' multiRL.output
+#'
+#' @param record record
+#' @param ... extra
+#'
+#' @returns multiRL.output
+#' 
 process_4_output <- function(
     record,
     ...
@@ -7,7 +14,7 @@ process_4_output <- function(
   
   extra <- list(...)
 
-  if (!is(record, "multiRL.record")) {
+  if (!methods::is(record, "multiRL.record")) {
     stop("'record' must be an object of class 'multiRL.record'.")
   }
   
@@ -38,7 +45,7 @@ process_4_output <- function(
   
 ################################## [loop] ######################################
   
-  value[1, ]  <- get_param(params, "Q0")
+  value[1, ]  <- .get_param(params, "Q1")
   count[1, ]  <- 0
   n_rows      <- record@input@n_rows
   set.seed(123)
@@ -108,16 +115,7 @@ process_4_output <- function(
   record@result@reward      <- reward
   record@result@utility     <- utility
   record@result@simulation  <- simulation
-  
-  methods::setClass(
-    Class = "multiRL.output",
-    slots = list(
-      input = "multiRL.input",
-      behrule = "multiRL.behrule",
-      result = "multiRL.result",
-      extra = "list"
-    )
-  )
+
   
   output <- methods::new(
     Class = "multiRL.output",

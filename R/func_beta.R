@@ -1,10 +1,19 @@
+#' soft max
+#'
+#' @param qvalue qvalue
+#' @param explor explor
+#' @param params params
+#' @param ... extra
+#'
+#' @returns probability
+#' 
 func_beta <- function(
     qvalue, 
     explor,
     params,
     ...
 ){
-  beta      <-  get_param(params, "beta")
+  beta      <-  .get_param(params, "beta")
   
   n_options <- length(qvalue)
   prob      <- rep(x = NA_real_, times = n_options)

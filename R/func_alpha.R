@@ -1,10 +1,19 @@
+#' learning rate
+#'
+#' @param qvalue qvalue
+#' @param reward reward
+#' @param params params
+#' @param ... extra
+#'
+#' @returns update
+#' 
 func_alpha <- function(
     qvalue,
     reward,
     params,
     ...
 ){
-  alpha     <-  get_param(params, "alpha")
+  alpha     <-  .get_param(params, "alpha")
   
   # TD
   if (length(alpha) == 1) {

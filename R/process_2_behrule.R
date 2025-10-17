@@ -1,3 +1,10 @@
+#' behrule
+#'
+#' @param behrule behrule
+#' @param ... extra
+#'
+#' @returns multiRL.behrule
+#' 
 process_2_behrule <- function(
     behrule,
     ...
@@ -18,15 +25,6 @@ process_2_behrule <- function(
 ################################ [behrule] #####################################
   
   # behrule -> multiRL.behrule
-  methods::setClass(
-    Class = "multiRL.behrule",
-    slots = list(
-      cue = "character", 
-      rsp = "character",
-      extra = "list"
-    )
-  )
-  
   multiRL.behrule <- methods::new(
     Class = "multiRL.behrule",
     cue = behrule$cue,

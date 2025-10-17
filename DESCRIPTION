@@ -1,7 +1,7 @@
 Package: multiRL
 Version: 0.0.0
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
-Description: 
+Description: Reinforcement Learning Tools for Multi-Armed Bandit.
 Authors@R:
   c(person(
     given = "YuKi",
@@ -18,14 +18,5 @@ LazyData: TRUE
 ByteCompile: TRUE
 RoxygenNote: 7.3.2
 Depends: R (>= 4.0.0)
-Imports: Rcpp, compiler, future, doFuture, foreach, doRNG, progressr
-LinkingTo: Rcpp
-Suggests: 
-  stats,
-  GenSA, 
-  GA, 
-  DEoptim, 
-  pso, 
-  mlrMBO, mlr, ParamHelpers, smoof, lhs, DiceKriging, rgenoud,
-  cmaes,
-  nloptr
+Imports: methods
+Suggests: stats, purrr, stringr
