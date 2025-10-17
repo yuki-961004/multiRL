@@ -19,4 +19,4 @@ ByteCompile: TRUE
 RoxygenNote: 7.3.2
 Depends: R (>= 4.0.0)
 Imports: methods
-Suggests: testthat, stats, purrr, stringr
+Suggests: stats, purrr, stringr
