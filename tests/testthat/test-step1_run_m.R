@@ -1,8 +1,10 @@
 # r
 testthat::test_that("Epsilon-First, non-priors, on-policy", {
   
+  data <- multiRL::MAB
+  
   multiRL.model <- multiRL::run_m(
-    data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
+    data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("Red", "Yellow", "Green", "Blue"),
       rsp = c("Up", "Down", "Left", "Right")
@@ -45,8 +47,10 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
 
 testthat::test_that("Epsilon-Greedy, priors, on-policy", {
   
+  data <- multiRL::MAB
+  
   multiRL.model <- multiRL::run_m(
-    data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
+    data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("Red", "Yellow", "Green", "Blue"),
       rsp = c("Up", "Down", "Left", "Right")
@@ -92,8 +96,10 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
 
 testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
   
+  data <- multiRL::TAB
+  
   multiRL.model <- multiRL::run_m(
-    data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+    data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
