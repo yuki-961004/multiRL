@@ -14,7 +14,13 @@ run_m <- function(
     data,
     colnames,
     params,
-    funcs,
+    funcs = list(
+      rate_func = multiRL::func_alpha,
+      prob_func = multiRL::func_beta,
+      util_func = multiRL::func_gamma,
+      bias_func = multiRL::func_delta,
+      expl_func = multiRL::func_epsilon
+    ),
     behrule,
     ...
 ){
