@@ -4,10 +4,23 @@
 \alias{run_m}
 \title{Step 1: Building reinforcement learning model}
 \usage{
-run_m(data, colnames, params, funcs, behrule, ...)
+run_m(
+  data,
+  behrule,
+  colnames,
+  params,
+  funcs = list(rate_func = multiRL::func_alpha, prob_func = multiRL::func_beta, util_func
+    = multiRL::func_gamma, bias_func = multiRL::func_delta, expl_func =
+    multiRL::func_epsilon),
+  priors = list(),
+  settings = list(mode = "fit", policy = "on"),
+  ...
+)
 }
 \arguments{
 \item{data}{data}
+
+\item{behrule}{behrule}
 
 \item{colnames}{colnames}
 
@@ -15,7 +28,9 @@ run_m(data, colnames, params, funcs, behrule, ...)
 
 \item{funcs}{funcs}
 
-\item{behrule}{behrule}
+\item{priors}{priors}
+
+\item{settings}{settings}
 
 \item{...}{extra}
 }

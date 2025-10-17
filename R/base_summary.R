@@ -45,14 +45,16 @@ methods::setMethod(
     LL    <- round(multiRL.summary@metrics@LL, 2)
     AIC   <- round(multiRL.summary@metrics@AIC, 2)
     BIC   <- round(multiRL.summary@metrics@BIC, 2)
+    LPr   <- round(multiRL.summary@metrics@LPr, 2)
+    LPo   <- round(multiRL.summary@metrics@LPo, 2)
     
     message(
       "Model Fit:\n",
       # Indent model fit metrics
       "  ", "Accuracy: ", ACC, "%\n",
       "  ", "Log-Likelihood: ", LL, "\n",
-      "  ", "Log-Prior Probability: ", "\n",
-      "  ", "Log-Posterior Probability: ", "\n",
+      "  ", "Log-Prior Probability: ", LPr, "\n",
+      "  ", "Log-Posterior Probability: ", LPo, "\n",
       "  ", "AIC: ", AIC, "\n",
       "  ", "BIC: ", BIC,"\n"
     )

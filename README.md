@@ -30,7 +30,7 @@ This package is designed to help users build the **Rescorla-Wagner Model** for *
 # Install the latest version from GitHub
 remotes::install_github("yuki-961004/multiRL@*release")
 # Load package
-library(binaryRL)
+library(multiRL)
 ```
 
 ## Demo

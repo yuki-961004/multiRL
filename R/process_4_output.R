@@ -20,7 +20,11 @@ process_4_output <- function(
   
 ################################## [load] ######################################
   
+  policy      <- record@input@settings@policy
+  
   state       <- record@input@features@state
+  action      <- record@input@features@action
+  
   params      <- record@input@params
   rate_func   <- record@input@funcs@rate_func
   prob_func   <- record@input@funcs@prob_func
@@ -74,15 +78,26 @@ process_4_output <- function(
       params = params
     )
     
-    latent[i, ] <- sample(
-      x = colnames(prob)[!is.na(prob[i, ])],
-      prob = prob[i, which(!is.na(prob[i, ]))] / 
-        sum(prob[i, which(!is.na(prob[i, ]))]),
-      size = 1
+    switch(
+      EXPR = policy,
+      "on" = {
+        latent[i, ] <- sample(
+          x = colnames(prob)[!is.na(prob[i, ])],
+          prob = prob[i, which(!is.na(prob[i, ]))] / 
+            sum(prob[i, which(!is.na(prob[i, ]))]),
+          size = 1
+        )
+        row_index <- which(state[i, , ] == latent[i, ])
+        col_index <- which(state[i, row_index, ] %in% rsp)
+        simulation[i, ] <- state[i, row_index, col_index]
+      },
+      "off" = {
+        latent[i, ] <- action[i, ]
+        row_index <- which(state[i, , ] == latent[i, ])
+        col_index <- which(state[i, row_index, ] %in% rsp)
+        simulation[i, ] <- action[i, ]
+      }
     )
-    row_index <- which(state[i, , ] == latent[i, ])
-    col_index <- which(state[i, row_index, ] %in% rsp)
-    simulation[i, ] <- state[i, row_index, col_index]
     
     reward[i, ] <- state[i, row_index, dim(state)[3]]
     utility[i, ] <- util_func(

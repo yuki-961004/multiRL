@@ -1,11 +1,14 @@
 # r
-testthat::test_that("Epsilon-First", {
+testthat::test_that("Epsilon-First, non-priors, on-policy", {
   
-  filepath <- testthat::test_path("testdata", "data.csv")
-  data <- utils::read.csv(filepath)
+  data <- multiRL::MAB
   
   multiRL.model <- run_m(
     data = data[data[, "Subject"] == 1, ],
+    behrule = list(
+      cue = c("Red", "Yellow", "Green", "Blue"),
+      rsp = c("Up", "Down", "Left", "Right")
+    ),
     colnames = list(
       subid = "Subject", 
       block = "Block",
@@ -28,11 +31,12 @@ testthat::test_that("Epsilon-First", {
         beta = 0.5
       )
     ),
-    behrule = list(
-      cue = c("Red", "Yellow", "Green", "Blue"),
-      rsp = c("Up", "Down", "Left", "Right")
+    priors = list(),
+    settings = list(
+      mode = "fit",
+      policy = "on"
     ),
-    whatyousay = c(1, 2, 3)
+    anythingelse = c(1, 2, 3)
   )
   
   multiRL.summary <- summary(multiRL.model)
@@ -41,13 +45,16 @@ testthat::test_that("Epsilon-First", {
   testthat::expect_s4_class(multiRL.summary, "multiRL.summary")
 })
 
-testthat::test_that("Epsilon-Greedy", {
-  
-  filepath <- testthat::test_path("testdata", "data.csv")
-  data <- utils::read.csv(filepath)
+testthat::test_that("Epsilon-Greedy, priors, on-policy", {
+
+  data <- multiRL::MAB
   
   multiRL.model <- run_m(
     data = data[data[, "Subject"] == 1, ],
+    behrule = list(
+      cue = c("Red", "Yellow", "Green", "Blue"),
+      rsp = c("Up", "Down", "Left", "Right")
+    ),
     colnames = list(
       subid = "Subject", 
       block = "Block",
@@ -70,11 +77,15 @@ testthat::test_that("Epsilon-Greedy", {
         beta = 0.5
       )
     ),
-    behrule = list(
-      cue = c("Red", "Yellow", "Green", "Blue"),
-      rsp = c("Up", "Down", "Left", "Right")
+    priors = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
-    whatyousay = c(1, 2, 3)
+    settings = list(
+      mode = "fit",
+      policy = "on"
+    ),
+    anythingelse = c(1, 2, 3)
   )
   
   multiRL.summary <- summary(multiRL.model)
@@ -83,20 +94,23 @@ testthat::test_that("Epsilon-Greedy", {
   testthat::expect_s4_class(multiRL.summary, "multiRL.summary")
 })
 
-testthat::test_that("Epsilon-Decreasing", {
+testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
   
-  filepath <- testthat::test_path("testdata", "data.csv")
-  data <- utils::read.csv(filepath)
+  data <- multiRL::TAB
   
   multiRL.model <- run_m(
     data = data[data[, "Subject"] == 1, ],
+    behrule = list(
+      cue = c("A", "B", "C", "D"),
+      rsp = c("A", "B", "C", "D")
+    ),
     colnames = list(
       subid = "Subject", 
       block = "Block",
       trial = "Trial",
-      object = c("Object_1", "Object_2", "Object_3", "Object_4"), 
-      reward = c("Reward_1", "Reward_2", "Reward_3", "Reward_4"),
-      action = "Action"
+      object = c("L_choice", "R_choice"), 
+      reward = c("L_reward", "R_reward"),
+      action = "Sub_Choose"
     ),
     params = list(
       fixed = list(
@@ -112,11 +126,15 @@ testthat::test_that("Epsilon-Decreasing", {
         beta = 0.5
       )
     ),
-    behrule = list(
-      cue = c("Red", "Yellow", "Green", "Blue"),
-      rsp = c("Up", "Down", "Left", "Right")
+    priors = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
-    whatyousay = c(1, 2, 3)
+    settings = list(
+      mode = "fit",
+      policy = "off"
+    ),
+    anythingelse = c(1, 2, 3)
   )
   
   multiRL.summary <- summary(multiRL.model)

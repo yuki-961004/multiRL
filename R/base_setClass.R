@@ -41,13 +41,23 @@ methods::setClass(
 )
 
 methods::setClass(
+  Class = "multiRL.settings",
+  slots = list(
+    mode = "character",
+    policy = "character"
+  )
+)
+
+methods::setClass(
   Class = "multiRL.input",
   slots = list(
     data = "data.frame",
     colnames = "multiRL.colnames",
     features = "multiRL.features",
     params = "multiRL.params",
+    priors = "list",
     funcs = "multiRL.funcs",
+    settings = "multiRL.settings",
     elements = "numeric",
     subid = "character",
     n_block = "numeric",
@@ -78,7 +88,6 @@ methods::setClass(
     shown = "matrix",
     prob = "matrix",
     count = "matrix",
-    
     exploration = "matrix",
     latent = "matrix",
     reward = "matrix",
@@ -115,6 +124,8 @@ methods::setClass(
     LL = "numeric",
     AIC = "numeric",
     BIC = "numeric",
+    LPr = "numeric",
+    LPo = "numeric",
     ABC = "list",
     extra = "list"
   )

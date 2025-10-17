@@ -172,6 +172,10 @@ data <- df_reward %>%
   )
 
 rm(df_base, df_object, df_reward)
+
+MAB <- data
+
+usethis::use_data(MAB, overwrite = TRUE)
 ```
 
 ```{r}

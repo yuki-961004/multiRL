@@ -2,16 +2,19 @@
 #' Step 1: Building reinforcement learning model
 #'
 #' @param data data
+#' @param behrule behrule
 #' @param colnames colnames
 #' @param params params
 #' @param funcs funcs
-#' @param behrule behrule
+#' @param priors priors
+#' @param settings settings
 #' @param ... extra
-#'
+#' 
 #' @returns multiRL.model
 #' 
 run_m <- function(
     data,
+    behrule,
     colnames,
     params,
     funcs = list(
@@ -21,7 +24,11 @@ run_m <- function(
       bias_func = multiRL::func_delta,
       expl_func = multiRL::func_epsilon
     ),
-    behrule,
+    priors = list(),
+    settings = list(
+      mode = "fit",
+      policy = "on"
+    ),
     ...
 ){
   
@@ -30,6 +37,8 @@ run_m <- function(
     colnames = colnames,
     params = params,
     funcs = funcs,
+    priors = priors,
+    settings = settings,
     ...
   )
   

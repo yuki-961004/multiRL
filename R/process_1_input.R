@@ -4,6 +4,8 @@
 #' @param colnames colnames
 #' @param params params
 #' @param funcs funcs
+#' @param priors priors
+#' @param settings settings
 #' @param ... extra
 #'
 #' @returns multiRL.input
@@ -13,6 +15,8 @@ process_1_input <- function(
     colnames,
     params,
     funcs,
+    priors,
+    settings,
     ...
 ){
 
@@ -127,7 +131,18 @@ process_1_input <- function(
     state = state,
     action = action
   )
- 
+
+################################# [settings] ###################################
+  
+  check_type <- all(sapply(settings, is.character))
+  if (!(check_type)) {message("Invalid settings key type")}
+  
+  settings <- methods::new(
+    Class = "multiRL.settings",
+    mode = settings$mode,
+    policy = settings$policy
+  )
+  
 ################################### [input] ####################################
   
   subid <- as.character(unique(data[[colnames@subid]]))
@@ -142,6 +157,8 @@ process_1_input <- function(
     features = features,
     params = params,
     funcs = funcs,
+    priors = priors,
+    settings = settings,
     elements = n_element,
     subid = subid,
     n_rows = n_rows,

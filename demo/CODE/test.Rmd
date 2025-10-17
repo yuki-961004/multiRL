@@ -38,6 +38,14 @@ multiRL.input <- process_1_input(
     util_func = func_gamma,
     bias_func = func_delta,
     expl_func = func_epsilon
+  ),
+  priors = list(
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  settings = list(
+    mode = "fit",
+    policy = "on"
   )
 )
 ```
@@ -178,7 +186,6 @@ multiRL.model <- run_m(
 )
 ```
 
-
 ```{r}
 profvis::profvis({
   test <- obj_func()
@@ -201,7 +208,7 @@ microbenchmark::microbenchmark(
 
 ```{r}
 binaryRL.res <- binaryRL::run_m(
-  mode = "replay",
+  mode = "fit",
   data = binaryRL::Mason_2024_G2,
   id = 1,
   n_params = 3,
@@ -212,12 +219,15 @@ binaryRL.res <- binaryRL::run_m(
   epsilon = NA_real_,
   eta = c(0.123, 0.456),
   tau = c(0.789), 
-  priors = NULL
+  priors = list(
+    eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  policy = "off"
 )
 
 summary(binaryRL.res)
 ```
-
 
 ```{r}
 multiRL.input <- process_1_input(
@@ -251,6 +261,14 @@ multiRL.input <- process_1_input(
     util_func = func_gamma,
     bias_func = func_delta,
     expl_func = func_epsilon
+  ),
+  priors = list(
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  settings = list(
+    mode = "fit",
+    policy = "off"
   )
 )
 ```
@@ -284,6 +302,7 @@ multiRL.metric <- process_5_metric(
 ```
 
 ```{r}
+View(multiRL.output@input@features@action)
 View(multiRL.output@result@value)
 View(multiRL.output@result@reward)
 View(multiRL.output@result@utility)
@@ -291,6 +310,8 @@ View(multiRL.output@result@count)
 View(multiRL.output@result@bias)
 View(multiRL.output@result@shown)
 View(multiRL.output@result@prob)
+View(multiRL.output@result@simulation)
+View(multiRL.output@result@latent)
 ```
 
 ```{r}
@@ -330,11 +351,18 @@ multiRL.model <- run_m(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
   ),
+  priors = list(
+    
+  ),
+  settings = list(
+    mode = "fit",
+    policy = "off"
+  ),
   whatyousay = c(1, 2, 3)
 )
 ```
 
 ```{r}
-test <- summary(multiRL.model)
+multiRL.summary <- summary(multiRL.model)
 ```
 

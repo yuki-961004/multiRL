@@ -24,7 +24,7 @@ process_5_metric <- function(
   n_rows      <- output@input@n_rows
   ACC         <- sum(rowSums(action == simulation) == ncol(action)) / n_rows
   
-################################### [LL] #######################################
+
   
   match       <- identical(output@behrule@cue, output@behrule@rsp)
   n_params    <- length(output@input@params@free)
@@ -33,12 +33,27 @@ process_5_metric <- function(
   AIC         <- NA_real_
   BIC         <- NA_real_
   
+  priors      <- output@input@priors
+  params      <- output@input@params@free
+  post        <- .check_priors_params(priors = priors, params = params)
+  LPr         <- NA_real_
+  LPo         <- NA_real_
+  
+################################### [LL] #######################################
+  
   if (match) {
     P <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
     logP <- base::log(P)
     LL <- sum(logP)
     AIC <- 2 * n_params - 2 * LL
     BIC <- n_params * log(n_rows) - 2 * LL
+
+################################### [LP] #######################################    
+    
+    if (post) {
+      LPr <- .calculate_log_prior(priors = priors, params = params)
+      LPo <- LL + LPr
+    }
   }
 
 ################################ [pattern] #####################################
@@ -68,6 +83,8 @@ process_5_metric <- function(
     LL = LL,
     AIC = AIC,
     BIC = BIC,
+    LPr = LPr,
+    LPo = LPo,
     ABC = ABC,
     extra = extra
   )
