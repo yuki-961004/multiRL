@@ -15,7 +15,10 @@
 run_m <- function(
     data,
     behrule,
-    colnames,
+    colnames = list(
+      subid = "Subject", block = "Block", trial = "Trial",
+      object = NA_character_, reward = NA_character_, action = "Action"
+    ),
     params,
     funcs = list(
       rate_func = multiRL::func_alpha,
@@ -26,6 +29,7 @@ run_m <- function(
     ),
     priors = list(),
     settings = list(
+      name = "unknown",
       mode = "fit",
       policy = "on"
     ),

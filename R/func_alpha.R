@@ -19,9 +19,11 @@ func_alpha <- function(
   if (length(alpha) == 1) {
     update <- qvalue + alpha * (reward - qvalue)
   # RSTD
-  } else if (length(alpha) == 2 & reward < qvalue) {
+  } 
+  else if (length(alpha) == 2 & reward < qvalue) {
     update <- qvalue + alpha[1] * (reward - qvalue)
-  } else if (length(alpha) == 2 & reward >= qvalue) {
+  } 
+  else if (length(alpha) == 2 & reward >= qvalue) {
     update <- qvalue + alpha[2] * (reward - qvalue)
   }
 

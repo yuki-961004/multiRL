@@ -14,6 +14,10 @@ methods::setMethod(
     
     raw <- object@input@data
     
+    object@result@value <- round(x = object@result@value, digits = 2)
+    object@result@bias <- round(x = object@result@bias, digits = 2)
+    object@result@prob <- round(x = object@result@prob, digits = 2)
+    
     vlaue <- .prefix_colnames(as.data.frame(object@result@value), "V_")
     bias <- .prefix_colnames(as.data.frame(object@result@bias), "B_")
     shown <- .prefix_colnames(as.data.frame(object@result@shown), "S_")

@@ -14,12 +14,12 @@ func_beta <- function(
     ...
 ){
   beta      <-  .get_param(params, "beta")
+  lapse     <-  .get_param(params, "lapse")
   
   n_options <- length(qvalue)
   prob      <- rep(x = NA_real_, times = n_options)
   index     <- which(!is.na(qvalue))
   n_shown   <- length(index)
-  lapse     <- 0.01 * n_shown
   
   if (explor == 1) {
     # Exploration
@@ -31,7 +31,7 @@ func_beta <- function(
   }
   
   # lapse
-  prob <- (1 - lapse) * prob + (lapse / n_shown)
+  prob <- (1 - lapse * n_shown) * prob + lapse
   
   return(prob)
 }

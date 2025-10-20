@@ -47,11 +47,17 @@ process_4_output <- function(
   reward      <- record@result@reward
   simulation  <- record@result@simulation
   
-################################## [loop] ######################################
+############################# [initial value] ##################################
   
-  value[1, ]  <- .get_param(params, "Q1")
+  Q1          <- .get_param(params, "Q1")
+  value[1, ]  <- ifelse(is.na(Q1), yes = 0, no = Q1)
   count[1, ]  <- 0
+  value       <- rbind(value, rep(NA, ncol(value)))
+  count       <- rbind(count, rep(NA, ncol(count)))
   n_rows      <- record@input@n_rows
+  
+############################# [action select] ##################################
+  
   set.seed(123)
   
   for (i in 1:n_rows) {
@@ -99,23 +105,37 @@ process_4_output <- function(
       }
     )
     
+############################## [value update] ##################################
+    
     reward[i, ] <- state[i, row_index, dim(state)[3]]
     utility[i, ] <- util_func(
       reward = as.numeric(reward[i, ]), 
       params = params
     )
     
-    if (i < n_rows) {
-      value[i + 1, ] <- value[i, ]
+    # 继承上一列的所有值
+    value[i + 1, ] <- value[i, ]
+    # 记录此时被选选项的值
+    Qi <- value[i, latent[i, ]]
+    
+    if (is.na(Q1) & Qi == 0) {
+      # 如果是第一次选, 则直接更新
+      value[i + 1, latent[i, ]] <- utility[i, ]
+    } else {
+      # 如果不是第一次选, 则按照alpha方程更新
       value[i + 1, latent[i, ]] <- rate_func(
         qvalue = as.numeric(value[i, latent[i, ]]),
         reward = as.numeric(utility[i, ]), 
         params = params
       )
-      count[i + 1, ] <- count[i, ]
-      count[i + 1, latent[i, ]] <- count[i + 1, latent[i, ]] + 1
     }
+    
+    count[i + 1, ] <- count[i, ]
+    count[i + 1, latent[i, ]] <- count[i + 1, latent[i, ]] + 1
   }
+  
+  value <- value[-1, ]
+  count <- count[-1, ]
 
 ################################# [output] #####################################
     

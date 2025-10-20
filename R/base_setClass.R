@@ -15,8 +15,9 @@ methods::setClass(
 methods::setClass(
   Class = "multiRL.params",
   slots = list(
+    free = "list",
     fixed = "list", 
-    free = "list"
+    constant = "list"
   )
 )
 
@@ -43,6 +44,7 @@ methods::setClass(
 methods::setClass(
   Class = "multiRL.settings",
   slots = list(
+    name = "character",
     mode = "character",
     policy = "character"
   )

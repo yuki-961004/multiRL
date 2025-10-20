@@ -24,9 +24,9 @@ process_5_metric <- function(
   n_rows      <- output@input@n_rows
   ACC         <- sum(rowSums(action == simulation) == ncol(action)) / n_rows
   
-
-  
-  match       <- identical(output@behrule@cue, output@behrule@rsp)
+  cue         <- output@behrule@cue
+  rsp         <- output@behrule@rsp
+  match       <- identical(cue, rsp)
   n_params    <- length(output@input@params@free)
   prob        <- output@result@prob
   LL          <- NA_real_
@@ -66,8 +66,8 @@ process_5_metric <- function(
   
   # 计算每个block中latent和simulation的选择比率
   ratio <- lapply(X = split(behavior, behavior[, "Block"]), FUN = function(x) {
-    latent_prop <- .block_ratio(x, "Latent")
-    simul_prop  <- .block_ratio(x, "Simulation")
+    latent_prop <- .block_ratio(data = x, colname = "Latent", levels = cue)
+    simul_prop  <- .block_ratio(data = x, colname = "Simulation", levels = rsp)
     list(Latent = latent_prop, Simulation = simul_prop)
   })
   

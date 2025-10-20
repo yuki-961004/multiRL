@@ -36,6 +36,13 @@ process_1_input <- function(
   
 ################################# [colnames] ###################################
   
+  if (length(colnames$object) == 1 && is.na(colnames$object)) {
+    colnames$object <- .detect_colnames(data = data, prefix = "Object_")
+  }
+  if (length(colnames$reward) == 1 && is.na(colnames$reward)) {
+    colnames$reward <- .detect_colnames(data = data, prefix = "Reward_")
+  }
+  
   colnames <- methods::new(
     Class = "multiRL.colnames",
     subid = colnames$subid, 
@@ -49,15 +56,18 @@ process_1_input <- function(
 ################################## [params] ####################################
   
   # 检查params是否是数值
-  check_type <- all(sapply(params$fixed, is.numeric))
-  if (!(check_type)) {message("Invalid fixed params key type")}
   check_type <- all(sapply(params$free, is.numeric))
   if (!(check_type)) {message("Invalid free params key type")}
+  check_type <- all(sapply(params$fixed, is.numeric))
+  if (!(check_type)) {message("Invalid fixed params key type")}
+  check_type <- all(sapply(params$constant, is.numeric))
+  if (!(check_type)) {message("Invalid constant params key type")}
   
   params <- methods::new(
     Class = "multiRL.params",
+    free = params$free,
     fixed = params$fixed, 
-    free = params$free
+    constant = params$constant
   )
 
 ################################### [funcs] ####################################
@@ -139,6 +149,7 @@ process_1_input <- function(
   
   settings <- methods::new(
     Class = "multiRL.settings",
+    name = settings$name,
     mode = settings$mode,
     policy = settings$policy
   )

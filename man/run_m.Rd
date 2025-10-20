@@ -7,13 +7,14 @@
 run_m(
   data,
   behrule,
-  colnames,
+  colnames = list(subid = "Subject", block = "Block", trial = "Trial", object =
+    NA_character_, reward = NA_character_, action = "Action"),
   params,
   funcs = list(rate_func = multiRL::func_alpha, prob_func = multiRL::func_beta, util_func
     = multiRL::func_gamma, bias_func = multiRL::func_delta, expl_func =
     multiRL::func_epsilon),
   priors = list(),
-  settings = list(mode = "fit", policy = "on"),
+  settings = list(name = "unknown", mode = "fit", policy = "on"),
   ...
 )
 }
