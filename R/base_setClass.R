@@ -46,6 +46,7 @@ methods::setClass(
   slots = list(
     name = "character",
     mode = "character",
+    estimate = "character",
     policy = "character"
   )
 )

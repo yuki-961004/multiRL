@@ -37,52 +37,48 @@ library(multiRL)
 
 ```r
 multiRL.model <- multiRL::run_m(
-  data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
   colnames = list(
-    subid = "Subject", 
-    block = "Block",
-    trial = "Trial",
+    subid = "Subject", block = "Block", trial = "Trial",
     object = c("L_choice", "R_choice"), 
     reward = c("L_reward", "R_reward"),
     action = "Sub_Choose"
   ),
   params = list(
+    free = list(
+      alpha = c(0.123, 0.456),
+      beta = 0.789
+    ),
     fixed = list(
-      Q1 = 100,
       gamma = 1,
       delta = 0.1,
       epsilon = NA_real_,
       zeta = 1,
       eta = NA_real_
     ),
-    free = list(
-      alpha = c(0.123, 0.456),
-      beta = 0.789
+    constant = list(
+      Q1 = NA_real_,
+      lapse = 0.01
     )
-  ),
-  funcs = list(
-    rate_func = multiRL::func_alpha,
-    prob_func = multiRL::func_beta,
-    util_func = multiRL::func_gamma,
-    bias_func = multiRL::func_delta,
-    expl_func = multiRL::func_epsilon
-  ),
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
   ),
   priors = list(
     alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    mode = "fit",
+    name = "TD",
+    mode = "fitting",
+    estimate = "MLE",
     policy = "off"
   ),
   anythingelse = c(1, 2, 3)
 )
 
-multiRL.summary <- summary(multiRL.model)
+multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 ```
@@ -96,34 +92,54 @@ Model Fit:
 ```
 
 ```r
-binaryRL.res <- binaryRL::run_m(
-  mode = "fit",
-  data = binaryRL::Mason_2024_G2,
-  id = 1,
-  n_params = 3,
-  n_trials = 360,
-  initial_value = 100,
-  threshold = 1,
-  pi = 0.1,
-  epsilon = NA_real_,
-  eta = c(0.123, 0.456),
-  tau = c(0.789), 
-  priors = list(
-    eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-    tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+multiRL.env <- multiRL::estimate_0_ENV(
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
   ),
-  policy = "off"
+  colnames = list(
+    subid = "Subject", block = "Block", trial = "Trial",
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  funcs = list(
+    rate_func = multiRL::func_alpha,
+    prob_func = multiRL::func_beta,
+    util_func = multiRL::func_gamma,
+    bias_func = multiRL::func_delta,
+    expl_func = multiRL::func_epsilon
+  ),
+  priors = list(
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  settings = list(
+    name = "TD",
+    mode = "fitting",
+    estimate = "MLE",
+    policy = "on"
+  ),
+)
+```
+
+```r
+multiRL.model <- multiRL::estimate_1_MLE(
+  model = multiRL::TD,
+  environment = multiRL.env,
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lower = c(0, 0),
+  upper = c(1, 1),
 )
 
-summary(binaryRL.res)
+multiRL.model@input@params@free
 ```
 
 ```
-Model Fit:
-  Accuracy: 100%
-  Log-Likelihood: -671.03
-  Log-Prior Probability: -0.83
-  Log-Posterior Probability: -671.86
-  AIC: 1348.06
-  BIC: 1359.72
+$alpha
+[1] 0.5193619
+
+$beta
+[1] 0.9796239
 ```

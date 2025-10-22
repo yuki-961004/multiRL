@@ -14,7 +14,7 @@ run_m(
     = multiRL::func_gamma, bias_func = multiRL::func_delta, expl_func =
     multiRL::func_epsilon),
   priors = list(),
-  settings = list(name = "unknown", mode = "fit", policy = "on"),
+  settings = list(name = "unknown", mode = "fitting", estimate = "MLE", policy = "on"),
   ...
 )
 }

@@ -30,7 +30,8 @@ run_m <- function(
     priors = list(),
     settings = list(
       name = "unknown",
-      mode = "fit",
+      mode = "fitting",
+      estimate = "MLE",
       policy = "on"
     ),
     ...

@@ -8,7 +8,7 @@ output: html_document
 
 ```{r}
 multiRL.input <- process_1_input(
-  data = read.csv("../DATA/DATA.csv") |> dplyr::filter(Subject == 1),
+  data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   colnames = list(
     subid = "Subject", block = "Block", trial = "Trial",
     object = NA_character_, reward = NA_character_, action = "Action"
@@ -43,7 +43,8 @@ multiRL.input <- process_1_input(
   ),
   settings = list(
     name = "TD",
-    mode = "fit",
+    mode = "fitting",
+    estimate = "ABC",
     policy = "on"
   )
 )
@@ -90,7 +91,7 @@ View(multiRL.output@result@prob)
 
 ```{r}
 multiRL.model <- run_m(
-  data = read.csv("../DATA/DATA.csv") |> dplyr::filter(Subject == 1),
+  data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   behrule = list(
     cue = c("Red", "Yellow", "Green", "Blue"),
     rsp = c("Up", "Down", "Left", "Right")
@@ -112,8 +113,16 @@ multiRL.model <- run_m(
       lapse = 0.01
     )
   ),
+  settings = list(
+    name = "unknown",
+    mode = "fitting",
+    estimate = "MLE",
+    policy = "on"
+  ),
   whatyousay = c(1, 2, 3)
 )
+
+multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 ## binaryRL
@@ -143,7 +152,7 @@ summary(binaryRL.res)
 
 ```{r}
 multiRL.input <- process_1_input(
-  data = binaryRL::Mason_2024_G2 |> dplyr::filter(Subject == 1),
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
   colnames = list(
     subid = "Subject", 
     block = "Block",
@@ -182,7 +191,8 @@ multiRL.input <- process_1_input(
   ),
   settings = list(
     name = "TD",
-    mode = "fit",
+    mode = "fitting",
+    estimate = "MLE",
     policy = "off"
   )
 )
@@ -230,8 +240,8 @@ View(multiRL.output@result@latent)
 ```
 
 ```{r}
-multiRL.model <- run_m(
-  data = binaryRL::Mason_2024_G2 |> dplyr::filter(Subject == 1),
+multiRL.model <- multiRL::run_m(
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
@@ -265,13 +275,14 @@ multiRL.model <- run_m(
   ),
   settings = list(
     name = "TD",
-    mode = "fit",
+    mode = "fitting",
+    estimate = "RNN",
     policy = "on"
   ),
   anythingelse = c(1, 2, 3)
 )
 
-multiRL.summary <- summary(multiRL.model)
+multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 

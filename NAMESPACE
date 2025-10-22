@@ -9,6 +9,13 @@ export(process_2_behrule)
 export(process_3_record)
 export(process_4_output)
 export(process_5_metric)
-
 export(run_m)
+
+export(estimate_0_ENV)
+export(estimate_1_MLE)
+
+export(TD)
+export(RSTD)
+export(Utility)
+
 exportMethods(summary)

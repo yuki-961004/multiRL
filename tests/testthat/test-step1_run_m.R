@@ -29,7 +29,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
     priors = list(),
     settings = list(
       name = "TD",
-      mode = "fit",
+      mode = "fitting",
+      estimate = "MLE",
       policy = "on"
     ),
     anythingelse = c(1, 2, 3)

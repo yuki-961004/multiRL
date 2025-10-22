@@ -151,6 +151,7 @@ process_1_input <- function(
     Class = "multiRL.settings",
     name = settings$name,
     mode = settings$mode,
+    estimate = settings$estimate,
     policy = settings$policy
   )
   
