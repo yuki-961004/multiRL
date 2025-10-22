@@ -30,7 +30,7 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
     settings = list(
       name = "TD",
       mode = "fitting",
-      estimate = "MLE",
+      estimate = "ABC",
       policy = "on"
     ),
     anythingelse = c(1, 2, 3)
@@ -76,6 +76,7 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
     settings = list(
       name = "TD",
       mode = "fit",
+      estimate = "RNN",
       policy = "on"
     ),
     anythingelse = c(1, 2, 3)
@@ -129,6 +130,7 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
     settings = list(
       name = "TD",
       mode = "fit",
+      estimate = "MLE",
       policy = "off"
     ),
     anythingelse = c(1, 2, 3)

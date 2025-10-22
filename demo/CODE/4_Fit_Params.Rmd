@@ -223,4 +223,6 @@ result <- estimate_1_MLE(
   lower = c(0, 0),
   upper = c(1, 1),
 )
+
+result@input@params@free
 ```
