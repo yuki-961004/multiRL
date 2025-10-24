@@ -4,7 +4,15 @@
 \alias{estimate_0_ENV}
 \title{estimate_0_ENV}
 \usage{
-estimate_0_ENV(data, behrule, colnames, funcs, priors, settings, ...)
+estimate_0_ENV(
+  data,
+  behrule,
+  colnames = list(),
+  funcs = list(),
+  priors,
+  settings = list(),
+  ...
+)
 }
 \arguments{
 \item{data}{data}

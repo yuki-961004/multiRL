@@ -7,15 +7,7 @@
 RSTD <- function(params){
   
   params <- list(
-    free = list(
-      alpha = c(params[1], params[2]), beta = params[3]
-    ),
-    fixed = list(
-      gamma = 1, delta = 0.1, epsilon = NA_real_, zeta = 1, eta = NA_real_
-    ),
-    constant = list(
-      Q1 = NA_real_, lapse = 0.01
-    )
+    free = list(alpha_n = params[1], alpha_p = params[2], beta = params[3])
   )
   
   multiRL.model <- multiRL::run_m(

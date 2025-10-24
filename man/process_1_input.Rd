@@ -4,7 +4,15 @@
 \alias{process_1_input}
 \title{multiRL.input}
 \usage{
-process_1_input(data, colnames, params, funcs, priors, settings, ...)
+process_1_input(
+  data,
+  colnames = list(),
+  params = list(),
+  funcs = list(),
+  priors,
+  settings = list(),
+  ...
+)
 }
 \arguments{
 \item{data}{data}

@@ -6,9 +6,5 @@
     purrr::pluck(x, "constant", name)
   )
   
-  if (length(found) == 0) {
-    stop(sprintf("Parameter '%s' not found in any source.", name))
-  } 
-  
   return(found)
 }

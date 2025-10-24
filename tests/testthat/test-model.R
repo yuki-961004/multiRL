@@ -32,9 +32,9 @@ testthat::test_that("TD", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0),
     upper = c(1, 1),
@@ -44,8 +44,8 @@ testthat::test_that("TD", {
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
 })
 
-# TD
-testthat::test_that("TD", {
+# RSTD
+testthat::test_that("RSTD", {
   
   multiRL.env <- estimate_0_ENV(
     data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
@@ -67,7 +67,8 @@ testthat::test_that("TD", {
       expl_func = multiRL::func_epsilon
     ),
     priors = list(
-      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     settings = list(
@@ -78,9 +79,9 @@ testthat::test_that("TD", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::RSTD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0, 0),
     upper = c(1, 1, 1),
@@ -124,9 +125,9 @@ testthat::test_that("Utility", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::Utility,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0, 0),
     upper = c(1, 1, 1),

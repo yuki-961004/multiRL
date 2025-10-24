@@ -11,7 +11,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
     ),
     params = list(
       free = list(
-        alpha = c(0.3, 0.7),
+        alpha_n = 0.3,
+        alpha_p = 0.7,
         beta = 0.5
       ),
       fixed = list(
@@ -28,7 +29,7 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
     ),
     priors = list(),
     settings = list(
-      name = "TD",
+      name = "RSTD",
       mode = "fitting",
       estimate = "ABC",
       policy = "on"
@@ -54,7 +55,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
     ),
     params = list(
       free = list(
-        alpha = c(0.3, 0.7),
+        alpha_n = 0.3,
+        alpha_p = 0.7,
         beta = 0.5
       ),
       fixed = list(
@@ -70,11 +72,12 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
       )
     ),
     priors = list(
-      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     settings = list(
-      name = "TD",
+      name = "RSTD",
       mode = "fit",
       estimate = "RNN",
       policy = "on"
@@ -108,7 +111,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
     ),
     params = list(
       free = list(
-        alpha = c(0.3, 0.7),
+        alpha_n = 0.3,
+        alpha_p = 0.7,
         beta = 0.5
       ),
       fixed = list(
@@ -124,11 +128,12 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
       )
     ),
     priors = list(
-      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     settings = list(
-      name = "TD",
+      name = "RSTD",
       mode = "fit",
       estimate = "MLE",
       policy = "off"

@@ -32,13 +32,13 @@ testthat::test_that("L-BFGS-B", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "L-BFGS-B",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -78,13 +78,13 @@ testthat::test_that("GenSA", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "GenSA",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -124,13 +124,13 @@ testthat::test_that("GA", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "GA",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -170,13 +170,13 @@ testthat::test_that("DEoptim", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "DEoptim",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -216,13 +216,13 @@ testthat::test_that("PSO", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "PSO",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -262,13 +262,13 @@ testthat::test_that("Bayesian", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "Bayesian",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -308,13 +308,13 @@ testthat::test_that("CMA-ES", {
     ),
   )
   
-  multiRL.model <- multiRL::estimate_1_MLE(
+  multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
-    environment = multiRL.env,
+    env = multiRL.env,
     algorithm = "CMA-ES",
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")

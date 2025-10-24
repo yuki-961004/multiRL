@@ -12,14 +12,53 @@
 #'
 process_1_input <- function(
     data,
-    colnames,
-    params,
-    funcs,
+    colnames = list(),
+    params = list(),
+    funcs = list(),
     priors,
-    settings,
+    settings = list(),
     ...
 ){
-
+################################# [default] ####################################
+  
+  default <- list(
+    subid = "Subject", 
+    block = "Block", 
+    trial = "Trial",
+    object = NA_character_, 
+    reward = NA_character_, 
+    action = "Action"
+  )
+  colnames <- utils::modifyList(x = default, val = colnames)
+  
+  default <- list(
+    free = list(),
+    fixed = list(
+      gamma = 1, delta = 0.1, epsilon = NA_real_, zeta = 1, eta = NA_real_
+    ),
+    constant = list(
+      Q1 = NA_real_, lapse = 0.01
+    )
+  )
+  params <- .modify_params(x = default, val = params)
+  
+  default <- list(
+    rate_func = multiRL::func_alpha,
+    prob_func = multiRL::func_beta,
+    util_func = multiRL::func_gamma,
+    bias_func = multiRL::func_delta,
+    expl_func = multiRL::func_epsilon
+  )
+  funcs <- utils::modifyList(x = default, val = funcs)
+  
+  default <- list(
+    name = "unknown",
+    mode = "fitting",
+    estimate = "MLE",
+    policy = "on"
+  )
+  settings <- utils::modifyList(x = default, val = settings)
+  
 ################################## [check] #####################################
   
   extra <- list(...)

@@ -7,15 +7,7 @@
 Utility <- function(params){
   
   params <- list(
-    free = list(
-      alpha = params[1], beta = params[2], gamma = params[3]
-    ),
-    fixed = list(
-      delta = 0.1, epsilon = NA_real_, zeta = 1, eta = NA_real_
-    ),
-    constant = list(
-      Q1 = NA_real_, lapse = 0.01
-    )
+    free = list(alpha = params[1], beta = params[2], gamma = params[3])
   )
   
   multiRL.model <- multiRL::run_m(

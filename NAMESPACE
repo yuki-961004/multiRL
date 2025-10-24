@@ -12,6 +12,7 @@ export(process_5_metric)
 export(run_m)
 
 export(estimate_0_ENV)
+export(estimate_1_LBI)
 export(estimate_1_MLE)
 
 export(TD)

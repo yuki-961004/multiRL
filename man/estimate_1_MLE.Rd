@@ -5,22 +5,33 @@
 \title{estimate_1_MLE}
 \usage{
 estimate_1_MLE(
+  data,
+  id = NULL,
+  behrule,
+  colnames,
   model,
-  environment,
+  priors,
+  settings,
   algorithm,
   lower,
   upper,
-  initial_params = NA,
-  initial_size = 50,
-  iteration = 10,
-  seed = 123,
   ...
 )
 }
 \arguments{
+\item{data}{data}
+
+\item{id}{id}
+
+\item{behrule}{behrule}
+
+\item{colnames}{colnames}
+
 \item{model}{model}
 
-\item{environment}{environment}
+\item{priors}{priors}
+
+\item{settings}{settings}
 
 \item{algorithm}{algorithm}
 
@@ -28,18 +39,10 @@ estimate_1_MLE(
 
 \item{upper}{upper}
 
-\item{initial_params}{initial_params}
-
-\item{initial_size}{initial_size}
-
-\item{iteration}{iteration}
-
-\item{seed}{seed}
-
 \item{...}{extra}
 }
 \value{
-multiRL.model
+data.frame
 }
 \description{
 estimate_1_MLE
