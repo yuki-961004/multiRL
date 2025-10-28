@@ -9,7 +9,7 @@ estimate_0_ENV(
   behrule,
   colnames = list(),
   funcs = list(),
-  priors,
+  priors = list(),
   settings = list(),
   ...
 )

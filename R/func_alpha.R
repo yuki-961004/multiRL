@@ -14,14 +14,14 @@ func_alpha <- function(
     ...
 ){
   alpha     <-  .get_param(params, "alpha")
-  alpha_n   <-  .get_param(params, "alpha_n")
-  alpha_p   <-  .get_param(params, "alpha_p")
+  alphaN    <-  .get_param(params, "alphaN")
+  alphaP    <-  .get_param(params, "alphaP")
   
   if (
-    !(is.null(alpha)) && is.null(alpha_n) && is.null(alpha_p)
+    !(is.null(alpha)) && is.null(alphaN) && is.null(alphaP)
   ) {model <- "TD"} 
   else if (
-    is.null(alpha) && !(is.null(alpha_n)) && !(is.null(alpha_p))
+    is.null(alpha) && !(is.null(alphaN)) && !(is.null(alphaP))
   ) {model <- "RSTD"} 
   else {stop("Unknown Model! Plase modify your learning rate function")}
 
@@ -31,10 +31,10 @@ func_alpha <- function(
   # RSTD
   } 
   else if (model == "RSTD" && reward < qvalue) {
-    update <- qvalue + alpha_n * (reward - qvalue)
+    update <- qvalue + alphaN * (reward - qvalue)
   } 
   else if (model == "RSTD" && reward >= qvalue) {
-    update <- qvalue + alpha_p * (reward - qvalue)
+    update <- qvalue + alphaP * (reward - qvalue)
   }
 
   return(update)

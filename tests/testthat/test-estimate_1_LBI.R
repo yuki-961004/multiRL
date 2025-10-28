@@ -8,17 +8,9 @@ testthat::test_that("L-BFGS-B", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -54,17 +46,9 @@ testthat::test_that("GenSA", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -100,17 +84,9 @@ testthat::test_that("GA", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -146,17 +122,9 @@ testthat::test_that("DEoptim", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -192,17 +160,9 @@ testthat::test_that("PSO", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -238,17 +198,9 @@ testthat::test_that("Bayesian", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -284,17 +236,9 @@ testthat::test_that("CMA-ES", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
-    ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
     ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 

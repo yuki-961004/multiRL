@@ -1,3 +1,5 @@
+import(doRNG)
+
 export(func_alpha)
 export(func_beta)
 export(func_gamma)
@@ -14,6 +16,8 @@ export(run_m)
 export(estimate_0_ENV)
 export(estimate_1_LBI)
 export(estimate_1_MLE)
+
+export(estimate_2_SBI)
 
 export(TD)
 export(RSTD)

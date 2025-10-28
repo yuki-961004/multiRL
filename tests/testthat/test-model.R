@@ -8,7 +8,6 @@ testthat::test_that("TD", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
@@ -54,27 +53,19 @@ testthat::test_that("RSTD", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
-    ),
     priors = list(
-      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     settings = list(
       name = "TD",
       mode = "fitting",
-      estimate = "MLE",
+      estimate = "MAP",
       policy = "on"
     ),
   )
@@ -101,26 +92,19 @@ testthat::test_that("Utility", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", block = "Block", trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
-    ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)},
+      gamma = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
     ),
     settings = list(
       name = "Utility",
       mode = "fitting",
-      estimate = "MLE",
+      estimate = "MAP",
       policy = "on"
     ),
   )

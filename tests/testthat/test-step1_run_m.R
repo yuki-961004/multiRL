@@ -11,8 +11,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
     ),
     params = list(
       free = list(
-        alpha_n = 0.3,
-        alpha_p = 0.7,
+        alphaN = 0.3,
+        alphaP = 0.7,
         beta = 0.5
       ),
       fixed = list(
@@ -55,8 +55,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
     ),
     params = list(
       free = list(
-        alpha_n = 0.3,
-        alpha_p = 0.7,
+        alphaN = 0.3,
+        alphaP = 0.7,
         beta = 0.5
       ),
       fixed = list(
@@ -72,8 +72,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
       )
     ),
     priors = list(
-      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     settings = list(
@@ -102,17 +102,14 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
       rsp = c("A", "B", "C", "D")
     ),
     colnames = list(
-      subid = "Subject", 
-      block = "Block",
-      trial = "Trial",
       object = c("L_choice", "R_choice"), 
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
     params = list(
       free = list(
-        alpha_n = 0.3,
-        alpha_p = 0.7,
+        alphaN = 0.3,
+        alphaP = 0.7,
         beta = 0.5
       ),
       fixed = list(
@@ -128,8 +125,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
       )
     ),
     priors = list(
-      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     settings = list(

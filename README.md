@@ -35,6 +35,7 @@ library(multiRL)
 
 ## Demo
 
+## Step 1: run_m
 ```r
 multiRL.model <- multiRL::run_m(
   data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
@@ -50,7 +51,8 @@ multiRL.model <- multiRL::run_m(
   ),
   params = list(
     free = list(
-      alpha = c(0.123, 0.456),
+      alphaN = 0.123,
+      alphaP = 0.456,
       beta = 0.789
     ),
     fixed = list(
@@ -66,11 +68,12 @@ multiRL.model <- multiRL::run_m(
     )
   ),
   priors = list(
-    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    name = "TD",
+    name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
     policy = "off"
@@ -90,6 +93,9 @@ Model Fit:
   AIC: 1346.06
   BIC: 1353.84
 ```
+## Step 2: rcv_d
+
+## Step 3: fit_p
 
 ```r
 multiRL.env <- multiRL::estimate_0_ENV(
@@ -99,21 +105,9 @@ multiRL.env <- multiRL::estimate_0_ENV(
     rsp = c("A", "B", "C", "D")
   ),
   colnames = list(
-    subid = "Subject", block = "Block", trial = "Trial",
     object = c("L_choice", "R_choice"), 
     reward = c("L_reward", "R_reward"),
     action = "Sub_Choose"
-  ),
-  funcs = list(
-    rate_func = multiRL::func_alpha,
-    prob_func = multiRL::func_beta,
-    util_func = multiRL::func_gamma,
-    bias_func = multiRL::func_delta,
-    expl_func = multiRL::func_epsilon
-  ),
-  priors = list(
-    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
     name = "TD",
@@ -122,9 +116,7 @@ multiRL.env <- multiRL::estimate_0_ENV(
     policy = "on"
   ),
 )
-```
 
-```r
 multiRL.model <- multiRL::estimate_1_MLE(
   model = multiRL::TD,
   environment = multiRL.env,
@@ -143,3 +135,35 @@ $alpha
 $beta
 [1] 0.9796239
 ```
+
+```r
+multiRL.env <- multiRL::estimate_0_ENV(
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  settings = list(
+    name = "TD",
+    mode = "simulating",
+    estimate = "ABC",
+    policy = "on"
+  ),
+)
+
+list_simulated <- estimate_2_SBI(
+  model = multiRL::TD,
+  env = multiRL.env,
+  priors = list(
+    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    beta = function(x) {stats::rexp(n = 1, rate = 1)}
+  ),
+  control = list(iter = 10)
+)
+```
+

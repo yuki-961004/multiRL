@@ -15,7 +15,8 @@ multiRL.input <- process_1_input(
   ),
   params = list(
     free = list(
-      alpha = c(0.3, 0.7),
+      alpha_n = 0.3,
+      alpha_p = 0.7,
       beta = 0.5
     ),
     fixed = list(
@@ -42,7 +43,7 @@ multiRL.input <- process_1_input(
     expl_func = multiRL::func_epsilon
   ),
   settings = list(
-    name = "TD",
+    name = "RSTD",
     mode = "fitting",
     estimate = "ABC",
     policy = "on"
@@ -98,7 +99,8 @@ multiRL.model <- run_m(
   ),
   params = list(
     free = list(
-      alpha = c(0.3, 0.7),
+      alpha_n = 0.3,
+      alpha_p = 0.7,
       beta = 0.5
     ),
     fixed = list(
@@ -163,7 +165,8 @@ multiRL.input <- process_1_input(
   ),
   params = list(
     free = list(
-      alpha = c(0.123, 0.456),
+      alpha_n = 0.3,
+      alpha_p = 0.7,
       beta = 0.789
     ),
     fixed = list(
@@ -190,7 +193,7 @@ multiRL.input <- process_1_input(
     expl_func = multiRL::func_epsilon
   ),
   settings = list(
-    name = "TD",
+    name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
     policy = "off"
@@ -254,7 +257,8 @@ multiRL.model <- multiRL::run_m(
   ),
   params = list(
     free = list(
-      alpha = c(0.123, 0.456),
+      alphaN = 0.3,
+      alphaP = 0.7,
       beta = 0.789
     ),
     fixed = list(
@@ -270,13 +274,14 @@ multiRL.model <- multiRL::run_m(
     )
   ),
   priors = list(
-    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    name = "TD",
+    name = "RSTD",
     mode = "fitting",
-    estimate = "RNN",
+    estimate = "MLE",
     policy = "on"
   ),
   anythingelse = c(1, 2, 3)

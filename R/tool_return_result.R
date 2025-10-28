@@ -12,8 +12,12 @@
   mode              <- model@input@settings@mode
   estimate          <- model@input@settings@estimate
   
-  # basic
+  # 将模拟数据集变成和原始数据集一样的列
   data              <- multiRL.summary@data
+  colnames          <- colnames(model@input@data)
+  data <- data[, colnames]
+  data[, model@input@colnames@action] <- as.vector(model@result@simulation)
+  
   params            <- model@input@params@free
 
   # for MLE
@@ -35,8 +39,29 @@
   switch(
     EXPR = mode,
     "simulating" = {
-      result <- list(data = data, input_params = params)
-      return(result)
+      switch(
+        EXPR = estimate,
+        "MLE" = {
+          result <- list(data = data, params = params, LL = LL)
+          return(result)
+        },
+        "MAP" = {
+          result <- list(data = data, params = params, LPo = LPo)
+          return(result)
+        },
+        "ABC" = {
+          result <- list(data = data, params = params, sumstat = sumstat)
+          return(result)
+        },
+        "RNN" = {
+          array <- list(
+            idinfo = idinfo, state = state,
+            latent = latent, simulation = simulation
+          )
+          result <- list(data = data, params = params, array = array)
+          return(result)
+        },
+      )
     },
     "fitting" = {
       switch(

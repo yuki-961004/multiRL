@@ -7,7 +7,7 @@
 RSTD <- function(params){
   
   params <- list(
-    free = list(alpha_n = params[1], alpha_p = params[2], beta = params[3])
+    free = list(alphaN = params[1], alphaP = params[2], beta = params[3])
   )
   
   multiRL.model <- multiRL::run_m(

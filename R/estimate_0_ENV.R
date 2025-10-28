@@ -15,7 +15,7 @@ estimate_0_ENV <- function(
     behrule,
     colnames = list(),
     funcs = list(),
-    priors,
+    priors = list(),
     settings = list(),
     ...
 ){
