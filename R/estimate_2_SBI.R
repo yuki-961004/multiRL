@@ -86,11 +86,10 @@ estimate_2_SBI <- function(
       list_simulated <- foreach::foreach(
         i = 1:iter, .packages = "multiRL"
       ) %dorng% {
-        model(params = list_params[[i]])
         p()
+        model(params = list_params[[i]])
       }
     })
-    
   })
 
 ############################## [ unregister ] ##################################
