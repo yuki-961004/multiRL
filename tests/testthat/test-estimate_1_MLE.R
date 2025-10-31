@@ -39,6 +39,6 @@ testthat::test_that("MLE", {
     control = list(core = 4)
   )
   
-  testthat::expect_s3_class(result, "data.frame")
+  testthat::expect_s3_class(result.MLE, "data.frame")
 })
 
