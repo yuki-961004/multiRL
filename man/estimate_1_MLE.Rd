@@ -6,38 +6,44 @@
 \usage{
 estimate_1_MLE(
   data,
-  id = NULL,
   behrule,
+  ids = NULL,
   colnames,
-  model,
+  funcs = NULL,
   priors,
   settings,
+  models,
   algorithm,
-  lower,
-  upper,
+  lowers,
+  uppers,
+  control,
   ...
 )
 }
 \arguments{
 \item{data}{data}
 
-\item{id}{id}
-
 \item{behrule}{behrule}
+
+\item{ids}{ids}
 
 \item{colnames}{colnames}
 
-\item{model}{model}
+\item{funcs}{funcs}
 
 \item{priors}{priors}
 
 \item{settings}{settings}
 
+\item{models}{models}
+
 \item{algorithm}{algorithm}
 
-\item{lower}{lower}
+\item{lowers}{lowers}
 
-\item{upper}{upper}
+\item{uppers}{uppers}
+
+\item{control}{control}
 
 \item{...}{extra}
 }

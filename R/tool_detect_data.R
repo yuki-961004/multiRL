@@ -11,9 +11,10 @@
     )
   }
   
-  subject_col_name <- subject_col_candidates[1] # Default to the first one found
+  # Default to the first one found
+  subject_col_name <- subject_col_candidates[1] 
   if (length(subject_col_candidates) > 1) {
-    warning(paste(
+    message(paste(
       "Found multiple columns containing 'sub': ",
       paste(subject_col_candidates, collapse = ", "),
       ". Using the first one found: '", subject_col_name, "'", sep = ""

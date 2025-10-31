@@ -19,8 +19,9 @@ ByteCompile: TRUE
 RoxygenNote: 7.3.3
 Depends: R (>= 4.0.0)
 Imports: 
-  methods, future, doFuture, foreach, doRNG, 
-  progressr, purrr, stringr, dplyr, tibble,
+  methods, 
+  future, doFuture, foreach, doRNG, progressr, 
+  purrr, stringr, dplyr, tibble,
 Suggests: 
   stats, 
   GenSA, 

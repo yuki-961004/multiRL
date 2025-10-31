@@ -295,7 +295,7 @@ test <- .extract_results(multiRL.model.all, n_model = 3, n_subject = 10)
 
 ```{r}
 test <- estimate_1_MLE(
-  data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:7),
+  data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:10),
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
@@ -305,15 +305,15 @@ test <- estimate_1_MLE(
     reward = c("L_reward", "R_reward"),
     action = "Sub_Choose"
   ),
-  model = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   priors = list(
     list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     list(
-      alpha_n = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      alpha_p = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     ),
     list(
@@ -329,8 +329,9 @@ test <- estimate_1_MLE(
   ),
   
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
-  lower = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
-  upper = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
+  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+  uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
+  control = list(core = 10)
 )
 ```
 
