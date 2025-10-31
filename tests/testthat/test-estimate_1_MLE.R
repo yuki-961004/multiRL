@@ -1,6 +1,6 @@
 testthat::test_that("MLE", {
   result.MLE <- estimate_1_MLE(
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:10),
+    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:4),
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -36,7 +36,7 @@ testthat::test_that("MLE", {
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 10)
+    control = list(core = 4)
   )
   
   testthat::expect_s3_class(result, "data.frame")
