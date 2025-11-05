@@ -57,7 +57,7 @@
   } else {
     
     # 处理你的原始错误输出
-    return(paste0(
+    stop(paste0(
       "Unknown: Found call '", dist_name, "' which does not start with 'd'"
     ))
   }

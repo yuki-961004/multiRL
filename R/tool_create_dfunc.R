@@ -128,7 +128,7 @@
       # 如果估计的形状参数不合理 (如 <= 0)，使用默认值
       if (shape <= 0) {
         message(
-          "Gamma parameter estimation failed. Using shape=1, rate=1 (Exponential)."
+          "Gamma parameter estimation failed. Using shape=1, rate=1."
         )
         shape <- 1
         rate  <- 1
