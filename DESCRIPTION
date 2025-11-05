@@ -21,7 +21,7 @@ Depends: R (>= 4.0.0)
 Imports: 
   methods, 
   future, doFuture, foreach, doRNG, progressr, 
-  purrr, stringr, dplyr, tibble,
+  purrr, stringr, dplyr, tibble
 Suggests: 
   stats, 
   GenSA, 
