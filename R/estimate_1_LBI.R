@@ -27,6 +27,7 @@ estimate_1_LBI <- function(
   
   default = list(
     pars = NA,
+    dash = 1e-5,
     size = 50,
     iter = 10,
     seed = 123
@@ -39,6 +40,9 @@ estimate_1_LBI <- function(
   if (length(iter) > 1) {iter <- iter[1]} 
   # 迭代的初始值
   if (length(pars) == 1 && is.na(pars)){pars <- lower + 1e-1}
+  
+  lower <- lower + dash
+  upper <- upper - dash
   
 ################################# [nloptr] #####################################
   

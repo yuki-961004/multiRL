@@ -46,60 +46,6 @@ test <- estimate_1_MLE(
 ```
 
 ```{r}
-free_params <- list()
-posteriors <- list()
-
-# 把自由参数找出来
-for (i in 1:length(x)) {
-  free_params[[i]] <- x[[i]]@input@params@free
-}
-# 把自由参数变成表格
-free_params <- dplyr::bind_rows(free_params)
-# 按照求得的自由参数最佳值, 按照正态分布, 计算后验分布
-for (i in 1:length(prior)) {
-  posteriors[[i]] <- function(x) {stats::dnorm(
-    x, log = TRUE, 
-    mean = mean(free_params[[i]]), 
-    sd = sd(free_params[[i]])
-  )}
-  
-}
-names(posteriors) <- names(prior)
-```
-
-
-```{r}
-free_params <- list()
-
-
-for (i in 1:length(multiRL.models)) {
-  
-  # 创建空list用于存放
-  free_params[[i]] <- rep(list(list()), length(multiRL.models[[i]]))
-  posteriors[[i]] <- rep(list(list()), length(priors[[i]]))
-  # 把自由参数找出来
-  for (j in 1:length(multiRL.models[[i]])) {
-    free_params[[i]][[j]] <- multiRL.models[[i]][[j]]@input@params@free
-  }
-  # 把自由参数变成表格
-  free_params[[i]] <- dplyr::bind_rows(free_params[[i]])
-  # 按照求得的自由参数最佳值, 按照正态分布, 计算后验分布
-  for (j in 1:length(posteriors[[i]])) {
-    posteriors[[i]][[j]] <- function(x) {stats::dnorm(
-      x, log = TRUE, 
-      mean = mean(free_params[[i]][[j]]), 
-      sd = sd(free_params[[i]][[j]])
-    )}
-    names(posteriors[[i]]) <- names(priors[[i]])
-  }
-}
-```
-
-```{r}
-test <- .update_priors(x = multiRL.models[[1]], priors = priors[[1]])
-```
-
-```{r}
 test <- estimate_1_MAP(
   data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:20),
   behrule = list(
@@ -132,37 +78,8 @@ test <- estimate_1_MAP(
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
-  control = list(core = 20, iter = c(10, 5))
+  control = list(core = 20, iter = c(10, 6))
 )
 ```
 
-
-```{r}
-multiRL.env <- multiRL::estimate_0_ENV(
-  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  settings = list(
-    name = "TD",
-    mode = "fitting",
-    estimate = "MLE",
-    policy = "on"
-  ),
-)
-
-multiRL.model <- multiRL::estimate_1_LBI(
-  model = multiRL::TD,
-  env = multiRL.env,
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
-  lower = c(0, 0),
-  upper = c(1, 1),
-)
-```
 

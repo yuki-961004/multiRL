@@ -194,6 +194,7 @@ estimate_1_MAP <- function(
 ################################### [ MAP ] #################################### 
     
     iter <- 0
+    stuck <- 0
     
     # 当LogPo的变化值不小于diff, 或迭代次数未达到, 则不断执行
     while (abs(delta_LogPo) > diff) {
@@ -237,6 +238,7 @@ estimate_1_MAP <- function(
       
       posteriors <- .update_priors(x = multiRL.model.MAP, priors = posteriors)
       sum_LogPo <- sum(sapply(multiRL.model.MAP, function(x) x@sumstat@LPo))
+      if (delta_LogPo == LogPo - sum_LogPo) {stuck <- stuck + 1}
       delta_LogPo <- sum_LogPo - LogPo
       LogPo <- sum_LogPo
     
@@ -247,7 +249,7 @@ estimate_1_MAP <- function(
       ))
     
       iter <- iter + 1
-      if (iter >= limit) {break}
+      if (iter >= limit || stuck > 1) {break}
     }
     multiRL.models[[i]] <- multiRL.model.MAP
   }
