@@ -1,4 +1,7 @@
-.extract_results <- function(x, n_model, n_subject) {
+.extract_results <- function(x) {
+  
+  n_model <- length(x)
+  n_subject <- length(x[[1]])
   
   # 必须先定义 .flatten_params 辅助函数
   .flatten_params <- function(free_params) {

@@ -1,18 +1,13 @@
 .calculate_log_prior = function(priors, params) {
   
-  log_densities <- mapply(
-    FUN = function(param_values, prior_fn) {
-      sapply(
-        X = param_values,
-        FUN = prior_fn
-      )
-    },
-    param_values = params,
-    prior_fn = priors,
+  log_prior <- mapply(
+    FUN = function(params, priors) {sapply(X = params, FUN = priors)},
+    params = params,
+    priors = priors,
     SIMPLIFY = FALSE 
   )
 
-  log_prior_sum <- sum(unlist(log_densities))
+  sum_log_prior <- sum(unlist(log_prior))
   
-  return(log_prior_sum)
+  return(sum_log_prior)
 }

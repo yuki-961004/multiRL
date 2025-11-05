@@ -1,4 +1,4 @@
-# 
+# L-BFGS-B
 testthat::test_that("L-BFGS-B", {
   
   multiRL.env <- estimate_0_ENV(

@@ -16,6 +16,7 @@ export(run_m)
 export(estimate_0_ENV)
 export(estimate_1_LBI)
 export(estimate_1_MLE)
+export(estimate_1_MAP)
 
 export(estimate_2_SBI)
 

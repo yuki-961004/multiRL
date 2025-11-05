@@ -99,8 +99,8 @@ multiRL.model <- run_m(
   ),
   params = list(
     free = list(
-      alpha_n = 0.3,
-      alpha_p = 0.7,
+      alphaN = 0.3,
+      alphaP = 0.7,
       beta = 0.5
     ),
     fixed = list(
@@ -125,6 +125,48 @@ multiRL.model <- run_m(
 )
 
 multiRL.summary <- multiRL::summary(multiRL.model)
+```
+```{r}
+obj_func_r <- function(x){
+  multiRL.model <- run_m(
+    data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
+    behrule = list(
+      cue = c("Red", "Yellow", "Green", "Blue"),
+      rsp = c("Up", "Down", "Left", "Right")
+    ),
+    params = list(
+      free = list(
+        alphaN = 0.3,
+        alphaP = 0.7,
+        beta = 0.5
+      ),
+      fixed = list(
+        gamma = 1,
+        delta = 0.1,
+        epsilon = 0.1,
+        zeta = 1,
+        eta = NA_real_
+      ),
+      constant = list(
+        Q1 = NA_real_,
+        lapse = 0.01
+      )
+    ),
+    settings = list(
+      name = "unknown",
+      mode = "fitting",
+      estimate = "MLE",
+      policy = "on"
+    ),
+    whatyousay = c(1, 2, 3)
+  )
+}
+
+microbenchmark::microbenchmark(
+  "r" = { obj_func_r() },
+  #"cpp" = { obj_func_cpp() },
+  times = 50
+)
 ```
 
 ## binaryRL

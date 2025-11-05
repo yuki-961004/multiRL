@@ -35,6 +35,9 @@ estimate_1_LBI <- function(
   
   list2env(control, envir = environment())
   
+  # 如果采用了MAP, 则以第一个值为MLE的迭代次数
+  if (length(iter) > 1) {iter <- iter[1]} 
+  # 迭代的初始值
   if (length(pars) == 1 && is.na(pars)){pars <- lower + 1e-1}
   
 ################################# [nloptr] #####################################

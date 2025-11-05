@@ -1,4 +1,4 @@
-#' estimate_1_MLE
+#' estimate_1_MAP
 #'
 #' @param data data
 #' @param behrule behrule
@@ -19,7 +19,7 @@
 #'
 #' @returns data.frame
 #' 
-estimate_1_MLE <- function(
+estimate_1_MAP <- function(
     data, 
     behrule,
     
@@ -36,7 +36,7 @@ estimate_1_MLE <- function(
     control,
     ...
 ){
-
+  
 ################################ [default] #####################################
   
   # 默认列名
@@ -62,14 +62,14 @@ estimate_1_MLE <- function(
     )
     funcs[[i]] <- utils::modifyList(x = default, val = funcs[[i]])
   }
-
+  
   # 默认设置
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
       name = paste0("Unknown Model ", i),
       mode = "fitting",
-      estimate = "MLE",
+      estimate = "MAP",
       policy = "on"
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
@@ -79,20 +79,20 @@ estimate_1_MLE <- function(
   default = list(
     pars = NA,
     size = 50,
-    iter = 10,
+    iter = c(10, 10),
     seed = 123,
-    core = 1
+    core = 1,
+    diff = 0.001
   )
   control <- utils::modifyList(x = default, val = control)
-  
   # 解放control中的设定, 变成全局变量
   list2env(control, envir = environment())
   
-  # 读取MLE迭代次数
+  # 读取MAP迭代次数
   if (length(iter) == 1) {
-    iter <- iter
+    limit <- iter
   } else if (length(iter) == 2) {
-    iter <- iter[1]
+    limit <- iter[2]
   }
   
 ############################ [aotu-detect data] ################################
@@ -100,9 +100,11 @@ estimate_1_MLE <- function(
   # 自动探测数据
   suppressMessages({dfinfo <- .detect_data(data)})
   # 如果没有输入被试序号的列名. 则自动探测
-  if ("subid" %in% names(colnames)) {subid <- colnames[["subid"]]} 
-  else {subid <- dfinfo$sub_col_name}
-  
+  if ("subid" %in% names(colnames)) {
+    subid <- colnames[["subid"]]
+  } else {
+    subid <- dfinfo$sub_col_name
+  }
   # 如果没有输入要拟合的被试序号, 就拟合所有的
   if (is.null(ids)){ids <- dfinfo$all_ids}
   
@@ -137,12 +139,11 @@ estimate_1_MLE <- function(
       model_name <- paste0("Unknown Model ", i)
     }
     
-################################### [ MLE ] ####################################
+################################### [ MLE ] #################################### 
     
     message(paste0(
-      "Fitting ", model_name,"\n"
+      "Initializing ", model_name,"\n"
     ))
-    
     # 定义进度条
     progressr::handlers(progressr::handler_txtprogressbar)
     # 进度条启动
@@ -153,7 +154,7 @@ estimate_1_MLE <- function(
       doRNG::registerDoRNG(seed = seed)
       # MLE并行开始
       suppressMessages({
-        multiRL.models[[i]] <- foreach::foreach(
+        multiRL.model.MLE <- foreach::foreach(
           j = ids, .packages = c("multiRL")
         ) %dorng% {
           env <- estimate_0_ENV(
@@ -177,6 +178,78 @@ estimate_1_MLE <- function(
         }
       })
     })
+    
+######################### [ Initialize Posteriors ] ############################
+    
+    posteriors <- .update_priors(x = multiRL.model.MLE, priors = priors[[i]])
+    sum_LogPo <- sum(sapply(multiRL.model.MLE, function(x) x@sumstat@LPo))
+    delta_LogPo = 1
+    LogPo <- sum_LogPo
+    
+    message(paste0(
+      "Starting Expectation-Maximization Algorithm", "\n",
+      "Log-Posterior Probability: ", round(LogPo, 2)
+    ))
+    
+################################### [ MAP ] #################################### 
+    
+    iter <- 0
+    
+    # 当LogPo的变化值不小于diff, 或迭代次数未达到, 则不断执行
+    while (abs(delta_LogPo) > diff) {
+    
+      # 定义进度条
+      progressr::handlers(progressr::handler_txtprogressbar)
+      # 进度条启动
+      progressr::with_progress({
+        # 进度条参照
+        p <- progressr::progressor(steps = length(ids))
+        # 锁定并行种子
+        doRNG::registerDoRNG(seed = seed)
+        # MAP并行开始
+        suppressMessages({
+          multiRL.model.MAP <- foreach::foreach(
+            j = ids, .packages = c("multiRL")
+          ) %dorng% {
+            env <- estimate_0_ENV(
+              data = data[data[, subid] == j, ],
+              behrule = behrule,
+              colnames = colnames,
+              funcs = funcs[[i]],
+              priors = posteriors,
+              settings = settings[[i]]
+            )
+            out <- estimate_1_LBI(
+              model = models[[i]],
+              env = env,
+              algorithm = algorithm,
+              lower = lowers[[i]],
+              upper = uppers[[i]],
+              control = control
+            )
+            p()
+            return(out)
+          }
+        })
+      })
+    
+########################### [ Update Posteriors ] ##############################
+      
+      posteriors <- .update_priors(x = multiRL.model.MAP, priors = posteriors)
+      sum_LogPo <- sum(sapply(multiRL.model.MAP, function(x) x@sumstat@LPo))
+      delta_LogPo <- sum_LogPo - LogPo
+      LogPo <- sum_LogPo
+    
+      message(paste0(
+        "Log-Posterior Probability: ", round(LogPo, 2),
+        ", ",
+        "\u0394: ", .sign_numbers(delta_LogPo), round(delta_LogPo, 2)
+      ))
+    
+      iter <- iter + 1
+      if (iter >= limit) {break}
+    }
+    multiRL.models[[i]] <- multiRL.model.MAP
   }
   # 停止并行
   future::plan(future::sequential)

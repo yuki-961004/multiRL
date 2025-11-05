@@ -117,9 +117,9 @@ multiRL.env <- multiRL::estimate_0_ENV(
   ),
 )
 
-multiRL.model <- multiRL::estimate_1_MLE(
+multiRL.model <- multiRL::estimate_1_LBI(
   model = multiRL::TD,
-  environment = multiRL.env,
+  env = multiRL.env,
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
   lower = c(0, 0),
   upper = c(1, 1),
