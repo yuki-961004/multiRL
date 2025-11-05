@@ -53,7 +53,7 @@
     "beta" = {
       
       # Beta 分布参数估计：使用矩匹配法 (Method of Moments)
-      # ⚠️ 严格要求：Beta 分布数据必须在 (0, 1) 区间内
+      # 严格要求：Beta 分布数据必须在 (0, 1) 区间内
       if (base::min(df_params) <= 0 || base::max(df_params) >= 1) {
         base::stop("Data for Beta distribution must be in (0, 1).")
       }
@@ -66,7 +66,7 @@
       
       # 防止极端值
       if (shape1 <= 0 || shape2 <= 0) {
-        warning(
+        message(
           "Beta parameter estimation failed. Using shape1=2, shape2=2."
         )
         shape1 <- 2
@@ -127,7 +127,7 @@
       rate  <- mean / var
       # 如果估计的形状参数不合理 (如 <= 0)，使用默认值
       if (shape <= 0) {
-        warning(
+        message(
           "Gamma parameter estimation failed. Using shape=1, rate=1 (Exponential)."
         )
         shape <- 1

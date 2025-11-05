@@ -27,7 +27,7 @@ estimate_1_LBI <- function(
   
   default = list(
     pars = NA,
-    dash = 1e-5,
+    dash = 0.01,
     size = 50,
     iter = 10,
     seed = 123
