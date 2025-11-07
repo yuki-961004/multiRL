@@ -93,77 +93,99 @@ Model Fit:
   AIC: 1346.06
   BIC: 1353.84
 ```
+
+## Estimation
+```r
+data <- multiRL::TAB |> dplyr::filter(Subject %in% 1:10)
+behrule <- list(cue = c("A", "B", "C", "D"), rsp = c("A", "B", "C", "D"))
+colnames <- list(
+  object = c("L_choice", "R_choice"), 
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose"
+)
+models <- list(multiRL::TD, multiRL::RSTD, multiRL::Utility)
+settings <- list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility"))
+```
+
+### MLE
+```r
+result.MLE <- multiRL::estimate_1_MLE(
+  data = data,
+  behrule = settings,
+  colnames = colnames,
+  models = models,
+  settings = settings,
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+  uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
+  control = list(core = 10, iter = 10)
+)
+```
+
+### MAP
+```r
+result.MAP <- multiRL::estimate_1_MAP(
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+  models = models,
+  settings = settings,
+  priors = list(
+    TD = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    ),
+    RSTD = list(
+      alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    ),
+    Utility = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)},
+      gamma = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
+    )
+  ),
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+  uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
+  control = list(core = 10, iter = c(10, 10))
+)
+```
+
+### RNN
+```r
+result.RNN <- multiRL::estimate_2_RNN(
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+  models = models,
+  settings = settings,
+  priors = list(
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    ),
+    list(
+      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    ),
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)},
+      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
+    )
+  ),
+  control = list(sample = 100, epochs = 10)
+)
+```
+### ABC
+```r
+```
+
 ## Step 2: rcv_d
 
 ## Step 3: fit_p
 
-```r
-multiRL.env <- multiRL::estimate_0_ENV(
-  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  settings = list(
-    name = "TD",
-    mode = "fitting",
-    estimate = "MLE",
-    policy = "on"
-  ),
-)
-
-multiRL.model <- multiRL::estimate_1_LBI(
-  model = multiRL::TD,
-  env = multiRL.env,
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
-  lower = c(0, 0),
-  upper = c(1, 1),
-)
-
-multiRL.model@input@params@free
-```
-
-```
-$alpha
-[1] 0.5193619
-
-$beta
-[1] 0.9796239
-```
-
-```r
-multiRL.env <- multiRL::estimate_0_ENV(
-  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  settings = list(
-    name = "TD",
-    mode = "simulating",
-    estimate = "ABC",
-    policy = "on"
-  ),
-)
-
-list_simulated <- estimate_2_SBI(
-  model = multiRL::TD,
-  env = multiRL.env,
-  priors = list(
-    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-    beta = function(x) {stats::rexp(n = 1, rate = 1)}
-  ),
-  control = list(iter = 10)
-)
-```
-
+## Step 4: rpl_e
