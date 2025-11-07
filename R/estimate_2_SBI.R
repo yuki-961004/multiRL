@@ -22,8 +22,8 @@ estimate_2_SBI <- function(
   
   default = list(
     core = 1,
-    iter = 10,
-    seed = 123
+    seed = 123,
+    sample = 100
   )
   control <- utils::modifyList(x = default, val = control)
   
@@ -33,7 +33,7 @@ estimate_2_SBI <- function(
   
   list_params <- list()
   
-  for (i in 1:iter) {
+  for (i in 1:sample) {
     params <- c()
     
     for (j in 1:length(priors)) {
@@ -72,26 +72,20 @@ estimate_2_SBI <- function(
   
   list_simulated <- list()
   
-  progressr::handlers(progressr::handler_txtprogressbar)
+  i <- NA
   
-  progressr::with_progress({
-    
-    p <- progressr::progressor(steps = iter)
-    
-    i <- NA
-    
-    doRNG::registerDoRNG(seed = seed)
-    
-    suppressMessages({
-      list_simulated <- foreach::foreach(
-        i = 1:iter, .packages = "multiRL"
-      ) %dorng% {
-        p()
-        model(params = list_params[[i]])
-      }
-    })
+  doRNG::registerDoRNG(seed = seed)
+  
+  suppressMessages({
+    list_simulated <- foreach::foreach(
+      i = 1:sample, .packages = "multiRL"
+    ) %dorng% {
+      model(params = list_params[[i]])
+    }
   })
 
+  message(paste0("Done!", "\n"))
+  
 ############################## [ unregister ] ##################################
   
   future::plan(future::sequential)

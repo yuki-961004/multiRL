@@ -30,12 +30,8 @@
   sumstat           <- model@sumstat@ABC$onerow
   
   # for RNN
-  idinfo            <- model@input@features@idinfo
-  state             <- model@input@features@state
-  action            <- model@input@features@action
-  latent            <- model@result@latent
-  simulation        <- model@result@simulation
-
+  matrix            <- .df2matrix(df = data)
+  
   switch(
     EXPR = mode,
     "simulating" = {
@@ -54,11 +50,7 @@
           return(result)
         },
         "RNN" = {
-          array <- list(
-            idinfo = idinfo, state = state,
-            latent = latent, simulation = simulation
-          )
-          result <- list(data = data, params = params, array = array)
+          result <- list(data = data, params = params, matrix = matrix)
           return(result)
         },
       )
@@ -76,15 +68,7 @@
           return(sumstat)
         },
         "RNN" = {
-          array <- list(
-            idinfo = idinfo, state = state,
-            latent = latent, simulation = simulation
-          )
-          result <- list(
-            array = array,
-            params = params
-          )
-          return(result)
+          return(matrix)
         },
       )
     }

@@ -5,5 +5,7 @@ utils::globalVariables(c(
   # MLE
   "pars", "size", "iter", "seed", "core", 
   # MAP
-  "diff", "dash"
+  "diff", "dash",
+  # RNN,
+  "sample", "info", "layer", "units", "batch_size", "epochs"
 ))

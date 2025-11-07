@@ -1,5 +1,5 @@
 Package: multiRL
-Version: 0.0.7
+Version: 0.0.8
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
 Description: Reinforcement Learning Tools for Multi-Armed Bandit.
 Authors@R:
@@ -30,4 +30,5 @@ Suggests:
   pso, 
   mlrMBO, mlr, ParamHelpers, smoof, lhs, DiceKriging, rgenoud,
   cmaes,
-  nloptr
+  nloptr,
+  tensorflow, keras, reticulate
