@@ -203,12 +203,14 @@ multiRL.input <- process_1_input(
     trial = "Trial",
     object = c("L_choice", "R_choice"), 
     reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
+    action = "Sub_Choose",
+    exinfo = c("Frame", "NetWorth", "RT")
+    #extra = NA_character_
   ),
   params = list(
     free = list(
-      alpha_n = 0.3,
-      alpha_p = 0.7,
+      alphaN = 0.3,
+      alphaP = 0.7,
       beta = 0.789
     ),
     fixed = list(
@@ -295,7 +297,8 @@ multiRL.model <- multiRL::run_m(
     subid = "Subject", block = "Block", trial = "Trial",
     object = c("L_choice", "R_choice"), 
     reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
+    action = "Sub_Choose",
+    exinfo = c("Frame", "NetWorth", "RT")
   ),
   params = list(
     free = list(

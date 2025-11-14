@@ -8,7 +8,8 @@ methods::setClass(
     trial = "character",
     object = "character", 
     reward = "character",
-    action = "character"
+    action = "character",
+    exinfo = "character"
   )
 )
 
@@ -37,7 +38,8 @@ methods::setClass(
   slots = list(
     idinfo = "array",
     state = "array",
-    action = "array"
+    action = "array",
+    exinfo = "array"
   )
 )
 

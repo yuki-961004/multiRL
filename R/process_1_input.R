@@ -21,16 +21,19 @@ process_1_input <- function(
 ){
 ################################# [default] ####################################
   
+  # 默认列名
   default <- list(
     subid = "Subject", 
     block = "Block", 
     trial = "Trial",
     object = NA_character_, 
     reward = NA_character_, 
-    action = "Action"
+    action = "Action",
+    exinfo = NA_character_
   )
   colnames <- utils::modifyList(x = default, val = colnames)
   
+  # 默认参数
   default <- list(
     free = list(),
     fixed = list(
@@ -40,8 +43,10 @@ process_1_input <- function(
       Q1 = NA_real_, lapse = 0.01
     )
   )
+  # 如果一个参数在一个地方(free, fixed, constant)设置过, 则在其他地方取消
   params <- .modify_params(x = default, val = params)
   
+  # 默认函数
   default <- list(
     rate_func = multiRL::func_alpha,
     prob_func = multiRL::func_beta,
@@ -51,6 +56,7 @@ process_1_input <- function(
   )
   funcs <- utils::modifyList(x = default, val = funcs)
   
+  # 默认设置
   default <- list(
     name = "unknown",
     mode = "fitting",
@@ -59,22 +65,30 @@ process_1_input <- function(
   )
   settings <- utils::modifyList(x = default, val = settings)
   
-################################## [check] #####################################
-  
   extra <- list(...)
-  
-  key_names <- c("subid", "block", "trial", "object", "reward", "action")
-  # 检查colnames的元素名称是否一致
-  check_key <- all(sort(names(colnames)) == sort(key_names))
-  if (!(check_key)) {message("Invalid colnames keys")}
-  # 检查colnames的元素类型是否一致
-  check_type <- all(sapply(colnames, is.character))
-  if (!(check_type)) {message("Invalid colnames key type")}
-  # 如果没有输入block, 则block自动变成1
-  if (is.null(colnames$block)) {data$Block = 1}
   
 ################################# [colnames] ###################################
   
+  key_names <- c(
+    "subid", "block", "trial", 
+    "object", "reward", "action", "exinfo"
+  )
+  # 检查colnames的元素名称是否一致
+  check_key <- all(sort(names(colnames)) == sort(key_names))
+  if (!(check_key)) {message("Invalid colnames keys")}
+  
+  # 检查colnames是否是字符串
+  check_type <- all(sapply(colnames, is.character))
+  if (!(check_type)) {message("Invalid colnames key type")}
+  
+################################## [idinfo] ####################################
+  
+  # 如果没有输入block, 则block自动变成1
+  if (is.null(colnames$block)) {data$Block = 1}
+  
+############################# [object & reward] ################################
+  
+  # 如果没有设置object和reward, 可以自动探测带前缀的列
   if (length(colnames$object) == 1 && is.na(colnames$object)) {
     colnames$object <- .detect_colnames(data = data, prefix = "Object_")
   }
@@ -89,7 +103,8 @@ process_1_input <- function(
     trial = colnames$trial,
     object = colnames$object, 
     reward = colnames$reward,
-    action = colnames$action
+    action = colnames$action,
+    exinfo = colnames$exinfo
   )
   
 ################################## [params] ####################################
@@ -139,6 +154,19 @@ process_1_input <- function(
   action <- as.matrix(data[, colnames@action])
   colnames(action) <- colnames@action # 单列会丢失列名
   
+  # exinfo
+  if (length(colnames@exinfo) == 1 && is.na(colnames@exinfo)) {
+    exinfo <- base::matrix(
+      data  = NA,
+      nrow  = base::nrow(data),
+      ncol  = 1
+    )
+    colnames(exinfo) <- "NullVar"
+  } else {
+    exinfo <- as.matrix(data[, colnames@exinfo])
+    colnames(exinfo) <- colnames@exinfo
+  }
+  
   # object -> element
   n_element <- stringr::str_count(object[, 1][1], pattern = "_") + 1
   
@@ -178,7 +206,8 @@ process_1_input <- function(
     Class = "multiRL.features",
     idinfo = idinfo,
     state = state,
-    action = action
+    action = action,
+    exinfo = exinfo
   )
 
 ################################# [settings] ###################################

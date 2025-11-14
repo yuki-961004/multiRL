@@ -13,6 +13,11 @@ func_beta <- function(
     params,
     ...
 ){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
   beta      <-  .get_param(params, "beta")
   lapse     <-  .get_param(params, "lapse")
   

@@ -11,6 +11,11 @@ func_epsilon <- function(
     params,
     ...
 ){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
   epsilon   <-  .get_param(params, "epsilon")
   zeta      <-  .get_param(params, "zeta")
   eta       <-  .get_param(params, "eta")

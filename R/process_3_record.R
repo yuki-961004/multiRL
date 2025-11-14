@@ -26,14 +26,16 @@ process_3_record <- function(
   
 ############################### [null matrix] ##################################
   
-  # 建立空表格记录价值更新
+  # 生成行数等量的多列表格
   nulldf <- matrix(
     data = NA_real_,
     nrow = input@n_trial * input@n_block,
     ncol = length(behrule@cue)
   )
+  # 列数表示需要更新的价值, 即潜在规则
   colnames(nulldf) <- behrule@cue
   
+  # 生成行数等量的单列表格
   singledf <- matrix(
     data = NA_real_,
     nrow = input@n_trial * input@n_block,

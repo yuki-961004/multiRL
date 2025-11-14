@@ -13,6 +13,11 @@ func_alpha <- function(
     params,
     ...
 ){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
   alpha     <-  .get_param(params, "alpha")
   alphaN    <-  .get_param(params, "alphaN")
   alphaP    <-  .get_param(params, "alphaP")
