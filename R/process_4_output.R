@@ -5,7 +5,7 @@
 #'
 #' @returns multiRL.output
 #' 
-process_4_output <- function(
+process_4_output_r <- function(
     record,
     ...
 ){
@@ -44,6 +44,8 @@ process_4_output <- function(
   reward      <- record@result@reward
   simulation  <- record@result@simulation
   
+  n_rows      <- record@input@n_rows
+  
 ############################# [initial value] ##################################
   
   Q1          <- .get_param(params, "Q1")
@@ -51,7 +53,6 @@ process_4_output <- function(
   count[1, ]  <- 0
   value       <- rbind(value, rep(NA, ncol(value)))
   count       <- rbind(count, rep(NA, ncol(count)))
-  n_rows      <- record@input@n_rows
   
 ############################# [action select] ##################################
   
@@ -59,13 +60,6 @@ process_4_output <- function(
   
   for (i in 1:n_rows) {
     
-    # bias function: 每个刺激上的偏见
-    bias[i, ] <- bias_func(
-      count = count[i, ], 
-      params = params,
-      idinfo = idinfo[i, ],
-      exinfo = exinfo[i, ]
-    )
     # 记录每个刺激是否出现
     shown[i, ] <- stats::setNames(
       object = ifelse(
@@ -74,6 +68,13 @@ process_4_output <- function(
         no = NA
       ),
       nm = cue
+    )
+    # bias function: 每个刺激上的偏见
+    bias[i, ] <- bias_func(
+      count = count[i, ], 
+      params = params,
+      idinfo = idinfo[i, ],
+      exinfo = exinfo[i, ]
     )
     # exploration function: 此次是否进行探索
     exploration[i, ] <- expl_func(

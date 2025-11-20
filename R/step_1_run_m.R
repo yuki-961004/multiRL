@@ -8,6 +8,7 @@
 #' @param funcs funcs
 #' @param priors priors
 #' @param settings settings
+#' @param engine engine
 #' @param ... extra
 #' 
 #' @returns multiRL.model
@@ -20,6 +21,7 @@ run_m <- function(
     funcs = list(),
     priors = list(),
     settings = list(),
+    engine = "R",
     ...
 ){
   
@@ -44,10 +46,17 @@ run_m <- function(
     ...
   )
   
-  multiRL.output <- process_4_output(
-    record = multiRL.record,
-    ...
-  )
+  if (engine == "Cpp") {
+    multiRL.output <- process_4_output_cpp(
+      record = multiRL.record,
+      extra = list(...)
+    )
+  } else if (engine == "R") {
+    multiRL.output <- process_4_output_r(
+      record = multiRL.record,
+      ...
+    )
+  }
   
   multiRL.metric <- process_5_metric(
     output = multiRL.output,

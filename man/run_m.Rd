@@ -12,6 +12,7 @@ run_m(
   funcs = list(),
   priors = list(),
   settings = list(),
+  engine = "R",
   ...
 )
 }
@@ -29,6 +30,8 @@ run_m(
 \item{priors}{priors}
 
 \item{settings}{settings}
+
+\item{engine}{engine}
 
 \item{...}{extra}
 }

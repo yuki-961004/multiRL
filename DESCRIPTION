@@ -1,5 +1,5 @@
 Package: multiRL
-Version: 0.0.9
+Version: 0.0.10
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
 Description: Reinforcement Learning Tools for Multi-Armed Bandit.
 Authors@R:
@@ -21,7 +21,9 @@ Depends: R (>= 4.0.0)
 Imports: 
   methods, 
   future, doFuture, foreach, doRNG, progressr, 
-  purrr, stringr, dplyr, tibble
+  purrr, stringr, dplyr, tibble, 
+  Rcpp
+LinkingTo: Rcpp
 Suggests: 
   stats, 
   GenSA, 

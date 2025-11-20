@@ -48,11 +48,11 @@ process_3_record <- function(
   prob        <- nulldf
   count       <- nulldf
   
-  exploration <- singledf
-  latent      <- singledf
-  reward      <- singledf
-  utility     <- singledf
-  simulation  <- singledf
+  exploration <- matrix(as.numeric(singledf), nrow = nrow(singledf), ncol = 1)
+  latent      <- matrix(as.character(singledf), nrow = nrow(singledf), ncol = 1)
+  reward      <- matrix(as.numeric(singledf), nrow = nrow(singledf), ncol = 1)
+  utility     <- matrix(as.numeric(singledf), nrow = nrow(singledf), ncol = 1)
+  simulation  <- matrix(as.character(singledf), nrow = nrow(singledf), ncol = 1)
   
   result <- methods::new(
     Class = "multiRL.result",

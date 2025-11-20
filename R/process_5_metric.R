@@ -9,14 +9,9 @@ process_5_metric <- function(
     output,
     ...
 ){
-################################## [check] #####################################
   
   extra <- list(...)
   
-  if (!methods::is(output, "multiRL.output")) {
-    stop("'output' must be an object of class 'multiRL.output'.")
-  }
-
 ################################### [ACC] ######################################
   
   action      <- output@input@features@action
@@ -42,6 +37,7 @@ process_5_metric <- function(
 ################################### [LL] #######################################
   
   if (match) {
+    # 如果刺激和反应是一一对应, 才能计算LL
     P <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
     logP <- base::log(P)
     LL <- sum(logP)
@@ -51,12 +47,13 @@ process_5_metric <- function(
 ################################### [LP] #######################################    
     
     if (post) {
+      # 如果在可计算LL的前提下, 还输入了对应的先验概率. 则计算LP
       LPr <- .calculate_log_prior(priors = priors, params = params)
       LPo <- LL + LPr
     }
   }
 
-################################ [pattern] #####################################
+################################## [ABC] #######################################
  
   idinfo      <- output@input@features@idinfo
   latent      <- output@result@latent

@@ -1,3 +1,6 @@
+import(Rcpp)
+useDynLib(multiRL, .registration = TRUE)
+
 import(doRNG)
 
 export(func_alpha)
@@ -9,7 +12,8 @@ export(func_epsilon)
 export(process_1_input)
 export(process_2_behrule)
 export(process_3_record)
-export(process_4_output)
+export(process_4_output_r)
+export(process_4_output_cpp)
 export(process_5_metric)
 export(run_m)
 

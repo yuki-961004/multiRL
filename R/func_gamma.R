@@ -15,7 +15,7 @@ func_gamma <- function(
   # e.g.
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
-  
+
   gamma     <-  .get_param(params, "gamma")
 
   utility <- sign(reward) * (abs(reward) ^ gamma)

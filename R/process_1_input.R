@@ -201,6 +201,12 @@ process_1_input <- function(
   # element: col-object-element
   state <- base::aperm(a = state, perm = c(1, 3, 2))
   
+  idinfo <- matrix(as.character(idinfo), nrow = nrow(idinfo), ncol = ncol(idinfo))
+  object <- matrix(as.character(object), nrow = nrow(object), ncol = ncol(object))
+  reward <- matrix(as.character(reward), nrow = nrow(reward), ncol = ncol(reward))
+  action <- matrix(as.character(action), nrow = nrow(action), ncol = ncol(action))
+  exinfo <- matrix(as.character(exinfo), nrow = nrow(exinfo), ncol = ncol(exinfo))
+
   # 整合拆分后的数据, 分别是id, state和action
   features <- methods::new(
     Class = "multiRL.features",

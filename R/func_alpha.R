@@ -34,11 +34,9 @@ func_alpha <- function(
   if (model == "TD") {
     update <- qvalue + alpha   * (reward - qvalue)
   # RSTD
-  } 
-  else if (model == "RSTD" && reward < qvalue) {
+  } else if (model == "RSTD" && reward < qvalue) {
     update <- qvalue + alphaN * (reward - qvalue)
-  } 
-  else if (model == "RSTD" && reward >= qvalue) {
+  } else if (model == "RSTD" && reward >= qvalue) {
     update <- qvalue + alphaP * (reward - qvalue)
   }
 

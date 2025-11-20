@@ -1,4 +1,4 @@
-# r
+# R
 testthat::test_that("Epsilon-First, non-priors, on-policy", {
   
   data <- multiRL::MAB
@@ -34,6 +34,7 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
       estimate = "ABC",
       policy = "on"
     ),
+    engine = "R",
     anythingelse = c(1, 2, 3)
   )
   
@@ -43,6 +44,7 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
   testthat::expect_s4_class(multiRL.summary, "multiRL.summary")
 })
 
+# Cpp
 testthat::test_that("Epsilon-Greedy, priors, on-policy", {
   
   data <- multiRL::MAB
@@ -82,7 +84,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
       estimate = "RNN",
       policy = "on"
     ),
-    anythingelse = c(1, 2, 3)
+    anythingelse = c(1, 2, 3),
+    engine = "Cpp"
   )
   
   multiRL.summary <- summary(multiRL.model)
@@ -91,6 +94,7 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
   testthat::expect_s4_class(multiRL.summary, "multiRL.summary")
 })
 
+# Cpp
 testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
   
   data <- multiRL::TAB
@@ -135,6 +139,7 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
       estimate = "MLE",
       policy = "off"
     ),
+    engine = "Cpp",
     anythingelse = c(1, 2, 3)
   )
   
