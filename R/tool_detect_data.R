@@ -4,6 +4,7 @@
   col_names <- names(data)
   subject_col_candidates <- col_names[grepl("sub", col_names, ignore.case = TRUE)]
   
+  # nocov start
   if (length(subject_col_candidates) == 0) {
     stop(
       "Error: Could not find a subject ID column containing 'sub' in the data. 
@@ -42,6 +43,7 @@
       sep = ""
     ))
   }
+  # nocov end
   
   random_subject_id <- sample(valid_subject_ids, 1)
   

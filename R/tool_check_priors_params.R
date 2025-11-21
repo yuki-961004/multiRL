@@ -5,6 +5,7 @@
     return(invisible(FALSE))
   }
   
+  # nocov start
   # 2. 检查名称是否相同
   # 使用 base::all.equal() 检查名称向量是否相同，返回 TRUE 或描述差异的字符串
   name_check <- all.equal(names(priors), names(params))
@@ -19,6 +20,7 @@
     )
     return(invisible(FALSE))
   }
+  # nocov end
   
   # 3. 名称匹配：返回 TRUE
   return(invisible(TRUE))

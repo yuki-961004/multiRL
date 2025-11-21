@@ -12,7 +12,7 @@ run_m(
   funcs = list(),
   priors = list(),
   settings = list(),
-  engine = "R",
+  engine = "Cpp",
   ...
 )
 }

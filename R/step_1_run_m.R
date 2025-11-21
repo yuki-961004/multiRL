@@ -21,7 +21,7 @@ run_m <- function(
     funcs = list(),
     priors = list(),
     settings = list(),
-    engine = "R",
+    engine = "Cpp",
     ...
 ){
   

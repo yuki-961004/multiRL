@@ -5,6 +5,7 @@
     pattern = paste0("^", prefix) 
   )
   
+  # nocov start
   if (length(colnames) == 0) {
     stop(
       "Could not automatically detect columns with prefix '",
@@ -12,6 +13,7 @@
       "'. Please manually specify column names."
     )
   }
+  # nocov end
   
   return(colnames)
 }

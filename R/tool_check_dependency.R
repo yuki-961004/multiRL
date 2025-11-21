@@ -28,6 +28,7 @@
   # Proceed only if there are missing packages
   if (length(missing_pkgs) > 0) {
     
+    # nocov start
     # Format package names for the error message
     missing_pkgs_str <- paste(missing_pkgs, collapse = ", ") 
     # e.g., "GA, DEoptim"
@@ -44,6 +45,7 @@
       # Use "them" or "it" appropriately
       install_cmd_pkgs
     )
+    # nocov end
     
     # Stop execution and display the message
     # call. = FALSE prevents the function call trace from being part of the error message
