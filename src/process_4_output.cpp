@@ -6,10 +6,10 @@
 //' multiRL.output
 //'
 //' This function processes the multiRL record and generates output.
-//' It accepts an S4 object `record` and a list `extra` for additional parameters.
+//' It accepts an S4 object `record` and a list `extra`.
 //'
 //' @param record An S4 object containing the multiRL record.
-//' @param extra A list of extra parameters passed from R.
+//' @param extra A list of extra infomation passed from R.
 //' @return multiRL.output
 //' @export
 // [[Rcpp::export]]
@@ -128,14 +128,14 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     int n_cues = cue.size(); 
     int n_rsps = rsp.size();
 
-    // 建立哈希表：cue 名称 → index
+    // cue建立哈希表
     std::unordered_map<std::string, int> cue_map;
     cue_map.reserve(n_cues);
     for (int j = 0; j < n_cues; j++) {
         cue_map[ std::string(CHAR(cue[j])) ] = j;
     }
 
-    // 把 rsp 向量预处理成 unordered_set，加速查找
+    // rsp建立哈希表
     std::unordered_set<std::string> rsp_set;
     rsp_set.reserve(n_rsps);
 
@@ -166,7 +166,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
 /******************************* [action select] ******************************/
 
-        // 记录每个刺激是否出现
+        // 记录刺激是否在该试次(state)出现
         shown.row(i) = record_shown(state[i], cue);
 
         // bias function: 每个刺激上的偏见

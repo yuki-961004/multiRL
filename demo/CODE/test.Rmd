@@ -355,7 +355,7 @@ library(Rcpp)
 Rcpp::sourceCpp("../../src/tool_get_param.cpp")
 test_params <- multiRL.model@input@params
 
-get_param(x = test_params, name = "alphaN")
+alpha <- get_param(x = test_params, name = "alpha")
 ```
 
 
@@ -506,6 +506,33 @@ obj_func_c <- function(x) {
     engine = "Cpp"
   )
 }
+```
+
+```{r}
+profvis::profvis({
+  obj_func_r()
+})
+```
+
+```{r}
+original_obj_func <- obj_func_r
+compiled_obj_func <- compiler::cmpfun(obj_func_r)
+
+microbenchmark::microbenchmark(
+  "original" = { original_obj_func() },
+  "compiled" = { compiled_obj_func() },
+  times = 50
+)
+```
+```{r}
+original_obj_func <- obj_func_c
+compiled_obj_func <- compiler::cmpfun(obj_func_c)
+
+microbenchmark::microbenchmark(
+  "original" = { original_obj_func() },
+  "compiled" = { compiled_obj_func() },
+  times = 50
+)
 ```
 
 

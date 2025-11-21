@@ -16,9 +16,9 @@ func_epsilon <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  epsilon   <-  .get_param(params, "epsilon")
-  zeta      <-  .get_param(params, "zeta")
-  eta       <-  .get_param(params, "eta")
+  epsilon   <-  get_param(params, "epsilon")
+  zeta      <-  get_param(params, "zeta")
+  eta       <-  get_param(params, "eta")
 
   set.seed(rownum)
   # Epsilon-First: 

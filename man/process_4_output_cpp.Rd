@@ -9,12 +9,12 @@ process_4_output_cpp(record, extra)
 \arguments{
 \item{record}{An S4 object containing the multiRL record.}
 
-\item{extra}{A list of extra parameters passed from R.}
+\item{extra}{A list of extra infomation passed from R.}
 }
 \value{
 multiRL.output
 }
 \description{
 This function processes the multiRL record and generates output.
-It accepts an S4 object `record` and a list `extra` for additional parameters.
+It accepts an S4 object `record` and a list `extra`.
 }

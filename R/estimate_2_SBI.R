@@ -17,6 +17,9 @@ estimate_2_SBI <- function(
 ){
 ################################ [default] #####################################
   
+  # 编译对象函数
+  model <- compiler::cmpfun(model)
+  
   multiRL.env <- env
   environment(model) <- multiRL.env
   

@@ -18,17 +18,21 @@ func_alpha <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  alpha     <-  .get_param(params, "alpha")
-  alphaN    <-  .get_param(params, "alphaN")
-  alphaP    <-  .get_param(params, "alphaP")
+  alpha     <-  get_param(params, "alpha")
+  alphaN    <-  get_param(params, "alphaN")
+  alphaP    <-  get_param(params, "alphaP")
   
   if (
-    !(is.null(alpha)) && is.null(alphaN) && is.null(alphaP)
-  ) {model <- "TD"} 
-  else if (
-    is.null(alpha) && !(is.null(alphaN)) && !(is.null(alphaP))
-  ) {model <- "RSTD"} 
-  else {stop("Unknown Model! Plase modify your learning rate function")}
+    !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
+  ) {
+    model <- "TD"
+  } else if (
+    is.na(alpha) && !(is.na(alphaN)) && !(is.na(alphaP))
+  ) {
+    model <- "RSTD"
+  } else {
+    stop("Unknown Model! Plase modify your learning rate function")
+  }
 
   # TD
   if (model == "TD") {

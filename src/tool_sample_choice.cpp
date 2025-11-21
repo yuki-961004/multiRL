@@ -1,8 +1,5 @@
 #include "tool_sample_choice.h"
 
-#include <Rcpp.h>
-// [[Rcpp::plugins(cpp11)]]
-
 // [[Rcpp::export]]
 std::string sample_choice(
     const Rcpp::NumericVector& prob_row, 

@@ -22,7 +22,7 @@ Imports:
   methods, 
   future, doFuture, foreach, doRNG, progressr, 
   purrr, stringr, dplyr, tibble, 
-  Rcpp
+  Rcpp, compiler
 LinkingTo: Rcpp
 Suggests: 
   stats, 
@@ -33,4 +33,5 @@ Suggests:
   mlrMBO, mlr, ParamHelpers, smoof, lhs, DiceKriging, rgenoud,
   cmaes,
   nloptr,
+  abc,
   tensorflow, keras, reticulate

@@ -18,8 +18,8 @@ func_beta <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  beta      <-  .get_param(params, "beta")
-  lapse     <-  .get_param(params, "lapse")
+  beta      <-  get_param(params, "beta")
+  lapse     <-  get_param(params, "lapse")
   
   n_options <- length(qvalue)
   prob      <- rep(x = NA_real_, times = n_options)
