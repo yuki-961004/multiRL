@@ -39,7 +39,7 @@ process_5_metric <- function(
   if (match) {
     # 如果刺激和反应是一一对应, 才能计算LL
     P <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
-    logP <- base::log(P)
+    logP <- log(P)
     LL <- sum(logP)
     AIC <- 2 * n_params - 2 * LL
     BIC <- n_params * log(n_rows) - 2 * LL

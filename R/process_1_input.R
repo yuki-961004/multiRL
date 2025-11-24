@@ -37,11 +37,14 @@ process_1_input <- function(
   default <- list(
     free = list(),
     fixed = list(
-      gamma = 1, delta = 0.1, 
-      epsilon = NA_real_, zeta = 1, eta = NA_real_, theta = 0
+      gamma = 1, 
+      delta = 0.1, 
+      epsilon = NA_real_, zeta = 1, eta = NA_real_, 
+      theta = 0
     ),
     constant = list(
-      Q1 = NA_real_, lapse = 0.01
+      Q0 = NA_real_, 
+      lapse = 0.01
     )
   )
   # 如果一个参数在一个地方(free, fixed, constant)设置过, 则在其他地方取消
@@ -171,14 +174,15 @@ process_1_input <- function(
   }
   
   # object -> element
-  n_element <- stringr::str_count(object[, 1][1], pattern = "_") + 1
+  n_element <- nchar(
+    gsub(pattern = "[^_]", replacement = "", x = object[[1]][1])
+  ) + 1
   
   # func: split object based on "_"
   split_object <- function(object) {
-    element <- stringr::str_split_fixed(
-      string = object,
-      pattern = "_",
-      n = n_element
+    element <- do.call(
+      what = rbind,
+      args = strsplit(x = object, split = "_", fixed = TRUE)
     )
     return(element)
   }

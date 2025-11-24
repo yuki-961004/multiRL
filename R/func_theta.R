@@ -1,6 +1,6 @@
 #' decay function
 #'
-#' @param value1 values
+#' @param value0 values
 #' @param values values
 #' @param params params
 #' @param ... extra
@@ -8,7 +8,7 @@
 #' @returns decayed values
 #' 
 func_theta <- function(
-    value1, 
+    value0, 
     values,
     params,
     ...
@@ -20,7 +20,7 @@ func_theta <- function(
   
   theta      <-  get_param(params, "theta")
   
-  decay      <- values + theta * (value1 - values)
+  decay      <- values + theta * (value0 - values)
   
   return(decay)
 }

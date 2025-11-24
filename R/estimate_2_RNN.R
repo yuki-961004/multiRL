@@ -156,20 +156,20 @@ estimate_2_RNN <- function(
   
   for (i in 1:length(models)) {
     
-    result[[i]] <- base::as.data.frame(result[[i]]) 
-    base::colnames(result[[i]]) <- base::names(priors[[i]])
+    result[[i]] <- as.data.frame(result[[i]]) 
+    colnames(result[[i]]) <- names(priors[[i]])
     
     result[[i]][["fit_model"]] <- settings[[i]]$name
     result[[i]][["Subject"]] <- ids
     
-    result[[i]] <- result[[i]] |>
-      dplyr::select(
-        dplyr::all_of(col_order), 
-        dplyr::everything()
-      )
+    # 找出所有不在 col_order 中的剩余列名
+    remaining_cols <- setdiff(names(result[[i]]), col_order)
+    
+    # 按顺序拼接列名，并对数据框进行重排
+    result[[i]] <- result[[i]][c(col_order, remaining_cols)]
   }
   
-  result <- dplyr::bind_rows(result)
+  result <- as.data.frame(do.call(what = rbind, args = result))
   
   return(result)
 }

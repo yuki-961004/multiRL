@@ -2,7 +2,7 @@
   
   if (length(algorithm > 1)) {
     global_opts <- algorithm[[1]]
-    local_opts <- list(algorithm = algorithm[[2]], xtol_rel = 1.0e-8)
+    local_opts <- list(algorithm = algorithm[[2]], xtol_rel = 1e-8)
     algorithm <- "NLOPT"
   } else if (length(algorithm == 1)) {
     global_opts <- algorithm

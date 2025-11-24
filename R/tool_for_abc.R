@@ -1,19 +1,19 @@
 .for_abc <- function(ratio) {
   
-  vector <- base::unlist(ratio)
+  vector <- unlist(ratio)
 
-  colname <- base::gsub(
+  colname <- gsub(
     pattern = ".",
     replacement = "_",
-    x = base::names(vector),
+    x = names(vector),
     fixed = TRUE
   )
 
-  onerow <- base::matrix(
+  onerow <- matrix(
     data = vector,
     nrow = 1,
-    ncol = base::length(vector),
-    dimnames = base::list(NULL, colname)
+    ncol = length(vector),
+    dimnames = list(NULL, colname)
   )
 
   return(onerow)

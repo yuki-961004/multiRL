@@ -4,10 +4,10 @@
 \alias{func_theta}
 \title{decay function}
 \usage{
-func_theta(value1, values, params, ...)
+func_theta(value0, values, params, ...)
 }
 \arguments{
-\item{value1}{values}
+\item{value0}{values}
 
 \item{values}{values}
 

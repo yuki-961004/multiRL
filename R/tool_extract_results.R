@@ -10,44 +10,44 @@
     param_vector <- unlist(x = free_params, recursive = TRUE)
     
     # tibble::as_tibble_row 避免了创建中间数据框
-    return(tibble::as_tibble_row(x = param_vector))
+    return(as.data.frame(as.list(param_vector)))
   }
   
   # 外部循环 (i: model)
-  final_results_df <- purrr::map_dfr(
-    .x = 1:n_model,
-    .f = function(i) {
-      
-      # 内部循环 (j: subject)
-      purrr::map_dfr(
-        .x = 1:n_subject, 
-        .f = function(j) {
-          
-          # 局部变量，避免重复访问
-          model_result <- x[[i]][[j]]
-          
-          # 提取固定统计量
-          stat_df <- dplyr::tibble(
-            fit_model = model_result@input@settings@name,
-            Subject = model_result@input@subid,
-            ACC = model_result@sumstat@ACC,
-            LogL = model_result@sumstat@LL,
-            AIC = model_result@sumstat@AIC,
-            BIC = model_result@sumstat@BIC,
-            LogPr = model_result@sumstat@LPr,
-            LogPo = model_result@sumstat@LPo
+  final_results_df <- do.call(
+    what = rbind,
+    args = unlist(
+      x = lapply(
+        X = 1:n_model,
+        FUN = function(i) {
+          lapply(
+            X = 1:n_subject,
+            FUN = function(j) {
+              # 局部变量，缩短引用路径
+              res <- x[[i]][[j]]
+              
+              # 构建单行 data.frame
+              # 注意：这里假设 .flatten_params 现在返回的是 base data.frame
+              data.frame(
+                fit_model = res@input@settings@name,
+                Subject   = res@input@subid,
+                ACC       = res@sumstat@ACC,
+                LogL      = res@sumstat@LL,
+                AIC       = res@sumstat@AIC,
+                BIC       = res@sumstat@BIC,
+                LogPr     = res@sumstat@LPr,
+                LogPo     = res@sumstat@LPo,
+                # 将参数部分直接作为列合并进来
+                .flatten_params(res@input@params@free),
+                stringsAsFactors = FALSE,
+                check.names = FALSE
+              )
+            }
           )
-          
-          # 提取参数 (params) 并平铺
-          params_df <- .flatten_params(
-            free_params = model_result@input@params@free
-          )
-          
-          # 合并并返回
-          return(dplyr::bind_cols(stat_df, params_df))
         }
-      )
-    }
+      ),
+      recursive = FALSE # 仅解压一层，将 list of lists 变为 list of data.frames
+    )
   )
   
   return(final_results_df)

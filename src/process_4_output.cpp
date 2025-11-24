@@ -146,9 +146,9 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
 /****************************** [initial value] *******************************/
 
-    double Q1 = get_param(params, "Q1");
-    if (std::isnan(Q1)) {Q1 = 0.0;}
-    std::fill( value.row(0).begin(), value.row(0).end(), Q1 );
+    double Q0 = get_param(params, "Q0");
+    if (std::isnan(Q0)) {Q0 = 0.0;}
+    std::fill( value.row(0).begin(), value.row(0).end(), Q0 );
     std::fill( count.row(0).begin(), count.row(0).end(), 0.0 );
 
     Rcpp::Function r_rbind("rbind");
@@ -287,7 +287,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // 记录上次价值
         value.row(i+1) = Rcpp::as<Rcpp::NumericVector>(
             dcay_func(
-                Rcpp::_["value1"] = Rcpp::NumericVector(value.row(0)),
+                Rcpp::_["value0"] = Rcpp::NumericVector(value.row(0)),
                 Rcpp::_["values"] = Rcpp::NumericVector(value.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
@@ -302,7 +302,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         double Qi = value(i, col_index);
 
         // learning rate function: 以什么比例采信预测误差
-        if (Rcpp::NumericVector::is_na(Q1) && Qi == 0) {
+        if (Rcpp::NumericVector::is_na(Q0) && Qi == 0) {
             // learning rate = 100%
             value(i+1, col_index) = utility(i, 0);
         } else {

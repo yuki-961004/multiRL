@@ -1,11 +1,10 @@
 .create_dfunc <- function(df_params, func_name) {
   
   # 1. 初始化一个干净的环境用于封装参数（Closure）
-  fn_env <- base::new.env(parent = base::baseenv())
+  fn_env <- new.env(parent = baseenv())
   
   # 2. 根据 func_name 计算参数并设定函数体
-  # 使用 base::switch 避免长串 if-else
-  post_func <- base::switch(
+  post_func <- switch(
     func_name,
     # --- 均匀分布 (unif) ---
     "unif" = {
@@ -54,8 +53,8 @@
       
       # Beta 分布参数估计：使用矩匹配法 (Method of Moments)
       # 严格要求：Beta 分布数据必须在 (0, 1) 区间内
-      if (base::min(df_params) <= 0 || base::max(df_params) >= 1) {
-        base::stop("Data for Beta distribution must be in (0, 1).")
+      if (min(df_params) <= 0 || max(df_params) >= 1) {
+        stop("Data for Beta distribution must be in (0, 1).")
       }
       
       # 计算参数
@@ -91,8 +90,7 @@
     # --- 指数分布 (exp) ---
     "exp" = {
       
-      # 指数分布参数估计：rate = 1 / mean
-      # 严格要求：指数分布数据必须 > 0
+      # 指数分布参数估计：rate = 1 / mean; 指数分布数据必须 > 0
       if (base::min(df_params) <= 0) {
         base::stop("Data for Exponential distribution must be > 0.")
       }
@@ -174,12 +172,11 @@
     },
     
     # --- 默认情况 (处理未知的 func_name) ---
-    # 返回一个错误处理函数
-    base::stop("Error: Unsupported distribution name: ", func_name)
+    stop("Error: Unsupported distribution name: ", func_name)
   )
   
   # 3. 绑定参数环境
-  base::environment(post_func) <- fn_env
+  environment(post_func) <- fn_env
   
   # 4. 返回生成的概率密度函数
   return(post_func)

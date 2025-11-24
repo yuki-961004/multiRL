@@ -16,14 +16,6 @@ process_3_record <- function(
   
   extra <- list(...)
   
-  if (!methods::is(input, "multiRL.input")) {
-    stop("'input' must be an object of class 'multiRL.input'.")
-  }
-  
-  if (!methods::is(behrule, "multiRL.behrule")) {
-    stop("'behrule' must be an object of class 'multiRL.behrule'.")
-  }
-  
 ############################### [null matrix] ##################################
   
   # 生成行数等量的多列表格

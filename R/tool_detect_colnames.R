@@ -1,8 +1,9 @@
 .detect_colnames <- function(data, prefix) {
   
-  colnames <- stringr::str_subset(
-    string = names(data),
-    pattern = paste0("^", prefix) 
+  colnames <- grep(
+    pattern = paste0("^", prefix),
+    x = names(data),
+    value = TRUE
   )
   
   # nocov start

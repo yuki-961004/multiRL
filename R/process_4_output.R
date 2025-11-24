@@ -49,8 +49,8 @@ process_4_output_r <- function(
   
 ############################# [initial value] ##################################
   
-  Q1          <- get_param(params, "Q1")
-  value[1, ]  <- ifelse(is.na(Q1), yes = 0, no = Q1)
+  Q0          <- get_param(params, "Q0")
+  value[1, ]  <- ifelse(is.na(Q0), yes = 0, no = Q0)
   count[1, ]  <- 0
   value       <- rbind(value, rep(NA, ncol(value)))
   count       <- rbind(count, rep(NA, ncol(count)))
@@ -130,7 +130,7 @@ process_4_output_r <- function(
     
     # 继承上一列的所有值
     value[i + 1, ] <- dcay_func(
-      value1 = value[1, ],
+      value0 = value[1, ],
       values = value[i, ],
       params = params,
       idinfo = idinfo[i, ],
@@ -139,7 +139,7 @@ process_4_output_r <- function(
     # 记录此时被选选项的值
     Qi <- value[i, latent[i, ]]
     
-    if (is.na(Q1) & Qi == 0) {
+    if (is.na(Q0) & Qi == 0) {
       # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
       value[i + 1, latent[i, ]] <- utility[i, ]
     } else {
