@@ -10,7 +10,7 @@
     free_params[[i]] <- x[[i]]@input@params@free
   }
   # 把自由参数变成表格
-  free_params <- as.data.frame(do.call(what = rbind, args = free_params))
+  free_params <- .rbind_fill(free_params)
   
   func_names <- list()
   for (i in 1:length(priors)) {
