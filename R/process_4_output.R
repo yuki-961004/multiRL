@@ -28,6 +28,7 @@ process_4_output_r <- function(
   util_func   <- record@input@funcs@util_func
   bias_func   <- record@input@funcs@bias_func
   expl_func   <- record@input@funcs@expl_func
+  dcay_func   <- record@input@funcs@dcay_func
   
   cue         <- record@behrule@cue
   rsp         <- record@behrule@rsp
@@ -48,7 +49,7 @@ process_4_output_r <- function(
   
 ############################# [initial value] ##################################
   
-  Q1          <- .get_param(params, "Q1")
+  Q1          <- get_param(params, "Q1")
   value[1, ]  <- ifelse(is.na(Q1), yes = 0, no = Q1)
   count[1, ]  <- 0
   value       <- rbind(value, rep(NA, ncol(value)))
@@ -128,7 +129,13 @@ process_4_output_r <- function(
     )
     
     # 继承上一列的所有值
-    value[i + 1, ] <- value[i, ]
+    value[i + 1, ] <- dcay_func(
+      value1 = value[1, ],
+      values = value[i, ],
+      params = params,
+      idinfo = idinfo[i, ],
+      exinfo = exinfo[i, ]
+    )
     # 记录此时被选选项的值
     Qi <- value[i, latent[i, ]]
     

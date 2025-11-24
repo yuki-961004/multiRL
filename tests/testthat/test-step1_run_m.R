@@ -20,7 +20,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
         delta = 0.1,
         epsilon = NA_real_,
         zeta = 20,
-        eta = NA_real_
+        eta = NA_real_,
+        theta = 0
       ),
       constant = list(
         Q1 = NA_real_,
@@ -66,7 +67,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
         delta = 0.1,
         epsilon = 0.3,
         zeta = 1,
-        eta = NA_real_
+        eta = NA_real_,
+        theta = 0
       ),
       constant = list(
         Q1 = 0,
@@ -121,7 +123,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
         delta = 0.1,
         epsilon = NA_real_,
         zeta = 1,
-        eta = 0.1
+        eta = 0.1,
+        theta = 0
       ),
       constant = list(
         Q1 = NA_real_,

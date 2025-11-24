@@ -29,7 +29,8 @@ methods::setClass(
     prob_func = "function",
     util_func = "function",
     bias_func = "function",
-    expl_func = "function"
+    expl_func = "function",
+    dcay_func = "function"
   )
 )
 

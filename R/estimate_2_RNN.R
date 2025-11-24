@@ -9,6 +9,7 @@
 #' @param settings settings
 #' @param models models
 #' @param control control
+#' @param ... extra
 #'
 #' @returns params
 #' 
@@ -23,7 +24,8 @@ estimate_2_RNN <- function(
     settings,
     models,
     
-    control
+    control,
+    ...
 ){
   
 ################################ [default] #####################################
@@ -47,7 +49,8 @@ estimate_2_RNN <- function(
       prob_func = multiRL::func_beta,
       util_func = multiRL::func_gamma,
       bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
+      expl_func = multiRL::func_epsilon,
+      dcay_func = multiRL::func_theta
     )
     funcs[[i]] <- utils::modifyList(x = default, val = funcs[[i]])
   }
@@ -149,10 +152,23 @@ estimate_2_RNN <- function(
     })
   }
   
+  col_order <- c("fit_model", "Subject")
+  
   for (i in 1:length(models)) {
-    result[[i]] <- as.data.frame(result[[i]])
-    colnames(result[[i]]) <- names(priors[[i]])
+    
+    result[[i]] <- base::as.data.frame(result[[i]]) 
+    base::colnames(result[[i]]) <- base::names(priors[[i]])
+    
+    result[[i]][["fit_model"]] <- settings[[i]]$name
+    result[[i]][["Subject"]] <- ids
+    
+    result[[i]] <- result[[i]] |>
+      dplyr::select(
+        dplyr::all_of(col_order), 
+        dplyr::everything()
+      )
   }
+  
   result <- dplyr::bind_rows(result)
   
   return(result)

@@ -69,8 +69,9 @@ multiRL.record <- process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output(
-  record = multiRL.record
+multiRL.output <- process_4_output_cpp(
+  record = multiRL.record,
+  extra = multiRL.record@extra
 )
 ```
 
@@ -243,7 +244,7 @@ multiRL.input <- process_1_input(
     name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
-    policy = "on"
+    policy = "off"
   )
 )
 ```
@@ -265,8 +266,9 @@ multiRL.record <- process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output(
-  record = multiRL.record
+multiRL.output <- process_4_output_cpp(
+  record = multiRL.record,
+  extra = multiRL.record@extra
 )
 ```
 
@@ -355,7 +357,7 @@ library(Rcpp)
 Rcpp::sourceCpp("../../src/tool_get_param.cpp")
 test_params <- multiRL.model@input@params
 
-alpha <- get_param(x = test_params, name = "alpha")
+alpha <- get_param(x = test_params, name = "theta")
 ```
 
 
@@ -394,7 +396,8 @@ multiRL.record <- process_3_record(
 )
 
 multiRL.output <- process_4_output_cpp(
-  record = multiRL.record
+  record = multiRL.record,
+  extra = multiRL.record@extra
 )
 ```
 

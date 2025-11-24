@@ -46,7 +46,8 @@ engine_RNN <- function(
     prob_func = multiRL::func_beta,
     util_func = multiRL::func_gamma,
     bias_func = multiRL::func_delta,
-    expl_func = multiRL::func_epsilon
+    expl_func = multiRL::func_epsilon,
+    dcay_func = multiRL::func_theta
   )
   funcs <- utils::modifyList(x = default, val = funcs)
   

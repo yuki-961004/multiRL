@@ -37,7 +37,8 @@ process_1_input <- function(
   default <- list(
     free = list(),
     fixed = list(
-      gamma = 1, delta = 0.1, epsilon = NA_real_, zeta = 1, eta = NA_real_
+      gamma = 1, delta = 0.1, 
+      epsilon = NA_real_, zeta = 1, eta = NA_real_, theta = 0
     ),
     constant = list(
       Q1 = NA_real_, lapse = 0.01
@@ -52,7 +53,8 @@ process_1_input <- function(
     prob_func = multiRL::func_beta,
     util_func = multiRL::func_gamma,
     bias_func = multiRL::func_delta,
-    expl_func = multiRL::func_epsilon
+    expl_func = multiRL::func_epsilon,
+    dcay_func = multiRL::func_theta
   )
   funcs <- utils::modifyList(x = default, val = funcs)
   
@@ -136,7 +138,8 @@ process_1_input <- function(
     prob_func = funcs$prob_func,
     util_func = funcs$util_func,
     bias_func = funcs$bias_func,
-    expl_func = funcs$expl_func
+    expl_func = funcs$expl_func,
+    dcay_func = funcs$dcay_func
   )
   
 ################################# [features] ###################################

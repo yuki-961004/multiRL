@@ -69,6 +69,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     const Rcpp::Function util_func(funcs.slot("util_func"));
     const Rcpp::Function bias_func(funcs.slot("bias_func"));
     const Rcpp::Function expl_func(funcs.slot("expl_func"));
+    const Rcpp::Function dcay_func(funcs.slot("dcay_func"));
 
 /****************************** [load behrule] ********************************/
     
@@ -284,7 +285,15 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         ); 
 
         // 记录上次价值
-        value.row(i+1) = value.row(i);
+        value.row(i+1) = Rcpp::as<Rcpp::NumericVector>(
+            dcay_func(
+                Rcpp::_["value1"] = Rcpp::NumericVector(value.row(0)),
+                Rcpp::_["values"] = Rcpp::NumericVector(value.row(i)),
+                Rcpp::_["params"] = params,
+                Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
+                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+            )
+        ); 
         // 提取此次选择的latent为target
         const std::string target = Rcpp::as<std::string>( latent(i,0) );
         // 在cue中寻找target
