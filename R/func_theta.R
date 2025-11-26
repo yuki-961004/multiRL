@@ -2,6 +2,7 @@
 #'
 #' @param value0 values
 #' @param values values
+#' @param reward reward
 #' @param params params
 #' @param ... extra
 #'
@@ -10,6 +11,7 @@
 func_theta <- function(
     value0, 
     values,
+    reward,
     params,
     ...
 ){
@@ -19,8 +21,15 @@ func_theta <- function(
   # Frame <- exinfo["Frame"]
   
   theta      <-  get_param(params, "theta")
+  bonus      <-  get_param(params, "bonus")
   
-  decay      <- values + theta * (value0 - values)
-  
+  if (reward == 0) {
+    decay <- values + theta * (value0 - values)
+  } else if (reward < 0) {
+    decay <- values + theta * (value0 - values) + bonus
+  } else if (reward > 0) {
+    decay <- values + theta * (value0 - values) - bonus
+  }
+
   return(decay)
 }

@@ -132,6 +132,7 @@ process_4_output_r <- function(
     value[i + 1, ] <- dcay_func(
       value0 = value[1, ],
       values = value[i, ],
+      reward = as.numeric(reward[i, ]), 
       params = params,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ]

@@ -284,11 +284,12 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             )
         ); 
 
-        // 记录上次价值
+        // decay function: 未被选择选项的价值也会更新
         value.row(i+1) = Rcpp::as<Rcpp::NumericVector>(
             dcay_func(
                 Rcpp::_["value0"] = Rcpp::NumericVector(value.row(0)),
                 Rcpp::_["values"] = Rcpp::NumericVector(value.row(i)),
+                Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))

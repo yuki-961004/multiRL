@@ -44,7 +44,8 @@ process_1_input <- function(
     ),
     constant = list(
       Q0 = NA_real_, 
-      lapse = 0.01
+      lapse = 0.01,
+      bonus = 0
     )
   )
   # 如果一个参数在一个地方(free, fixed, constant)设置过, 则在其他地方取消

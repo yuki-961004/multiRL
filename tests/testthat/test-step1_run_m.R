@@ -25,7 +25,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
       ),
       constant = list(
         Q0 = NA_real_,
-        lapse = 0.01
+        lapse = 0.01,
+        bonus = 0
       )
     ),
     priors = list(),
@@ -72,7 +73,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
       ),
       constant = list(
         Q0 = 0,
-        lapse = 0.01
+        lapse = 0.01,
+        bonus = 0
       )
     ),
     priors = list(
@@ -128,7 +130,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
       ),
       constant = list(
         Q0 = NA_real_,
-        lapse = 0.01
+        lapse = 0.01,
+        bonus = 0
       )
     ),
     priors = list(
