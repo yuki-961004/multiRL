@@ -1,4 +1,7 @@
 .get_dfunc <- function(func) {
+
+  # 超越mfit, 不再只用正态分布拟合所有后验概率密度, 而是依照先验概率密度找对应密度函数
+  
   # 把函数体拼成单一字符串
   txt <- paste(deparse(body(func)), collapse = "\n")
   

@@ -1,6 +1,6 @@
 .create_dfunc <- function(df_params, func_name) {
   
-  # 1. 初始化一个干净的环境用于封装参数（Closure）
+  # 1. 初始化一个干净的环境用于封装参数（Closure）[非常重要! 不写将产生递归]
   fn_env <- new.env(parent = baseenv())
   
   # 2. 根据 func_name 计算参数并设定函数体

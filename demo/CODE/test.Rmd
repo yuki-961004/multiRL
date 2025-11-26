@@ -185,8 +185,8 @@ binaryRL.res <- binaryRL::run_m(
   threshold = 1,
   pi = 0.1,
   epsilon = NA_real_,
-  eta = c(0.123, 0.456),
-  tau = c(0.789), 
+  eta = c(0.3, 0.7),
+  tau = c(0.5), 
   priors = list(
     eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
@@ -293,7 +293,7 @@ View(multiRL.output@result@latent)
 
 ```{r}
 multiRL.model <- multiRL::run_m(
-  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+  data = binaryRL::Mason_2024_G2[binaryRL::Mason_2024_G2[, "Subject"] == 1, ],
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
@@ -309,17 +309,18 @@ multiRL.model <- multiRL::run_m(
     free = list(
       alphaN = 0.3,
       alphaP = 0.7,
-      beta = 0.789
+      beta = 0.5
     ),
     fixed = list(
       gamma = 1,
       delta = 0.1,
       epsilon = NA_real_,
       zeta = 1,
-      eta = NA_real_
+      eta = NA_real_,
+      theta = 0
     ),
     constant = list(
-      Q1 = NA_real_,
+      Q0 = 100,
       lapse = 0.01
     )
   ),
@@ -332,8 +333,9 @@ multiRL.model <- multiRL::run_m(
     name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
-    policy = "on"
+    policy = "off"
   ),
+  #engine = "R",
   anythingelse = c(1, 2, 3)
 )
 

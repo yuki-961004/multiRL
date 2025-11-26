@@ -35,7 +35,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // record_shown
-Rcpp::IntegerVector record_shown(const Rcpp::CharacterMatrix& state, const Rcpp::CharacterVector& cue);
+Rcpp::NumericVector record_shown(const Rcpp::CharacterMatrix& state, const Rcpp::CharacterVector& cue);
 RcppExport SEXP _multiRL_record_shown(SEXP stateSEXP, SEXP cueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

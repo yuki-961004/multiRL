@@ -1,10 +1,5 @@
 .rbind_fill <- function(x) {
-  
-  # 防御性检查: 必须是列表
-  if (!is.list(x)) {
-    stop("Input must be a list (of data.frames or named lists).")
-  }
-  
+   
   # 1. 搜集所有可能出现的列名 (Union of all keys)
   # 无论 x 的元素是 data.frame 还是 list，names() 都能正确获取名字
   all_cols <- unique(unlist(lapply(x, names), use.names = FALSE))

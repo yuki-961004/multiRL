@@ -1,17 +1,16 @@
 .check_priors_params = function(priors, params) {
   
-  # 1. 检查 priors 是否为空 (NULL)
+  # 1. 如果没有输入priors返回FALSE
   if (length(priors) == 0) {
     return(invisible(FALSE))
   }
   
   # nocov start
-  # 2. 检查名称是否相同
-  # 使用 base::all.equal() 检查名称向量是否相同，返回 TRUE 或描述差异的字符串
+  # 2. 检查priors和params的名称是否相同
   name_check <- all.equal(names(priors), names(params))
   
   if (name_check != TRUE) {
-    # 名称不匹配：输出信息并返回 FALSE
+    # 如果有的参数有先验有的没有, 则返回FALSE
     message(
       "The names of 'priors' must be identical to the names of 'params'. ",
       "Mismatched names found: \n",
@@ -22,6 +21,6 @@
   }
   # nocov end
   
-  # 3. 名称匹配：返回 TRUE
+  # 3. 前面的情况都没出现, 才返回TRUE
   return(invisible(TRUE))
 }

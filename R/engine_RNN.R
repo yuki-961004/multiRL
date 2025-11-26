@@ -62,9 +62,10 @@ engine_RNN <- function(
 
   # 默认控制
   default = list(
+    # simulate
     seed = 123,
     core = 1,
-
+    # tensorflow
     layer = "GRU",
     info = c(colnames$object, colnames$action),
     units = 128,

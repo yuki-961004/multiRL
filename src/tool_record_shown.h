@@ -3,7 +3,7 @@
 
 #include <Rcpp.h>
 
-Rcpp::IntegerVector record_shown(
+Rcpp::NumericVector record_shown(
     const Rcpp::CharacterMatrix& state, 
     const Rcpp::CharacterVector& cue
 );

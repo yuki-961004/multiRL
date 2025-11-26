@@ -32,12 +32,10 @@
     })
   })
   
-  # 第二步: 扁平化列表 (Flatten)
-  # 将 list of lists 转换为 list of data.frames
+  # 第二步: 将 list of lists 转换为 list of data.frames
   flat_list <- unlist(nested_res, recursive = FALSE)
   
-  # 第三步: 智能合并 (Bind with Fill)
-  # 调用我们新写的辅助函数处理列不一致的问题
+  # 第三步: 合并list成dataframe, 约等于dplyr::bind_rows
   final_results_df <- .rbind_fill(flat_list)
   
   return(final_results_df)

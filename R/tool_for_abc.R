@@ -1,5 +1,6 @@
 .for_abc <- function(ratio) {
   
+  # 为ABC计算单行的摘要统计量
   vector <- unlist(ratio)
 
   colname <- gsub(

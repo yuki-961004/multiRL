@@ -182,7 +182,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // exploration function: 此次是否进行探索
         exploration.row(i) = Rcpp::as<Rcpp::NumericVector>(
             expl_func(
-                Rcpp::_["rownum"] = i,
+                Rcpp::_["rownum"] = i + 1,
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
@@ -328,6 +328,9 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     
     value = value(rows_to_keep, Rcpp::_);
     count = count(rows_to_keep, Rcpp::_);
+
+    Rcpp::colnames(value) = cue;
+    Rcpp::colnames(count) = cue;
 
 /********************************* [save result] ******************************/
 

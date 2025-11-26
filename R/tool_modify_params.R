@@ -1,5 +1,6 @@
 .modify_params <- function(x, val) {
   
+  # 如果一个参数出现在了free里, 则它不应该再出现在其他slot中
   params <- utils::modifyList(x = x, val = val)
 
   free_names <- names(params$free)

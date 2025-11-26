@@ -1,4 +1,6 @@
 .df2matrix <- function(df) {
+  # 因为RNN只接受全数字的矩阵, 所以需要将表格中的字符串按照唯一值转换成字符串
+
   # 提取所有列，转为字符后拼成一个向量
   all_values <- unlist(lapply(df, as.character))
   
@@ -26,7 +28,9 @@
     if (!any(is.na(num_col))) return(num_col)
     
     # 否则用全局映射表替换
-    col_char[col_char %in% names(mapping)] <- as.character(mapping[col_char[col_char %in% names(mapping)]])
+    col_char[col_char %in% names(mapping)] <- as.character(
+      mapping[col_char[col_char %in% names(mapping)]]
+    )
     
     # 再转为数值
     as.numeric(col_char)

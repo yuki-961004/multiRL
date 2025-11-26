@@ -12,29 +12,35 @@ process_5_metric <- function(
   
   extra <- list(...)
   
-################################### [ACC] ######################################
+################################### [load] #####################################
   
-  action      <- output@input@features@action
-  simulation  <- output@result@simulation
-  n_rows      <- output@input@n_rows
-  ACC         <- sum(rowSums(action == simulation) == ncol(action)) / n_rows
-  
+  # ?CUE == RSP
   cue         <- output@behrule@cue
   rsp         <- output@behrule@rsp
   match       <- identical(cue, rsp)
+
+  # for MLE
   n_params    <- length(output@input@params@free)
   prob        <- output@result@prob
   LL          <- NA_real_
   AIC         <- NA_real_
   BIC         <- NA_real_
   
+  # for MAP
   priors      <- output@input@priors
   params      <- output@input@params@free
   post        <- .check_priors_params(priors = priors, params = params)
   LPr         <- NA_real_
   LPo         <- NA_real_
-  
-################################### [LL] #######################################
+
+################################### [ACC] ######################################
+
+  action      <- output@input@features@action
+  simulation  <- output@result@simulation
+  n_rows      <- output@input@n_rows
+  ACC         <- sum(rowSums(action == simulation) == ncol(action)) / n_rows
+
+#################################### [LL] ######################################
   
   if (match) {
     # 如果刺激和反应是一一对应, 才能计算LL
@@ -44,7 +50,7 @@ process_5_metric <- function(
     AIC <- 2 * n_params - 2 * LL
     BIC <- n_params * log(n_rows) - 2 * LL
 
-################################### [LP] #######################################    
+#################################### [LP] ######################################    
     
     if (post) {
       # 如果在可计算LL的前提下, 还输入了对应的先验概率. 则计算LP

@@ -69,9 +69,10 @@ estimate_2_RNN <- function(
   
   # 默认控制
   default = list(
+    # simulate
     seed = 123,
     core = 1,
-    
+    # tensorflow
     layer = "GRU",
     info = c(colnames$object, colnames$action),
     units = 128,
@@ -93,7 +94,7 @@ estimate_2_RNN <- function(
   } else {
     subid <- dfinfo$sub_col_name
   }
-  # 如果没有输入要拟合的被试序号, 就拟合所有的
+  # 如果没有输入要拟合的被试序号, 就拟合所有的被试
   if (is.null(ids)){ids <- dfinfo$all_ids}
   
 ################################## [RNN] #######################################
@@ -158,14 +159,12 @@ estimate_2_RNN <- function(
     
     result[[i]] <- as.data.frame(result[[i]]) 
     colnames(result[[i]]) <- names(priors[[i]])
-    
+    # 新增两列作为序号
     result[[i]][["fit_model"]] <- settings[[i]]$name
     result[[i]][["Subject"]] <- ids
-    
-    # 找出所有不在 col_order 中的剩余列名
+    # 找到原始列的名字
     remaining_cols <- setdiff(names(result[[i]]), col_order)
-    
-    # 按顺序拼接列名，并对数据框进行重排
+    # 序号列 + 数据列
     result[[i]] <- result[[i]][c(col_order, remaining_cols)]
   }
   

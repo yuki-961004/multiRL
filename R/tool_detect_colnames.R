@@ -1,5 +1,6 @@
 .detect_colnames <- function(data, prefix) {
   
+  # 检测以Object_和Reward_开头的列名
   colnames <- grep(
     pattern = paste0("^", prefix),
     x = names(data),
