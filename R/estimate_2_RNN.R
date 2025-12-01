@@ -59,13 +59,20 @@ estimate_2_RNN <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i),
-      mode = "simulating",
-      estimate = "RNN",
-      policy = "on"
+      name = paste0("Unknown Model ", i)
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
   }
+  
+  # 强制设置
+  for (i in 1:length(settings)) {
+    settings[[i]]$mode <- "simulating"
+    settings[[i]]$estimate <- "RNN"
+    settings[[i]]$policy <- "on"
+  }
+  
+  # 转换先验
+  priors <- .convert_priors(priors = priors, to = "rfunc")
   
   # 默认控制
   default = list(
@@ -73,10 +80,11 @@ estimate_2_RNN <- function(
     seed = 123,
     core = 1,
     # tensorflow
+    sample = 1000,
+    scope = "individual",
     layer = "GRU",
     info = c(colnames$object, colnames$action),
     units = 128,
-    sample = 1000,
     batch_size = 10,
     epochs = 100
   )
@@ -124,14 +132,11 @@ estimate_2_RNN <- function(
       suppressMessages({
         opt_params <- list()
         
-        for (j in ids) {
-          sub_data <- data[data[, subid] == j, ]
-          n_info   <- length(info)
-          n_params <- length(priors[[i]])
-          n_trials <- nrow(sub_data)
-          # 为每个被试单独训练模型
+        if ( scope == "shared" ) {
+          
+          # 只训练一个RNN
           RNN <- engine_RNN(
-            data = sub_data,
+            data = data[data[, subid] == 1, ],
             behrule = behrule,
             colnames = colnames,
             settings = settings[[i]],
@@ -139,15 +144,53 @@ estimate_2_RNN <- function(
             model = models[[i]],
             control = control
           )
-          # 预测真实数据对应的参数
-          X_sub <- array(NA, dim = c(1, n_trials, n_info))
-          X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
-          X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
-          names(X_pred) <- names(priors)
-          opt_params[[j]] <- X_pred
-          p()
+          
+          for (j in ids) {
+            
+            sub_data <- data[data[, subid] == j, ]
+            
+            n_info   <- length(info)
+            n_params <- length(priors[[i]])
+            n_trials <- nrow(sub_data)
+            
+            # 预测真实数据对应的参数
+            X_sub <- array(NA, dim = c(1, n_trials, n_info))
+            X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
+            X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
+            names(X_pred) <- names(priors)
+            opt_params[[j]] <- X_pred
+            p()
+          }
+          
+        } else if ( scope == "individual" ) {
+          
+          for (j in ids) {
+            
+            sub_data <- data[data[, subid] == j, ]
+            
+            n_info   <- length(info)
+            n_params <- length(priors[[i]])
+            n_trials <- nrow(sub_data)
+            
+            # 为每个被试单独训练模型
+            RNN <- engine_RNN(
+              data = sub_data,
+              behrule = behrule,
+              colnames = colnames,
+              settings = settings[[i]],
+              priors = priors[[i]],
+              model = models[[i]],
+              control = control
+            )
+            # 预测真实数据对应的参数
+            X_sub <- array(NA, dim = c(1, n_trials, n_info))
+            X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
+            X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
+            names(X_pred) <- names(priors)
+            opt_params[[j]] <- X_pred
+            p()
+          }
         }
-        
         result[[i]] <- do.call(rbind, opt_params)
       })
     })
@@ -168,7 +211,7 @@ estimate_2_RNN <- function(
     result[[i]] <- result[[i]][c(col_order, remaining_cols)]
   }
   
-  result <- as.data.frame(do.call(what = rbind, args = result))
+  result <- .rbind_fill(result)
   
   return(result)
 }

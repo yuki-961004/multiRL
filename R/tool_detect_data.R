@@ -45,6 +45,7 @@
   }
   # nocov end
   
+  set.seed(123)
   random_subject_id <- sample(valid_subject_ids, 1)
   
   # 构建包含四个命名元素的列表

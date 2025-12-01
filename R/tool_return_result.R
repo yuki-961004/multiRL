@@ -71,6 +71,10 @@
           return(matrix)
         },
       )
+    },
+    "replay" = {
+      result <- list(multiRL.model = model, multiRL.summary = multiRL.summary)
+      return(result)
     }
   )
 }

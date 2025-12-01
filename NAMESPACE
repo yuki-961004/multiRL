@@ -26,9 +26,12 @@ export(estimate_1_MAP)
 export(engine_RNN)
 export(estimate_2_SBI)
 export(estimate_2_RNN)
+export(rcv_d)
+export(fit_p)
 
 export(TD)
 export(RSTD)
 export(Utility)
+export(rpl_e)
 
 exportMethods(summary)

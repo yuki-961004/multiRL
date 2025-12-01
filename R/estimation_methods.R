@@ -71,8 +71,6 @@ estimation_methods <- function(
       )
     },
     "RNN" = {
-      .check_tensorflow()
-      
       estimate_2_RNN(
         data = data,
         behrule = behrule,

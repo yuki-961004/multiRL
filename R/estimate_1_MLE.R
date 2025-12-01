@@ -65,7 +65,11 @@ estimate_1_MLE <- function(
   }
   
   # 默认先验
-  if (is.null(priors)) {priors <- rep(list(list()), length(models))}
+  if (is.null(priors)) {
+    priors <- rep(list(list()), length(models))
+  } else {
+    priors <- .convert_priors(priors = priors, to = "dfunc")
+  }
   
   # 默认设置
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
@@ -104,8 +108,11 @@ estimate_1_MLE <- function(
   # 自动探测数据
   suppressMessages({dfinfo <- .detect_data(data)})
   # 如果没有输入被试序号的列名. 则自动探测
-  if ("subid" %in% names(colnames)) {subid <- colnames[["subid"]]} 
-  else {subid <- dfinfo$sub_col_name}
+  if ("subid" %in% names(colnames)) {
+    subid <- colnames[["subid"]]
+  } else {
+    subid <- dfinfo$sub_col_name
+  }
   
   # 如果没有输入要拟合的被试序号, 就拟合所有的
   if (is.null(ids)){ids <- dfinfo$all_ids}

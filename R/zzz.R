@@ -3,9 +3,9 @@ utils::globalVariables(c(
   # model
   "data", "behrule", "colnames", "funcs", "priors", "settings",
   # MLE
-  "pars", "size", "iter", "seed", "core", 
+  "iter", "pars", "size", "seed", "core", 
   # MAP
   "diff", "dash",
   # RNN,
-  "sample", "info", "layer", "units", "batch_size", "epochs"
+  "sample", "scope", "info", "layer", "units", "batch_size", "epochs"
 ))

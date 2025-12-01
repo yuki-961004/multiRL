@@ -64,6 +64,9 @@ estimate_1_MAP <- function(
     funcs[[i]] <- utils::modifyList(x = default, val = funcs[[i]])
   }
   
+  # 默认先验
+  priors <- .convert_priors(priors = priors, to = "dfunc")
+  
   # 默认设置
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
@@ -187,6 +190,10 @@ estimate_1_MAP <- function(
     delta_LogPo = 1
     LogPo <- sum_LogPo
     
+    if (is.infinite(LogPo)) {
+      LogPo <- 0
+      warning("Infinite in Log-Posterior Probability")
+    }
     message(paste0(
       "Starting Expectation-Maximization Algorithm", "\n",
       "Log-Posterior Probability: ", round(LogPo, 2)
@@ -239,6 +246,7 @@ estimate_1_MAP <- function(
       
       posteriors <- .update_priors(x = multiRL.model.MAP, priors = posteriors)
       sum_LogPo <- sum(sapply(multiRL.model.MAP, function(x) x@sumstat@LPo))
+      if (is.infinite(sum_LogPo)) {sum_LogPo <- 0}
       if (delta_LogPo == LogPo - sum_LogPo) {stuck <- stuck + 1}
       delta_LogPo <- sum_LogPo - LogPo
       LogPo <- sum_LogPo

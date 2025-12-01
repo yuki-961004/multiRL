@@ -87,8 +87,6 @@ estimate_2_SBI <- function(
     }
   })
 
-  message(paste0("Done!", "\n"))
-  
 ############################## [ unregister ] ##################################
   
   future::plan(future::sequential)
