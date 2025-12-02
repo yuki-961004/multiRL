@@ -1,5 +1,5 @@
 Package: multiRL
-Version: 0.0.15
+Version: 0.0.16
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
 Description: Reinforcement Learning Tools for Multi-Armed Bandit.
 Authors@R:

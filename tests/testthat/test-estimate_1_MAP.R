@@ -22,14 +22,14 @@ testthat::test_that("MAP", {
         beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
       ),
       list(
-        alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-        alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-        beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+        alphaN = function(x) {stats::dunif(x, min = 0, max = 1, log = TRUE)}, 
+        alphaP = function(x) {stats::dnorm(x, mean = 0.5, sd = 0.1, log = TRUE)}, 
+        beta = function(x) {stats::dlnorm(x, meanlog = 0.5, sdlog = 0.1, log = TRUE)}
       ),
       list(
-        alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-        beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)},
-        gamma = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
+        alpha = function(x) {stats::dgamma(x, shape = 2, rate = 3, log = TRUE)}, 
+        beta = function(x) {stats::dlogis(x, location = 0, scale = 1, log = TRUE)},
+        gamma = function(x) {stats::dweibull(x, shape = 1, scale = 1, log = TRUE)}
       )
     ),
     settings = list(
