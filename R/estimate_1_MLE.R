@@ -75,7 +75,7 @@ estimate_1_MLE <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i),
+      name = paste0("Unknown_", i),
       mode = "fitting",
       estimate = "MLE",
       policy = "on"
@@ -142,11 +142,7 @@ estimate_1_MLE <- function(
   
   for (i in 1:length(models)) {
 
-    if ("name" %in% names(settings[[i]])) {
-      model_name <- settings[[i]]$name
-    } else {
-      model_name <- paste0("Unknown Model ", i)
-    }
+    model_name <- settings[[i]]$name
     
 ################################### [ MLE ] ####################################
     

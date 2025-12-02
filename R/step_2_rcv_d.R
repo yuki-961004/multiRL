@@ -78,7 +78,7 @@ rcv_d <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i),
+      name = paste0("Unknown_", i),
       policy = "on"
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
@@ -170,11 +170,11 @@ rcv_d <- function(
     )  
     
     simulated_data[[i]] <- .list2df(list = list_simulated, subid = subid)[[1]]
-    
     simulated_params[[i]] <- .list2df(list = list_simulated, subid = subid)[[2]]
     simulated_params[[i]]$simulate_model <- model_name
     names(simulated_params)[i] <- model_name
     
+############################## [recovery data] #################################
     
     list_recovery[[i]] <- estimation_methods(
       data = simulated_data[[i]], 

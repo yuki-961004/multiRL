@@ -25,56 +25,7 @@ engine_RNN <- function(
     
     control = control
 ){
-  
-################################ [default] #####################################
-  
-  # 默认列名
-  default <- list(
-    subid = "Subject", 
-    block = "Block", 
-    trial = "Trial",
-    object = NA_character_, 
-    reward = NA_character_, 
-    action = "Action"
-  )
-  colnames <- utils::modifyList(x = default, val = colnames)
-  
-  # 默认方程
-  if (is.null(funcs)) {funcs <- list()}
-  default <- list(
-    rate_func = multiRL::func_alpha,
-    prob_func = multiRL::func_beta,
-    util_func = multiRL::func_gamma,
-    bias_func = multiRL::func_delta,
-    expl_func = multiRL::func_epsilon,
-    dcay_func = multiRL::func_theta
-  )
-  funcs <- utils::modifyList(x = default, val = funcs)
-  
-  # 默认设置
-  default <- list(
-    name = paste0("Unknown Model"),
-    mode = "simulating",
-    estimate = "RNN",
-    policy = "on"
-  )
-  settings <- utils::modifyList(x = default, val = settings)
 
-  # 默认控制
-  default = list(
-    # simulate
-    seed = 123,
-    core = 1,
-    # tensorflow
-    layer = "GRU",
-    info = c(colnames$object, colnames$action),
-    units = 128,
-    sample = 1000,
-    batch_size = 10,
-    epochs = 100
-  )
-  control <- utils::modifyList(x = default, val = control)
-  # 解放control中的设定, 变成全局变量
   list2env(control, envir = environment())
   
 ############################### [Simulate] #####################################

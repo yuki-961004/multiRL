@@ -3,6 +3,7 @@ testthat::test_that("MLE", {
   data <- multiRL::TAB
   
   result.MLE <- estimate_1_MLE(
+    # 数据
     data = data[data[, "Subject"] %in% 1:4,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -13,6 +14,7 @@ testthat::test_that("MLE", {
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
+    # 模型
     models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
     priors = list(
       list(
@@ -35,11 +37,11 @@ testthat::test_that("MLE", {
       list(name = "RSTD"),
       list(name = "Utility")
     ),
-    
+    # 算法
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 4)
+    control = list(core = 4, iter = 5)
   )
   
   testthat::expect_s3_class(result.MLE, "data.frame")

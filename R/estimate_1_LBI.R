@@ -20,16 +20,18 @@ estimate_1_LBI <- function(
     ...
 ){
   
-################################ [default] #####################################
-  
   # 编译对象函数
   model <- compiler::cmpfun(model)
+  # 所以对象函数所处环境
   multiRL.env <- env
   environment(model) <- multiRL.env
   
+################################ [default] #####################################
+  
+  # 默认控制
   default = list(
     pars = NA,
-    dash = 0.01,
+    dash = 1e-5,
     size = 50,
     iter = 10,
     seed = 123

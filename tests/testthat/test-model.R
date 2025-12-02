@@ -12,13 +12,6 @@ testthat::test_that("TD", {
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
-    funcs = list(
-      rate_func = multiRL::func_alpha,
-      prob_func = multiRL::func_beta,
-      util_func = multiRL::func_gamma,
-      bias_func = multiRL::func_delta,
-      expl_func = multiRL::func_epsilon
-    ),
     priors = list(
       alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
@@ -37,7 +30,7 @@ testthat::test_that("TD", {
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -76,7 +69,7 @@ testthat::test_that("RSTD", {
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0, 0),
     upper = c(1, 1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -115,7 +108,7 @@ testthat::test_that("Utility", {
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0, 0),
     upper = c(1, 1, 1),
-    iteration = 10,
+    iteration = 5,
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")

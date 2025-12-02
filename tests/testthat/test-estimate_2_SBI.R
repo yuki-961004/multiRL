@@ -1,8 +1,10 @@
 # Generating
 testthat::test_that("SBI", {
   
+  data <- multiRL::TAB
+  
   multiRL.env <- estimate_0_ENV(
-    data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+    data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

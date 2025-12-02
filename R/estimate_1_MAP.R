@@ -71,7 +71,7 @@ estimate_1_MAP <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i),
+      name = paste0("Unknown_", i),
       mode = "fitting",
       estimate = "MAP",
       policy = "on"
@@ -137,11 +137,7 @@ estimate_1_MAP <- function(
   
   for (i in 1:length(models)) {
 
-    if ("name" %in% names(settings[[i]])) {
-      model_name <- settings[[i]]$name
-    } else {
-      model_name <- paste0("Unknown Model ", i)
-    }
+    model_name <- settings[[i]]$name
     
 ################################### [ MLE ] #################################### 
     
@@ -246,8 +242,11 @@ estimate_1_MAP <- function(
       
       posteriors <- .update_priors(x = multiRL.model.MAP, priors = posteriors)
       sum_LogPo <- sum(sapply(multiRL.model.MAP, function(x) x@sumstat@LPo))
-      if (is.infinite(sum_LogPo)) {sum_LogPo <- 0}
-      if (delta_LogPo == LogPo - sum_LogPo) {stuck <- stuck + 1}
+      if (is.infinite(LogPo) || 
+          is.infinite(sum_LogPo) || 
+          delta_LogPo == LogPo - sum_LogPo) {
+        stuck <- stuck + 1
+      }
       delta_LogPo <- sum_LogPo - LogPo
       LogPo <- sum_LogPo
     

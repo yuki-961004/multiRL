@@ -22,6 +22,7 @@ estimate_0_ENV <- function(
   
 ################################# [default] ####################################
   
+  # 默认列名
   default <- list(
     subid = "Subject", 
     block = "Block", 
@@ -32,6 +33,7 @@ estimate_0_ENV <- function(
   )
   colnames <- utils::modifyList(x = default, val = colnames)
   
+  # 默认函数
   default <- list(
     rate_func = multiRL::func_alpha,
     prob_func = multiRL::func_beta,
@@ -42,8 +44,9 @@ estimate_0_ENV <- function(
   )
   funcs <- utils::modifyList(x = default, val = funcs)
   
+  # 默认设置
   default <- list(
-    name = "unknown",
+    name = "Unknown",
     mode = "fitting",
     estimate = "MLE",
     policy = "on"

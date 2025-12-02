@@ -3,6 +3,7 @@ testthat::test_that("MAP", {
   data <- multiRL::TAB
   
   result.MAP <- estimate_1_MAP(
+    # 数据
     data = data[data[, "Subject"] %in% 1:4,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -13,6 +14,7 @@ testthat::test_that("MAP", {
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
+    # 模型
     models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
     priors = list(
       list(
@@ -35,6 +37,7 @@ testthat::test_that("MAP", {
       list(name = "RSTD"),
       list(name = "Utility")
     ),
+    # 算法
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),

@@ -59,7 +59,7 @@ estimate_2_RNN <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i)
+      name = paste0("Unknown_", i)
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
   }
@@ -111,11 +111,7 @@ estimate_2_RNN <- function(
   
   for (i in 1:length(models)) {
     
-    if ("name" %in% names(settings[[i]])) {
-      model_name <- settings[[i]]$name
-    } else {
-      model_name <- paste0("Unknown Model ", i)
-    }
+    model_name <- settings[[i]]$name
     
     message(paste0(
       "Fitting ", model_name,"\n"
@@ -209,6 +205,7 @@ estimate_2_RNN <- function(
     remaining_cols <- setdiff(names(result[[i]]), col_order)
     # 序号列 + 数据列
     result[[i]] <- result[[i]][c(col_order, remaining_cols)]
+    
   }
   
   result <- .rbind_fill(result)

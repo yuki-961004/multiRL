@@ -77,7 +77,7 @@ fit_p <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i),
+      name = paste0("Unknown_", i),
       policy = "on"
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])

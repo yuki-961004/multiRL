@@ -63,7 +63,7 @@ rpl_e <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown Model ", i),
+      name = paste0("Unknown_", i),
       mode = "replay",
       policy = "on"
     )
