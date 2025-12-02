@@ -1,5 +1,6 @@
 # Generating
 testthat::test_that("SBI", {
+  
   multiRL.env <- estimate_0_ENV(
     data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
     behrule = list(

@@ -1,6 +1,9 @@
 testthat::test_that("MAP", {
+  
+  data <- multiRL::TAB
+  
   result.MAP <- estimate_1_MAP(
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:4),
+    data = data[data[, "Subject"] %in% 1:4,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

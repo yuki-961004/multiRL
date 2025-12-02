@@ -1,9 +1,11 @@
 # MLE
 testthat::test_that("MLE", {
   
+  data <- multiRL::TAB
+  
   recovery.MLE <- rcv_d(
     estimate = "MLE",
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:5),
+    data = data[data[, "Subject"] %in% 1:5,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

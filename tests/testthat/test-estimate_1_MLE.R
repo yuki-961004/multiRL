@@ -1,6 +1,9 @@
 testthat::test_that("MLE", {
+  
+  data <- multiRL::TAB
+  
   result.MLE <- estimate_1_MLE(
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:4),
+    data = data[data[, "Subject"] %in% 1:4,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

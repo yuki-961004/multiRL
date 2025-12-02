@@ -1,8 +1,10 @@
 testthat::test_that("replay MLE", {
   
+  data <- multiRL::TAB
+  
   result.MLE <- multiRL::fit_p(
     estimate = "MLE",
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:5),
+    data = data[data[, "Subject"] %in% 1:5,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -39,7 +41,7 @@ testthat::test_that("replay MLE", {
   
   replay <- multiRL::rpl_e(
     result = result.MLE,
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:5),
+    data = data[data[, "Subject"] %in% 1:5,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

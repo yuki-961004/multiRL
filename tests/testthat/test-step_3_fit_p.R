@@ -1,9 +1,11 @@
 # MLE
 testthat::test_that("MLE", {
   
-  result.MLE <- multiRL::fit_p(
+  data <- multiRL::TAB
+  
+  fitting.MLE <- multiRL::fit_p(
     estimate = "MLE",
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:5),
+    data = data[data[, "Subject"] %in% 1:5,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -38,15 +40,17 @@ testthat::test_that("MLE", {
     control = list(core = 1, iter = 5)
   )
   
-  testthat::expect_s3_class(result.MLE, "data.frame")
+  testthat::expect_s3_class(fitting.MLE, "data.frame")
 })
 
 # MAP
 testthat::test_that("MAP", {
   
+  data <- multiRL::TAB
+  
   result.MAP <- multiRL::fit_p(
     estimate = "MAP",
-    data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:5),
+    data = data[data[, "Subject"] %in% 1:5,],
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
