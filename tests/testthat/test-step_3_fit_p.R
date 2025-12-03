@@ -51,7 +51,8 @@ testthat::test_that("MAP", {
   
   result.MAP <- multiRL::fit_p(
     estimate = "MAP",
-    data = data[data[, "Subject"] %in% 1:5,],
+    data = data,
+    ids = c(1:10),
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -83,7 +84,7 @@ testthat::test_that("MAP", {
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 1, iter = c(5, 5))
+    control = list(core = 1, iter = c(5, 3))
   )
   
   testthat::expect_s3_class(result.MAP, "data.frame")

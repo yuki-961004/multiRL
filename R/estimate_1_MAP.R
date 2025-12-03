@@ -203,6 +203,7 @@ estimate_1_MAP <- function(
     iter <- 0
     stuck <- 0
     
+    hp <- patience
     best_LogPo <- -Inf
     
     # 当LogPo的变化值不小于diff, 或迭代次数未达到, 则不断执行
@@ -247,20 +248,26 @@ estimate_1_MAP <- function(
       
       posteriors <- .update_priors(x = multiRL.model.MAP, priors = posteriors)
       sum_LogPo <- sum(sapply(multiRL.model.MAP, function(x) x@sumstat@LPo))
-      if (is.infinite(LogPo) || 
-          is.infinite(sum_LogPo) || 
-          delta_LogPo == LogPo - sum_LogPo) {
+      # 如果出现了Inf, 则说明先验被调整出了问题
+      if (is.infinite(LogPo) || is.infinite(sum_LogPo)) {
+        LogPo <- 0
+        sum_LogPo <- 0
+        warning(paste0(
+          "Infinite log-priors detected. Please adjust the priors."
+        ))
+      } else if (delta_LogPo == LogPo - sum_LogPo) {
         stuck <- stuck + 1
       }
       delta_LogPo <- sum_LogPo - LogPo
       LogPo <- sum_LogPo
     
+      # 如果这次没有改进, 则耐心-1, 如果耐心为0, 则会提前结束
       if (LogPo > best_LogPo) {
         best_LogPo <- LogPo
-        patience <- patience + 1
+        hp <- hp + 1
         multiRL.model.MAP.best <- multiRL.model.MAP
       } else {
-        patience <- patience - 1
+        hp <- hp - 1
       }
       
       message(paste0(
@@ -270,12 +277,12 @@ estimate_1_MAP <- function(
         ", ",
         "best: ", round(best_LogPo, 2), 
         ", ", 
-        "patience: ", patience
+        "patience: ", hp
       ))
     
       iter <- iter + 1
       
-      if (delta_LogPo <= diff ) {
+      if (abs(delta_LogPo) <= diff ) {
         message(paste0(
           "Congrets~ EM-MAP finds solution!"
         ))
@@ -284,7 +291,7 @@ estimate_1_MAP <- function(
           "Iteration limit reached without convergence."
         ))
         break
-      } else if (stuck > 1 || patience < 0) {
+      } else if (stuck > 1 || hp < 0) {
         message(paste0(
           "EM-MAP seems to be stuck",
           ". ",
