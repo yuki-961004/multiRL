@@ -2,7 +2,7 @@ testthat::test_that("MAP", {
   
   data <- multiRL::TAB
   
-  result.MAP <- estimate_1_MAP(
+  result.MAP <- multiRL::estimate_1_MAP(
     # 数据
     data = data[data[, "Subject"] %in% 1:4,],
     behrule = list(
@@ -23,13 +23,13 @@ testthat::test_that("MAP", {
       ),
       list(
         alphaN = function(x) {stats::dunif(x, min = 0, max = 1, log = TRUE)}, 
-        alphaP = function(x) {stats::dnorm(x, mean = 0.5, sd = 0.1, log = TRUE)}, 
+        alphaP = function(x) {stats::dnorm(x, mean = 0.5, sd = 0.1, log = TRUE)},
         beta = function(x) {stats::dlnorm(x, meanlog = 0.5, sdlog = 0.1, log = TRUE)}
       ),
       list(
         alpha = function(x) {stats::dgamma(x, shape = 2, rate = 3, log = TRUE)}, 
-        beta = function(x) {stats::dlogis(x, location = 0, scale = 1, log = TRUE)},
-        gamma = function(x) {stats::dweibull(x, shape = 1, scale = 1, log = TRUE)}
+        beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)},
+        gamma = function(x) {stats::dlogis(x, location = 0, scale = 1, log = TRUE)}
       )
     ),
     settings = list(
@@ -41,7 +41,7 @@ testthat::test_that("MAP", {
     algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 4, iter = c(5, 3))
+    control = list(core = 4, iter = c(10, 3))
   )
   
   testthat::expect_s3_class(result.MAP, "data.frame")

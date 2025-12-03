@@ -3,7 +3,7 @@ testthat::test_that("L-BFGS-B", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -38,7 +38,7 @@ testthat::test_that("GenSA", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -73,7 +73,7 @@ testthat::test_that("GA", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -108,7 +108,7 @@ testthat::test_that("DEoptim", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -143,7 +143,7 @@ testthat::test_that("PSO", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -178,7 +178,7 @@ testthat::test_that("Bayesian", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -213,7 +213,7 @@ testthat::test_that("CMA-ES", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -248,7 +248,7 @@ testthat::test_that("NLOPT", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),

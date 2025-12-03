@@ -274,7 +274,17 @@ estimate_1_MAP <- function(
       ))
     
       iter <- iter + 1
-      if (iter >= limit || stuck > 1 || patience < 0) {
+      
+      if (delta_LogPo <= diff ) {
+        message(paste0(
+          "Congrets~ EM-MAP finds solution!"
+        ))
+      } else if (iter >= limit) {
+        message(paste0(
+          "Iteration limit reached without convergence."
+        ))
+        break
+      } else if (stuck > 1 || patience < 0) {
         message(paste0(
           "EM-MAP seems to be stuck",
           ". ",

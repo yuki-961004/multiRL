@@ -84,20 +84,19 @@ Model Fit:
 ## Arguments
 
 ```r
+# dataset info
 behrule = list(
   cue = c("A", "B", "C", "D"),
   rsp = c("A", "B", "C", "D")
 )
-
 colnames = list(
   object = c("L_choice", "R_choice"), 
   reward = c("L_reward", "R_reward"),
   action = "Sub_Choose"
 )
+
+# models
 models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility)
-
-settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility"))
-
 priors = list(
   list(
     alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
@@ -114,7 +113,9 @@ priors = list(
     gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
   )
 )
+settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility"))
 
+# algorithms
 algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA")
 lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0))
 uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1))

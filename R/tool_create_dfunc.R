@@ -193,37 +193,7 @@
         )
       }
     },
-    # --- Weibull 分布 (weibull) ---
-    "weibull" = {
-      
-      # 严格要求：Weibull 分布数据必须 > 0
-      if (base::min(df_params) <= 0) {
-        base::stop("Data for Weibull distribution must be > 0.")
-      }
-      
-      # *** 注意：Weibull MoM 估计复杂。以下是占位近似。***
-      
-      # Weibull 分布的 shape 和 scale 难以通过简单 MoM 估计。
-      # 此处使用一个简化的经验值和均值公式进行占位。
-      # shape (k 或 alpha) 
-      shape <- 1.5 
-      # scale (lambda 或 beta) 
-      scale <- base::mean(df_params) / base::gamma(1 + 1 / shape) 
-      
-      # 传入环境
-      fn_env$shape <- shape
-      fn_env$scale <- scale
-      
-      # 定义函数体
-      function(x) {
-        stats::dweibull(
-          x,
-          log = TRUE,
-          shape = shape,
-          scale = scale
-        )
-      }
-    },
+
     # --- 默认情况 (处理未知的 func_name) ---
     stop("Error: Unsupported distribution name: ", func_name)
   )

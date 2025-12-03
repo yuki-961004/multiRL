@@ -75,7 +75,7 @@ rpl_e <- function(
   # 获取被试id所在列
   suppressMessages({dfinfo <- .detect_data(data)})
   subid <- dfinfo$sub_col_name
-  ids <- dfinfo$all_ids
+  if (is.null(ids)){ids <- dfinfo$all_ids}
   
   model_info <- list()
   if (is.null(free_params)) {

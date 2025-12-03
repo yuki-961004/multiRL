@@ -3,7 +3,7 @@ testthat::test_that("SBI", {
   
   data <- multiRL::TAB
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = data[data[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -22,7 +22,7 @@ testthat::test_that("SBI", {
     ),
   )
   
-  list_simulated <- estimate_2_SBI(
+  list_simulated <- multiRL::estimate_2_SBI(
     model = multiRL::TD,
     env = multiRL.env,
     priors = list(

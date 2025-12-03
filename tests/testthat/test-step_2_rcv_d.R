@@ -5,7 +5,7 @@ testthat::test_that("MLE", {
   
   recovery.MLE <- rcv_d(
     estimate = "MLE",
-    data = data[data[, "Subject"] %in% 1:5,],
+    data = data,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

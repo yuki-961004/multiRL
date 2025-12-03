@@ -5,7 +5,8 @@ testthat::test_that("MLE", {
   
   fitting.MLE <- multiRL::fit_p(
     estimate = "MLE",
-    data = data[data[, "Subject"] %in% 1:5,],
+    data = data,
+    ids = c(1:5),
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

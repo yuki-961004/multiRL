@@ -2,7 +2,7 @@ testthat::test_that("MLE", {
   
   data <- multiRL::TAB
   
-  result.MLE <- estimate_1_MLE(
+  result.MLE <- multiRL::estimate_1_MLE(
     # 数据
     data = data[data[, "Subject"] %in% 1:4,],
     behrule = list(
