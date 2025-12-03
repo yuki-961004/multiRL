@@ -1,6 +1,6 @@
 .sign_numbers <- function(x){
   
-  if(sign(x) == 1){
+  if(is.finite(x) && x > 0){
     sign_char <- "+"
   }
   else {
