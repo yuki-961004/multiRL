@@ -1,14 +1,48 @@
 ---
 title: "Untitled"
 author: "yuki"
-date: "2025-11-21"
+date: "2025-11-03"
 output: html_document
 ---
+
+# LBI
+
+```{r}
+multiRL.env <- multiRL::estimate_0_ENV(
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  settings = list(
+    name = "TD",
+    mode = "fitting",
+    estimate = "MLE",
+    policy = "on"
+  ),
+)
+
+multiRL.model <- multiRL::estimate_1_LBI(
+  model = multiRL::TD,
+  env = multiRL.env,
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lower = c(0, 0),
+  upper = c(1, 1),
+  control = list(iter = 100)
+)
+
+multiRL.model@input@params@free
+```
+
 ## MLE
 
 ```{r}
-test_MLE <- estimation_methods(
-  estimate = "MLE",
+result.MLE <- multiRL::estimate_1_MLE(
   data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:10),
   behrule = list(
     cue = c("A", "B", "C", "D"),
@@ -25,17 +59,15 @@ test_MLE <- estimation_methods(
   
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
-  uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
+  uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
   control = list(core = 10, iter = 10)
 )
 ```
 
-
 ## MAP
 
 ```{r}
-test_MAP <- estimation_methods(
-  estimate = "MAP",
+result.MAP <- multiRL::estimate_1_MAP(
   data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:10),
   behrule = list(
     cue = c("A", "B", "C", "D"),
@@ -73,52 +105,4 @@ test_MAP <- estimation_methods(
 )
 ```
 
-## RNN
 
-```{r}
-reticulate::use_condaenv(condaenv = "tf-gpu", required = TRUE)
-```
-
-```{r}
-test_RNN <- estimation_methods(
-  estimate = "RNN",
-  data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:3),
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-  
-  priors = list(
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)},
-      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
-    )
-  ),
-  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
-  
-  control = list(
-    layer = "GRU",
-    units = 128,
-    sample = 100,
-    batch_size = 10,
-    epochs = 10
-  )
-)
-```

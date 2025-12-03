@@ -59,10 +59,10 @@
       switch(
         EXPR = estimate,
         "MLE" = {
-          return(LL)
+          return(-LL)
         },
         "MAP" = {
-          return(LPo)
+          return(-LPo)
         },
         "ABC" = {
           return(sumstat)

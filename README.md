@@ -1,4 +1,4 @@
-# multiRL
+# multiRL <a href="https://yuki-961004.github.io/multiRL/"><img src="./fig/logo.png" alt="LOGO" align="right" width="120"/></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/yuki-961004/multiRL/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yuki-961004/multiRL/actions/workflows/R-CMD-check.yaml)
@@ -10,9 +10,9 @@
 This package is designed to help users build the **Rescorla-Wagner Model** for **Multi-Armed Bandit** tasks (for TAFC see [binaryRL](https://yuki-961004.github.io/binaryRL/)). Beginners can define models using simple **`if-else`** logic, making model construction more accessible.  
 
 * [Step 1](./articles/multiRL.html#id_1-run-model): Build Reinforcement Learning Models `run_m()`
-* ~~[Step 2](./articles/multiRL.html#id_2-recovery): Parameter and Model Recovery `rcv_d()`~~
-* ~~[Step 3](./articles/multiRL.html#id_3-fit-real-data): Fit Real Data `fit_p()`~~
-* ~~[Step 4](./articles/multiRL.html#id_4-replay-the-experiment): Replay the Experiment `rpl_e()`~~ 
+* [Step 2](./articles/multiRL.html#id_2-recovery): Parameter and Model Recovery `rcv_d()`
+* [Step 3](./articles/multiRL.html#id_3-fit-real-data): Fit Real Data `fit_p()`
+* [Step 4](./articles/multiRL.html#id_4-replay-the-experiment): Replay the Experiment `rpl_e()`
 
 <!---------------------------------------------------------->
 
@@ -36,6 +36,7 @@ library(multiRL)
 ## Demo
 
 ## Step 1: run_m
+
 ```r
 multiRL.model <- multiRL::run_m(
   data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
@@ -50,22 +51,12 @@ multiRL.model <- multiRL::run_m(
     action = "Sub_Choose"
   ),
   params = list(
-    free = list(
-      alphaN = 0.123,
-      alphaP = 0.456,
-      beta = 0.789
-    ),
+    free = list(alphaN = 0.3, alphaP = 0.7, beta = 0.5),
     fixed = list(
-      gamma = 1,
-      delta = 0.1,
-      epsilon = NA_real_,
-      zeta = 1,
-      eta = NA_real_
+      gamma = 1, delta = 0.1, epsilon = NA_real_, 
+      zeta = 1, eta = NA_real_, theta = 0
     ),
-    constant = list(
-      Q1 = NA_real_,
-      lapse = 0.01
-    )
+    constant = list(Q1 = NA_real_, lapse = 0.01, bonus = 0)
   ),
   priors = list(
     alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -73,12 +64,8 @@ multiRL.model <- multiRL::run_m(
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    name = "RSTD",
-    mode = "fitting",
-    estimate = "MLE",
-    policy = "off"
-  ),
-  anythingelse = c(1, 2, 3)
+    name = "RSTD", mode = "fitting", estimate = "MLE", policy = "off"
+  )
 )
 
 multiRL.summary <- multiRL::summary(multiRL.model)
@@ -87,105 +74,99 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 Model Fit:
   Accuracy: 100%
-  Log-Likelihood: -671.03
-  Log-Prior Probability: -0.83
-  Log-Posterior Probability: -671.86
-  AIC: 1346.06
-  BIC: 1353.84
+  Log-Likelihood: -384.01
+  Log-Prior Probability: -0.04
+  Log-Posterior Probability: -384.05
+  AIC: 774.03
+  BIC: 785.69
 ```
 
-## Estimation
+## Arguments
+
 ```r
-data <- multiRL::TAB |> dplyr::filter(Subject %in% 1:10)
-behrule <- list(cue = c("A", "B", "C", "D"), rsp = c("A", "B", "C", "D"))
-colnames <- list(
+behrule = list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
+)
+
+colnames = list(
   object = c("L_choice", "R_choice"), 
   reward = c("L_reward", "R_reward"),
   action = "Sub_Choose"
 )
-models <- list(multiRL::TD, multiRL::RSTD, multiRL::Utility)
-settings <- list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility"))
-```
+models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility)
 
-### MLE
-```r
-result.MLE <- multiRL::estimate_1_MLE(
-  data = data,
-  behrule = settings,
-  colnames = colnames,
-  models = models,
-  settings = settings,
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
-  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
-  uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-  control = list(core = 10, iter = 10)
-)
-```
+settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility"))
 
-### MAP
-```r
-result.MAP <- multiRL::estimate_1_MAP(
-  data = data,
-  behrule = behrule,
-  colnames = colnames,
-  models = models,
-  settings = settings,
-  priors = list(
-    TD = list(
-      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
-    ),
-    RSTD = list(
-      alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
-    ),
-    Utility = list(
-      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)},
-      gamma = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
-    )
+priors = list(
+  list(
+    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    beta = function(x) {stats::rexp(n = 1, rate = 1)}
   ),
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
-  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
-  uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-  control = list(core = 10, iter = c(10, 10))
-)
-```
-
-### RNN
-```r
-result.RNN <- multiRL::estimate_2_RNN(
-  data = data,
-  behrule = behrule,
-  colnames = colnames,
-  models = models,
-  settings = settings,
-  priors = list(
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)},
-      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
-    )
+  list(
+    alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    beta = function(x) {stats::rexp(n = 1, rate = 1)}
   ),
-  control = list(sample = 100, epochs = 10)
+  list(
+    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    beta = function(x) {stats::rexp(n = 1, rate = 1)},
+    gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
+  )
 )
-```
-### ABC
-```r
+
+algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA")
+lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0))
+uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1))
+control = list(...)
 ```
 
 ## Step 2: rcv_d
 
+```r
+recovery <- multiRL::rcv_d(
+  estimate = c("MLE", "MAP", "ABC", "RNN"),
+  data = multiRL::TAB,
+  behrule = behrule,
+  colnames = colnames,
+  models = models,
+  priors = priors,
+  settings = settings,
+  algorithm = algorithm,
+  lowers = lowers,
+  uppers = uppers,
+  control = control
+)
+```
+
 ## Step 3: fit_p
 
+```r
+fitting <- multiRL::fit_p(
+  estimate = c("MLE", "MAP", "ABC", "RNN"),
+  data = multiRL::TAB,
+  behrule = behrule,
+  colnames = colnames,
+  models = models,
+  priors = priors,
+  settings = settings,
+  algorithm = algorithm,
+  lowers = lowers,
+  uppers = uppers,
+  control = control
+)
+```
+
 ## Step 4: rpl_e
+
+```r
+replay <- multiRL::rpl_e(
+  result = fitting,
+  data = multiRL::TAB,
+  behrule = behrule,
+  colnames = colnames,
+  models = models,
+  settings = settings,
+  priors = priors
+)
+```

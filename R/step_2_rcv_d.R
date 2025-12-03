@@ -90,7 +90,7 @@ rcv_d <- function(
       name = settings[[i]]$name,
       mode = "simulating",
       estimate = estimate,
-      policy = settings[[i]]$policy
+      policy = "on"
     )
   }
   
@@ -115,6 +115,7 @@ rcv_d <- function(
     diff = 0.001,
     # SBI
     sample = 100,
+    train = 1000,
     scope = "shared",
     layer = "GRU",
     info = c(colnames$object, colnames$action),

@@ -5,7 +5,7 @@ date: "2025-12-01"
 output: html_document
 ---
 ```{r}
-replay <- rpl_e(
+replay <- multiRL::rpl_e(
   result = result,
   data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:10),
   behrule = list(

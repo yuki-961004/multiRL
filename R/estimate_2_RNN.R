@@ -80,7 +80,8 @@ estimate_2_RNN <- function(
     seed = 123,
     core = 1,
     # tensorflow
-    sample = 1000,
+    sample = 100,
+    train = 1000,
     scope = "individual",
     layer = "GRU",
     info = c(colnames$object, colnames$action),

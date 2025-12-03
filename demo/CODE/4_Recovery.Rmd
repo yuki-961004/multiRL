@@ -1,0 +1,199 @@
+---
+title: "Untitled"
+author: "yuki"
+date: "2025-12-03"
+output: html_document
+---
+## MLE
+
+```{r}
+recovery <- binaryRL::rcv_d(
+  data = binaryRL::Mason_2024_G2,
+  model_names = c("TD"),
+  simulate_models = list(binaryRL::TD),
+  fit_models = list(binaryRL::TD),
+  lower = list(c(0, 0)),
+  upper = list(c(1, 5)),
+  iteration_s = 100,
+  iteration_f = 100,
+  nc = 10,
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA")
+)
+
+result <- dplyr::bind_rows(recovery) %>%
+  dplyr::select(simulate_model, fit_model, iteration, everything())
+```
+
+```{r}
+cor(result$input_param_1, result$output_param_1)
+cor(result$input_param_2, result$output_param_2)
+```
+
+```{r}
+recovery.MLE <- multiRL::rcv_d(
+  estimate = "MLE",
+  data = multiRL::TAB,
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  models = list(multiRL::TD),
+  priors = list(
+    TD = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    )
+  ),
+  settings = list(list(name = "TD", policy = "off")),
+  
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0)),
+  uppers = list(c(1, 5)),
+  control = list(sample = 100, core = 10, iter = 100)
+)
+```
+
+```{r}
+# alpha
+df_true <- recovery.MLE$simulate$TD$alpha
+df_pred <- recovery.MLE$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$alpha
+
+cor(df_true, df_pred)
+
+# alpha
+df_true <- recovery.MLE$simulate$TD$beta
+df_pred <- recovery.MLE$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$beta
+
+cor(df_true, df_pred)
+
+# policy = "on"
+# [1] 0.6112659
+# [1] 0.8791621
+
+# policy = "off"
+# [1] 0.9666269
+# [1] 0.8918622
+```
+
+
+```{r}
+recovery.MAP <- multiRL::rcv_d(
+  estimate = "MAP",
+  data = multiRL::TAB,
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  models = list(multiRL::TD),
+  priors = list(
+    TD = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    )
+  ),
+  settings = list(list(name = "TD", policy = "on")),
+  
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0)),
+  uppers = list(c(1, 5)),
+  control = list(sample = 100, core = 10, iter = 10, patience = 5)
+)
+```
+
+```{r}
+# alpha
+df_true <- recovery.MAP$simulate$TD$alpha
+df_pred <- recovery.MAP$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$alpha
+
+cor(df_true, df_pred)
+
+# alpha
+df_true <- recovery.MAP$simulate$TD$beta
+df_pred <- recovery.MAP$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$beta
+
+cor(df_true, df_pred)
+
+# on
+# [1] 0.601884
+# [1] 0.7975589
+```
+
+# RNN (pass)
+
+```{r}
+reticulate::use_condaenv(condaenv = "tf-gpu", required = TRUE)
+```
+
+```{r}
+recovery.RNN <- multiRL::rcv_d(
+  estimate = "RNN",
+  data = multiRL::TAB,
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  models = list(multiRL::TD),
+  priors = list(
+    TD = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    )
+  ),
+  settings = list(list(name = "TD")),
+  control = list(
+    layer = "GRU",
+    sample = 100,
+    train = 1000,
+    units = 128,
+    batch_size = 10,
+    epochs = 100
+  )
+)
+```
+
+```{r}
+# alpha
+df_true <- recovery.RNN$simulate$TD$alpha
+df_pred <- recovery.RNN$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$alpha
+
+cor(df_true, df_pred)
+
+# alpha
+df_true <- recovery.RNN$simulate$TD$beta
+df_pred <- recovery.RNN$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$beta
+
+cor(df_true, df_pred)
+```

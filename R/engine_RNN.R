@@ -26,6 +26,10 @@ engine_RNN <- function(
     control = control
 ){
 
+  # 确保训练模型和参数恢复时没有用同一份数据
+  control$seed <- control$seed * 2
+  # 训练模型的样本量是train, 检测模型的量是sample
+  control$sample <- control$train
   list2env(control, envir = environment())
   
 ############################### [Simulate] #####################################

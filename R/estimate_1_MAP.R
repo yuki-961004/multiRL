@@ -86,7 +86,8 @@ estimate_1_MAP <- function(
     iter = c(10, 10),
     seed = 123,
     core = 1,
-    diff = 0.001
+    diff = 0.001,
+    patience = 10
   )
   control <- utils::modifyList(x = default, val = control)
   # 解放control中的设定, 变成全局变量
@@ -179,6 +180,8 @@ estimate_1_MAP <- function(
       })
     })
     
+    multiRL.model.MAP.best <- multiRL.model.MLE
+    
 ######################### [ Initialize Posteriors ] ############################
     
     posteriors <- .update_priors(x = multiRL.model.MLE, priors = priors[[i]])
@@ -199,6 +202,8 @@ estimate_1_MAP <- function(
     
     iter <- 0
     stuck <- 0
+    
+    best_LogPo <- -Inf
     
     # 当LogPo的变化值不小于diff, 或迭代次数未达到, 则不断执行
     while (abs(delta_LogPo) > diff) {
@@ -250,16 +255,35 @@ estimate_1_MAP <- function(
       delta_LogPo <- sum_LogPo - LogPo
       LogPo <- sum_LogPo
     
+      if (LogPo > best_LogPo) {
+        best_LogPo <- LogPo
+        patience <- patience + 1
+        multiRL.model.MAP.best <- multiRL.model.MAP
+      } else {
+        patience <- patience - 1
+      }
+      
       message(paste0(
-        "Log-Posterior Probability: ", round(LogPo, 2),
+        "current: ", round(LogPo, 2),
         ", ",
-        "\u0394: ", .sign_numbers(delta_LogPo), round(delta_LogPo, 2)
+        "\u0394: ", .sign_numbers(delta_LogPo), round(delta_LogPo, 2),
+        ", ",
+        "best: ", round(best_LogPo, 2), 
+        ", ", 
+        "patience: ", patience
       ))
     
       iter <- iter + 1
-      if (iter >= limit || stuck > 1) {break}
+      if (iter >= limit || stuck > 1 || patience < 0) {
+        message(paste0(
+          "EM-MAP seems to be stuck",
+          ". ",
+          "You could try other priors or just accept the best results for now."
+        ))
+        break
+      }
     }
-    multiRL.models[[i]] <- multiRL.model.MAP
+    multiRL.models[[i]] <- multiRL.model.MAP.best
   }
   # 停止并行
   future::plan(future::sequential)
