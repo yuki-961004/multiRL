@@ -1,4 +1,4 @@
-#' decay function
+#' Function: Decay Rate
 #'
 #' @param value0 values
 #' @param values values

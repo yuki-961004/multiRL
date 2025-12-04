@@ -1,4 +1,4 @@
-#' Epsilon Related
+#' Function: Epsilon Related
 #'
 #' @param rownum rownum
 #' @param params params

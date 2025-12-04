@@ -2,7 +2,7 @@
 % Please edit documentation in R/step_3_fit_p.R
 \name{fit_p}
 \alias{fit_p}
-\title{fit_p}
+\title{Step 3: Optimizing parameters to fit real data}
 \usage{
 fit_p(
   data,
@@ -54,5 +54,5 @@ fit_p(
 optimal params
 }
 \description{
-fit_p
+Step 3: Optimizing parameters to fit real data
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_gamma.R
 \name{func_gamma}
 \alias{func_gamma}
-\title{Utility Function}
+\title{Function: Utility Function}
 \usage{
 func_gamma(reward, params, ...)
 }
@@ -17,5 +17,5 @@ func_gamma(reward, params, ...)
 utility
 }
 \description{
-Utility Function
+Function: Utility Function
 }

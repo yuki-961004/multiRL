@@ -2,7 +2,7 @@
 % Please edit documentation in R/process_2_behrule.R
 \name{process_2_behrule}
 \alias{process_2_behrule}
-\title{behrule}
+\title{multiRL.behrule}
 \usage{
 process_2_behrule(behrule, ...)
 }
@@ -15,5 +15,5 @@ process_2_behrule(behrule, ...)
 multiRL.behrule
 }
 \description{
-behrule
+multiRL.behrule
 }

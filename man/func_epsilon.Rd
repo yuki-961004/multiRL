@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_epsilon.R
 \name{func_epsilon}
 \alias{func_epsilon}
-\title{Epsilon Related}
+\title{Function: Epsilon Related}
 \usage{
 func_epsilon(rownum, params, ...)
 }
@@ -17,5 +17,5 @@ func_epsilon(rownum, params, ...)
 try
 }
 \description{
-Epsilon Related
+Function: Epsilon Related
 }

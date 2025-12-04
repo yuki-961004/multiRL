@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_beta.R
 \name{func_beta}
 \alias{func_beta}
-\title{soft max}
+\title{Function: Soft-Max}
 \usage{
 func_beta(qvalue, explor, params, ...)
 }
@@ -19,5 +19,5 @@ func_beta(qvalue, explor, params, ...)
 probability
 }
 \description{
-soft max
+Function: Soft-Max
 }

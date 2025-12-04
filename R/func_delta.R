@@ -1,4 +1,4 @@
-#' Upper-Confidence-Bound
+#' Function: Upper-Confidence-Bound
 #'
 #' @param count count
 #' @param params params

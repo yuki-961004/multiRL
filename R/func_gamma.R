@@ -1,4 +1,4 @@
-#' Utility Function
+#' Function: Utility Function
 #'
 #' @param reward reward
 #' @param params params

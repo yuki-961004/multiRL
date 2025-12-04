@@ -1,4 +1,4 @@
-#' learning rate
+#' Function: Learning Rate
 #'
 #' @param qvalue qvalue
 #' @param reward reward

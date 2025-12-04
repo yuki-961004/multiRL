@@ -1,4 +1,5 @@
-#' fit_p
+#' @title 
+#' Step 3: Optimizing parameters to fit real data
 #'
 #' @param data data
 #' @param behrule behrule

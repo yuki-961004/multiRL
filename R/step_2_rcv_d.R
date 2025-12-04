@@ -1,4 +1,5 @@
-#' rcv_d
+#' @title 
+#' Step 2: Generating fake data for parameter and model recovery
 #'
 #' @param data data
 #' @param behrule behrule

@@ -1,4 +1,5 @@
-#' rpl_e
+#' @title 
+#' Step 4: Replaying the experiment with optimal parameters
 #'
 #' @param data data
 #' @param behrule behrule

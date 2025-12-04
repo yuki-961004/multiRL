@@ -2,7 +2,7 @@
 % Please edit documentation in R/step_4_rpl_e.R
 \name{rpl_e}
 \alias{rpl_e}
-\title{rpl_e}
+\title{Step 4: Replaying the experiment with optimal parameters}
 \usage{
 rpl_e(
   data,
@@ -45,5 +45,5 @@ rpl_e(
 replay
 }
 \description{
-rpl_e
+Step 4: Replaying the experiment with optimal parameters
 }

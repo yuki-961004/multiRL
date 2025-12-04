@@ -1,4 +1,4 @@
-#' soft max
+#' Function: Soft-Max
 #'
 #' @param qvalue qvalue
 #' @param explor explor

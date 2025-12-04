@@ -2,7 +2,7 @@
 % Please edit documentation in R/step_2_rcv_d.R
 \name{rcv_d}
 \alias{rcv_d}
-\title{rcv_d}
+\title{Step 2: Generating fake data for parameter and model recovery}
 \usage{
 rcv_d(
   data,
@@ -54,5 +54,5 @@ rcv_d(
 recovery
 }
 \description{
-rcv_d
+Step 2: Generating fake data for parameter and model recovery
 }

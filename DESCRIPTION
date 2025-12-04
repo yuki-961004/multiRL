@@ -1,14 +1,22 @@
 Package: multiRL
-Version: 0.0.17
+Version: 0.1.0
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
 Description: Reinforcement Learning Tools for Multi-Armed Bandit.
 Authors@R:
-  c(person(
-    given = "YuKi",
-    role = c("aut", "cre"),
-    email = "hmz1969a@gmail.com",
-    comment = c(ORCID = "0009-0000-1378-1318")
-  ))
+  c(
+    person(
+      given = "YuKi",
+      role = c("aut", "cre"),
+      email = "hmz1969a@gmail.com",
+      comment = c(ORCID = "0009-0000-1378-1318")
+    ),
+    person(
+      given = "Xinyu",
+      role = "aut",
+      email = "xinyu000328@gmail.com",
+      comment = c(ORCID = "0009-0004-4974-9191")
+    )
+  )
 Maintainer: YuKi <hmz1969a@gmail.com>
 URL: https://yuki-961004.github.io/multiRL/
 BugReports: https://github.com/yuki-961004/multiRL/issues

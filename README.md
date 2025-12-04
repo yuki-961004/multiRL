@@ -16,14 +16,6 @@ This package is designed to help users build the **Rescorla-Wagner Model** for *
 
 <!---------------------------------------------------------->
 
-## Highlights
-
-> 1. Adherence to R S4 Methods.  
-> 2. Compatibility with Two-Alternative Forced Choice (TAFC) tasks.  
-> 3. Supports Definition of Latent Rules.  
-> 4. Array-based Results for Seamless Integration with TensorFlow and ABC.  
-
-
 ## Installation
 
 ```r
@@ -33,141 +25,62 @@ remotes::install_github("yuki-961004/multiRL@*release")
 library(multiRL)
 ```
 
-## Demo
+## Features
+1. Designed for Multi-Armed Bandit Tasks (see Sutton & Barto, [2018](https://mitpress.mit.edu/9780262039246/reinforcement-learning/)).  
+2. Includes three basic models (Niv et al., [2012](https://doi.org/10.1523/JNEUROSCI.5498-10.2012))
+3. Follows the ten simple rules (Wilson & Collins [2019](https://doi.org/10.7554/eLife.49547))
 
-## Step 1: run_m
+<p align="center">
+    <img src="./fig/rl_intro.png" alt="RL Intro" width="27%" style="display: inline;">
+    <img src="./fig/rl_models.png" alt="RL Models" width="34.9%" style="display: inline;">
+    <span style="display:inline-block; width:20px;"></span>
+    <img src="./fig/rl_process.png" alt="RL Process" width="19.6%" style="display: inline;">
+</p>
+
+## Upgrades
 
 ```r
-multiRL.model <- multiRL::run_m(
-  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    subid = "Subject", block = "Block", trial = "Trial",
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  params = list(
-    free = list(alphaN = 0.3, alphaP = 0.7, beta = 0.5),
-    fixed = list(
-      gamma = 1, delta = 0.1, epsilon = NA_real_, 
-      zeta = 1, eta = NA_real_, theta = 0
-    ),
-    constant = list(Q1 = NA_real_, lapse = 0.01, bonus = 0)
-  ),
-  priors = list(
-    alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-    alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-    beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
-  ),
-  settings = list(
-    name = "RSTD", mode = "fitting", estimate = "MLE", policy = "off"
+# learning-rate 
+binaryRL::func_eta              ->             multiRL::func_alpha
+# soft-max  
+binaryRL::func_tau              ->             multiRL::func_beta
+# utility function
+binaryRL::func_gamma            ->             multiRL::func_gamma
+# upper-confidence-bound
+binaryRL::func_pi               ->             multiRL::func_delta
+# ε-(first, greedy, decrasing)  
+binaryRL::func_epsilon          ->             multiRL::func_epsilon
+```
+
+### Latent Learning Rules 
+
+```r
+multiRL::run_m(
+  ...,
+  behrule = c(
+    cue = c(...),
+    rsp = c(...)
   )
+  ...
 )
-
-multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
-```
-Model Fit:
-  Accuracy: 100%
-  Log-Likelihood: -384.01
-  Log-Prior Probability: -0.04
-  Log-Posterior Probability: -384.05
-  AIC: 774.03
-  BIC: 785.69
-```
+**Reference**  
+- Eckstein, M. K., & Collins, A. G. (2020). Computational evidence for hierarchically structured reinforcement learning in humans. Proceedings of the National Academy of Sciences, 117(47), 29381-29389. https://doi.org/10.1073/pnas.1912330117
 
-## Arguments
+### Working-Memory System 
 
 ```r
-# dataset info
-behrule = list(
-  cue = c("A", "B", "C", "D"),
-  rsp = c("A", "B", "C", "D")
-)
-colnames = list(
-  object = c("L_choice", "R_choice"), 
-  reward = c("L_reward", "R_reward"),
-  action = "Sub_Choose"
-)
+# multiRL::func_theta()
 
-# models
-models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility)
-priors = list(
-  list(
-    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-    beta = function(x) {stats::rexp(n = 1, rate = 1)}
-  ),
-  list(
-    alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-    alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-    beta = function(x) {stats::rexp(n = 1, rate = 1)}
-  ),
-  list(
-    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-    beta = function(x) {stats::rexp(n = 1, rate = 1)},
-    gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
-  )
-)
-settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility"))
-
-# algorithms
-algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA")
-lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0))
-uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1))
-control = list(...)
+if (reward == 0) {
+  decay <- values + theta * (value0 - values)
+} else if (reward < 0) {
+  decay <- values + theta * (value0 - values) + bonus
+} else if (reward > 0) {
+  decay <- values + theta * (value0 - values) - bonus
+}
 ```
-
-## Step 2: rcv_d
-
-```r
-recovery <- multiRL::rcv_d(
-  estimate = c("MLE", "MAP", "ABC", "RNN"),
-  data = multiRL::TAB,
-  behrule = behrule,
-  colnames = colnames,
-  models = models,
-  priors = priors,
-  settings = settings,
-  algorithm = algorithm,
-  lowers = lowers,
-  uppers = uppers,
-  control = control
-)
-```
-
-## Step 3: fit_p
-
-```r
-fitting <- multiRL::fit_p(
-  estimate = c("MLE", "MAP", "ABC", "RNN"),
-  data = multiRL::TAB,
-  behrule = behrule,
-  colnames = colnames,
-  models = models,
-  priors = priors,
-  settings = settings,
-  algorithm = algorithm,
-  lowers = lowers,
-  uppers = uppers,
-  control = control
-)
-```
-
-## Step 4: rpl_e
-
-```r
-replay <- multiRL::rpl_e(
-  result = fitting,
-  data = multiRL::TAB,
-  behrule = behrule,
-  colnames = colnames,
-  models = models,
-  settings = settings,
-  priors = priors
-)
-```
+**Reference**  
+- Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. https://doi.org/10.1111/j.1460-9568.2011.07980.x  
+- Hitchcock, P. F., Kim, J., & Frank, M. J. (2025). How working memory and reinforcement learning interact when avoiding punishment and pursuing reward concurrently. Journal of Experimental Psychology: General. https://psycnet.apa.org/doi/10.1037/xge0001817

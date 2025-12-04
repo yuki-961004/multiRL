@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_theta.R
 \name{func_theta}
 \alias{func_theta}
-\title{decay function}
+\title{Function: Decay Rate}
 \usage{
 func_theta(value0, values, reward, params, ...)
 }
@@ -21,5 +21,5 @@ func_theta(value0, values, reward, params, ...)
 decayed values
 }
 \description{
-decay function
+Function: Decay Rate
 }

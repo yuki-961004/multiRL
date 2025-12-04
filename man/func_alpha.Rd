@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_alpha.R
 \name{func_alpha}
 \alias{func_alpha}
-\title{learning rate}
+\title{Function: Learning Rate}
 \usage{
 func_alpha(qvalue, reward, params, ...)
 }
@@ -19,5 +19,5 @@ func_alpha(qvalue, reward, params, ...)
 update
 }
 \description{
-learning rate
+Function: Learning Rate
 }

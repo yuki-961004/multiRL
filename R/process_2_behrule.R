@@ -1,4 +1,4 @@
-#' behrule
+#' multiRL.behrule
 #'
 #' @param behrule behrule
 #' @param ... extra

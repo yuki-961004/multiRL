@@ -1,0 +1,66 @@
+url: https://yuki-961004.github.io/multiRL/
+
+template:
+  bootstrap: 5
+  math-rendering: mathjax
+  params:
+    ganalytics: G-BNYYX0HD3L
+  
+reference:
+
+  - title: "Example Datasets"
+    contents:
+      - TAB
+      - MAB
+
+  - title: "Steps"
+    contents:
+      - run_m
+      - rcv_d
+      - fit_p
+      - rpl_e
+
+  - title: "Models"
+    contents:
+      - TD
+      - RSTD
+      - Utility
+
+  - title: "Functions"
+    contents:
+      - func_alpha
+      - func_beta
+      - func_gamma
+      - func_delta
+      - func_epsilon
+      - func_theta
+
+  - title: "Processes"
+    contents:
+      - process_1_input
+      - process_2_behrule
+      - process_3_record
+      - process_4_output_cpp
+      - process_4_output_r
+      - process_5_metric
+
+  - title: "Estimation"
+    contents:
+      - estimate_0_ENV
+      - estimate_1_LBI
+      - estimate_1_MLE
+      - estimate_1_MAP
+      - estimate_2_SBI
+      - estimate_2_RNN
+      - engine_RNN
+      - estimation_methods
+
+  - title: "Summary"
+    contents:
+      - summary,multiRL.model-method
+
+navbar:
+  structure:
+    left: [intro, reference, news, articles, extensions]
+    right: [search, github]
+  
