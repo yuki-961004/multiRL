@@ -191,7 +191,9 @@ estimate_1_MAP <- function(
     
     if (is.infinite(LogPo)) {
       LogPo <- 0
-      warning("Infinite in Log-Posterior Probability")
+      warning(paste0(
+        "Infinite log-priors detected. Please adjust the priors."
+      ))
     }
     message(paste0(
       "Starting Expectation-Maximization Algorithm", "\n",

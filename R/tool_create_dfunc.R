@@ -11,7 +11,7 @@
       
       # 计算参数
       mean        <- base::mean(df_params)
-      sd          <- stats::sd(df_params) + 1e-5
+      sd          <- max(stats::sd(df_params), 1e-4)
       # 传入环境
       fn_env$mean <- mean
       fn_env$sd   <- sd
@@ -32,7 +32,7 @@
       
       # 计算参数
       mean        <- base::mean(df_params)
-      sd          <- stats::sd(df_params) + 1e-5
+      sd          <- max(stats::sd(df_params), 1e-4)
       # 传入环境
       fn_env$mean <- mean
       fn_env$sd   <- sd
@@ -58,10 +58,10 @@
       }
       
       # 计算参数
-      mean <- base::mean(df_params)
-      var  <- stats::var(df_params)
-      shape1 <- mean * (mean * (1 - mean) / var - 1)
-      shape2 <- (1 - mean) * (mean * (1 - mean) / var - 1)
+      mean    <- base::mean(df_params)
+      var     <- max(stats::var(df_params), 1e-4)
+      shape1  <- mean * (mean * (1 - mean) / var - 1)
+      shape2  <- (1 - mean) * (mean * (1 - mean) / var - 1)
       
       # 防止极端值
       if (shape1 <= 0 || shape2 <= 0) {
@@ -119,12 +119,12 @@
       }
       
       # 计算参数
-      mean <- base::mean(df_params)
-      var  <- stats::var(df_params)
+      mean  <- base::mean(df_params)
+      var   <- max(stats::var(df_params), 1e-4)
       shape <- (mean ^ 2) / var
       rate  <- mean / var
-      # 如果估计的形状参数不合理 (如 <= 0)，使用默认值
-      if (shape <= 0) {
+      # 如果估计的形状参数不合理，使用默认值
+      if (shape >= 1e+4 || rate >= 1e+4) {
         message(
           "Gamma parameter estimation failed. Using shape=1, rate=1."
         )
@@ -154,9 +154,10 @@
         base::stop("Data for Log-Normal distribution must be > 0.")
       }
       # 计算参数
-      log_data <- base::log(df_params)
-      meanlog <- base::mean(log_data)
-      sdlog   <- stats::sd(log_data) + 1e-5
+      log_data  <- base::log(df_params)
+      meanlog   <- base::mean(log_data)
+      sdlog     <- max(stats::sd(log_data), 1e-4)
+      
       # 传入环境
       fn_env$meanlog <- meanlog
       fn_env$sdlog   <- sdlog
@@ -176,8 +177,9 @@
       # 计算参数：
       # location = mean
       # scale 约等于 sqrt(3) * sd / pi (MoM)
-      location <- base::mean(df_params)
-      scale <- base::sqrt(3) * stats::sd(df_params) / base::pi
+      location  <- mean(df_params)
+      sd        <- max(stats::sd(df_params), 1e-4)
+      scale     <- sqrt(3) * sd / base::pi
       
       # 传入环境
       fn_env$location <- location
