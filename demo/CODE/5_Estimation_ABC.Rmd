@@ -1,0 +1,163 @@
+---
+title: "ABC"
+author: "yuki"
+date: "2025-10-27"
+output: html_document
+---
+```{r}
+# 需要用到的全局变量
+# 未来就是function内的argument
+
+# 每次为一个被试训练模型
+data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ]
+# 争议点: 为被试1训练的ABC模型, 是否为其他被试进行拟合参数时, 是否也有一样的效果
+# 因为不同被试不同的只有每个block里的试次呈现的顺序
+# 而摘要统计量, 我目前是按照每个block进行平均值计算的. 
+# 所以有可能以任何一个被试训练的ABC模型, 对所有被试都可以拟合
+
+# 行为规则, 如果刺激和选择一一对应, 则这样写. 
+# 如果不一一对应, 可能是cue = 红绿黄蓝, rsp = 上下左右
+behrule = list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
+)
+# 列名, 数据集中的列名
+colnames = list(
+  object = c("L_choice", "R_choice"), 
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose"
+)
+# 额外设定, 关键在于mode, 如果是ABC, 则一定使用的是模拟数据, 所以是simulating
+settings = list(
+  name = "RSTD",
+  mode = "simulating",
+  estimate = "ABC",
+  policy = "on"
+)
+# 生成的随机数, 取自哪个分布
+priors = list(
+  alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+  alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+  beta = function(x) {stats::rexp(n = 1, rate = 1)}
+)
+# 使用的哪个强化学习模型
+model = multiRL::RSTD
+# 生成多少个模拟数据集, 使用多少个核心用于生成
+# 核心数量, 在任务管理器里查看, 尽可能多
+control = list(sample = 1100, core = 8)
+```
+
+```{r}
+multiRL.env <- multiRL::estimate_0_ENV(
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+  settings = settings,
+)
+```
+
+```{r}
+list_simulated <- multiRL::estimate_2_SBI(
+  model = model,
+  env = multiRL.env,
+  priors = priors,
+  control = control
+)
+```
+
+```{r}
+# 你的对象就是list_simulated
+# 里面记录了产生的模拟数据集data
+# 用于生成模拟数据集用到的自由参数params
+# 摘要统计量sumstat
+
+# abc接受的是摘要统计量和自由参数
+# 通过训练两者之间的映射关系
+# 当给定新的摘要统计量时. 可以准确推断生成它的自由参数
+
+# list_simulated有1100个模拟数据
+# 用前1000个生成假数据, 后100个验证结果
+
+# 争议点: 做这样一个测试, 用被试1的1000个数据, 训练一个ABC模型
+# 然后再使用被试2, 被试3的数据, 生成100个假数据. 
+# 最后使用这个abc模型, 不仅测试被试1的1001-1100, 
+# 也测试是否能准确得出被试2, 被试3的1-100的假数据参数是否可以正常恢复. 
+
+
+list_train <- list_simulated[1:1000]
+list_valid <- list_simulated[1001:1100]
+
+
+#Step 1: Free Parameters
+extract_params <- function(x) {
+  param_vector <- unlist(x$params)      
+  names(param_vector) <- names(x$params)  
+  return(param_vector)
+}
+
+
+# parameters for training
+df_train.params <- dplyr::bind_rows(
+  .x = purrr::map(.x = list_train, .f = extract_params)
+)
+
+df_valid.params <- dplyr::bind_rows(
+  .x = purrr::map(.x = list_valid, .f = extract_params)
+)
+
+#Step 2: Summary Statistics
+extract_sumstats <- function(x) {
+  stats_vector <- x$sumstat
+  names(stats_vector) <- colnames(x$sumstat)
+  return(stats_vector)
+}
+
+df_train.sumstats <- dplyr::bind_rows(
+  .x = purrr::map(.x = list_train, .f = extract_sumstats)
+)
+
+df_valid.sumstats <- dplyr::bind_rows(
+  .x = purrr::map(.x = list_valid, .f = extract_sumstats)
+)
+
+
+```
+
+
+
+```{r}
+#Step 3: Training ABC Model
+df_true <- df_valid.params
+df_pred <- data.frame(
+  alphaN = NA,
+  alphaP = NA,
+  beta = NA
+)
+
+for (i in 1:100) {
+  result <- abc::abc(
+    target = as.vector(df_valid.sumstats[i, ]), 
+    param = df_train.params, 
+    sumstat = df_train.sumstats, 
+    tol = .1, 
+    method = "neuralnet", 
+    transf = c("logit", "logit","logit"),
+    logit.bounds = rbind(c(0, 1), c(0, 1), c(0, 1))
+  )
+  
+  df_pred[i, ] <- summary(result)[5, ]
+}
+
+```
+
+
+```{r}
+#Parameter Recovery
+cor(df_true$alphaN, df_pred$alphaN)
+cor(df_true$alphaP, df_pred$alphaP)
+cor(df_true$beta, df_pred$beta)
+
+```
+
+
+
