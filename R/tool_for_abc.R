@@ -3,12 +3,7 @@
   # 为ABC计算单行的摘要统计量
   vector <- unlist(ratio)
 
-  colname <- gsub(
-    pattern = ".",
-    replacement = "_",
-    x = names(vector),
-    fixed = TRUE
-  )
+  colname <- chartr(".", "_", names(vector))
 
   onerow <- matrix(
     data = vector,

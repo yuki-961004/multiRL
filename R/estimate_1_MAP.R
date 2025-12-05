@@ -275,7 +275,7 @@ estimate_1_MAP <- function(
       message(paste0(
         "current: ", round(LogPo, 2),
         ", ",
-        "\u0394: ", .sign_numbers(delta_LogPo), round(delta_LogPo, 2),
+        "\u0394: ", .sign_numbers(delta_LogPo), round(delta_LogPo, 3),
         ", ",
         "best: ", round(best_LogPo, 2), 
         ", ", 

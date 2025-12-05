@@ -27,6 +27,9 @@ result <- dplyr::bind_rows(recovery) %>%
 ```{r}
 cor(result$input_param_1, result$output_param_1)
 cor(result$input_param_2, result$output_param_2)
+
+# [1] 0.7767969
+# [1] 0.7762264
 ```
 
 ```{r}
@@ -109,12 +112,12 @@ recovery.MAP <- multiRL::rcv_d(
       beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
     )
   ),
-  settings = list(list(name = "TD", policy = "on")),
+  settings = list(list(name = "TD", policy = "off")),
   
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
   lowers = list(c(0, 0)),
   uppers = list(c(1, 5)),
-  control = list(sample = 100, core = 10, iter = 10, patience = 5)
+  control = list(sample = 100, core = 10, iter = 100, patience = 5)
 )
 ```
 
@@ -138,9 +141,13 @@ cor(df_true, df_pred)
 # on
 # [1] 0.601884
 # [1] 0.7975589
+
+# off
+# [1] 0.9705857
+# [1] 0.9277346
 ```
 
-# RNN (pass)
+# RNN
 
 ```{r}
 reticulate::use_condaenv(condaenv = "tf-gpu", required = TRUE)
@@ -196,4 +203,7 @@ df_pred <- recovery.RNN$recovery$TD %>%
 df_pred <- df_pred$beta
 
 cor(df_true, df_pred)
+
+# [1] 0.8175291
+# [1] 0.9259069
 ```

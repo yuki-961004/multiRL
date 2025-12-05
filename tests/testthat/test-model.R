@@ -1,7 +1,7 @@
 # TD
 testthat::test_that("TD", {
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -39,7 +39,7 @@ testthat::test_that("TD", {
 # RSTD
 testthat::test_that("RSTD", {
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -78,7 +78,7 @@ testthat::test_that("RSTD", {
 # Utility
 testthat::test_that("Utility", {
   
-  multiRL.env <- estimate_0_ENV(
+  multiRL.env <- multiRL::estimate_0_ENV(
     data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
     behrule = list(
       cue = c("A", "B", "C", "D"),

@@ -1,21 +1,18 @@
 .detect_colnames <- function(data, prefix) {
   
-  # 检测以Object_和Reward_开头的列名
-  colnames <- grep(
-    pattern = paste0("^", prefix),
-    x = names(data),
-    value = TRUE
-  )
+  # 1. 获取所有列名
+  all_names <- names(data)
   
-  # nocov start
-  if (length(colnames) == 0) {
+  # 2. 使用 startsWith 匹配前缀
+  matched_cols <- all_names[startsWith(all_names, prefix)]
+  
+  # 3. 错误处理
+  if (length(matched_cols) == 0L) {
     stop(
-      "Could not automatically detect columns with prefix '",
-      prefix,
+      "Could not automatically detect columns with prefix '", prefix, 
       "'. Please manually specify column names."
     )
   }
-  # nocov end
   
-  return(colnames)
+  return(matched_cols)
 }

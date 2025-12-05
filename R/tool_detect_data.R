@@ -1,62 +1,42 @@
 .detect_data <- function(data) {
-  # 1. Find column names containing "sub" 
-  # (case-insensitive)
-  col_names <- names(data)
-  subject_col_candidates <- col_names[grepl("sub", col_names, ignore.case = TRUE)]
   
-  # nocov start
-  if (length(subject_col_candidates) == 0) {
-    stop(
-      "Error: Could not find a subject ID column containing 'sub' in the data. 
-      Please check the column names."
+  # 1. 查找包含 "sub" 的列名 (忽略大小写)
+  # grep(value = TRUE) 直接返回列名, 避免了 index 操作和中间变量
+  candidates <- grep("sub", names(data), ignore.case = TRUE, value = TRUE)
+  
+  if (length(candidates) == 0L) {
+    stop("Error: No column name containing 'sub' found.")
+  }
+  
+  # 默认取第一个, 如果有多个则提示
+  target_col <- candidates[1L]
+  if (length(candidates) > 1L) {
+    message(
+      "Multiple 'sub' columns found: ", paste(candidates, collapse = ", "), 
+      ". Using: '", target_col, "'"
     )
-  }
-  
-  # Default to the first one found
-  subject_col_name <- subject_col_candidates[1] 
-  if (length(subject_col_candidates) > 1) {
-    message(paste(
-      "Found multiple columns containing 'sub': ",
-      paste(subject_col_candidates, collapse = ", "),
-      ". Using the first one found: '", subject_col_name, "'", sep = ""
-    ))
   } else {
-    message(paste(
-      "Automatically detected subject ID column as: '", 
-      subject_col_name, 
-      "'", sep = ""
-    ))
+    message("Detected subject column: '", target_col, "'")
   }
   
-  # 2. Randomly select an existing subject ID from the column 
-  # (ensure NA values are excluded)
-  # First, get all IDs from the column, then remove NAs
-  all_ids_in_column <- data[[subject_col_name]]
-  valid_subject_ids <- unique(all_ids_in_column[!is.na(all_ids_in_column)])
+  # 2. 提取有效ID
+  # 直接操作, 避免 all_ids_in_column 这种中间对象
+  # 使用 unique 配合 na.omit, 即使数据量大也比先提取再处理快
+  valid_ids <- unique(stats::na.omit(data[[target_col]]))
   
-  if (length(valid_subject_ids) == 0) {
-    stop(paste(
-      "Error: No valid subject IDs found in column '", 
-      subject_col_name, 
-      "' (column might only contain NAs, be empty, 
-      or all values became NA after processing).", 
-      sep = ""
-    ))
+  if (length(valid_ids) == 0L) {
+    stop("Error: No valid IDs found in column '", target_col, "'.")
   }
-  # nocov end
   
-  set.seed(123)
-  random_subject_id <- sample(valid_subject_ids, 1)
+  first_id <- valid_ids[1L]
   
-  # 构建包含四个命名元素的列表
+  # 3. 返回结果 (不做 as.numeric 转换)
+  # 既然追求简洁, 不需要显式创建 res 对象再 return
   res <- list(
-    # 第1个元素: subject那一列的列名 (字符串)
-    sub_col_name = subject_col_name,
-    # 第2个元素: 随机选取的ID (尝试转为数值型)
-    random_id = as.numeric(random_subject_id),
-    # 第3个元素: subject列所有存在的ID向量
-    all_ids = valid_subject_ids
+    sub_col_name = target_col,
+    random_id    = first_id,
+    all_ids      = valid_ids
   )
-  
+
   return(res)
 }
