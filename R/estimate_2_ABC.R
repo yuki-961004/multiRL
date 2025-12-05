@@ -1,4 +1,4 @@
-#' estimate_2_RNN
+#' estimate_2_ABC
 #'
 #' @param data data
 #' @param behrule behrule
@@ -10,12 +10,14 @@
 #' @param priors priors
 #' @param settings settings
 #' 
+#' @param lowers lowers
+#' @param uppers uppers
 #' @param control control
 #' @param ... extra
 #'
 #' @returns params
 #' 
-estimate_2_RNN <- function(
+estimate_2_ABC <- function(
     data,
     behrule,
     ids = NULL,
@@ -25,7 +27,9 @@ estimate_2_RNN <- function(
     funcs = NULL,
     priors,
     settings,
-
+    
+    lowers,
+    uppers,
     control,
     ...
 ){
@@ -69,7 +73,7 @@ estimate_2_RNN <- function(
   # 强制设置
   for (i in 1:length(settings)) {
     settings[[i]]$mode <- "simulating"
-    settings[[i]]$estimate <- "RNN"
+    settings[[i]]$estimate <- "ABC"
     settings[[i]]$policy <- "on"
   }
   
@@ -81,15 +85,11 @@ estimate_2_RNN <- function(
     # simulate
     seed = 123,
     core = 1,
-    # tensorflow
+    # abc
     sample = 100,
     train = 1000,
     scope = "individual",
-    layer = "GRU",
-    info = c(colnames$object, colnames$action),
-    units = 128,
-    batch_size = 10,
-    epochs = 100
+    tol = 0.1
   )
   control <- utils::modifyList(x = default, val = control)
   # 解放control中的设定, 变成全局变量
@@ -108,8 +108,8 @@ estimate_2_RNN <- function(
   # 如果没有输入要拟合的被试序号, 就拟合所有的被试
   if (is.null(ids)){ids <- dfinfo$all_ids}
   
-################################## [RNN] #######################################
-
+################################## [ABC] #######################################
+  
   result <- list()
   
   for (i in 1:length(models)) {
@@ -126,15 +126,14 @@ estimate_2_RNN <- function(
     progressr::with_progress({
       # 进度条参照
       p <- progressr::progressor(steps = length(ids))
-
+      
       # RNN启动!
       suppressMessages({
         opt_params <- list()
         
         if ( scope == "shared" ) {
           
-          # 只训练一个RNN
-          RNN <- engine_RNN(
+          ABC <- engine_ABC(
             data = data[data[, subid] == 1, ],
             behrule = behrule,
             colnames = colnames,
@@ -149,31 +148,39 @@ estimate_2_RNN <- function(
             
             sub_data <- data[data[, subid] == j, ]
             
-            n_info   <- length(info)
-            n_params <- length(priors[[i]])
-            n_trials <- nrow(sub_data)
+            df_target <- lapply(
+              X = split(sub_data, sub_data[, colnames$block]), FUN = function(x) {
+              action_prop  <- .block_ratio(
+                data = x, colname = colnames$action, levels = behrule$rsp
+            )})
             
-            # 预测真实数据对应的参数
-            X_sub <- array(NA, dim = c(1, n_trials, n_info))
-            X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
-            X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
-            names(X_pred) <- names(priors)
-            opt_params[[j]] <- X_pred
+            n_params <- length(priors[[i]])
+            
+            utils::capture.output(
+              suppressWarnings({
+                opt_params[[j]] <- summary(abc::abc(
+                  target = df_target, 
+                  param = ABC$df_params, 
+                  sumstat = ABC$df_sumstats, 
+                  tol = tol, 
+                  method = "neuralnet", 
+                  transf = rep("logit", n_params),
+                  logit.bounds = cbind(lowers[[i]], uppers[[i]])
+                ))[5, ]
+              })
+            )
+            
+            names(opt_params[[j]]) <- names(priors)
             p()
           }
           
         } else if ( scope == "individual" ) {
-          
+
           for (j in ids) {
             
             sub_data <- data[data[, subid] == j, ]
             
-            n_info   <- length(info)
-            n_params <- length(priors[[i]])
-            n_trials <- nrow(sub_data)
-            
-            # 为每个被试单独训练模型
-            RNN <- engine_RNN(
+            ABC <- engine_ABC(
               data = sub_data,
               behrule = behrule,
               colnames = colnames,
@@ -183,14 +190,33 @@ estimate_2_RNN <- function(
               model = models[[i]],
               control = control
             )
-            # 预测真实数据对应的参数
-            X_sub <- array(NA, dim = c(1, n_trials, n_info))
-            X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
-            X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
-            names(X_pred) <- names(priors)
-            opt_params[[j]] <- X_pred
+
+            df_target <- lapply(
+              X = split(sub_data, sub_data[, colnames$block]), FUN = function(x) {
+                action_prop  <- .block_ratio(
+                  data = x, colname = colnames$action, levels = behrule$rsp
+            )})
+            
+            n_params <- length(priors[[i]])
+            
+            utils::capture.output(
+              suppressWarnings({
+                opt_params[[j]] <- summary(abc::abc(
+                  target = df_target, 
+                  param = ABC$df_params, 
+                  sumstat = ABC$df_sumstats, 
+                  tol = tol, 
+                  method = "neuralnet", 
+                  transf = rep("logit", n_params),
+                  logit.bounds = cbind(lowers[[i]], uppers[[i]])
+                ))[5, ]
+              })
+            )
+            
+            names(opt_params[[j]]) <- names(priors)
             p()
           }
+
         }
         result[[i]] <- do.call(rbind, opt_params)
       })
@@ -215,5 +241,5 @@ estimate_2_RNN <- function(
   
   result <- .rbind_fill(result)
   
-  return(result)
+  return(result)  
 }

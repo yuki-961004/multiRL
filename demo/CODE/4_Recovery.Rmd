@@ -12,6 +12,12 @@ recovery <- binaryRL::rcv_d(
   model_names = c("TD"),
   simulate_models = list(binaryRL::TD),
   fit_models = list(binaryRL::TD),
+  rfun = list(
+    TD = list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    )
+  ),
   lower = list(c(0, 0)),
   upper = list(c(1, 5)),
   iteration_s = 100,
@@ -28,8 +34,8 @@ result <- dplyr::bind_rows(recovery) %>%
 cor(result$input_param_1, result$output_param_1)
 cor(result$input_param_2, result$output_param_2)
 
-# [1] 0.7767969
-# [1] 0.7762264
+# [1] 0.481417
+# [1] 0.651679
 ```
 
 ```{r}
@@ -89,6 +95,7 @@ cor(df_true, df_pred)
 # [1] 0.8918622
 ```
 
+## MAP
 
 ```{r}
 recovery.MAP <- multiRL::rcv_d(
@@ -145,6 +152,64 @@ cor(df_true, df_pred)
 # off
 # [1] 0.9705857
 # [1] 0.9277346
+```
+
+## ABC
+
+
+```{r}
+recovery.ABC <- multiRL::rcv_d(
+  estimate = "ABC",
+  data = multiRL::TAB,
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  models = list(multiRL::TD),
+  priors = list(
+    TD = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    )
+  ),
+  settings = list(list(name = "TD")),
+  
+  lowers = list(c(0, 0)),
+  uppers = list(c(1, 5)),
+  control = list(
+    sample = 100,
+    train = 1000,
+    tol = 0.1
+  )
+)
+```
+
+```{r}
+# alpha
+df_true <- recovery.ABC$simulate$TD$alpha
+df_pred <- recovery.ABC$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$alpha
+
+cor(df_true, df_pred)
+
+# alpha
+df_true <- recovery.ABC$simulate$TD$beta
+df_pred <- recovery.ABC$recovery$TD %>%
+  dplyr::filter(fit_model == "TD")
+df_pred <- df_pred$beta
+
+cor(df_true, df_pred)
+
+# [1] 0.9901116
+# [1] 0.9325671
 ```
 
 # RNN

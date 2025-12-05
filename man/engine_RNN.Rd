@@ -8,10 +8,10 @@ engine_RNN(
   data = data,
   behrule = behrule,
   colnames,
+  model,
   funcs = NULL,
   priors,
   settings = NULL,
-  model,
   control = control
 )
 }
@@ -22,13 +22,13 @@ engine_RNN(
 
 \item{colnames}{colnames}
 
+\item{model}{model}
+
 \item{funcs}{funcs}
 
 \item{priors}{priors}
 
 \item{settings}{settings}
-
-\item{model}{model}
 
 \item{control}{control}
 }

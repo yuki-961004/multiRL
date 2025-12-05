@@ -27,6 +27,8 @@ export(estimate_1_LBI)
 export(estimate_1_MLE)
 export(estimate_1_MAP)
 export(estimate_2_SBI)
+export(estimate_2_ABC)
+export(engine_ABC)
 export(estimate_2_RNN)
 export(engine_RNN)
 

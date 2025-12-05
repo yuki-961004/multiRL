@@ -122,7 +122,8 @@ rcv_d <- function(
     info = c(colnames$object, colnames$action),
     units = 128,
     batch_size = 10,
-    epochs = 100
+    epochs = 100,
+    tol = 0.1
   )
   control <- utils::modifyList(x = default, val = control)
   

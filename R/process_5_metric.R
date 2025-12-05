@@ -67,11 +67,9 @@ process_5_metric <- function(
   behavior    <- as.data.frame(base::cbind(idinfo, latent, simulation))
   colnames(behavior) <- c("Subject", "Block", "Trial", "Latent", "Simulation")
   
-  # 计算每个block中latent和simulation的选择比率
+  # 计算每个block中simulation的选择比率
   ratio <- lapply(X = split(behavior, behavior[, "Block"]), FUN = function(x) {
-    latent_prop <- .block_ratio(data = x, colname = "Latent", levels = cue)
-    simul_prop  <- .block_ratio(data = x, colname = "Simulation", levels = rsp)
-    list(Latent = latent_prop, Simulation = simul_prop)
+    action_prop  <- .block_ratio(data = x, colname = "Simulation", levels = rsp)
   })
   
   onerow <- .for_abc(ratio)

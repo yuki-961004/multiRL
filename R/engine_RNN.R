@@ -16,12 +16,12 @@
 engine_RNN <- function(
     data = data,
     behrule = behrule,
-    
     colnames,
+    
+    model,
     funcs = NULL,
     priors,
     settings = NULL,
-    model,
     
     control = control
 ){
@@ -38,6 +38,7 @@ engine_RNN <- function(
     data = data,
     behrule = behrule,
     colnames = colnames,
+    funcs = funcs,
     settings = settings,
   )
   

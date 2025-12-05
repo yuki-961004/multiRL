@@ -44,10 +44,12 @@ estimation_methods <- function(
         behrule = behrule,
         ids = ids,
         colnames = colnames,
+        
+        models = models,
         funcs = funcs,
         priors = priors,
         settings = settings,
-        models = models,
+        
         algorithm = algorithm,
         lowers = lowers,
         uppers = uppers,
@@ -60,11 +62,30 @@ estimation_methods <- function(
         behrule = behrule,
         ids = ids,
         colnames = colnames,
+        
+        models = models,
         funcs = funcs,
         priors = priors,
         settings = settings,
-        models = models,
+
         algorithm = algorithm,
+        lowers = lowers,
+        uppers = uppers,
+        control = control
+      )
+    },
+    "ABC" = {
+      estimate_2_ABC(
+        data = data,
+        behrule = behrule,
+        ids = ids,
+        colnames = colnames,
+        
+        models = models,
+        funcs = funcs,
+        priors = priors,
+        settings = settings,
+        
         lowers = lowers,
         uppers = uppers,
         control = control
@@ -76,10 +97,12 @@ estimation_methods <- function(
         behrule = behrule,
         ids = ids,
         colnames = colnames,
+        
+        models = models,
         funcs = funcs,
         priors = priors,
         settings = settings,
-        models = models,
+        
         control = control
       )
     },
