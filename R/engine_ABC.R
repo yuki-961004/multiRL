@@ -30,6 +30,8 @@ engine_ABC <- function(
   control$seed <- control$seed * 2
   # 训练模型的样本量是train, 检测模型的量是sample
   control$sample <- control$train
+  # 因为abc的部分需要多核, 所以这里必须是单核
+  control$core <- 1
   
 ############################### [Simulate] #####################################
   

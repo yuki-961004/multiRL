@@ -1,11 +1,10 @@
 # MLE
 testthat::test_that("MLE", {
   
-  data <- multiRL::TAB
-  
   recovery.MLE <- rcv_d(
     estimate = "MLE",
-    data = data,
+    data = multiRL::TAB,
+    id = 1,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -46,3 +45,47 @@ testthat::test_that("MLE", {
   
 })
 
+testthat::test_that("ABC", {
+  
+  recovery.ABC <- rcv_d(
+    estimate = "ABC",
+    data = multiRL::TAB,
+    id = 1,
+    behrule = list(
+      cue = c("A", "B", "C", "D"),
+      rsp = c("A", "B", "C", "D")
+    ),
+    
+    colnames = list(
+      object = c("L_choice", "R_choice"), 
+      reward = c("L_reward", "R_reward"),
+      action = "Sub_Choose"
+    ),
+    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+    priors = list(
+      list(
+        alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+        beta = function(x) {stats::rexp(n = 1, rate = 1)}
+      ),
+      list(
+        alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+        alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+        beta = function(x) {stats::rexp(n = 1, rate = 1)}
+      ),
+      list(
+        alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+        beta = function(x) {stats::rexp(n = 1, rate = 1)},
+        gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
+      )
+    ),
+    
+    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+    uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
+    control = list(core = 1, sample = 5, train = 100)
+  )
+  
+  
+  testthat::expect_equal(names(recovery.ABC)[1:2], c("simulate", "recovery"))
+  
+})

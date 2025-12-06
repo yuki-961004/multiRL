@@ -107,14 +107,35 @@ estimate_2_ABC <- function(
   }
   # 如果没有输入要拟合的被试序号, 就拟合所有的被试
   if (is.null(ids)){ids <- dfinfo$all_ids}
+
+################################ [ Parallel ] ################################## 
   
-################################## [ABC] #######################################
+  sys <- Sys.info()[["sysname"]]
   
-  result <- list()
+  if (core == 1) {
+    future::plan(future::sequential)
+  } else if (sys == "Windows") {
+    future::plan(future::multisession, workers = core)
+  } else if (sys == "Darwin") {
+    future::plan(future::multisession, workers = core)
+  } else if (sys == "Linux") {
+    future::plan(future::multicore, workers = core)
+  }
+  
+  doFuture::registerDoFuture()
+
+################################ [ beforeach ] ################################# 
+  
+  # 创建空list, 用于存放结果
+  result.ABC <- list()
+  # 定义foreach内的指针
+  j <- NA
   
   for (i in 1:length(models)) {
     
     model_name <- settings[[i]]$name
+
+################################## [ABC] #######################################
     
     message(paste0(
       "Fitting ", model_name,"\n"
@@ -126,8 +147,9 @@ estimate_2_ABC <- function(
     progressr::with_progress({
       # 进度条参照
       p <- progressr::progressor(steps = length(ids))
-      
-      # RNN启动!
+      # 锁定并行内种子
+      doRNG::registerDoRNG(seed = seed)
+      # ABC启动!
       suppressMessages({
         opt_params <- list()
         
@@ -143,9 +165,10 @@ estimate_2_ABC <- function(
             model = models[[i]],
             control = control
           )
-          
-          for (j in ids) {
-            
+
+          opt_params <- foreach::foreach(
+            j = ids, .packages = c("multiRL")
+          ) %dorng% {
             sub_data <- data[data[, subid] == j, ]
             
             df_target <- lapply(
@@ -158,7 +181,7 @@ estimate_2_ABC <- function(
             
             utils::capture.output(
               suppressWarnings({
-                opt_params[[j]] <- summary(abc::abc(
+                opt_params_j <- summary(abc::abc(
                   target = df_target, 
                   param = ABC$df_params, 
                   sumstat = ABC$df_sumstats, 
@@ -170,14 +193,15 @@ estimate_2_ABC <- function(
               })
             )
             
-            names(opt_params[[j]]) <- names(priors)
+            names(opt_params_j) <- names(priors)
             p()
-          }
-          
+            return(opt_params_j)
+          }       
         } else if ( scope == "individual" ) {
 
-          for (j in ids) {
-            
+          opt_params <- foreach::foreach(
+            j = ids, .packages = c("multiRL")
+          ) %dorng% {
             sub_data <- data[data[, subid] == j, ]
             
             ABC <- engine_ABC(
@@ -201,7 +225,7 @@ estimate_2_ABC <- function(
             
             utils::capture.output(
               suppressWarnings({
-                opt_params[[j]] <- summary(abc::abc(
+                opt_params_j <- summary(abc::abc(
                   target = df_target, 
                   param = ABC$df_params, 
                   sumstat = ABC$df_sumstats, 
@@ -213,33 +237,36 @@ estimate_2_ABC <- function(
               })
             )
             
-            names(opt_params[[j]]) <- names(priors)
+            names(opt_params_j) <- names(priors)
             p()
+            return(opt_params_j)
           }
-
         }
-        result[[i]] <- do.call(rbind, opt_params)
+        result.ABC[[i]] <- do.call(rbind, opt_params)
       })
     })
   }
   
+  # 停止并行
+  future::plan(future::sequential)
+
   col_order <- c("fit_model", "Subject")
   
   for (i in 1:length(models)) {
     
-    result[[i]] <- as.data.frame(result[[i]]) 
-    colnames(result[[i]]) <- names(priors[[i]])
+    result.ABC[[i]] <- as.data.frame(result.ABC[[i]]) 
+    colnames(result.ABC[[i]]) <- names(priors[[i]])
     # 新增两列作为序号
-    result[[i]][["fit_model"]] <- settings[[i]]$name
-    result[[i]][["Subject"]] <- ids
+    result.ABC[[i]][["fit_model"]] <- settings[[i]]$name
+    result.ABC[[i]][["Subject"]] <- ids
     # 找到原始列的名字
-    remaining_cols <- setdiff(names(result[[i]]), col_order)
+    remaining_cols <- setdiff(names(result.ABC[[i]]), col_order)
     # 序号列 + 数据列
-    result[[i]] <- result[[i]][c(col_order, remaining_cols)]
+    result.ABC[[i]] <- result.ABC[[i]][c(col_order, remaining_cols)]
     
   }
   
-  result <- .rbind_fill(result)
+  result.ABC <- .rbind_fill(result.ABC)
   
-  return(result)  
+  return(result.ABC)  
 }

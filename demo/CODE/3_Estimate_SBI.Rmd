@@ -133,7 +133,7 @@ cor(df_true$beta, df_pred$beta)
 ```{r}
 result.ABC <- multiRL::estimate_2_ABC(
   data = multiRL::TAB,
-  ids = 1,
+  ids = 1:10,
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
@@ -167,6 +167,8 @@ result.ABC <- multiRL::estimate_2_ABC(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
   control = list(
+    scope = "individual",
+    #scope = "shared",
     core = 10,
     tol = 0.1,
     sample = 100,

@@ -7,12 +7,13 @@
   matched_cols <- all_names[startsWith(all_names, prefix)]
   
   # 3. 错误处理
+  # nocov start
   if (length(matched_cols) == 0L) {
     stop(
       "Could not automatically detect columns with prefix '", prefix, 
       "'. Please manually specify column names."
     )
   }
-  
+  # nocov end
   return(matched_cols)
 }

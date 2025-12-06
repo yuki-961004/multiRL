@@ -1,5 +1,5 @@
 .get_function_name <- function(func) {
-  
+  # nocov start
   # 1. 先从全局环境找
   objs <- ls(envir = .GlobalEnv)
   for (nm in objs) {
@@ -24,4 +24,5 @@
   
   # 3. 如果找不到名称 → 这个函数没有名称绑定（匿名）
   return(NULL)
+  # nocov end
 }

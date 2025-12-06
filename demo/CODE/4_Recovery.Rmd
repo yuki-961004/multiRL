@@ -184,6 +184,8 @@ recovery.ABC <- multiRL::rcv_d(
   lowers = list(c(0, 0)),
   uppers = list(c(1, 5)),
   control = list(
+    core = 10,
+    scope = "shared",
     sample = 100,
     train = 1000,
     tol = 0.1

@@ -1,10 +1,10 @@
 testthat::test_that("MLE", {
-  
-  data <- multiRL::TAB
-  
-  result.MLE <- multiRL::estimate_1_MLE(
+
+  result.MLE <- multiRL::estimation_methods(
+    estimate = "MLE",
     # 数据
-    data = data[data[, "Subject"] %in% 1:4,],
+    data = multiRL::TAB,
+    ids = 1:4,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

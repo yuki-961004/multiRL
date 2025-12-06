@@ -1,9 +1,10 @@
 # Generating
 testthat::test_that("ABC", {
   
-  result.ABC <- multiRL::estimate_2_ABC(
+  result.ABC <- multiRL::estimation_methods(
+    estimate = "ABC",
     data = multiRL::TAB,
-    ids = c(1:4),
+    ids = 1:4,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")

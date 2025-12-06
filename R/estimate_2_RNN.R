@@ -110,7 +110,7 @@ estimate_2_RNN <- function(
   
 ################################## [RNN] #######################################
 
-  result <- list()
+  result.RNN <- list()
   
   for (i in 1:length(models)) {
     
@@ -192,7 +192,7 @@ estimate_2_RNN <- function(
             p()
           }
         }
-        result[[i]] <- do.call(rbind, opt_params)
+        result.RNN[[i]] <- do.call(rbind, opt_params)
       })
     })
   }
@@ -201,19 +201,19 @@ estimate_2_RNN <- function(
   
   for (i in 1:length(models)) {
     
-    result[[i]] <- as.data.frame(result[[i]]) 
-    colnames(result[[i]]) <- names(priors[[i]])
+    result.RNN[[i]] <- as.data.frame(result.RNN[[i]]) 
+    colnames(result.RNN[[i]]) <- names(priors[[i]])
     # 新增两列作为序号
-    result[[i]][["fit_model"]] <- settings[[i]]$name
-    result[[i]][["Subject"]] <- ids
+    result.RNN[[i]][["fit_model"]] <- settings[[i]]$name
+    result.RNN[[i]][["Subject"]] <- ids
     # 找到原始列的名字
-    remaining_cols <- setdiff(names(result[[i]]), col_order)
+    remaining_cols <- setdiff(names(result.RNN[[i]]), col_order)
     # 序号列 + 数据列
-    result[[i]] <- result[[i]][c(col_order, remaining_cols)]
+    result.RNN[[i]] <- result.RNN[[i]][c(col_order, remaining_cols)]
     
   }
   
-  result <- .rbind_fill(result)
+  result.RNN <- .rbind_fill(result.RNN)
   
-  return(result)
+  return(result.RNN)
 }

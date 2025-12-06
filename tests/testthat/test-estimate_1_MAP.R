@@ -1,10 +1,10 @@
 testthat::test_that("MAP", {
   
-  data <- multiRL::TAB
-  
-  result.MAP <- multiRL::estimate_1_MAP(
+  result.MAP <- multiRL::estimation_methods(
+    estimate = "MAP",
     # 数据
-    data = data[data[, "Subject"] %in% 1:4,],
+    data = multiRL::TAB,
+    ids = 1:4,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
