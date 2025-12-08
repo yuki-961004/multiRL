@@ -8,7 +8,7 @@
 #'
 #' @returns decayed values
 #' 
-func_theta <- function(
+func_zeta <- function(
     value0, 
     values,
     reward,
@@ -20,15 +20,15 @@ func_theta <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  theta      <-  get_param(params, "theta")
+  zeta       <-  get_param(params, "zeta")
   bonus      <-  get_param(params, "bonus")
   
   if (reward == 0) {
-    decay <- values + theta * (value0 - values)
+    decay <- values + zeta * (value0 - values)
   } else if (reward < 0) {
-    decay <- values + theta * (value0 - values) + bonus
+    decay <- values + zeta * (value0 - values) + bonus
   } else if (reward > 0) {
-    decay <- values + theta * (value0 - values) - bonus
+    decay <- values + zeta * (value0 - values) - bonus
   }
 
   return(decay)

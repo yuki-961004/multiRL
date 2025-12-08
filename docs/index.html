@@ -35,7 +35,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,14 +137,14 @@
 <h3 id="working-memory-system">Working-Memory System<a class="anchor" aria-label="anchor" href="#working-memory-system"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># multiRL::func_theta()</span></span>
+<code class="sourceCode R"><span><span class="co"># multiRL::func_zeta()</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">theta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span></span>
+<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">theta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">+</span> <span class="va">bonus</span></span>
+<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">+</span> <span class="va">bonus</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">theta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">-</span> <span class="va">bonus</span></span>
+<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">-</span> <span class="va">bonus</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><strong>Reference</strong><br>
 - Collins, A. G., &amp; Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link uri">https://doi.org/10.1111/j.1460-9568.2011.07980.x</a><br>

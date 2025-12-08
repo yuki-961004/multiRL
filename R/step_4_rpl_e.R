@@ -52,7 +52,7 @@ rpl_e <- function(
       util_func = multiRL::func_gamma,
       bias_func = multiRL::func_delta,
       expl_func = multiRL::func_epsilon,
-      dcay_func = multiRL::func_theta
+      dcay_func = multiRL::func_zeta
     )
     funcs[[i]] <- utils::modifyList(x = default, val = funcs[[i]])
   }

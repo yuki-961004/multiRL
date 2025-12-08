@@ -15,7 +15,7 @@ export(func_beta)
 export(func_gamma)
 export(func_delta)
 export(func_epsilon)
-export(func_theta)
+export(func_zeta)
 
 export(TD)
 export(RSTD)

@@ -33,7 +33,7 @@ reference:
       - func_gamma
       - func_delta
       - func_epsilon
-      - func_theta
+      - func_zeta
 
   - title: "Processes"
     contents:

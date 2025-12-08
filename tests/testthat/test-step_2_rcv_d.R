@@ -1,7 +1,7 @@
 # MLE
 testthat::test_that("MLE", {
   
-  recovery.MLE <- rcv_d(
+  recovery.MLE <- multiRL::rcv_d(
     estimate = "MLE",
     data = multiRL::TAB,
     id = 1,
@@ -47,7 +47,7 @@ testthat::test_that("MLE", {
 
 testthat::test_that("ABC", {
   
-  recovery.ABC <- rcv_d(
+  recovery.ABC <- multiRL::rcv_d(
     estimate = "ABC",
     data = multiRL::TAB,
     id = 1,

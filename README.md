@@ -71,14 +71,14 @@ multiRL::run_m(
 ### Working-Memory System 
 
 ```r
-# multiRL::func_theta()
+# multiRL::func_zeta()
 
 if (reward == 0) {
-  decay <- values + theta * (value0 - values)
+  decay <- values + zeta * (value0 - values)
 } else if (reward < 0) {
-  decay <- values + theta * (value0 - values) + bonus
+  decay <- values + zeta * (value0 - values) + bonus
 } else if (reward > 0) {
-  decay <- values + theta * (value0 - values) - bonus
+  decay <- values + zeta * (value0 - values) - bonus
 }
 ```
 **Reference**  
