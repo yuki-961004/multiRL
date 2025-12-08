@@ -6,8 +6,9 @@ output: html_document
 ---
 ```{r}
 replay <- multiRL::rpl_e(
-  result = result,
-  data = multiRL::TAB %>% dplyr::filter(Subject %in% 1:10),
+  result = recovery.MLE,
+  #result = fitting.MLE,
+  data = multiRL::TAB,
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
@@ -20,22 +21,7 @@ replay <- multiRL::rpl_e(
   ),
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
-  priors = list(
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)},
-      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
-    )
-  ),
+  omit = c("data", "funcs")
 )
 ```
 

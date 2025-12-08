@@ -200,11 +200,13 @@ rcv_d <- function(
   
 ############################### [results] ###################################### 
   
-  result <- list(
+  recovery <- list(
     simulate = simulated_params,
     recovery = list_recovery
   )
   
-  return(result)
+  class(recovery) <- "multiRL.recovery"
+  
+  return(recovery)
 
 }

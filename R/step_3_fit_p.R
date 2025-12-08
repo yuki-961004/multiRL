@@ -131,7 +131,7 @@ fit_p <- function(
   
 ############################### [results] ###################################### 
   
-  result <- estimation_methods(
+  fitting <- estimation_methods(
     data = data, 
     behrule = behrule,
     ids = ids,
@@ -147,5 +147,13 @@ fit_p <- function(
     control = control
   )
   
-  return(result)
+  fitting$fit_model <- factor(
+    fitting$fit_model, levels = unique(fitting$fit_model)
+  )
+  
+  fitting <- split(fitting, fitting$fit_model)
+  
+  class(fitting) <- "multiRL.fitting"
+  
+  return(fitting)
 }

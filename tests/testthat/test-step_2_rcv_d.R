@@ -41,7 +41,7 @@ testthat::test_that("MLE", {
   )
 
   
-  testthat::expect_equal(names(recovery.MLE)[1:2], c("simulate", "recovery"))
+  testthat::expect_s3_class(recovery.MLE, "multiRL.recovery")
   
 })
 
@@ -86,6 +86,6 @@ testthat::test_that("ABC", {
   )
   
   
-  testthat::expect_equal(names(recovery.ABC)[1:2], c("simulate", "recovery"))
+  testthat::expect_s3_class(recovery.ABC, "multiRL.recovery")
   
 })

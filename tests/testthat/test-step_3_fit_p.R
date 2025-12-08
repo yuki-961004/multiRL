@@ -1,11 +1,9 @@
 # MLE
 testthat::test_that("MLE", {
   
-  data <- multiRL::TAB
-  
   fitting.MLE <- multiRL::fit_p(
     estimate = "MLE",
-    data = data,
+    data = multiRL::TAB,
     ids = c(1:5),
     behrule = list(
       cue = c("A", "B", "C", "D"),
@@ -41,18 +39,16 @@ testthat::test_that("MLE", {
     control = list(core = 1, iter = 5)
   )
   
-  testthat::expect_s3_class(fitting.MLE, "data.frame")
+  testthat::expect_s3_class(fitting.MLE, "multiRL.fitting")
 })
 
 # MAP
 testthat::test_that("MAP", {
   
-  data <- multiRL::TAB
-  
-  result.MAP <- multiRL::fit_p(
+  fitting.MAP <- multiRL::fit_p(
     estimate = "MAP",
-    data = data,
-    ids = c(1:10),
+    data = multiRL::TAB,
+    ids = c(1:5),
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -87,5 +83,5 @@ testthat::test_that("MAP", {
     control = list(core = 1, iter = c(5, 3))
   )
   
-  testthat::expect_s3_class(result.MAP, "data.frame")
+  testthat::expect_s3_class(fitting.MAP, "multiRL.fitting")
 })
