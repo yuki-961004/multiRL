@@ -65,10 +65,12 @@
           return(-LPo)
         },
         "ABC" = {
-          return(sumstat)
+          result <- list(data = data, params = params, sumstat = sumstat)
+          return(result)
         },
         "RNN" = {
-          return(matrix)
+          result <- list(data = data, params = params, matrix = matrix)
+          return(result)
         },
       )
     },

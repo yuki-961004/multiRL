@@ -61,16 +61,16 @@ estimate_2_RNN <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown_", i)
+      name = paste0("Unknown_", i),
+      policy = "on"
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
   }
   
   # 强制设置
   for (i in 1:length(settings)) {
-    settings[[i]]$mode <- "simulating"
+    settings[[i]]$mode <- "fitting"
     settings[[i]]$estimate <- "RNN"
-    settings[[i]]$policy <- "on"
   }
   
   # 转换先验

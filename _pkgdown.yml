@@ -51,6 +51,8 @@ reference:
       - estimate_1_MLE
       - estimate_1_MAP
       - estimate_2_SBI
+      - estimate_2_ABC
+      - engine_ABC
       - estimate_2_RNN
       - engine_RNN
       - estimation_methods

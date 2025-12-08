@@ -76,11 +76,15 @@ estimate_1_MLE <- function(
   for (i in 1:length(settings)) {
     default <- list(
       name = paste0("Unknown_", i),
-      mode = "fitting",
-      estimate = "MLE",
-      policy = "on"
+      policy = "off"
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
+  }
+  
+  # 强制设置
+  for (i in 1:length(settings)) {
+    settings[[i]]$mode <- "fitting"
+    settings[[i]]$estimate <- "MLE"
   }
   
   # 默认控制
