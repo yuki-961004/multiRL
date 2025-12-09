@@ -69,7 +69,10 @@ testthat::test_that("replay fitting.MLE", {
         gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
       )
     ),
+    omit = c("funcs")
   )
+  
+  plot(x = replay)
   
   testthat::expect_s4_class(replay$TD$`1`$multiRL.model, "multiRL.model")
   testthat::expect_s4_class(replay$TD$`1`$multiRL.summary, "multiRL.summary")
@@ -147,7 +150,10 @@ testthat::test_that("replay recovery.MLE", {
         gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
       )
     ),
+    omit = c("data", "funcs")
   )
+  
+  plot(x = replay, param = "beta")
   
   testthat::expect_s4_class(replay$simulate$TD[[1]]$multiRL.model, "multiRL.model")
   testthat::expect_s4_class(replay$simulate$TD[[1]]$multiRL.summary, "multiRL.summary")

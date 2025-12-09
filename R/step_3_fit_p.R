@@ -78,8 +78,7 @@ fit_p <- function(
   if (is.null(settings)) {settings <- rep(list(list()), length(models))}
   for (i in 1:length(settings)) {
     default <- list(
-      name = paste0("Unknown_", i),
-      policy = "on"
+      name = paste0("Unknown_", i)
     )
     settings[[i]] <- utils::modifyList(x = default, val = settings[[i]])
   }
@@ -89,8 +88,7 @@ fit_p <- function(
     fit_settings[[i]] <- list(
       name = settings[[i]]$name,
       mode = "fitting",
-      estimate = estimate,
-      policy = settings[[i]]$policy
+      estimate = estimate
     )
   }
   

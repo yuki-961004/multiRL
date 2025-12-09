@@ -38,3 +38,4 @@ export(fit_p)
 export(rpl_e)
 
 exportMethods(summary)
+S3method(plot, multiRL.replay)

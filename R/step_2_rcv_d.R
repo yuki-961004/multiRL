@@ -100,8 +100,7 @@ rcv_d <- function(
     fit_settings[[i]] <- list(
       name = settings[[i]]$name,
       mode = "fitting",
-      estimate = estimate,
-      policy = settings[[i]]$policy
+      estimate = estimate
     )
   }
   
@@ -142,7 +141,7 @@ rcv_d <- function(
   # 只需要用一个被试的模板生成模拟数据
   if (is.null(id)){id <- dfinfo$random_id}
   # 在整体数据集中索引这个随机被试的数据
-  data = data[data[, subid] == id, ]
+  data <- data[data[, subid] == id, ]
   
 ############################## [simulate data] #################################
   

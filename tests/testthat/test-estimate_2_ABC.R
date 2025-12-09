@@ -37,7 +37,7 @@ testthat::test_that("ABC", {
     
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
-    control = list(tol = 0.1, sample = 100, train = 100)
+    control = list(core = 4, tol = 0.1, sample = 100, train = 100)
   )
 
   testthat::expect_s3_class(result.ABC, "data.frame")

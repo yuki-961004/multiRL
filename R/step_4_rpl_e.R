@@ -46,12 +46,33 @@ rpl_e <- function(
     stop("The provided 'result' does not belong to the 'multiRL' class.")
   }
   
+############################ [aotu-detect data] ################################
+  
+  suppressMessages({dfinfo <- .detect_data(data)})
+  # 如果没有输入被试序号的列名. 则自动探测
+  if ("subid" %in% names(colnames)) {
+    subid <- colnames[["subid"]]
+  } else {
+    subid <- dfinfo$sub_col_name
+  }
+  
 ################################# [replay] #####################################
   
   if (mode == "recovery") {
     
+    id <- dfinfo$random_id
+    data <- data[data[, subid] == id, ]
+    
+    sim_data <- list()
+    for (i in 1:nrow(result$simulate[[1]])) {
+      sim_data[[i]] <- data
+      sim_data[[i]][[subid]] <- i
+    }
+    
+    sim_data <- do.call(rbind, sim_data)
+    
     simulate <- .replay(
-      data = data, 
+      data = sim_data, 
       behrule = behrule,
       ids = ids,
       colnames = colnames,
@@ -69,7 +90,7 @@ rpl_e <- function(
     
     for (name in model_names) {
       recovery[[name]] <- .replay(
-        data = data, 
+        data = sim_data, 
         behrule = behrule,
         ids = ids,
         colnames = colnames,
@@ -86,7 +107,9 @@ rpl_e <- function(
       simulate = simulate,
       recovery = recovery
     )
+    
   } else if (mode == "fitting") {
+    
     fitting <- .replay(
       data = data, 
       behrule = behrule,
