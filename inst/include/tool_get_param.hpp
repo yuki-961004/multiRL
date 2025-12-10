@@ -1,5 +1,5 @@
-#ifndef GET_PARAM_H   
-#define GET_PARAM_H
+#ifndef GET_PARAM_HPP_   
+#define GET_PARAM_HPP_
 
 #include <Rcpp.h>
 #include <string>

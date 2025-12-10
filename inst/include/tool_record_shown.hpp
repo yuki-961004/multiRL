@@ -1,5 +1,5 @@
-#ifndef RECORD_SHOWN_H   
-#define RECORD_SHOWN_H
+#ifndef RECORD_SHOWN_HPP_   
+#define RECORD_SHOWN_HPP_
 
 #include <Rcpp.h>
 

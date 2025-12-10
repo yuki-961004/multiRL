@@ -1,4 +1,4 @@
-#include "tool_get_param.h" 
+#include "../inst/include/tool_get_param.hpp" 
 
 // [[Rcpp::export]]
 double get_param(

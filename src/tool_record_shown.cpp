@@ -1,4 +1,4 @@
-#include "tool_record_shown.h"
+#include "../inst/include/tool_record_shown.hpp"
 
 // [[Rcpp::export]]
 Rcpp::NumericVector record_shown(

@@ -1,4 +1,4 @@
-#include "tool_sample_choice.h"
+#include "../inst/include/tool_sample_choice.hpp"
 
 // [[Rcpp::export]]
 std::string sample_choice(

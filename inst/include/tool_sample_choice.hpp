@@ -1,5 +1,5 @@
-#ifndef TOOL_SAMPLE_H
-#define TOOL_SAMPLE_H
+#ifndef TOOL_SAMPLE_HPP_
+#define TOOL_SAMPLE_HPP_
 
 #include <Rcpp.h>
 

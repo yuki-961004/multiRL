@@ -1,7 +1,7 @@
 #include <Rcpp.h>
-#include "tool_get_param.h" 
-#include "tool_record_shown.h" 
-#include "tool_sample_choice.h" 
+#include "../inst/include/tool_get_param.hpp" 
+#include "../inst/include/tool_record_shown.hpp" 
+#include "../inst/include/tool_sample_choice.hpp" 
 
 //' multiRL.output
 //'
