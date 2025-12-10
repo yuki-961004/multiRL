@@ -38,7 +38,7 @@ testthat::test_that("replay fitting.MLE", {
     control = list(core = 1, iter = 5)
   )
   
-  replay <- multiRL::rpl_e(
+  replay.fitting <- multiRL::rpl_e(
     result = fitting.MLE,
     data = multiRL::TAB,
     behrule = list(
@@ -72,10 +72,10 @@ testthat::test_that("replay fitting.MLE", {
     omit = c("funcs")
   )
   
-  plot(x = replay)
+  plot(x = replay.fitting)
   
-  testthat::expect_s4_class(replay$TD$`1`$multiRL.model, "multiRL.model")
-  testthat::expect_s4_class(replay$TD$`1`$multiRL.summary, "multiRL.summary")
+  testthat::expect_s4_class(replay.fitting$TD[[1]]$multiRL.model, "multiRL.model")
+  testthat::expect_s4_class(replay.fitting$TD[[1]]$multiRL.summary, "multiRL.summary")
 })
 
 testthat::test_that("replay recovery.MLE", {
@@ -119,7 +119,7 @@ testthat::test_that("replay recovery.MLE", {
     control = list(core = 1, sample = 5, iter = 5)
   )
   
-  replay <- multiRL::rpl_e(
+  replay.recovery <- multiRL::rpl_e(
     result = recovery.MLE,
     data = multiRL::TAB,
     behrule = list(
@@ -153,10 +153,10 @@ testthat::test_that("replay recovery.MLE", {
     omit = c("data", "funcs")
   )
   
-  plot(x = replay, param = "beta")
+  plot(x = replay.recovery, param = "beta")
   
-  testthat::expect_s4_class(replay$simulate$TD[[1]]$multiRL.model, "multiRL.model")
-  testthat::expect_s4_class(replay$simulate$TD[[1]]$multiRL.summary, "multiRL.summary")
-  testthat::expect_s4_class(replay$recovery$TD[[1]]$`1`$multiRL.model, "multiRL.model")
-  testthat::expect_s4_class(replay$recovery$TD[[1]]$`1`$multiRL.summary, "multiRL.summary")
+  testthat::expect_s4_class(replay.recovery$simulate$TD[[1]]$multiRL.model, "multiRL.model")
+  testthat::expect_s4_class(replay.recovery$simulate$TD[[1]]$multiRL.summary, "multiRL.summary")
+  testthat::expect_s4_class(replay.recovery$recovery$TD$TD[[1]]$multiRL.model, "multiRL.model")
+  testthat::expect_s4_class(replay.recovery$recovery$TD$TD[[1]]$multiRL.summary, "multiRL.summary")
 })

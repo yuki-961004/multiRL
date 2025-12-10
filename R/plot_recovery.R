@@ -44,8 +44,12 @@
   
 ################################## [plot] ######################################
   
+  plot <- list()
+
   for (i in model_names) {
     
+    plot[[i]] <- list()
+
     for (j in free_params_names[[i]]) {
       
       true <- as.numeric(
@@ -64,11 +68,7 @@
       # 找到 true 和 pred 中的最小值和最大值
       min_val <- base::min(true, pred)
       max_val <- base::max(true, pred)
-      
-      # 增加一点边距，让数据点不贴边
-      range_ext <- max_val - min_val
-      margin    <- range_ext * 0.01
-      limit     <- base::c(min_val, max_val)
+      limit   <- base::c(min_val, max_val)
       
       p <- data.frame(true = true, pred = pred) |>
         ggplot2::ggplot(
@@ -105,7 +105,9 @@
           )
         ) +
         .theme_apa()
-      p
+      print(p)
+      plot[[i]][[j]] <- p
     }
   }
+  invisible(plot)
 }

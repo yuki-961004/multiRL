@@ -3,10 +3,10 @@
 ################################ [get info] ####################################
   
   # 取出 rsp 名称（列名）
-  rsp <- x[[1]][[1]]$multiRL.model@behrule@rsp
-  subid <- x[[1]][[1]]$multiRL.model@input@colnames@subid
-  block <- x[[1]][[1]]$multiRL.model@input@colnames@block
-  action <- x[[1]][[1]]$multiRL.model@input@colnames@action
+  rsp     <- x[[1]][[1]]$multiRL.model@behrule@rsp
+  subid   <- x[[1]][[1]]$multiRL.model@input@colnames@subid
+  block   <- x[[1]][[1]]$multiRL.model@input@colnames@block
+  action  <- x[[1]][[1]]$multiRL.model@input@colnames@action
   
   # 模型名与被试名
   model_names <- names(x)
@@ -21,13 +21,13 @@
   }
   data_raw <- do.call(rbind, data_raw)
   
-  col_block <- data_raw[[block]]
-  col_action <- data_raw[[action]]
+  col_block   <- data_raw[[block]]
+  col_action  <- data_raw[[action]]
   
-  # 1. 统计每个 Block 在四个选项的次数
+  # 1. 统计每个 Block 不同action的次数
   tbl <- with(data_raw, table(col_block, col_action))
   
-  # 2. 计算比例（同行求和后除以该行总和）
+  # 2. 计算每个 Block 不同action的比率
   ratio_raw <- prop.table(tbl, margin = 1)
   
   # 3. 转成数据框
@@ -49,7 +49,7 @@
     
     # 数值列（按 rsp 动态生成）
     numeric_cols <- stats::setNames(
-      object = replicate(
+      object = base::replicate(
         n = length(rsp),
         expr = numeric(n_rows),
         simplify = FALSE
@@ -102,17 +102,17 @@
     }
     
     # 展开成大表
-    df <- .expand_ratio(ratio_list, rsp)
+    ratio_df <- .expand_ratio(ratio_list, rsp)
     
-    df_mean <- stats::aggregate(
-      x = df[, rsp, drop = FALSE],
-      by = list(Block = df[[block]]),
+    ratio_model <- stats::aggregate(
+      x = ratio_df[, rsp, drop = FALSE],
+      by = list(Block = ratio_df[[block]]),
       FUN = mean
     )
     
-    df_mean$model <- m
+    ratio_model$model <- m
     
-    ratio[[m]] <- df_mean
+    ratio[[m]] <- ratio_model
   }
   
   ratio_robot <- do.call(rbind, ratio)
@@ -120,7 +120,7 @@
 ################################# [plot] #######################################
   
   ratio <- rbind(ratio_human, ratio_robot)
-  rownames(ratio) <- NULL
+  row.names(ratio) <- NULL
   ratio$model <- factor(ratio$model, levels = unique(ratio$model))
   
   long_df <- stats::reshape(
@@ -160,5 +160,6 @@
       color = "Model"
     ) +
     .theme_apa()
-  p
+  print(p)
+  invisible(p)
 }

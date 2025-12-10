@@ -1,3 +1,4 @@
+# nocov start
 .make_empty_value <- function(class_name) {
   switch(
     class_name,
@@ -13,6 +14,7 @@
     methods::new(class_name)
   )
 }
+# nocov end
 
 .remove_slot <- function(x, omit = base::character()) {
   

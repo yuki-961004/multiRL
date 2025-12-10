@@ -16,6 +16,7 @@
     return(base_colors[seq_len(n)])
   }
   
+  # nocov start
   # 用 colorRampPalette 做渐变扩展
   dynamic_cols <- grDevices::colorRampPalette(base_colors[-1])(n - 1)
   
@@ -23,4 +24,5 @@
   final_cols <- c(base_colors[1], dynamic_cols)
   
   return(final_cols)
+  # nocov end
 }

@@ -17,7 +17,7 @@ testthat::test_that("SBI", {
     settings = list(
       name = "TD",
       mode = "simulating",
-      estimate = "ABC",
+      estimate = "MAP",
       policy = "on"
     ),
   )

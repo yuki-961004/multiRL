@@ -60,7 +60,10 @@ reference:
   - title: "Summary"
     contents:
       - summary,multiRL.model-method
-
+      
+  - title: "Plot"
+    contents:
+      - plot.multiRL.replay
 navbar:
   structure:
     left: [intro, reference, news, articles, extensions]
