@@ -5,41 +5,48 @@
 \title{Step 4: Replaying the experiment with optimal parameters}
 \usage{
 rpl_e(
+  result,
+  free_params = NULL,
   data,
+  colnames,
   behrule,
   ids = NULL,
-  colnames,
+  models,
   funcs = NULL,
   priors = NULL,
   settings = NULL,
-  result,
-  models,
-  free_params = NULL,
   ...
 )
 }
 \arguments{
-\item{data}{data}
+\item{result}{Result from \code{rcv_d} or \code{fit_p}}
 
-\item{behrule}{behrule}
+\item{free_params}{In order to prevent ambiguity regarding the free parameters, their names 
+can be explicitly defined by the user.}
 
-\item{ids}{ids}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{colnames}{colnames}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{funcs}{funcs}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{priors}{priors}
+\item{ids}{The Subject ID of the participant whose data needs to be fitted.}
 
-\item{settings}{settings}
+\item{models}{Reinforcement Learning Models}
 
-\item{result}{result}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{models}{models}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{free_params}{free_params}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 replay

@@ -1,0 +1,37 @@
+#' @title Algorithm Packages
+#' @name algorithm
+#' @description 
+#'  
+#'  The package supports the following eight optimization packages for finding 
+#'    the optimal values of the model's free parameters. Note that if you use 
+#'    "NLOPT", you must consult its official documentation to input a specific 
+#'    algorithm name. If no local search algorithm is specified, the default 
+#'    local search method used will be "NLOPT_LN_BOBYQA".
+#'  
+#' @section Class: 
+#' \code{algorithm [Character]} 
+#'  
+#' @section Packages: 
+#' \enumerate{
+#'    \item L-BFGS-B (from \code{stats::optim}) 
+#'    \item Simulated Annealing (\code{GenSA::GenSA})
+#'    \item Genetic Algorithm (\code{GA::ga})
+#'    \item Differential Evolution (\code{DEoptim::DEoptim})
+#'    \item Bayesian Optimization (\code{mlrMBO::mbo})
+#'    \item Particle Swarm Optimization (\code{pso::psoptim})
+#'    \item Covariance Matrix Adapting Evolutionary Strategy (\code{cmaes::cma_es})
+#'    \item Nonlinear Optimization (\code{nloptr::nloptr})
+#' }
+#' 
+#' @section Example: 
+#' \preformatted{ # supported algorithms
+#'  algorithm = "L-BFGS-B"
+#'  algorithm = "GenSA"
+#'  algorithm = "GA"
+#'  algorithm = "DEoptim"
+#'  algorithm = "Bayesian"
+#'  algorithm = "PSO"
+#'  algorithm = "CMA-ES"
+#'  algorithm = "NLOPT_GN_MLSL"
+#' }
+NULL

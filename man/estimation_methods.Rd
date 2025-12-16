@@ -5,15 +5,15 @@
 \title{estimation_methods}
 \usage{
 estimation_methods(
+  estimate,
   data,
+  colnames,
   behrule,
   ids = NULL,
-  colnames,
+  models,
   funcs = NULL,
   priors = NULL,
   settings = NULL,
-  models,
-  estimate,
   algorithm,
   lowers,
   uppers,
@@ -22,33 +22,42 @@ estimation_methods(
 )
 }
 \arguments{
-\item{data}{data}
+\item{estimate}{Estimate method that you want to use, 
+see \link[multiRL]{estimate}}
 
-\item{behrule}{behrule}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{ids}{ids}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{colnames}{colnames}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{funcs}{funcs}
+\item{ids}{The Subject ID of the participant whose data needs to be fitted.}
 
-\item{priors}{priors}
+\item{models}{Reinforcement Learning Models}
 
-\item{settings}{settings}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{models}{models}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{estimate}{estimate}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{algorithm}{algorithm}
+\item{algorithm}{Algorithm packages that multiRL supports, 
+see \link[multiRL]{algorithm}}
 
-\item{lowers}{lowers}
+\item{lowers}{Lower bound of free parameters in each model.}
 
-\item{uppers}{uppers}
+\item{uppers}{Upper bound of free parameters in each model.}
 
-\item{control}{control}
+\item{control}{Settings manage various aspects of the iterative process,
+see \link[multiRL]{control}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 results

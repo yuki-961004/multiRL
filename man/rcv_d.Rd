@@ -5,15 +5,15 @@
 \title{Step 2: Generating fake data for parameter and model recovery}
 \usage{
 rcv_d(
+  estimate,
   data,
+  colnames,
   behrule,
   id = NULL,
-  colnames,
+  models,
   funcs = NULL,
   priors = NULL,
   settings = NULL,
-  models,
-  estimate,
   algorithm,
   lowers,
   uppers,
@@ -22,33 +22,44 @@ rcv_d(
 )
 }
 \arguments{
-\item{data}{data}
+\item{estimate}{Estimate method that you want to use, 
+see \link[multiRL]{estimate}}
 
-\item{behrule}{behrule}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{id}{id}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{colnames}{colnames}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{funcs}{funcs}
+\item{id}{The ID of the subject whose experimental structure (e.g., trial order) will 
+be used as the template for generating all simulated data. 
+Defaults to the first subject found in the input data.}
 
-\item{priors}{priors}
+\item{models}{Reinforcement Learning Models}
 
-\item{settings}{settings}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{models}{models}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{estimate}{estimate}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{algorithm}{algorithm}
+\item{algorithm}{Algorithm packages that multiRL supports, 
+see \link[multiRL]{algorithm}}
 
-\item{lowers}{lowers}
+\item{lowers}{Lower bound of free parameters in each model.}
 
-\item{uppers}{uppers}
+\item{uppers}{Upper bound of free parameters in each model.}
 
-\item{control}{control}
+\item{control}{Settings manage various aspects of the iterative process,
+see \link[multiRL]{control}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 recovery

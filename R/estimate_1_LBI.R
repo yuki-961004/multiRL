@@ -1,12 +1,21 @@
 #' estimate_1_LBI
 #'
-#' @param model model
-#' @param env environment
-#' @param algorithm algorithm
-#' @param lower lower
-#' @param upper upper
-#' @param control control
-#' @param ... extra
+#' @param model 
+#'  Reinforcement Learning Model
+#' @param env 
+#'  multiRL.env
+#' @param algorithm 
+#'  Algorithm packages that multiRL supports, 
+#'    see \link[multiRL]{algorithm}
+#' @param lower 
+#'  Lower bound of free parameters
+#' @param upper 
+#'  Upper bound of free parameters
+#' @param control 
+#'  Settings manage various aspects of the iterative process,
+#'    see \link[multiRL]{control}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns multiRL.model
 #' 

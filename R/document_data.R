@@ -1,0 +1,34 @@
+#' @title Dataset Structure
+#' @name data
+#' @description 
+#'  
+#'  Experimental data from any Multi-Armed Bandit (MAB)-like task.
+#'  
+#' @section Class: 
+#' \code{data [data.frame]} 
+#'  
+#' @section Details:  
+#' 
+#'  Each row must contain all information relevant to that trial for running a 
+#'    decision-making task (e.g., multi-armed bandit) as well as the feedback 
+#'    received.
+#'  
+#'  In this type of paradigm, the rewards associated with possible actions must 
+#'    be explicitly written in the table for every trial (aka, tabular case, 
+#'    see Sutton & Barto, 2018, Chapter 2). The package does not perform any 
+#'    real-time random sampling based on the agent’s choices; therefore, Users 
+#'    should pre-define the reward for each possible action in every trial.
+#'    
+#'  You should never use true randomization to generate rewards. Doing so would 
+#'    result in different participants interacting with multi-armed bandits that 
+#'    do not share the same expected values. In such cases, if two participants 
+#'    show different parameter estimates in a reinforcement-learning model, we 
+#'    cannot determine whether the difference reflects stable individual traits 
+#'    or simply the fact that one participant happened to be lucky while the 
+#'    other was not.
+#' 
+#' @references 
+#' Sutton, R. S., & Barto, A. G. (2018). Reinforcement Learning: 
+#' An Introduction (2nd ed). MIT press.
+#' 
+NULL

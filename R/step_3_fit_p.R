@@ -1,35 +1,59 @@
 #' @title 
 #' Step 3: Optimizing parameters to fit real data
 #'
-#' @param data data
-#' @param behrule behrule
-#' @param ids ids
-#' @param colnames colnames
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' @param models models
-#' @param estimate estimate
-#' @param algorithm algorithm
-#' @param lowers lowers
-#' @param uppers uppers
-#' @param control control
-#' @param ... extra
+#' @param estimate 
+#'  Estimate method that you want to use, 
+#'    see \link[multiRL]{estimate}
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param ids 
+#'  The Subject ID of the participant whose data needs to be fitted.
+#' @param models 
+#'  Reinforcement Learning Models
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param algorithm 
+#'  Algorithm packages that multiRL supports, 
+#'    see \link[multiRL]{algorithm}
+#' @param lowers 
+#'  Lower bound of free parameters in each model.
+#' @param uppers 
+#'  Upper bound of free parameters in each model.
+#' @param control 
+#'  Settings manage various aspects of the iterative process,
+#'    see \link[multiRL]{control}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns optimal params
 #' 
 fit_p <- function(
-    data, 
-    behrule,
+    estimate,
     
-    ids = NULL,
+    data, 
     colnames,
+    behrule,
+    ids = NULL,
+    
     funcs = NULL,
     priors = NULL,
     settings = NULL,
     models,
     
-    estimate,
     algorithm,
     lowers,
     uppers,

@@ -49,12 +49,13 @@ multiRL.model <- multiRL::run_m(
     fixed = list(
       gamma = 1, 
       delta = 0.1, 
-      epsilon = NA_real_, zeta = 1, eta = NA_real_, 
-      theta = 0
+      epsilon = NA_real_,
+      zeta = 0
     ),
     constant = list(
       Q0 = 100, 
       lapse = 0.01,
+      threshold = 1,
       bonus = 0
     )
   ),

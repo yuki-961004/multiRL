@@ -7,14 +7,11 @@
 process_3_record(input, behrule, ...)
 }
 \arguments{
-\item{input}{input}
+\item{input}{multiRL.input}
 
-\item{behrule}{behrule}
+\item{behrule}{multiRL.behrule}
 
-\item{...}{extra}
-}
-\value{
-multiRL.record
+\item{...}{Additional arguments passed to internal functions.}
 }
 \description{
 multiRL.record

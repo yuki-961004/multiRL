@@ -1,21 +1,36 @@
 #' estimate_0_ENV
 #'
-#' @param data data
-#' @param behrule behrule
-#' @param colnames colnames
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' @param ... extra
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns multiRL.env
 #' 
 estimate_0_ENV <- function(
     data,
-    behrule,
     colnames = list(),
+    behrule,
+    
     funcs = list(),
     priors = list(),
+    
     settings = list(),
     ...
 ){

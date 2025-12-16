@@ -1,8 +1,10 @@
 #' TD Model
-#'
-#' @param params params
-#'
-#' @returns result
+#' 
+#'  \deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
+#'  
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
 #' 
 TD <- function(params){
   

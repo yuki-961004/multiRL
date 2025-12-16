@@ -1,0 +1,65 @@
+---
+title: "Step 2: rcv_d"
+author: "YuKi"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Step 2: rcv_d}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+<p align="center">
+    <img src="./fig/rl_step2.png" alt="Step 2" width="80%" style="display: inline;">
+</p>
+
+```{r eval=FALSE}
+recovery.MLE <- multiRL::rcv_d(
+  estimate = "MLE",
+
+  data = multiRL::TAB,
+  colnames = list(
+    object = c("L_choice", "R_choice"), 
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  id = 1,
+
+  models = list(
+    multiRL::TD, 
+    multiRL::RSTD, 
+    multiRL::Utility
+  ),
+  priors = list(
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    ),
+    list(
+      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    ),
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)},
+      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
+    )
+  ),
+  settings = list(
+    list(name = "TD"), 
+    list(name = "RSTD"), 
+    list(name = "Utility")
+  ),
+  
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+  uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
+  control = list(core = 10, sample = 100, iter = 100)
+)
+
+save(recovery.MLE, file = "./recovery.MLE.Rdata")
+```
+

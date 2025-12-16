@@ -7,11 +7,10 @@
 RSTD(params)
 }
 \arguments{
-\item{params}{params}
-}
-\value{
-result
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 }
 \description{
-RSTD Model
+\deqn{Q_{new} = Q_{old} + \alpha_{-} \cdot (R - Q_{old}), R < Q_{old}}
+ \deqn{Q_{new} = Q_{old} + \alpha_{+} \cdot (R - Q_{old}), R \ge Q_{old}}
 }

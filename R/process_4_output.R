@@ -1,9 +1,9 @@
 #' multiRL.output
 #'
-#' @param record record
-#' @param ... extra
-#'
-#' @returns multiRL.output
+#' @param record 
+#'  multiRL.record
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #' 
 process_4_output_r <- function(
     record,

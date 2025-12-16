@@ -6,13 +6,13 @@
 \usage{
 estimate_1_MLE(
   data,
+  colnames,
   behrule,
   ids = NULL,
-  colnames,
-  funcs = NULL,
-  priors = NULL,
-  settings = NULL,
   models,
+  funcs = NULL,
+  priors,
+  settings = NULL,
   algorithm,
   lowers,
   uppers,
@@ -21,31 +21,39 @@ estimate_1_MLE(
 )
 }
 \arguments{
-\item{data}{data}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{behrule}{behrule}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{ids}{ids}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{colnames}{colnames}
+\item{ids}{The Subject ID of the participant whose data needs to be fitted.}
 
-\item{funcs}{funcs}
+\item{models}{Reinforcement Learning Models}
 
-\item{priors}{priors}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{settings}{settings}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{models}{models}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{algorithm}{algorithm}
+\item{algorithm}{Algorithm packages that multiRL supports, 
+see \link[multiRL]{algorithm}}
 
-\item{lowers}{lowers}
+\item{lowers}{Lower bound of free parameters in each model.}
 
-\item{uppers}{uppers}
+\item{uppers}{Upper bound of free parameters in each model.}
 
-\item{control}{control}
+\item{control}{Settings manage various aspects of the iterative process,
+see \link[multiRL]{control}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 data.frame

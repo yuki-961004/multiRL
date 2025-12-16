@@ -7,19 +7,21 @@
 estimate_1_LBI(model, env, algorithm, lower, upper, control = list(), ...)
 }
 \arguments{
-\item{model}{model}
+\item{model}{Reinforcement Learning Model}
 
-\item{env}{environment}
+\item{env}{multiRL.env}
 
-\item{algorithm}{algorithm}
+\item{algorithm}{Algorithm packages that multiRL supports, 
+see \link[multiRL]{algorithm}}
 
-\item{lower}{lower}
+\item{lower}{Lower bound of free parameters}
 
-\item{upper}{upper}
+\item{upper}{Upper bound of free parameters}
 
-\item{control}{control}
+\item{control}{Settings manage various aspects of the iterative process,
+see \link[multiRL]{control}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 multiRL.model

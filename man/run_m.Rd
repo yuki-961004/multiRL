@@ -6,10 +6,10 @@
 \usage{
 run_m(
   data,
-  behrule = list(),
   colnames = list(),
-  params = list(),
+  behrule = list(),
   funcs = list(),
+  params = list(),
   priors = list(),
   settings = list(),
   engine = "Cpp",
@@ -17,27 +17,82 @@ run_m(
 )
 }
 \arguments{
-\item{data}{data}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{behrule}{behrule}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{colnames}{colnames}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{params}{params}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{funcs}{funcs}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{priors}{priors}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{settings}{settings}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{engine}{engine}
+\item{engine}{Specifies whether the core MDP update loop is executed in C++ or in R.}
 
-\item{...}{extra}
-}
-\value{
-multiRL.model
+\item{...}{Additional arguments passed to internal functions.}
 }
 \description{
 Step 1: Building reinforcement learning model
 }
+\section{Example}{
+ 
+\preformatted{ # multiRL.model
+ multiRL.model <- multiRL::run_m(
+   data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+   behrule = list(
+     cue = c("A", "B", "C", "D"),
+     rsp = c("A", "B", "C", "D")
+   ),
+   colnames = list(
+     subid = "Subject", block = "Block", trial = "Trial",
+     object = c("L_choice", "R_choice"), 
+     reward = c("L_reward", "R_reward"),
+     action = "Sub_Choose",
+     exinfo = c("Frame", "NetWorth", "RT")
+   ),
+   params = list(
+     free = list(
+       alpha = 0.5,
+       beta = 0.5
+     ),
+     fixed = list(
+       gamma = 1, 
+       delta = 0.1, 
+       epsilon = NA_real_,
+       zeta = 0
+     ),
+     constant = list(
+       Q0 = NA, 
+       lapse = 0.01,
+       threshold = 1,
+       bonus = 0
+     )
+   ),
+   priors = list(
+     alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+   ),
+   settings = list(
+     name = "TD",
+     mode = "fitting",
+     estimate = "MLE",
+     policy = "off"
+   ),
+   engine = "Cpp"
+ )
+ 
+ multiRL.summary <- multiRL::summary(multiRL.model)
+}
+}
+

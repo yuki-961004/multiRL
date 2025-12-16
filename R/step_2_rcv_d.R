@@ -1,40 +1,66 @@
 #' @title 
 #' Step 2: Generating fake data for parameter and model recovery
 #'
-#' @param data data
-#' @param behrule behrule
-#' @param id id
-#' @param colnames colnames
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' @param models models
-#' @param estimate estimate
-#' @param algorithm algorithm
-#' @param lowers lowers
-#' @param uppers uppers
-#' @param control control
-#' @param ... extra
+#' @param estimate 
+#'  Estimate method that you want to use, 
+#'    see \link[multiRL]{estimate}
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param id
+#'  The ID of the subject whose experimental structure (e.g., trial order) will 
+#'    be used as the template for generating all simulated data. 
+#'    Defaults to the first subject found in the input data.
+#' @param models 
+#'  Reinforcement Learning Models
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param algorithm 
+#'  Algorithm packages that multiRL supports, 
+#'    see \link[multiRL]{algorithm}
+#' @param lowers 
+#'  Lower bound of free parameters in each model.
+#' @param uppers 
+#'  Upper bound of free parameters in each model.
+#' @param control 
+#'  Settings manage various aspects of the iterative process,
+#'    see \link[multiRL]{control}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns recovery
 #' 
 rcv_d <- function(
-  data, 
-  behrule,
+    estimate,  
   
-  id = NULL,
-  colnames,
-  funcs = NULL,
-  priors = NULL,
-  settings = NULL,
-  models,
+    data, 
+    colnames,
+    behrule,
+    id = NULL,
   
-  estimate,
-  algorithm,
-  lowers,
-  uppers,
-  control,
-  ...
+    models,
+    funcs = NULL,
+    priors = NULL,
+    settings = NULL,
+
+    algorithm,
+    lowers,
+    uppers,
+    control,
+    ...
 ){
 ################################# [check] ######################################
   

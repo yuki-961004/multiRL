@@ -2,20 +2,47 @@
 % Please edit documentation in R/func_epsilon.R
 \name{func_epsilon}
 \alias{func_epsilon}
-\title{Function: Epsilon Related}
+\title{Function: \eqn{\epsilon}–first, Greedy, Decreasing}
 \usage{
 func_epsilon(rownum, params, ...)
 }
 \arguments{
-\item{rownum}{rownum}
+\item{rownum}{The trial number}
 
-\item{params}{params}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{...}{extra}
-}
-\value{
-try
+\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
+the user.}
 }
 \description{
-Function: Epsilon Related
+\eqn{\epsilon–first}: 
+ 
+ \deqn{
+ P(x) = 
+ \begin{cases}
+   i \le \text{threshold}, & x=1  \\
+   i > \text{threshold}, & x=0 
+ \end{cases}
+ }
+ 
+ \eqn{\epsilon–greedy}: 
+ 
+ \deqn{
+ P(x) = 
+ \begin{cases}
+   \epsilon, & x=1  \\
+   1-\epsilon, & x=0 
+ \end{cases}
+ }
+ 
+ \eqn{\epsilon–decreasing}:
+ 
+ \deqn{
+ P(x) = 
+ \begin{cases}
+   \frac{1}{1+\epsilon \cdot i}, & x=1  \\
+   \frac{\epsilon \cdot i}{1+\epsilon \cdot i}, & x=0 
+ \end{cases}
+ }
 }

@@ -7,12 +7,10 @@
 process_2_behrule(behrule, ...)
 }
 \arguments{
-\item{behrule}{behrule}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{...}{extra}
-}
-\value{
-multiRL.behrule
+\item{...}{Additional arguments passed to internal functions.}
 }
 \description{
 multiRL.behrule

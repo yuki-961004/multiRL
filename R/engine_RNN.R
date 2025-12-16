@@ -1,29 +1,43 @@
 #' engine_RNN
 #'
-#' @param data data
-#' @param behrule behrule
-#' @param colnames colnames
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param model 
+#'  Reinforcement Learning Model
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param control 
+#'  Settings manage various aspects of the iterative process,
+#'    see \link[multiRL]{control}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #' 
-#' @param model model
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' 
-#' @param control control
-#'
-#' @returns RNN
-
 engine_RNN <- function(
-    data = data,
-    behrule = behrule,
+    data,
     colnames,
+    behrule,
     
     model,
     funcs = NULL,
     priors,
-    settings = NULL,
     
-    control = control
+    settings = NULL,
+    control = control,
+    ...
 ){
 
   # 确保训练模型和参数恢复时没有用同一份数据

@@ -1,9 +1,9 @@
 #' multiRL.metric
 #'
-#' @param output output
-#' @param ... extra
-#'
-#' @returns multiRL.metric
+#' @param output 
+#'  multiRL.output
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #' 
 process_5_metric <- function(
     output,

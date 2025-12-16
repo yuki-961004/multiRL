@@ -7,30 +7,33 @@
 process_1_input(
   data,
   colnames = list(),
-  params = list(),
   funcs = list(),
+  params = list(),
   priors,
   settings = list(),
   ...
 )
 }
 \arguments{
-\item{data}{data}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{colnames}{colnames}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{params}{params}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{funcs}{funcs}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{priors}{priors}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{settings}{settings}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{...}{extra}
-}
-\value{
-multiRL.input
+\item{...}{Additional arguments passed to internal functions.}
 }
 \description{
 multiRL.input

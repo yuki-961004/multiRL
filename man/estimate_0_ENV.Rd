@@ -6,8 +6,8 @@
 \usage{
 estimate_0_ENV(
   data,
-  behrule,
   colnames = list(),
+  behrule,
   funcs = list(),
   priors = list(),
   settings = list(),
@@ -15,19 +15,25 @@ estimate_0_ENV(
 )
 }
 \arguments{
-\item{data}{data}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{behrule}{behrule}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{colnames}{colnames}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{funcs}{funcs}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{priors}{priors}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{settings}{settings}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 multiRL.env

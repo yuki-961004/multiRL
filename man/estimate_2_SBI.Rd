@@ -7,15 +7,17 @@
 estimate_2_SBI(model, env, priors, control = list(), ...)
 }
 \arguments{
-\item{model}{model}
+\item{model}{Reinforcement Learning Model}
 
 \item{env}{multiRL.env}
 
-\item{priors}{priors}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{control}{control}
+\item{control}{Settings manage various aspects of the iterative process,
+see \link[multiRL]{control}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 simulated data

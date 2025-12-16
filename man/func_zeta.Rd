@@ -7,19 +7,19 @@
 func_zeta(value0, values, reward, params, ...)
 }
 \arguments{
-\item{value0}{values}
+\item{value0}{The initial values for all actions.}
 
-\item{values}{values}
+\item{values}{The current expected values for all actions.}
 
-\item{reward}{reward}
+\item{reward}{The feedback received by the agent from the environment at trial(t) 
+following the execution of action(a)}
 
-\item{params}{params}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{...}{extra}
-}
-\value{
-decayed values
+\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
+the user.}
 }
 \description{
-Function: Decay Rate
+\deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
 }

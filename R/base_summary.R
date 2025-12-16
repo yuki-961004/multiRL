@@ -1,7 +1,7 @@
 #' summary
 #'
 #' @param object multiRL.model. 
-#' @param ... extra
+#' @param ... ...
 #'
 #' @returns multiRL.summary
 #' 

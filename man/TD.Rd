@@ -7,11 +7,9 @@
 TD(params)
 }
 \arguments{
-\item{params}{params}
-}
-\value{
-result
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 }
 \description{
-TD Model
+\deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
 }

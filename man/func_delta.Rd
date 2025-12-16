@@ -7,15 +7,16 @@
 func_delta(count, params, ...)
 }
 \arguments{
-\item{count}{count}
+\item{count}{How many times this action has been executed}
 
-\item{params}{params}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{...}{extra}
-}
-\value{
-bias
+\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
+the user.}
 }
 \description{
-Function: Upper-Confidence-Bound
+\deqn{
+   \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
+ }
 }

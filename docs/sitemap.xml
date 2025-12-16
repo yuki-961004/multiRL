@@ -1,10 +1,22 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://yuki-961004.github.io/multiRL/404.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/articles/index.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/articles/multiRL.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/articles/Step_1_run_m.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/articles/Step_2_rcv_d.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/articles/Step_3_fit_p.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/articles/Step_4_rpl_e.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/authors.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/index.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/LICENSE-text.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/algorithm.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/behrule.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/colnames.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/control.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/data.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/engine_ABC.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/engine_RNN.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/estimate.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/estimate_0_ENV.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/estimate_1_LBI.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/estimate_1_MAP.html</loc></url>
@@ -14,6 +26,7 @@
 <url><loc>https://yuki-961004.github.io/multiRL/reference/estimate_2_SBI.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/estimation_methods.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/fit_p.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/funcs.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/func_alpha.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/func_beta.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/func_delta.html</loc></url>
@@ -21,9 +34,13 @@
 <url><loc>https://yuki-961004.github.io/multiRL/reference/func_gamma.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/func_theta.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/func_zeta.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/get_param.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/index.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/MAB.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/params.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/plot.multiRL.replay.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/policy.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/priors.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/process_1_input.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/process_2_behrule.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/process_3_record.html</loc></url>
@@ -34,6 +51,7 @@
 <url><loc>https://yuki-961004.github.io/multiRL/reference/rpl_e.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/RSTD.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/run_m.html</loc></url>
+<url><loc>https://yuki-961004.github.io/multiRL/reference/settings.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/summary-multiRL.model-method.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/TAB.html</loc></url>
 <url><loc>https://yuki-961004.github.io/multiRL/reference/TD.html</loc></url>

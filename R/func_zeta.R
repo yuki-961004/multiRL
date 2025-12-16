@@ -1,12 +1,21 @@
-#' Function: Decay Rate
+#' @title Function: Decay Rate
+#' @description
+#' 
+#'  \deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
 #'
-#' @param value0 values
-#' @param values values
-#' @param reward reward
-#' @param params params
-#' @param ... extra
-#'
-#' @returns decayed values
+#' @param value0 
+#'  The initial values for all actions.
+#' @param values 
+#'  The current expected values for all actions.
+#' @param reward 
+#'  The feedback received by the agent from the environment at trial(t) 
+#'    following the execution of action(a)
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
+#' @param ... 
+#'  Subject ID, Block ID, Trial ID, and any additional information defined by 
+#'    the user.
 #' 
 func_zeta <- function(
     value0, 

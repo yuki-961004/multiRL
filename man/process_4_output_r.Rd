@@ -7,12 +7,9 @@
 process_4_output_r(record, ...)
 }
 \arguments{
-\item{record}{record}
+\item{record}{multiRL.record}
 
-\item{...}{extra}
-}
-\value{
-multiRL.output
+\item{...}{Additional arguments passed to internal functions.}
 }
 \description{
 multiRL.output

@@ -7,11 +7,13 @@
 Utility(params)
 }
 \arguments{
-\item{params}{params}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 }
 \value{
 result
 }
 \description{
-Utility Model
+\deqn{Q_{new} = Q_{old} + \alpha \cdot (U(R) - Q_{old})}
+ \deqn{U(R) = {R}^{\gamma}}
 }

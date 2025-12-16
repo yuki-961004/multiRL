@@ -1,10 +1,17 @@
 #' estimate_2_SBI
 #'
-#' @param model model
-#' @param env multiRL.env
-#' @param priors priors
-#' @param control control
-#' @param ... extra
+#' @param model 
+#'  Reinforcement Learning Model
+#' @param env 
+#'  multiRL.env
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param control 
+#'  Settings manage various aspects of the iterative process,
+#'    see \link[multiRL]{control}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns simulated data
 #' 

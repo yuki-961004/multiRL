@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{multiRL.model.}
 
-\item{...}{extra}
+\item{...}{...}
 }
 \value{
 multiRL.summary

@@ -7,17 +7,31 @@
 func_beta(qvalue, explor, params, ...)
 }
 \arguments{
-\item{qvalue}{qvalue}
+\item{qvalue}{The estimated expected value of taking action(a) at trial(t) with bias.}
 
-\item{explor}{explor}
+\item{explor}{Whether the agent made a random choice (exploration) in this trial.}
 
-\item{params}{params}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{...}{extra}
-}
-\value{
-probability
+\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
+the user.}
 }
 \description{
-Function: Soft-Max
+\deqn{
+   P_{t}(a) = 
+   \frac{
+     \exp(\beta \cdot (Q_t(a) - \max_{a' \in \mathcal{A}} Q_t(a')))
+   }
+   {
+     \sum_{a' \in \mathcal{A}} 
+     \exp(
+       \beta \cdot (Q_t(a') - \max_{a'_{i} \in \mathcal{A}} Q_t(a'_{i}))
+     )
+   }
+ }
+   
+ \deqn{
+   P_{t}(a) = (1 - lapse \cdot N_{shown}) \cdot P_{t}(a) + lapse
+ }
 }

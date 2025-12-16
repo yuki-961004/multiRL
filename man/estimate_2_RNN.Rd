@@ -6,9 +6,9 @@
 \usage{
 estimate_2_RNN(
   data,
+  colnames,
   behrule,
   ids = NULL,
-  colnames,
   models,
   funcs = NULL,
   priors,
@@ -18,25 +18,32 @@ estimate_2_RNN(
 )
 }
 \arguments{
-\item{data}{data}
+\item{data}{A data frame in which each row represents a single trial,
+see \link[multiRL]{data}}
 
-\item{behrule}{behrule}
+\item{colnames}{Column names in the data frame,
+see \link[multiRL]{colnames}}
 
-\item{ids}{ids}
+\item{behrule}{The agent’s implicitly formed internal rule,
+see \link[multiRL]{behrule}}
 
-\item{colnames}{colnames}
+\item{ids}{The Subject ID of the participant whose data needs to be fitted.}
 
-\item{models}{models}
+\item{models}{Reinforcement Learning Models}
 
-\item{funcs}{funcs}
+\item{funcs}{The functions forming the reinforcement learning model,
+see \link[multiRL]{funcs}}
 
-\item{priors}{priors}
+\item{priors}{Prior probability density function of the free parameters,
+see \link[multiRL]{priors}}
 
-\item{settings}{settings}
+\item{settings}{Other model settings, 
+see \link[multiRL]{settings}}
 
-\item{control}{control}
+\item{control}{Settings manage various aspects of the iterative process,
+see \link[multiRL]{control}}
 
-\item{...}{extra}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
 params

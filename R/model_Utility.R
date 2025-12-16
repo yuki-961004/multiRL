@@ -1,6 +1,11 @@
 #' Utility Model
 #'
-#' @param params params
+#'  \deqn{Q_{new} = Q_{old} + \alpha \cdot (U(R) - Q_{old})}
+#'  \deqn{U(R) = {R}^{\gamma}}
+#'
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
 #'
 #' @returns result
 #' 

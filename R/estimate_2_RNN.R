@@ -1,25 +1,40 @@
 #' estimate_2_RNN
 #'
-#' @param data data
-#' @param behrule behrule
-#' @param ids ids
-#' @param colnames colnames
-#' 
-#' @param models models
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' 
-#' @param control control
-#' @param ... extra
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param ids 
+#'  The Subject ID of the participant whose data needs to be fitted.
+#' @param models 
+#'  Reinforcement Learning Models
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param control 
+#'  Settings manage various aspects of the iterative process,
+#'    see \link[multiRL]{control}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns params
 #' 
 estimate_2_RNN <- function(
     data,
+    colnames,
     behrule,
     ids = NULL,
-    colnames,
     
     models,
     funcs = NULL,

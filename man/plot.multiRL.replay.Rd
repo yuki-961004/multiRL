@@ -11,9 +11,9 @@
 
 \item{y}{NULL}
 
-\item{model}{model}
+\item{model}{The name of model that you want to plot}
 
-\item{param}{param}
+\item{param}{The name of parameter that you want to plot}
 
 \item{...}{extra}
 }

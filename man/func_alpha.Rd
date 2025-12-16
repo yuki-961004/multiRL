@@ -7,17 +7,17 @@
 func_alpha(qvalue, reward, params, ...)
 }
 \arguments{
-\item{qvalue}{qvalue}
+\item{qvalue}{The estimated expected value of taking action(a) at trial(t).}
 
-\item{reward}{reward}
+\item{reward}{The feedback received by the agent from the environment at trial(t) 
+following the execution of action(a)}
 
-\item{params}{params}
+\item{params}{Parameters used by the model’s internal functions,
+see \link[multiRL]{params}}
 
-\item{...}{extra}
-}
-\value{
-update
+\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
+the user.}
 }
 \description{
-Function: Learning Rate
+\deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
 }

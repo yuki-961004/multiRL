@@ -1,33 +1,52 @@
 #' @title 
 #' Step 4: Replaying the experiment with optimal parameters
-#'
-#' @param data data
-#' @param behrule behrule
-#' @param ids ids
-#' @param colnames colnames
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' @param result result
-#' @param models models
-#' @param free_params free_params
-#' @param ... extra
+#' 
+#' @param result 
+#'  Result from \code{rcv_d} or \code{fit_p}
+#' @param free_params 
+#'  In order to prevent ambiguity regarding the free parameters, their names 
+#'    can be explicitly defined by the user.
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param ids 
+#'  The Subject ID of the participant whose data needs to be fitted.
+#' @param models 
+#'  Reinforcement Learning Models
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 #' @returns replay
 #' 
 rpl_e <- function(
-    data, 
-    behrule,
+    result,  
+    free_params = NULL,
     
-    ids = NULL,
+    data, 
     colnames,
+    behrule,
+    ids = NULL,
+    
+    models,
     funcs = NULL,
     priors = NULL,
     settings = NULL,
     
-    result,
-    models,
-    free_params = NULL,
     ...
 ){
  

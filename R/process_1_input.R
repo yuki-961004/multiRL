@@ -1,21 +1,34 @@
 #' multiRL.input
 #'
-#' @param data data
-#' @param colnames colnames
-#' @param params params
-#' @param funcs funcs
-#' @param priors priors
-#' @param settings settings
-#' @param ... extra
-#'
-#' @returns multiRL.input
+#' @param data 
+#'  A data frame in which each row represents a single trial,
+#'    see \link[multiRL]{data} 
+#' @param colnames 
+#'  Column names in the data frame,
+#'    see \link[multiRL]{colnames}
+#' @param funcs 
+#'  The functions forming the reinforcement learning model,
+#'    see \link[multiRL]{funcs}
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
+#' @param priors 
+#'  Prior probability density function of the free parameters,
+#'    see \link[multiRL]{priors}
+#' @param settings 
+#'  Other model settings, 
+#'    see \link[multiRL]{settings}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #'
 process_1_input <- function(
     data,
     colnames = list(),
-    params = list(),
+    
     funcs = list(),
+    params = list(),
     priors,
+    
     settings = list(),
     ...
 ){

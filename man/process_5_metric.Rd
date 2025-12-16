@@ -7,12 +7,9 @@
 process_5_metric(output, ...)
 }
 \arguments{
-\item{output}{output}
+\item{output}{multiRL.output}
 
-\item{...}{extra}
-}
-\value{
-multiRL.metric
+\item{...}{Additional arguments passed to internal functions.}
 }
 \description{
 multiRL.metric

@@ -8,6 +8,7 @@ output: html_document
 
 ```{r}
 recovery <- binaryRL::rcv_d(
+  policy = "off",
   data = binaryRL::Mason_2024_G2,
   model_names = c("TD"),
   simulate_models = list(binaryRL::TD),
@@ -34,8 +35,13 @@ result <- dplyr::bind_rows(recovery) %>%
 cor(result$input_param_1, result$output_param_1)
 cor(result$input_param_2, result$output_param_2)
 
-# [1] 0.481417
-# [1] 0.651679
+# on
+# [1] 0.5829604
+# [1] 0.6965698
+
+# off
+# [1] 0.6877152
+# [1] 0.8534783
 ```
 
 ```{r}

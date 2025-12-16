@@ -1,0 +1,206 @@
+#' @title Model Parameter Configuration
+#' @name params
+#' @description 
+#'  
+#'  The names of all these parameters are not necessarily fixed. You can define 
+#'    the parameters you need and set their names according to the functions 
+#'    used in your custom model. You must only ensure that the parameter names 
+#'    defined here are consistent with those used in your model's functions, 
+#'    and that their names do not conflict with each other.
+#'
+#' @section Class: 
+#' \code{params [List]} 
+#'
+#' @section Note: 
+#'  The parameters are divided into three types: \code{free}, \code{fixed}, 
+#'    and \code{constant.} This classification is not mandatory, any parameter 
+#'    can be treated as a free parameter depending on the user’s specification.
+#'    By default, the learning rate \code{alpha} and the inverse-temperature 
+#'    \code{beta} are the required free parameters. 
+#'  
+#' @section free: 
+#' \itemize{
+#'    \item \code{alpha [double]} 
+#'    
+#'          Learning Rate \code{alpha} specifies how aggressively or 
+#'          conservatively the agent adopts the prediction error 
+#'          (the difference between the observed reward and the expected value). 
+#'          
+#'          A value closer to 1 indicates a more aggressive update of the value 
+#'          function, meaning the agent relies more heavily on the current 
+#'          observed reward. Conversely, a value closer to 0 indicates a more 
+#'          conservative update, meaning the agent trusts its previously 
+#'          established expected value more.
+#'          
+#'    \item \code{beta [double]} 
+#'    
+#'          The inverse temperature parameter, \code{beta}, is a crucial 
+#'          component of the soft-max function. It reflects the extent to which 
+#'          the agent's decision-making relies on the value differences between 
+#'          various available options.
+#'          
+#'          A higher value of \code{beta} signifies more rational 
+#'          decision-making; that is, the probability of executing actions with 
+#'          higher expected value is greater. Conversely, a lower \code{beta} 
+#'          value signifies more stochastic decision-making, where the 
+#'          probability of executing different actions becomes nearly equal, 
+#'          regardless of the differences in their expected values.
+#' }
+#' @section fixed: 
+#' \itemize{
+#'    \item \code{gamma [double]} 
+#'    
+#'          The physical reward received is often distinct from the 
+#'          psychological value perceived by an individual. This concept 
+#'          originates in psychophysics, specifically Stevens' Power Law. 
+#'          
+#'          Here, the default utility function is defined as 
+#'          \eqn{y = x^{\gamma}}. When \eqn{\gamma = 1}, it is assumed that the 
+#'          physical quantity is equivalent to the psychological quantity.
+#'          
+#'    \item \code{delta [double]} 
+#'    
+#'          This parameter represents the weight given to the number of times 
+#'          an option has been selected.In the context of Upper Confidence 
+#'          Bound (UCB), an option that has been selected few times should be 
+#'          assigned a higher exploratory bias.
+#'          
+#'          With the default set to 0.1, a bias value is effectively applied 
+#'          only to options that have never been chosen. Once an action has 
+#'          been executed even a single time, the assigned bias value 
+#'          approaches zero.
+#'          
+#'    \item \code{epsilon [double]} 
+#'    
+#'          This parameter governs the Exploration-Exploitation trade-off and 
+#'          can be used to implement three distinct strategies by adjusting 
+#'          \code{epsilon} and \code{threshold}: \eqn{\epsilon–first}, 
+#'          \eqn{\epsilon–greedy}, and \eqn{\epsilon–decreasing}. 
+#'          
+#'          When set to \eqn{\epsilon–greedy}: \code{epsilon} represents the 
+#'          probability that the agent will execute a random exploratory action 
+#'          throughout the entire experiment, regardless of the estimated value.
+#'          
+#'          When set to \eqn{\epsilon–decreasing}: The probability of the agent 
+#'          making a random choice decreases as the number of trials increases. 
+#'          The rate of this decay is influenced by \code{epsilon}.
+#'          
+#'          By default, \code{epsilon} is set to \code{NA}, which corresponds 
+#'          to the \eqn{\epsilon–first} model. In this model, the agent always 
+#'          selects randomly before a specified trial (\code{threshold = 1}).
+#'    \item \code{zeta [double]} 
+#'    
+#'          Collins and Frank 
+#'          (\href{https://doi.org/10.1111/j.1460-9568.2011.07980.x}{2012}) 
+#'          proposed that in every trial, not only the chosen option undergoes 
+#'          value updating, but the expected values of unchosen options also 
+#'          decay towards their initial value, due to the constraints of 
+#'          working memory. This specific parameter represents the rate of this 
+#'          decay. 
+#'          
+#'          A larger value signifies a faster decay from the learned value back 
+#'          to the initial value. The default value is set to 0, which assumes 
+#'          that no such working memory system exists.
+#' }
+#' @section constant: 
+#' \itemize{
+#'    \item \code{Q0 [double]} 
+#'    
+#'          This parameter represents the initial value assigned to each action 
+#'          at the start of the MDP. As argued by Sutton and Barto (2018), 
+#'          initial values are often set to be optimistic (i.e., higher than 
+#'          all possible rewards) to encourage exploration. Conversely, an 
+#'          overly low initial value might lead the agent to cease exploring 
+#'          other options after receiving the first reward, resulting in 
+#'          repeated selection of the initially chosen action.
+#'          
+#'          The default value is set to \code{NA}, which implies that the agent 
+#'          will use the first observed reward as the initial value for that 
+#'          action. When combined with UCB, this setting ensures that every 
+#'          option is selected at least once, and their first rewards are 
+#'          immediately memorized.
+#'          
+#'          Note: This is a package-specific implementation decision. If you 
+#'          think this interpretation unsuitable, you may explicitly set 
+#'          \code{Q0} to 0 or another optimistic initial value instead.
+#'    \item \code{lapse [double]} 
+#'    
+#'          Wilson and Collins 
+#'          (\href{https://doi.org/10.7554/eLife.49547}{2019}) 
+#'          introduced the concept of the Lapse Rate, which represents the 
+#'          probability that a subject makes a error (lapse). This parameter 
+#'          ensures that every option has a minimum probability of being chosen, 
+#'          preventing the probability from reaching zero. This is a very 
+#'          reasonable assumption and, crucially, it avoids the numerical 
+#'          instability issue where 
+#'          \eqn{\log(P) = \log(0)} results in \code{-Inf}. 
+#'          
+#'          The default value here is set to 0.01, meaning every action has at 
+#'          least 1 percent probability of being executed by the agent.
+#'          
+#'    \item \code{threshold [double]} 
+#'    
+#'          This parameter represents the trial number before which the agent 
+#'          will select completely randomly. 
+#'          
+#'          The default value is set to 1, meaning that only the very first 
+#'          trial involves a purely random choice by the agent.
+#'          
+#'    \item \code{bonus [double]} 
+#'    
+#'          Hitchcock, Kim and Frank 
+#'          (\href{https://dx.doi.org/10.1037/xge0001817}{2025}) 
+#'          introduced modifications to the working memory model, positing that 
+#'          the value of unchosen options is not merely subject to decay toward 
+#'          the initial value. They suggest that the outcome obtained after 
+#'          selecting an option might, to some extent, provide information 
+#'          about the value of the unchosen options. This information, referred 
+#'          to as a reward bonus, also influences the value update of the 
+#'          unchosen options. 
+#'          
+#'          The default value for this \code{bonus} is 0, which assumes that 
+#'          no such bonus value change exists.
+#' }
+#' 
+#' @section Example: 
+#' \preformatted{ # TD
+#'  params = list(
+#'    free = list(
+#'      alpha = x[1],
+#'      beta = x[2]
+#'    ),
+#'    fixed = list(
+#'      gamma = 1, 
+#'      delta = 0.1, 
+#'      epsilon = NA_real_, 
+#'      zeta = 0
+#'    ),
+#'    constant = list(
+#'      Q0 = NA_real_, 
+#'      lapse = 0.01,
+#'      threshold = 1,
+#'      bonus = 0
+#'    )
+#'  )
+#' }
+#' 
+#' @references 
+#' Sutton, R. S., & Barto, A. G. (2018). Reinforcement Learning: 
+#' An Introduction (2nd ed). MIT press.
+#' 
+#' Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning 
+#' is working memory, not reinforcement learning? A behavioral, computational, 
+#' and neurogenetic analysis. \emph{European Journal of Neuroscience, 35}(7), 
+#' 1024-1035.
+#' \url{https://doi.org/10.1111/j.1460-9568.2011.07980.x}
+#' 
+#' Wilson, R. C., & Collins, A. G. (2019). Ten simple rules for the 
+#' computational modeling of behavioral data. \emph{Elife, 8}, e49547. 
+#' \url{https://doi.org/10.7554/eLife.49547}
+#' 
+#' Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory 
+#' and reinforcement learning interact when avoiding punishment and pursuing 
+#' reward concurrently. \emph{Journal of Experimental Psychology: General}. 
+#' \url{https://dx.doi.org/10.1037/xge0001817}
+#' 
+NULL

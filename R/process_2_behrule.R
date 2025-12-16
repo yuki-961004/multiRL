@@ -1,9 +1,10 @@
 #' multiRL.behrule
 #'
-#' @param behrule behrule
-#' @param ... extra
-#'
-#' @returns multiRL.behrule
+#' @param behrule 
+#'  The agent’s implicitly formed internal rule,
+#'    see \link[multiRL]{behrule}
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #' 
 process_2_behrule <- function(
     behrule,

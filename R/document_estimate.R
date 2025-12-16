@@ -1,0 +1,132 @@
+#' @title Estimate Methods
+#' @name estimate
+#' @description 
+#' 
+#'  The method used for parameter estimation, including \code{"MLE"} 
+#'    (Maximum Likelihood Estimation), \code{"MAP"} (Maximum A Posteriori), 
+#'    \code{"ABC"} (Approximate Bayesian Computation), and \code{"RNN"} 
+#'    (Recurrent Neural Network).
+#'  
+#' @section Class: 
+#' \code{estimate [Character]} 
+#'  
+#' @section 1. Likelihood Based Inference (LBI): 
+#'  This estimation approach is adopted when latent rules are absent and human 
+#'    behavior aligns with the value update objective. In other words, it is the 
+#'    estimation method employed when the log-likelihood can be calculated.
+#' 
+#' @section 1.1 Maximum Likelihood Estimation (MLE): 
+#' 
+#'  Log-likelihood reflects the similarity between the human's observed choice and the 
+#'    model's prediction. The free parameters (e.g., learning rate) govern the 
+#'    entire update and transformation process, thereby controlling the 
+#'    resulting log-likelihood value. MLE then involves finding the set of free 
+#'    parameters that maximizes the sum of the log-likelihoods across all trials.
+#'    
+#'  The search for these optimal parameters can be accomplished using various 
+#'    algorithms. For details, please refer to the documentation for 
+#'    \link[multiRL]{algorithm}.
+#' 
+#' \enumerate{
+#'    \item The Markov Decision Process (MDP) continuously updates the expected 
+#'    value of each action.
+#'    \item These expected values are transformed into action probabilities using 
+#'    the soft-max function.
+#'    \item The log-probability of each action (derived from the probabilities) 
+#'    is calculated.
+#'    \item For a single trial, the log-likelihood is found by taking the 
+#'    log-probability of the action actually chosen by the human (as the other 
+#'    actions have an indicator variable of zero). 
+#' }
+#' 
+#' @section 1.2 Maximum A Posteriori (MAP): 
+#' 
+#'  MAP is an extension of MLE. In addition to optimizing parameters for each 
+#'    individual subject based on the likelihood, MAP incorporates information 
+#'    about the population distribution of the parameters.
+#' 
+#' \enumerate{
+#'    \item Perform an initial MLE to find the best-fitting parameters for each 
+#'    individual subject.
+#'    \item Use these best-fitting parameters to estimate the Probability 
+#'    Density Function (PDF) of the population-level parameter distribution.
+#'    \item Perform MLE again for each subject. However, instead of returning 
+#'    the log-likelihood, the returned value is the log-posterior (log Post), 
+#'    which incorporates the PDF. In other words, this step assesses the 
+#'    probability of the best-fitting parameter occurring within its derived 
+#'    population distribution. This penalization helps avoid finding extreme 
+#'    parameter estimates.
+#'    \item The above steps are repeated until the log-posterior stabilizes.
+#' }
+#' 
+#' @section 2. Simulation Based Inference (LBI): 
+#'    Simulation-Based Inference (SBI) can be employed when calculating the 
+#'    log-likelihood is impossible or computationally intractable. SBI 
+#'    generally seeks to establish a direct relationship between the behavioral 
+#'    data and the parameters, without compressing the behavioral data into a 
+#'    single summary statistic (such as the log-likelihood).
+#'    
+#' @section 2.1 Approximate Bayesian Computation (ABC): 
+#' 
+#'  The ABC model is trained by finding a mapping between the summary 
+#'    statistics and the free parameters. Once the model is trained, given a 
+#'    new set of summary statistics, the model can instantly determine the 
+#'    corresponding input parameters.
+#' 
+#' \enumerate{
+#'    \item Generate a large amount of simulated data using randomly sampled 
+#'    input parameters.
+#'    \item Compress the simulated data into summary statistics—for instance, 
+#'    by calculating the proportion of times each action was executed within 
+#'    different blocks.
+#'    \item Establish the mapping between these summary statistics and the 
+#'    input parameters, which constitutes training the ABC model.
+#'    \item Given a new set of summary statistics, the trained model outputs 
+#'    the input parameters most likely to have generated those statistics.
+#' }
+#' @section 2.2 Recurrent Neural Network (RNN): 
+#' 
+#' 
+#'  The Recurrent Neural Network (RNN) directly seeks a mapping between the 
+#'    simulated dataset itself and the input free parameters. When provided 
+#'    with new behavioral data, the trained model can estimate the input 
+#'    parameters most likely to have generated that specific dataset.
+#' 
+#' 
+#' \itemize{
+#'    \item The RNN component included in \code{multiRL} is merely a shell for 
+#'    TensorFlow. Consequently, users who intend to use \code{estimate = "RNN"} 
+#'    must first install and configure the necessary TensorFlow environment.
+#' }
+#' 
+#'  The RNN model is trained using only \code{state} and \code{action} data 
+#'    as the raw dataset by default. In other words, the developer assumes that 
+#'    the only necessary input information for the RNN comprises the 
+#'    trial-by-trial object presentation (the state) and the agent's resultant 
+#'    action. This constraint is adopted because excessive input information 
+#'    may not only interfere with model training but also lead to unnecessary 
+#'    time consumption.
+#' 
+#' \enumerate{
+#'    \item The raw simulated data is limited to the state (object information 
+#'    presented on each trial) and the action chosen by the agent in response 
+#'    to that state.
+#'    \item After the simulated data is generated, it is partitioned into a 
+#'    training set and a validation set, and the RNN training commences.
+#'    \item The iteration stops when both the training and validation sets 
+#'    converge. If the Mean Squared Error (MSE) of the validation set is high 
+#'    while the MSE of the training set is low, this indicates overfitting, 
+#'    suggesting that the RNN model may lack generalization ability.
+#'    \item Given a new dataset, the trained model infers the input parameters 
+#'    that are most likely to have generated that dataset.
+#' }
+#' 
+#' @section Example: 
+#' \preformatted{ # supported estimate methods
+#'  estimate = "MLE"
+#'  estimate = "MAP"
+#'  estimate = "ABC"
+#'  estimate = "RNN"
+#' }
+#' 
+NULL

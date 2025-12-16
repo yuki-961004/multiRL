@@ -1,10 +1,11 @@
 #' multiRL.record
 #'
-#' @param input input
-#' @param behrule behrule
-#' @param ... extra
-#'
-#' @returns multiRL.record
+#' @param input 
+#'  multiRL.input
+#' @param behrule 
+#'  multiRL.behrule
+#' @param ... 
+#'  Additional arguments passed to internal functions.
 #' 
 process_3_record <- function(
     input,

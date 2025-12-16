@@ -1,0 +1,87 @@
+#' @title Column Names
+#' @name colnames
+#' @description 
+#'  
+#'  Users must categorize and inform the program of the column names within 
+#'    their dataset.
+#'    
+#' @section Class: 
+#' \code{colnames [List]} 
+#'    
+#' @section Slot:  
+#' \itemize{
+#'    Users can reference these variables within the model’s functions. For 
+#'    instance, \code{subid}, \code{block}, and \code{trial} will be merged 
+#'    into \code{idinfo}. You can then access them inside \code{func_alpha} 
+#'    using \code{Trial <- idinfo["Trial"]} to retrieve the current trial index. 
+#'    Any additional trial-level variables required by your model can be 
+#'    specified in \code{exinfo}. Regarding \code{object}, \code{reward}, and 
+#'    \code{action}, these variables are required by the MDP framework and may 
+#'    appear under different names (e.g., \code{qvalue}). They are typically 
+#'    not meant to be manipulated directly by users.
+#' }
+#' \enumerate{
+#'    \item \code{subid [Character]}  
+#'    
+#'          The column name of subject identifier.
+#'          
+#'          Column name that is exactly "Subject" can be recognized 
+#'          automatically.
+#'          
+#'    \item \code{block[Character]} 
+#'    
+#'          The column name of block index.
+#'          
+#'          Column name that is exactly "Block" can be recognized 
+#'          automatically.
+#'          
+#'    \item \code{trial[Character]} 
+#'    
+#'          The column name of trial index.
+#'          
+#'          Column name that is exactly "Trial" can be recognized 
+#'          automatically.
+#'          
+#'    \item \code{object [CharacterVector]}  
+#'    
+#'          The column names of objects presented in the task, with individual 
+#'          elements separated by underscores (“_”). 
+#'          
+#'          Column names that are prefixed with "Object_" can be recognized 
+#'          automatically.
+#'          
+#'    \item \code{reward [CharacterVector]} 
+#'    
+#'          The column names of the reward associated with each object; ensure 
+#'          that every object has its own corresponding reward.
+#'          
+#'          Column names that are prefixed with "Reward_" can be recognized 
+#'          automatically.
+#'          
+#'    \item \code{action [Character]} 
+#'    
+#'          The column name of the action taken by the agent, which must match 
+#'          an object or one of its elements.
+#'          
+#'          Column name that is exactly "Action" can be recognized 
+#'          automatically.
+#'          
+#'    \item \code{exinfo [CharacterVector]} 
+#'    
+#'          The column names of extra information that the model may use during 
+#'          the markov decision process.
+#' }
+#' 
+#' @section Example: 
+#' \preformatted{ # column names
+#'  colnames = list(
+#'    subid = "Subject", 
+#'    block = "Block", 
+#'    trial = "Trial",
+#'    object = c("Object_1", "Object_2", "Object_3", "Object_4"), 
+#'    reward = c("Reward_1", "Reward_2", "Reward_3", "Reward_4"), 
+#'    action = "Action",
+#'    exinfo = c("Frame", "NetWorth", "RT", "Mood")
+#'  )
+#' }
+NULL

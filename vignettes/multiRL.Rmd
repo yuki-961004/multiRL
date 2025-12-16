@@ -1,0 +1,448 @@
+---
+title: "Tutorial on multiRL"
+output: rmarkdown::html_vignette
+description: |
+  Reinforcement Learning Tools for Multi-Armed Bandit.
+vignette: >
+  %\VignetteIndexEntry{Tutorial on multiRL}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!---------------------------------------------------------->
+
+## 1. Run Model {#1-run-model}
+
+Create a function with **ONLY ONE** argument, `params`
+
+```{r eval=FALSE}
+TD <- function(params){
+  
+  params <- list(
+    free = list(alpha = params[1], beta = params[2])
+  )
+
+  multiRL.model <- multiRL::run_m(
+    data = data,
+    behrule = behrule,
+    colnames = colnames,
+    params = params,
+    funcs = funcs,
+    priors = priors,
+    settings = settings
+  )
+  
+  assign(x = "multiRL.model", value = multiRL.model, envir = multiRL.env)
+  return(.return_result(multiRL.model))
+}
+```
+
+Configure dataset-specific parameters.
+
+```{r}
+data = multiRL::TAB
+colnames = list(
+  object = c("L_choice", "R_choice"), 
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose"
+)
+behrule = list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
+)
+```
+
+
+<!---------------------------------------------------------->
+
+### Custom Functions
+
+<!---------------------------------------------------------->
+
+The default function is applicable to three basic models **TD**, **RSTD** and **Utility**.  
+
+  * You can also customize all the six core functions to build your own RL model. 
+
+<!---------------------------------------------------------->
+
+<details>
+<summary>Learning Rate (α)</summary>
+
+```{r eval=FALSE}
+print(multiRL::func_alpha)
+```
+
+```{r eval=FALSE}
+func_alpha <- function(
+    qvalue,
+    reward,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
+  alpha     <-  get_param(params, "alpha")
+  alphaN    <-  get_param(params, "alphaN")
+  alphaP    <-  get_param(params, "alphaP")
+  
+  if (
+    !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
+  ) {
+    model <- "TD"
+  } else if (
+    is.na(alpha) && !(is.na(alphaN)) && !(is.na(alphaP))
+  ) {
+    model <- "RSTD"
+  } else {
+    stop("Unknown Model! Plase modify your learning rate function")
+  }
+
+  # TD
+  if (model == "TD") {
+    update <- qvalue + alpha   * (reward - qvalue)
+  # RSTD
+  } else if (model == "RSTD" && reward < qvalue) {
+    update <- qvalue + alphaN * (reward - qvalue)
+  } else if (model == "RSTD" && reward >= qvalue) {
+    update <- qvalue + alphaP * (reward - qvalue)
+  }
+
+  return(update)
+}
+```
+</details>
+
+<!---------------------------------------------------------->
+
+<details>
+<summary>Soft-Max (β)</summary>
+
+```{r eval=FALSE}
+print(binaryRL::func_tau)
+```
+
+```{r eval=FALSE}
+func_beta <- function(
+    qvalue, 
+    explor,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
+  beta      <-  get_param(params, "beta")
+  lapse     <-  get_param(params, "lapse")
+  
+  n_options <- length(qvalue)
+  prob      <- rep(x = NA_real_, times = n_options)
+  index     <- which(!is.na(qvalue))
+  n_shown   <- length(index)
+  
+  if (explor == 1) {
+    # Exploration
+    prob[index] <- 1 / n_shown
+  } else {
+    # Exploitation
+    exp_stable <- exp(beta * (qvalue - max(qvalue, na.rm = TRUE)))
+    prob <- exp_stable / sum(exp_stable, na.rm = TRUE)
+  }
+  
+  # lapse
+  prob <- (1 - lapse * n_shown) * prob + lapse
+  
+  return(prob)
+}
+```
+
+</details>
+
+<!---------------------------------------------------------->
+
+<details>
+<summary>Utility Function (γ)</summary>
+
+```{r eval=FALSE}
+print(binaryRL::func_gamma)
+```
+
+```{r eval=FALSE}
+func_gamma <- function(
+    reward,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+
+  gamma     <-  get_param(params, "gamma")
+
+  utility <- sign(reward) * (abs(reward) ^ gamma)
+}
+```
+</details>
+
+<!---------------------------------------------------------->
+
+<details>
+<summary>Upper-Confidence-Bound (δ)</summary>
+
+```{r eval=FALSE}
+print(binaryRL::func_pi)
+```
+
+```{r eval=FALSE}
+func_delta <- function(
+    count,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
+  delta     <-  get_param(params, "delta")
+
+  bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10))
+  
+  return(bias)
+}
+```
+</details>
+
+<!---------------------------------------------------------->
+
+<details>
+<summary>Epsilon Related (ε)</summary>
+
+```{r eval=FALSE}
+print(binaryRL::func_epsilon)
+```
+
+```{r eval=FALSE}
+func_epsilon <- function(
+    rownum,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
+  epsilon   <-  get_param(params, "epsilon")
+  threshold <-  get_param(params, "threshold")
+  
+  if (is.na(epsilon) && threshold > 0) {
+    model <- "first"
+  } else if (!(is.na(epsilon)) && threshold == 0) {
+    model <- "decreasing"
+  } else if (!(is.na(epsilon)) && threshold == 1) {
+    model <- "greedy"
+  } else {
+    stop("Unknown Model! Plase modify your learning rate function")
+  }
+  
+  set.seed(rownum)
+  # Epsilon-First: 
+  if (rownum <= threshold) {
+    try <- 1
+  } else if (rownum > threshold && model == "first") {
+    try <- 0
+  # Epsilon-Greedy:
+  } else if (rownum > threshold && model == "greedy"){
+    try <- sample(
+      c(1, 0),
+      prob = c(epsilon, 1 - epsilon),
+      size = 1
+    )
+  # Epsilon-Decreasing: 
+  } else if (rownum > threshold && model == "decreasing") {
+    try <- sample(
+      c(1, 0),
+      prob = c(
+        1 / (1 + epsilon * rownum),
+        epsilon * rownum / (1 + epsilon * rownum)
+      ),
+      size = 1
+    )
+  }
+  
+  return(try)
+}
+```
+</details>
+
+<!---------------------------------------------------------->
+
+<details>
+<summary>Working Memory (ζ)</summary>
+```{r eval=FALSE}
+print(binaryRL::func_zeta)
+```
+
+```{r eval=FALSE}
+func_zeta <- function(
+    value0, 
+    values,
+    reward,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
+  zeta       <-  get_param(params, "zeta")
+  bonus      <-  get_param(params, "bonus")
+  
+  if (reward == 0) {
+    decay <- values + zeta * (value0 - values)
+  } else if (reward < 0) {
+    decay <- values + zeta * (value0 - values) + bonus
+  } else if (reward > 0) {
+    decay <- values + zeta * (value0 - values) - bonus
+  }
+
+  return(decay)
+}
+```
+</details>
+
+<!---------------------------------------------------------->
+
+## 2. Recovery {#2-recovery}
+
+Here, using the publicly available data from Mason et al. [(2024)](https://doi.org/10.3758/s13423-023-02415-x), we demonstrate how to perform parameter recovery and model recovery following the method suggested by Wilson & Collins [(2019)](https://doi.org/10.7554/eLife.49547).  
+
+<!---------------------------------------------------------->
+
+```{r eval=FALSE}
+recovery.MLE <- multiRL::rcv_d(
+  estimate = "MLE",
+
+  data = data,
+  colnames = colnames,
+  behrule = behrule,
+
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+  uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
+  control = list(core = 10, sample = 100, iter = 100)
+)
+```
+
+<pre>
+Recovery TD
+
+Simulating...
+
+Fitting TD
+  |==================                                                      | 25%
+</pre>
+
+
+
+<!---------------------------------------------------------->
+
+## 3. Fit Real Data {#3-fit-real-data}
+Following the recommendations of Wilson & Collins [(2019)](https://doi.org/10.7554/eLife.49547), a model is only worth fitting to real data if it demonstrates good performance in the parameter recovery and model recovery.
+
+> "Once all the previous steps have been completed, you can finally move on to modeling your empirical data."
+
+> "If the model-independent analyses do not show evidence of the expected results, there is almost no point in fitting the model. Instead, you should go back to the beginning, either re-thinking the computational models if the analyses show interesting patterns of behavior, or re-thinking the experimental design or even the scientific question you are trying to answer."
+
+```{r eval=FALSE}
+fitting.MLE <- multiRL::fit_p(
+  estimate = "MLE",
+
+  data = data,
+  colnames = colnames,
+  behrule = behrule,
+
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+  uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
+  control = list(core = 10, iter = 100)
+)
+```  
+
+<pre>
+Fitting TD
+  |==================                                                      | 25%
+</pre>
+
+<!---------------------------------------------------------->
+
+## 4. Replay the Experiment {#4-replay-the-experiment}
+Users can use the simple code snippet below to load the model fitting results, retrieve the best-fitting parameters, and feed them back into the model to reproduce the behavioral data generated by each reinforcement learning model.
+
+```{r eval=FALSE}
+replay.recovery <- multiRL::rpl_e(
+  result = recovery.MLE,
+
+  data = data,
+  colnames = colnames,
+  behrule = behrule,
+  
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+
+  omit = c("data", "funcs")
+)
+  
+plot(x = replay.recovery)
+```
+
+<p align="center">
+    <img src="./fig/TD_alpha.png" alt="TD_alpha" width="30%" style="display: inline;">
+    <img src="./fig/TD_beta.png" alt="TD_beta" width="30%" style="display: inline;">
+</p>
+
+<p align="center">
+    <img src="./fig/RSTD_alphaN.png" alt="RSTD_alphaN" width="30%" style="display: inline;">
+    <img src="./fig/RSTD_alphaP.png" alt="RSTD_alphaP" width="30%" style="display: inline;">
+    <img src="./fig/RSTD_beta.png" alt="RSTD_beta" width="30%" style="display: inline;">
+</p>
+
+<p align="center">
+    <img src="./fig/Utility_alpha.png" alt="Utility_alpha" width="30%" style="display: inline;">
+    <img src="./fig/Utility_beta.png" alt="Utility_beta" width="30%" style="display: inline;">
+    <img src="./fig/Utility_gamma.png" alt="Utility_gamma" width="30%" style="display: inline;">
+</p>
+
+```{r eval=FALSE}
+replay.fitting <- multiRL::rpl_e(
+  result = fitting.MLE,
+
+  data = data,
+  colnames = colnames,
+  behrule = behrule,
+  
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  
+  omit = c("funcs")
+)
+
+plot(x = replay.fitting)
+```
+
+<p align="center">
+    <img src="./fig/Block_Ratio.png" alt="Block_Ratio" width="80%" style="display: inline;">
+</p>

@@ -1,8 +1,13 @@
 pandoc: 3.6.3
 pkgdown: 2.1.3
 pkgdown_sha: ~
-articles: {}
-last_built: 2025-12-10T08:47Z
+articles:
+  multiRL: multiRL.html
+  Step_1_run_m: Step_1_run_m.html
+  Step_2_rcv_d: Step_2_rcv_d.html
+  Step_3_fit_p: Step_3_fit_p.html
+  Step_4_rpl_e: Step_4_rpl_e.html
+last_built: 2025-12-16T13:31Z
 urls:
   reference: https://yuki-961004.github.io/multiRL/reference
   article: https://yuki-961004.github.io/multiRL/articles

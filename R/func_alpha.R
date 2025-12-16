@@ -1,11 +1,19 @@
-#' Function: Learning Rate
+#' @title Function: Learning Rate
+#' @description
+#' 
+#'  \deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
 #'
-#' @param qvalue qvalue
-#' @param reward reward
-#' @param params params
-#' @param ... extra
-#'
-#' @returns update
+#' @param qvalue 
+#'  The estimated expected value of taking action(a) at trial(t).
+#' @param reward 
+#'  The feedback received by the agent from the environment at trial(t) 
+#'    following the execution of action(a)
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
+#' @param ... 
+#'  Subject ID, Block ID, Trial ID, and any additional information defined by 
+#'    the user.
 #' 
 func_alpha <- function(
     qvalue,

@@ -1,11 +1,33 @@
-#' Function: Soft-Max
+#' @title Function: Soft-Max
+#' @description
+#' 
+#'  \deqn{
+#'    P_{t}(a) = 
+#'    \frac{
+#'      \exp(\beta \cdot (Q_t(a) - \max_{a' \in \mathcal{A}} Q_t(a')))
+#'    }
+#'    {
+#'      \sum_{a' \in \mathcal{A}} 
+#'      \exp(
+#'        \beta \cdot (Q_t(a') - \max_{a'_{i} \in \mathcal{A}} Q_t(a'_{i}))
+#'      )
+#'    }
+#'  }
+#'    
+#'  \deqn{
+#'    P_{t}(a) = (1 - lapse \cdot N_{shown}) \cdot P_{t}(a) + lapse
+#'  }
 #'
-#' @param qvalue qvalue
-#' @param explor explor
-#' @param params params
-#' @param ... extra
-#'
-#' @returns probability
+#' @param qvalue 
+#'  The estimated expected value of taking action(a) at trial(t) with bias.
+#' @param explor 
+#'  Whether the agent made a random choice (exploration) in this trial.
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
+#' @param ... 
+#'  Subject ID, Block ID, Trial ID, and any additional information defined by 
+#'    the user.
 #' 
 func_beta <- function(
     qvalue, 

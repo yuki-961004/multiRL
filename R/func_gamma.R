@@ -1,10 +1,17 @@
-#' Function: Utility Function
+#' @title Function: Utility Function
+#' @description
+#' 
+#'  \deqn{U(R) = {R}^{\gamma}}
 #'
-#' @param reward reward
-#' @param params params
-#' @param ... extra
-#'
-#' @returns utility
+#' @param reward 
+#'  The feedback received by the agent from the environment at trial(t) 
+#'    following the execution of action(a)
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
+#' @param ... 
+#'  Subject ID, Block ID, Trial ID, and any additional information defined by 
+#'    the user.
 #' 
 func_gamma <- function(
     reward,
@@ -19,4 +26,6 @@ func_gamma <- function(
   gamma     <-  get_param(params, "gamma")
 
   utility <- sign(reward) * (abs(reward) ^ gamma)
+  
+  return(utility)
 }

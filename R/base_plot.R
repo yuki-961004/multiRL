@@ -2,8 +2,10 @@
 #'
 #' @param x multiRL.replay
 #' @param y NULL
-#' @param model model
-#' @param param param
+#' @param model 
+#'  The name of model that you want to plot
+#' @param param 
+#'  The name of parameter that you want to plot
 #' @param ... extra
 #'
 #' @returns plot

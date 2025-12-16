@@ -1,10 +1,18 @@
-#' Function: Upper-Confidence-Bound
-#'
-#' @param count count
-#' @param params params
-#' @param ... extra
-#'
-#' @returns bias
+#' @title Function: Upper-Confidence-Bound
+#' @description
+#' 
+#'  \deqn{
+#'    \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
+#'  }
+#'  
+#' @param count 
+#'  How many times this action has been executed
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
+#' @param ... 
+#'  Subject ID, Block ID, Trial ID, and any additional information defined by 
+#'    the user.
 #' 
 func_delta <- function(
     count,

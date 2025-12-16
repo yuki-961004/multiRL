@@ -8,11 +8,25 @@ template:
   
 reference:
 
-  - title: "Example Datasets"
+  - title: "Datasets"
     contents:
       - TAB
       - MAB
-
+      
+  - title: "Document"
+    contents:
+      - data
+      - colnames
+      - behrule
+      - funcs
+      - params
+      - priors
+      - settings
+      - policy
+      - estimate
+      - algorithm
+      - control
+      
   - title: "Steps"
     contents:
       - run_m
@@ -56,7 +70,7 @@ reference:
       - estimate_2_RNN
       - engine_RNN
       - estimation_methods
-
+      
   - title: "Summary"
     contents:
       - summary,multiRL.model-method
@@ -64,6 +78,16 @@ reference:
   - title: "Plot"
     contents:
       - plot.multiRL.replay
+
+articles:
+  - title: "Tutorial"
+    navbar: "Tutorial"
+    contents:
+      - Step_1_run_m
+      - Step_2_rcv_d         
+      - Step_3_fit_p         
+      - Step_4_rpl_e 
+
 navbar:
   structure:
     left: [intro, reference, news, articles, extensions]

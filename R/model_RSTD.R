@@ -1,8 +1,11 @@
 #' RSTD Model
 #'
-#' @param params params
+#'  \deqn{Q_{new} = Q_{old} + \alpha_{-} \cdot (R - Q_{old}), R < Q_{old}}
+#'  \deqn{Q_{new} = Q_{old} + \alpha_{+} \cdot (R - Q_{old}), R \ge Q_{old}}
 #'
-#' @returns result
+#' @param params 
+#'  Parameters used by the model’s internal functions,
+#'    see \link[multiRL]{params}
 #' 
 RSTD <- function(params){
   
