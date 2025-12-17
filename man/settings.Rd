@@ -12,7 +12,7 @@ The \code{settings} argument is responsible for defining the model's name,
 \code{settings [List]}
 }
 
-\section{Slot}{
+\section{Slots}{
  
 \itemize{
    \item \code{name [Character]} 

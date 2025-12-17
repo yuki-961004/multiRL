@@ -38,9 +38,32 @@
 #'    see \link[multiRL]{control}
 #' @param ... 
 #'  Additional arguments passed to internal functions.
-#'
-#' @returns optimal params
-#' 
+#'  
+#' @section Example: 
+#' \preformatted{ # fitting
+#'  fitting.MLE <- multiRL::fit_p(
+#'    estimate = "MLE",
+#'   
+#'    data = multiRL::TAB,
+#'    colnames = list(
+#'      object = c("L_choice", "R_choice"), 
+#'      reward = c("L_reward", "R_reward"),
+#'      action = "Sub_Choose"
+#'    ),
+#'    behrule = list(
+#'      cue = c("A", "B", "C", "D"),
+#'      rsp = c("A", "B", "C", "D")
+#'    ),
+#'   
+#'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+#'   
+#'    algorithm = "NLOPT_GN_MLSL",
+#'    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+#'    uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
+#'    control = list(core = 10, iter = 100)
+#'  )
+#' }
 fit_p <- function(
     estimate,
     

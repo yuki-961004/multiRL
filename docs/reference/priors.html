@@ -7,21 +7,31 @@
   };
 </script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Density and Random Function — priors"><meta name="description" content="Users must specify one of the two function types (stats::?func).
    Either the Density Function (d-func) or the Random Function (r-func)
-These functions can represent either the sampling distribution for
-   generating random numbers or the prior distribution the free parameters
-   are assumed to follow.
+
+Density Function (stats::dfunc) represents the prior
+           distribution the free parameters are assumed to follow
+Random Function (stats::rfunc) represents the sampling
+           distribution for generating random numbers
+
+
 Users do not need to memorize when to input the d-func or the r-func;
-   the program will handle the necessary conversion automatically. The
-   standard format for the currently supported functions will be displayed
-   below. Please modify only the numerical values within these functions."><meta property="og:description" content="Users must specify one of the two function types (stats::?func).
+   the program will handle the necessary conversion automatically. Since
+   this conversion function relies on regular expressions for string
+   transformation, it is relatively brittle. Users must strictly follow the
+   examples provided below."><meta property="og:description" content="Users must specify one of the two function types (stats::?func).
    Either the Density Function (d-func) or the Random Function (r-func)
-These functions can represent either the sampling distribution for
-   generating random numbers or the prior distribution the free parameters
-   are assumed to follow.
+
+Density Function (stats::dfunc) represents the prior
+           distribution the free parameters are assumed to follow
+Random Function (stats::rfunc) represents the sampling
+           distribution for generating random numbers
+
+
 Users do not need to memorize when to input the d-func or the r-func;
-   the program will handle the necessary conversion automatically. The
-   standard format for the currently supported functions will be displayed
-   below. Please modify only the numerical values within these functions."><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-BNYYX0HD3L"></script><script>
+   the program will handle the necessary conversion automatically. Since
+   this conversion function relies on regular expressions for string
+   transformation, it is relatively brittle. Users must strictly follow the
+   examples provided below."><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-BNYYX0HD3L"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -48,6 +58,9 @@ Users do not need to memorize when to input the d-func or the r-func;
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -73,13 +86,15 @@ Users do not need to memorize when to input the d-func or the r-func;
     <div class="ref-description section level2">
     <p>Users must specify one of the two function types (<code>stats::?func</code>).
    Either the Density Function (d-func) or the Random Function (r-func)</p>
-<p>These functions can represent either the sampling distribution for
-   generating random numbers or the prior distribution the free parameters
-   are assumed to follow.</p>
-<p>Users do not need to memorize when to input the d-func or the r-func;
-   the program will handle the necessary conversion automatically. The
-   standard format for the currently supported functions will be displayed
-   below. Please modify only the numerical values within these functions.</p>
+<p></p><ul><li><p>Density Function (<code>stats::dfunc</code>) represents the prior
+           distribution the free parameters are assumed to follow</p></li>
+<li><p>Random Function (<code>stats::rfunc</code>) represents the sampling
+           distribution for generating random numbers</p></li>
+</ul><p>Users do not need to memorize when to input the d-func or the r-func;
+   the program will handle the necessary conversion automatically. Since
+   this conversion function relies on regular expressions for string
+   transformation, it is relatively brittle. Users must strictly follow the
+   examples provided below.</p>
     </div>
 
 

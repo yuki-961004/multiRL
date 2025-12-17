@@ -337,7 +337,7 @@ recovery.MLE <- multiRL::rcv_d(
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
   
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
   control = list(core = 10, sample = 100, iter = 100)
@@ -350,7 +350,7 @@ Recovery TD
 Simulating...
 
 Fitting TD
-  |==================                                                      | 25%
+  |==================                                                           | 25%
 </pre>
 
 
@@ -375,7 +375,7 @@ fitting.MLE <- multiRL::fit_p(
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
   
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
   control = list(core = 10, iter = 100)
@@ -384,7 +384,7 @@ fitting.MLE <- multiRL::fit_p(
 
 <pre>
 Fitting TD
-  |==================                                                      | 25%
+  |==================                                                           | 25%
 </pre>
 
 <!---------------------------------------------------------->

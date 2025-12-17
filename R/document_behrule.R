@@ -21,15 +21,15 @@
 #' @section Class: 
 #' \code{behrule [List]} 
 #'    
-#' @section Slot: 
+#' @section Slots: 
 #' \itemize{
 #'    \item \code{cue [CharacterVector]}
 #'    
 #'          A \code{cue} refers to the stimulus—or a component of the 
 #'          stimulus—presented in the paradigm. It represents the internal 
 #'          target the agent selects, which may differ from the actual 
-#'          behavioral response. However, it is this internal target that 
-#'          determines which value the agent truly updates.
+#'          behavioral response. For instance, cue is the color of arrows, 
+#'          rather than the direction. 
 #'          
 #'    \item \code{rsp [CharacterVector]}
 #'    

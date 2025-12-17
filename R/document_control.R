@@ -139,7 +139,10 @@
 #'          be fitted simultaneously (the number of parallel threads), 
 #'          with the default set to 1. If the user wishes to speed up the 
 #'          fitting, they can increase the number of cores appropriately based 
-#'          on their system specifications.
+#'          on their system specifications. When \code{estimate = "RNN"}, since 
+#'          model training is typically handled by the GPU, setting 
+#'          \code{core > 1} will only accelerate the generation of simulated 
+#'          data.
 #' }
 #' 
 #' @section ABC: 

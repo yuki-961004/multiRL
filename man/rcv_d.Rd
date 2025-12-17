@@ -61,9 +61,51 @@ see \link[multiRL]{control}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
-\value{
-recovery
-}
 \description{
 Step 2: Generating fake data for parameter and model recovery
 }
+\section{Example}{
+ 
+\preformatted{ # recovery
+ recovery.MLE <- multiRL::rcv_d(
+   estimate = "MLE",
+   
+   data = multiRL::TAB,
+   colnames = list(
+     object = c("L_choice", "R_choice"), 
+     reward = c("L_reward", "R_reward"),
+     action = "Sub_Choose"
+   ),
+   behrule = list(
+     cue = c("A", "B", "C", "D"),
+     rsp = c("A", "B", "C", "D")
+   ),
+   id = 1,
+
+   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+   priors = list(
+     list(
+       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       beta = function(x) {stats::rexp(n = 1, rate = 1)}
+     ),
+     list(
+       alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       beta = function(x) {stats::rexp(n = 1, rate = 1)}
+     ),
+     list(
+       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       beta = function(x) {stats::rexp(n = 1, rate = 1)},
+       gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
+     )
+   ),
+
+   algorithm = "NLOPT_GN_MLSL",
+   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
+   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
+   control = list(core = 10, sample = 100, iter = 100)
+ )
+}
+}
+

@@ -24,10 +24,10 @@ The method used for parameter estimation, including \code{"MLE"}
 \section{1.1 Maximum Likelihood Estimation (MLE)}{
  
 
- Log-likelihood reflects the similarity between the human's observed choice and the 
-   model's prediction. The free parameters (e.g., learning rate) govern the 
-   entire update and transformation process, thereby controlling the 
-   resulting log-likelihood value. MLE then involves finding the set of free 
+ Log-likelihood reflects the similarity between the human's observed choice 
+   and the model's prediction. The free parameters (e.g., learning rate) 
+   govern the entire Markov Decision Process, thereby controlling the 
+   returning log-likelihood value. MLE then involves finding the set of free 
    parameters that maximizes the sum of the log-likelihoods across all trials.
    
  The search for these optimal parameters can be accomplished using various 
@@ -36,14 +36,12 @@ The method used for parameter estimation, including \code{"MLE"}
 
 \enumerate{
    \item The Markov Decision Process (MDP) continuously updates the expected 
-   value of each action.
+         value of each action.
    \item These expected values are transformed into action probabilities using 
-   the soft-max function.
-   \item The log-probability of each action (derived from the probabilities) 
-   is calculated.
-   \item For a single trial, the log-likelihood is found by taking the 
-   log-probability of the action actually chosen by the human (as the other 
-   actions have an indicator variable of zero). 
+         the soft-max function.
+   \item The log-probability of each action is calculated.
+   \item The likelihood is defined as the product of the human actions and 
+         the log-probabilities estimated by the model.
 }
 }
 
@@ -56,26 +54,26 @@ The method used for parameter estimation, including \code{"MLE"}
 
 \enumerate{
    \item Perform an initial MLE to find the best-fitting parameters for each 
-   individual subject.
+         individual subject.
    \item Use these best-fitting parameters to estimate the Probability 
-   Density Function (PDF) of the population-level parameter distribution.
+         Density Function of the population-level parameter distribution.
    \item Perform MLE again for each subject. However, instead of returning 
-   the log-likelihood, the returned value is the log-posterior (log Post), 
-   which incorporates the PDF. In other words, this step assesses the 
-   probability of the best-fitting parameter occurring within its derived 
-   population distribution. This penalization helps avoid finding extreme 
-   parameter estimates.
-   \item The above steps are repeated until the log-posterior stabilizes.
+         the log-likelihood, the returned value is the log-posterior. 
+         In other words, this step considers the probability of the 
+         best-fitting parameter occurring within its derived population 
+         distribution. This penalization helps avoid finding extreme 
+         parameter estimates.
+   \item The above steps are repeated until the log-posterior converges.
 }
 }
 
-\section{2. Simulation Based Inference (LBI)}{
+\section{2. Simulation Based Inference (SBI)}{
  
    Simulation-Based Inference (SBI) can be employed when calculating the 
    log-likelihood is impossible or computationally intractable. SBI 
    generally seeks to establish a direct relationship between the behavioral 
    data and the parameters, without compressing the behavioral data into a 
-   single summary statistic (such as the log-likelihood).
+   single value (log-likelihood).
 }
 
 \section{2.1 Approximate Bayesian Computation (ABC)}{
@@ -88,14 +86,14 @@ The method used for parameter estimation, including \code{"MLE"}
 
 \enumerate{
    \item Generate a large amount of simulated data using randomly sampled 
-   input parameters.
+         input parameters.
    \item Compress the simulated data into summary statistics—for instance, 
-   by calculating the proportion of times each action was executed within 
-   different blocks.
+         by calculating the proportion of times each action was executed 
+         within different blocks.
    \item Establish the mapping between these summary statistics and the 
-   input parameters, which constitutes training the ABC model.
+         input parameters, which constitutes training the ABC model.
    \item Given a new set of summary statistics, the trained model outputs 
-   the input parameters most likely to have generated those statistics.
+         the input parameters most likely to have generated those statistics.
 }
 }
 
@@ -111,8 +109,8 @@ The method used for parameter estimation, including \code{"MLE"}
 
 \itemize{
    \item The RNN component included in \code{multiRL} is merely a shell for 
-   TensorFlow. Consequently, users who intend to use \code{estimate = "RNN"} 
-   must first install and configure the necessary TensorFlow environment.
+         TensorFlow. Consequently, users who intend to use 
+         \code{estimate = "RNN"} must first install TensorFlow.
 }
 
  The RNN model is trained using only \code{state} and \code{action} data 

@@ -8,7 +8,7 @@
 #' @section Class: 
 #' \code{settings [List]} 
 #'    
-#' @section Slot: 
+#' @section Slots: 
 #' \itemize{
 #'    \item \code{name [Character]} 
 #'    

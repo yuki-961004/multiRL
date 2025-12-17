@@ -8,7 +8,40 @@ Experimental data from any Multi-Armed Bandit (MAB)-like task.
 }
 \section{Class}{
  
-\code{data [data.frame]}
+\code{data [data.frame]} 
+ 
+\tabular{llllllllllll}{
+  subid \tab block \tab trial \tab 
+  object_1 \tab object_2 \tab object_3 \tab object_4 \tab 
+  reward_1 \tab reward_2 \tab reward_3 \tab reward_4 \tab 
+  action
+  \cr
+  1 \tab 1 \tab 1 \tab 
+  A \tab B \tab C \tab D \tab
+  20\tab 0 \tab 60\tab 40\tab
+  A
+  \cr
+  1 \tab 1 \tab 2 \tab 
+  A \tab B \tab C \tab D \tab
+  20\tab 40\tab 60\tab 80\tab
+  B
+  \cr
+  1 \tab 1 \tab 3 \tab 
+  A \tab B \tab C \tab D \tab
+  20\tab 0 \tab 60\tab 40\tab
+  C
+  \cr
+  1 \tab 1 \tab 4 \tab 
+  A \tab B \tab C \tab D \tab
+  20\tab 40\tab 60\tab 80\tab
+  D
+  \cr
+  ..\tab ..\tab ..\tab 
+  ..\tab ..\tab ..\tab ..\tab
+  ..\tab ..\tab ..\tab ..\tab
+  ..
+  \cr
+}
 }
 
 \section{Details}{
@@ -20,17 +53,25 @@ Experimental data from any Multi-Armed Bandit (MAB)-like task.
  
  In this type of paradigm, the rewards associated with possible actions must 
    be explicitly written in the table for every trial (aka, tabular case, 
-   see Sutton & Barto, 2018, Chapter 2). The package does not perform any 
-   real-time random sampling based on the agent’s choices; therefore, Users 
-   should pre-define the reward for each possible action in every trial.
-   
- You should never use true randomization to generate rewards. Doing so would 
-   result in different participants interacting with multi-armed bandits that 
-   do not share the same expected values. In such cases, if two participants 
-   show different parameter estimates in a reinforcement-learning model, we 
-   cannot determine whether the difference reflects stable individual traits 
-   or simply the fact that one participant happened to be lucky while the 
-   other was not.
+   see Sutton & Barto, 2018, Chapter 2).
+}
+
+\section{Note}{
+  
+
+ The package does not perform any real-time random sampling based on the 
+   agent’s choices; therefore, Users should pre-define the reward for each 
+   possible action in every trial.
+ 
+ \strong{You should never ever ever use true randomization to generate 
+   rewards.} 
+ 
+ Doing so would result in different participants interacting with multi-armed 
+   bandits that do not share the same expected values. In such cases, if two 
+   participants show different parameter estimates in a same model, we cannot 
+   determine whether the difference reflects stable individual traits or 
+   simply the fact that one participant happened to be lucky while the other 
+   was not.
 }
 
 \references{

@@ -12,19 +12,8 @@ Users must categorize and inform the program of the column names within
 \code{colnames [List]}
 }
 
-\section{Slot}{
+\section{Slots}{
   
-\itemize{
-   Users can reference these variables within the model’s functions. For 
-   instance, \code{subid}, \code{block}, and \code{trial} will be merged 
-   into \code{idinfo}. You can then access them inside \code{func_alpha} 
-   using \code{Trial <- idinfo["Trial"]} to retrieve the current trial index. 
-   Any additional trial-level variables required by your model can be 
-   specified in \code{exinfo}. Regarding \code{object}, \code{reward}, and 
-   \code{action}, these variables are required by the MDP framework and may 
-   appear under different names (e.g., \code{qvalue}). They are typically 
-   not meant to be manipulated directly by users.
-}
 \enumerate{
    \item \code{subid [Character]}  
    
@@ -76,6 +65,12 @@ Users must categorize and inform the program of the column names within
          The column names of extra information that the model may use during 
          the markov decision process.
 }
+}
+
+\section{Tips}{
+  
+ Users can use these variables within the model’s functions. see 
+   \href{https://yuki-961004.github.io/multiRL/articles/Step_1_run_m.html}{tutorial}.
 }
 
 \section{Example}{

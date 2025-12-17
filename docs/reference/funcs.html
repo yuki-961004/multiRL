@@ -40,6 +40,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -102,11 +105,12 @@
 
 
 <p><code>rate_func</code> is the function that determines the learning rate
-   (\(\alpha\)). Within this function, you can control the specific value of
+   (\(\alpha\)). This function governs how the model selects the
    \(\alpha\). For instance, you can set different learning rates for
-   different circumstances. This allows you to govern whether the agent
-   updates expected values (Q-values) with an aggressive or a conservative
-   step size under various conditions.</p>
+   different circumstances. Rather than 'learning' in a general sense, the
+   learning rate determines whether the agent updates its expected values
+   (Q-values) using an aggressive or conservative step size across different
+   conditions.</p>
 <p>$$Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})$$</p>
     </div>
     <div class="section level2">
@@ -153,10 +157,9 @@
 
 <p><code>util_func</code> is defined by the utility exponent parameter (\(\gamma\)).
    Its purpose is to account for the fact that the objective reward received
-   by an agent may hold a different subjective value (utility) across
-   different agents. This is analogous to how different individuals
-   experience varying levels of pleasure from the same event.</p>
-<p>The built-in function is formulated according to Stevens' power law.</p>
+   by human may hold a different subjective value (utility) across
+   different subjects.</p>
+<p>Note: The built-in function is formulated according to Stevens' power law.</p>
 <p>$$U(R) = {R}^{\gamma}$$</p>
     </div>
     <div class="section level2">
@@ -164,13 +167,13 @@
 
 
 
-<p><code>bias_func</code> is the function defined by the exploration constant
-   parameter (\(\delta\)). This function signifies that the expected value
-   of an action is not solely determined by the received reward, but is also
-   influenced by the number of times the action has been executed.
-   Specifically, an action that has been executed fewer times receives a
-   larger exploration bias. This mechanism encourages the agent to execute
-   every action at least once, thereby promoting exploration.</p>
+<p><code>bias_func</code> is the function defined by the parameter (\(\delta\)).
+   This function signifies that the expected value of an action is not
+   solely determined by the received reward, but is also influenced by the
+   number of times the action has been executed. Specifically, an action
+   that has been executed fewer times receives a larger exploration bias.
+   This mechanism prompts exploration and ensures the agent to execute
+   every action at least once.</p>
 <p>$$
    \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
  $$</p>
@@ -180,10 +183,10 @@
 
 
 
-<p><code>expl_func</code> is the function defined by the exploration rate parameter
-   (\(\epsilon\)) and the constant threshold. This function controls the
-   probability with which the agent engages in exploration (i.e., making a
-   random choice) versus exploitation (i.e., making a value-based choice).</p>
+<p><code>expl_func</code> is the function defined by the parameter (\(\epsilon\))
+   and the constant threshold. This function controls the probability with
+   which the agent engages in exploration (i.e., making a random choice)
+   versus exploitation (i.e., making a value-based choice).</p>
 <p>\(\epsilon–first\): The agent must choose randomly for a fixed number of
    initial trials. Once the number of trials exceeds the threshold, the agent
    must exclusively choose based on value.</p>
@@ -222,16 +225,16 @@
 
 <p><code>dcay_func</code> is the function defined by the decay rate parameter
    (\(\zeta\)) and the constant bonus. This function indicates that at the
-   end of each trial, upon receiving value feedback, the value of the chosen
-   action is not the only one to change according to the learning rate. The
-   values of the unchosen actions also undergo change. Due to the limitations
-   of working memory capacity, the values of the unchosen actions are
-   hypothesized to decay back towards their initial value at a rate
-   determined by the decay rate parameter (\(\zeta\)).</p>
+   end of each trial, not only the value of the chosen option will be changed
+   according to the learning rate, but also the values of the unchosen
+   options also undergo change.</p>
+<p>It is due to the limitations of working memory capacity, the values of the
+   unchosen options are hypothesized to decay back towards their initial
+   value at a rate determined by the decay rate parameter (\(\zeta\)).</p>
 <p>$$W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})$$</p>
-<p>Furthermore, if the chosen action provides information relevant to the
-   unchosen actions, this decay rate may be enhanced or mitigated by the
-   constant bonus.</p>
+<p>Furthermore, if the feedback of the chosen option provides information
+   relevant to the unchosen options, this decay rate may be enhanced or
+   mitigated by the constant bonus.</p>
     </div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>

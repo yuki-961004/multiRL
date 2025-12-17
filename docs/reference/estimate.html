@@ -38,6 +38,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -87,23 +90,21 @@
 
 
 
-<p>Log-likelihood reflects the similarity between the human's observed choice and the
-   model's prediction. The free parameters (e.g., learning rate) govern the
-   entire update and transformation process, thereby controlling the
-   resulting log-likelihood value. MLE then involves finding the set of free
+<p>Log-likelihood reflects the similarity between the human's observed choice
+   and the model's prediction. The free parameters (e.g., learning rate)
+   govern the entire Markov Decision Process, thereby controlling the
+   returning log-likelihood value. MLE then involves finding the set of free
    parameters that maximizes the sum of the log-likelihoods across all trials.</p>
 <p>The search for these optimal parameters can be accomplished using various
    algorithms. For details, please refer to the documentation for
    <a href="algorithm.html">algorithm</a>.</p>
 <ol><li><p>The Markov Decision Process (MDP) continuously updates the expected
-   value of each action.</p></li>
+         value of each action.</p></li>
 <li><p>These expected values are transformed into action probabilities using
-   the soft-max function.</p></li>
-<li><p>The log-probability of each action (derived from the probabilities)
-   is calculated.</p></li>
-<li><p>For a single trial, the log-likelihood is found by taking the
-   log-probability of the action actually chosen by the human (as the other
-   actions have an indicator variable of zero).</p></li>
+         the soft-max function.</p></li>
+<li><p>The log-probability of each action is calculated.</p></li>
+<li><p>The likelihood is defined as the product of the human actions and
+         the log-probabilities estimated by the model.</p></li>
 </ol></div>
     <div class="section level2">
     <h2 id="-maximum-a-posteriori-map-">1.2 Maximum A Posteriori (MAP)<a class="anchor" aria-label="anchor" href="#-maximum-a-posteriori-map-"></a></h2>
@@ -114,26 +115,26 @@
    individual subject based on the likelihood, MAP incorporates information
    about the population distribution of the parameters.</p>
 <ol><li><p>Perform an initial MLE to find the best-fitting parameters for each
-   individual subject.</p></li>
+         individual subject.</p></li>
 <li><p>Use these best-fitting parameters to estimate the Probability
-   Density Function (PDF) of the population-level parameter distribution.</p></li>
+         Density Function of the population-level parameter distribution.</p></li>
 <li><p>Perform MLE again for each subject. However, instead of returning
-   the log-likelihood, the returned value is the log-posterior (log Post),
-   which incorporates the PDF. In other words, this step assesses the
-   probability of the best-fitting parameter occurring within its derived
-   population distribution. This penalization helps avoid finding extreme
-   parameter estimates.</p></li>
-<li><p>The above steps are repeated until the log-posterior stabilizes.</p></li>
+         the log-likelihood, the returned value is the log-posterior.
+         In other words, this step considers the probability of the
+         best-fitting parameter occurring within its derived population
+         distribution. This penalization helps avoid finding extreme
+         parameter estimates.</p></li>
+<li><p>The above steps are repeated until the log-posterior converges.</p></li>
 </ol></div>
     <div class="section level2">
-    <h2 id="-simulation-based-inference-lbi-">2. Simulation Based Inference (LBI)<a class="anchor" aria-label="anchor" href="#-simulation-based-inference-lbi-"></a></h2>
+    <h2 id="-simulation-based-inference-sbi-">2. Simulation Based Inference (SBI)<a class="anchor" aria-label="anchor" href="#-simulation-based-inference-sbi-"></a></h2>
 
 
 <p>Simulation-Based Inference (SBI) can be employed when calculating the
    log-likelihood is impossible or computationally intractable. SBI
    generally seeks to establish a direct relationship between the behavioral
    data and the parameters, without compressing the behavioral data into a
-   single summary statistic (such as the log-likelihood).</p>
+   single value (log-likelihood).</p>
     </div>
     <div class="section level2">
     <h2 id="-approximate-bayesian-computation-abc-">2.1 Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#-approximate-bayesian-computation-abc-"></a></h2>
@@ -145,14 +146,14 @@
    new set of summary statistics, the model can instantly determine the
    corresponding input parameters.</p>
 <ol><li><p>Generate a large amount of simulated data using randomly sampled
-   input parameters.</p></li>
+         input parameters.</p></li>
 <li><p>Compress the simulated data into summary statistics—for instance,
-   by calculating the proportion of times each action was executed within
-   different blocks.</p></li>
+         by calculating the proportion of times each action was executed
+         within different blocks.</p></li>
 <li><p>Establish the mapping between these summary statistics and the
-   input parameters, which constitutes training the ABC model.</p></li>
+         input parameters, which constitutes training the ABC model.</p></li>
 <li><p>Given a new set of summary statistics, the trained model outputs
-   the input parameters most likely to have generated those statistics.</p></li>
+         the input parameters most likely to have generated those statistics.</p></li>
 </ol></div>
     <div class="section level2">
     <h2 id="-recurrent-neural-network-rnn-">2.2 Recurrent Neural Network (RNN)<a class="anchor" aria-label="anchor" href="#-recurrent-neural-network-rnn-"></a></h2>
@@ -166,8 +167,8 @@
    parameters most likely to have generated that specific dataset.</p>
 
 <ul><li><p>The RNN component included in <code>multiRL</code> is merely a shell for
-   TensorFlow. Consequently, users who intend to use <code>estimate = "RNN"</code>
-   must first install and configure the necessary TensorFlow environment.</p></li>
+         TensorFlow. Consequently, users who intend to use
+         <code>estimate = "RNN"</code> must first install TensorFlow.</p></li>
 </ul><p>The RNN model is trained using only <code>state</code> and <code>action</code> data
    as the raw dataset by default. In other words, the developer assumes that
    the only necessary input information for the RNN comprises the

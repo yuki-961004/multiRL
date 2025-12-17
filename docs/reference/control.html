@@ -36,6 +36,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -182,7 +185,10 @@
          be fitted simultaneously (the number of parallel threads),
          with the default set to 1. If the user wishes to speed up the
          fitting, they can increase the number of cores appropriately based
-         on their system specifications.</p></li>
+         on their system specifications. When <code>estimate = "RNN"</code>, since
+         model training is typically handled by the GPU, setting
+         <code>core &gt; 1</code> will only accelerate the generation of simulated
+         data.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="abc">ABC<a class="anchor" aria-label="anchor" href="#abc"></a></h2>

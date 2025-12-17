@@ -30,9 +30,46 @@
 #'    see \link[multiRL]{settings}
 #' @param ... 
 #'  Additional arguments passed to internal functions.
-#'
-#' @returns replay
 #' 
+#' @section Example: 
+#' \preformatted{ # info
+#'  data = multiRL::TAB
+#'  colnames = list(
+#'    object = c("L_choice", "R_choice"), 
+#'    reward = c("L_reward", "R_reward"),
+#'    action = "Sub_Choose"
+#'  )
+#'  behrule = list(
+#'    cue = c("A", "B", "C", "D"),
+#'    rsp = c("A", "B", "C", "D")
+#'  )
+#'  
+#'  replay.recovery <- multiRL::rpl_e(
+#'    result = recovery.MLE,
+#'   
+#'    data = data,
+#'    colnames = colnames,
+#'    behrule = behrule,
+#'   
+#'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+#'   
+#'    omit = c("data", "funcs")
+#'  )
+#' 
+#'  replay.fitting <- multiRL::rpl_e(
+#'    result = fitting.MLE,
+#'   
+#'    data = data,
+#'    colnames = colnames,
+#'    behrule = behrule,
+#'   
+#'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+#'   
+#'    omit = c("funcs")
+#'  )
+#' }
 rpl_e <- function(
     result,  
     free_params = NULL,

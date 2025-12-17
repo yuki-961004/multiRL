@@ -20,3 +20,24 @@ the user.}
    \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
  }
 }
+\section{Body}{
+ 
+\preformatted{func_delta <- function(
+    count,
+    params,
+    ...
+){
+  # if you need extra information
+  # e.g.
+  # Trial <- idinfo["Trial"]
+  # Frame <- exinfo["Frame"]
+  
+  delta     <-  get_param(params, "delta")
+  
+  bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10))
+  
+  return(bias)
+}
+}
+}
+

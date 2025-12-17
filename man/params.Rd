@@ -64,8 +64,8 @@ The names of all these parameters are not necessarily fixed. You can define
          psychological value perceived by an individual. This concept 
          originates in psychophysics, specifically Stevens' Power Law. 
          
-         Here, the default utility function is defined as 
-         \eqn{y = x^{\gamma}}. When \eqn{\gamma = 1}, it is assumed that the 
+         Note: The default utility function is defined as 
+         \eqn{y = x^{\gamma}} and \eqn{\gamma = 1}, which assumed that the 
          physical quantity is equivalent to the psychological quantity.
          
    \item \code{delta [double]} 
@@ -75,17 +75,16 @@ The names of all these parameters are not necessarily fixed. You can define
          Bound (UCB), an option that has been selected few times should be 
          assigned a higher exploratory bias.
          
-         With the default set to 0.1, a bias value is effectively applied 
-         only to options that have never been chosen. Once an action has 
-         been executed even a single time, the assigned bias value 
+         Note: With the default set to 0.1, a bias value is effectively 
+         applied only to options that have never been chosen. Once an action 
+         has been executed even a single time, the assigned bias value 
          approaches zero.
          
    \item \code{epsilon [double]} 
    
          This parameter governs the Exploration-Exploitation trade-off and 
          can be used to implement three distinct strategies by adjusting 
-         \code{epsilon} and \code{threshold}: \eqn{\epsilon–first}, 
-         \eqn{\epsilon–greedy}, and \eqn{\epsilon–decreasing}. 
+         \code{epsilon} and \code{threshold}:  
          
          When set to \eqn{\epsilon–greedy}: \code{epsilon} represents the 
          probability that the agent will execute a random exploratory action 
@@ -98,6 +97,7 @@ The names of all these parameters are not necessarily fixed. You can define
          By default, \code{epsilon} is set to \code{NA}, which corresponds 
          to the \eqn{\epsilon–first} model. In this model, the agent always 
          selects randomly before a specified trial (\code{threshold = 1}).
+         
    \item \code{zeta [double]} 
    
          Collins and Frank 
@@ -108,9 +108,9 @@ The names of all these parameters are not necessarily fixed. You can define
          working memory. This specific parameter represents the rate of this 
          decay. 
          
-         A larger value signifies a faster decay from the learned value back 
-         to the initial value. The default value is set to 0, which assumes 
-         that no such working memory system exists.
+         Note: A larger value signifies a faster decay from the learned 
+         value back to the initial value. The default value is set to 0, 
+         which assumes that no such working memory system exists.
 }
 }
 
@@ -133,9 +133,10 @@ The names of all these parameters are not necessarily fixed. You can define
          option is selected at least once, and their first rewards are 
          immediately memorized.
          
-         Note: This is a package-specific implementation decision. If you 
+         Note: This is what I consider the reasonable setting. If you 
          think this interpretation unsuitable, you may explicitly set 
          \code{Q0} to 0 or another optimistic initial value instead.
+         
    \item \code{lapse [double]} 
    
          Wilson and Collins 
@@ -148,16 +149,19 @@ The names of all these parameters are not necessarily fixed. You can define
          instability issue where 
          \eqn{\log(P) = \log(0)} results in \code{-Inf}. 
          
-         The default value here is set to 0.01, meaning every action has at 
-         least 1 percent probability of being executed by the agent.
+         Note: The default value here is set to 0.01, meaning every action 
+         has at least 1\% probability of being executed by the agent. If the
+         paradigm you use have a large number of available actions, a 1\% 
+         minimum probability for each action might be unreasonable. You can 
+         adjust this value to be even smaller.
          
    \item \code{threshold [double]} 
    
          This parameter represents the trial number before which the agent 
          will select completely randomly. 
          
-         The default value is set to 1, meaning that only the very first 
-         trial involves a purely random choice by the agent.
+         Note: The default value is set to 1, meaning that only the very 
+         first trial involves a purely random choice by the agent.
          
    \item \code{bonus [double]} 
    
@@ -171,8 +175,8 @@ The names of all these parameters are not necessarily fixed. You can define
          to as a reward bonus, also influences the value update of the 
          unchosen options. 
          
-         The default value for this \code{bonus} is 0, which assumes that 
-         no such bonus value change exists.
+         Note: The default value for this \code{bonus} is 0, which assumes 
+         that no such bonus value change exists.
 }
 }
 

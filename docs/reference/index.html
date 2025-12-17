@@ -32,6 +32,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -53,7 +56,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a></h2>
+      <h2 id="steps">Steps<a class="anchor" aria-label="anchor" href="#steps"></a></h2>
 
 
 
@@ -65,16 +68,28 @@
 
       <dl><dt>
 
-          <code><a href="TAB.html">TAB</a></code>
+          <code><a href="run_m.html">run_m()</a></code>
 
         </dt>
-        <dd>Group 2 from Mason et al. (2024)</dd>
+        <dd>Step 1: Building reinforcement learning model</dd>
       </dl><dl><dt>
 
-          <code><a href="MAB.html">MAB</a></code>
+          <code><a href="rcv_d.html">rcv_d()</a></code>
 
         </dt>
-        <dd>Simulated Multi-Arm Bandit Dataset</dd>
+        <dd>Step 2: Generating fake data for parameter and model recovery</dd>
+      </dl><dl><dt>
+
+          <code><a href="fit_p.html">fit_p()</a></code>
+
+        </dt>
+        <dd>Step 3: Optimizing parameters to fit real data</dd>
+      </dl><dl><dt>
+
+          <code><a href="rpl_e.html">rpl_e()</a></code>
+
+        </dt>
+        <dd>Step 4: Replaying the experiment with optimal parameters</dd>
       </dl></div><div class="section level2">
       <h2 id="document">Document<a class="anchor" aria-label="anchor" href="#document"></a></h2>
 
@@ -152,41 +167,6 @@
 
         </dt>
         <dd>Control Algorithm Behavior</dd>
-      </dl></div><div class="section level2">
-      <h2 id="steps">Steps<a class="anchor" aria-label="anchor" href="#steps"></a></h2>
-
-
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="run_m.html">run_m()</a></code>
-
-        </dt>
-        <dd>Step 1: Building reinforcement learning model</dd>
-      </dl><dl><dt>
-
-          <code><a href="rcv_d.html">rcv_d()</a></code>
-
-        </dt>
-        <dd>Step 2: Generating fake data for parameter and model recovery</dd>
-      </dl><dl><dt>
-
-          <code><a href="fit_p.html">fit_p()</a></code>
-
-        </dt>
-        <dd>Step 3: Optimizing parameters to fit real data</dd>
-      </dl><dl><dt>
-
-          <code><a href="rpl_e.html">rpl_e()</a></code>
-
-        </dt>
-        <dd>Step 4: Replaying the experiment with optimal parameters</dd>
       </dl></div><div class="section level2">
       <h2 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a></h2>
 
@@ -381,6 +361,29 @@
 
         </dt>
         <dd>estimation_methods</dd>
+      </dl></div><div class="section level2">
+      <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a></h2>
+
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="TAB.html">TAB</a></code>
+
+        </dt>
+        <dd>Group 2 from Mason et al. (2024)</dd>
+      </dl><dl><dt>
+
+          <code><a href="MAB.html">MAB</a></code>
+
+        </dt>
+        <dd>Simulated Multi-Arm Bandit Dataset</dd>
       </dl></div><div class="section level2">
       <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a></h2>
 

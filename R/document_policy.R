@@ -4,10 +4,50 @@
 #' 
 #'  The term "policy" in this context is debatable, but the core meaning is 
 #'    whether the model itself acts based on the probabilities it estimates. 
-#'    If the model only estimates probabilities but does not use them to enable 
-#'    a sampling function, it is referred to as off-policy.
 #'    
 #' @section Class: 
 #' \code{policy [Character]} 
 #' 
+#' @section Detail:
+#'  \itemize{
+#'    \item "On-Policy": The robot (an RL model) converts the expected value of 
+#'          each action into a probability distribution using the soft-max 
+#'          function. It then utilizes a \code{sample()} function to randomly 
+#'          select an action to execute based on these estimated probabilities. 
+#'          Under this mechanism, actions with higher expected values have a 
+#'          greater likelihood of being selected. Once an action is performed, 
+#'          the feedback received (reward or penalty) is used to update the 
+#'          expected value of that action, which in turn influences the 
+#'          probability of choosing different actions in the future.
+#'    \item "Off-Policy": The robot (an RL model) directly replicates human 
+#'          behavior. Consequently, in most cases, this ensures that the 
+#'          rewards obtained by the robot in each trial are identical to those 
+#'          obtained by the human. This also results in the value update 
+#'          trajectories for different actions being exactly the same as the 
+#'          trajectories experienced by the human. In this scenario, a previous 
+#'          choice does not influence subsequent value updates. Because all 
+#'          actions are copied from the human, the trajectory of value updates 
+#'          will not diverge due to differences in individual samples. 
+#'          Essentially, in this specific case, the \code{sample()} step does 
+#'          not exist.
+#'  }
+#'  
+#' @section Metaphor:
+#'  \itemize{
+#'    \item "On-Policy": The robot completes an examination paper independently 
+#'          and then checks its answers against the ground truth to see if they 
+#'          are correct. If it makes a mistake, it re-attempts the task 
+#'          (adjusting the input parameters). This process repeats until its 
+#'          answers are sufficiently close to the standard answers, or until 
+#'          the degree of similarity can no longer be improved. In other words, 
+#'          the robot has found the optimal parameters within the given model 
+#'          to imitate human behavior as closely as possible.
+#'    \item "Off-Policy": The robot sees the standard answers to the exam 
+#'          directly. It does not personally complete any of the papers; 
+#'          instead, it acts as an observer trying to understand the underlying 
+#'          logic behind the standard answers. Even if there are a few 
+#'          answers that the robot cannot even understand at all, they will 
+#'          ignore these outliers in order to maximize its overall accuracy.
+#'  }
+#'  
 NULL

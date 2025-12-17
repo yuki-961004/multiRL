@@ -32,6 +32,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -64,7 +67,7 @@
 
 
 <p><code>data [data.frame]</code></p>
-    </div>
+<table class="table table"><tr><td>subid</td><td>block</td><td>trial</td><td>object_1</td><td>object_2</td><td>object_3</td><td>object_4</td><td>reward_1</td><td>reward_2</td><td>reward_3</td><td>reward_4</td><td>action</td></tr><tr><td>1</td><td>1</td><td>1</td><td>A</td><td>B</td><td>C</td><td>D</td><td>20</td><td>0</td><td>60</td><td>40</td><td>A</td></tr><tr><td>1</td><td>1</td><td>2</td><td>A</td><td>B</td><td>C</td><td>D</td><td>20</td><td>40</td><td>60</td><td>80</td><td>B</td></tr><tr><td>1</td><td>1</td><td>3</td><td>A</td><td>B</td><td>C</td><td>D</td><td>20</td><td>0</td><td>60</td><td>40</td><td>C</td></tr><tr><td>1</td><td>1</td><td>4</td><td>A</td><td>B</td><td>C</td><td>D</td><td>20</td><td>40</td><td>60</td><td>80</td><td>D</td></tr><tr><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td><td>..</td></tr></table></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
@@ -75,16 +78,24 @@
    received.</p>
 <p>In this type of paradigm, the rewards associated with possible actions must
    be explicitly written in the table for every trial (aka, tabular case,
-   see Sutton &amp; Barto, 2018, Chapter 2). The package does not perform any
-   real-time random sampling based on the agent’s choices; therefore, Users
-   should pre-define the reward for each possible action in every trial.</p>
-<p>You should never use true randomization to generate rewards. Doing so would
-   result in different participants interacting with multi-armed bandits that
-   do not share the same expected values. In such cases, if two participants
-   show different parameter estimates in a reinforcement-learning model, we
-   cannot determine whether the difference reflects stable individual traits
-   or simply the fact that one participant happened to be lucky while the
-   other was not.</p>
+   see Sutton &amp; Barto, 2018, Chapter 2).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+
+
+
+<p>The package does not perform any real-time random sampling based on the
+   agent’s choices; therefore, Users should pre-define the reward for each
+   possible action in every trial.</p>
+<p><strong>You should never ever ever use true randomization to generate
+   rewards.</strong></p>
+<p>Doing so would result in different participants interacting with multi-armed
+   bandits that do not share the same expected values. In such cases, if two
+   participants show different parameter estimates in a same model, we cannot
+   determine whether the difference reflects stable individual traits or
+   simply the fact that one participant happened to be lucky while the other
+   was not.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

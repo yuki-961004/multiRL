@@ -36,11 +36,12 @@
 #' @section Learning Rate (\eqn{\alpha}):  
 #' 
 #'  \code{rate_func} is the function that determines the learning rate 
-#'    (\eqn{\alpha}). Within this function, you can control the specific value of 
+#'    (\eqn{\alpha}). This function governs how the model selects the 
 #'    \eqn{\alpha}. For instance, you can set different learning rates for 
-#'    different circumstances. This allows you to govern whether the agent 
-#'    updates expected values (Q-values) with an aggressive or a conservative 
-#'    step size under various conditions.
+#'    different circumstances. Rather than 'learning' in a general sense, the 
+#'    learning rate determines whether the agent updates its expected values 
+#'    (Q-values) using an aggressive or conservative step size across different 
+#'    conditions.
 #' 
 #'  \deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
 #' 
@@ -87,23 +88,22 @@
 #' 
 #'  \code{util_func} is defined by the utility exponent parameter (\eqn{\gamma}). 
 #'    Its purpose is to account for the fact that the objective reward received 
-#'    by an agent may hold a different subjective value (utility) across 
-#'    different agents. This is analogous to how different individuals 
-#'    experience varying levels of pleasure from the same event. 
+#'    by human may hold a different subjective value (utility) across 
+#'    different subjects. 
 #'    
-#'    The built-in function is formulated according to Stevens' power law.
+#'    Note: The built-in function is formulated according to Stevens' power law.
 #' 
 #'  \deqn{U(R) = {R}^{\gamma}}
 #' 
 #' @section Upper Confidence Bound (\eqn{\delta}):  
 #' 
-#'  \code{bias_func} is the function defined by the exploration constant 
-#'    parameter (\eqn{\delta}). This function signifies that the expected value 
-#'    of an action is not solely determined by the received reward, but is also 
-#'    influenced by the number of times the action has been executed.  
-#'    Specifically, an action that has been executed fewer times receives a 
-#'    larger exploration bias. This mechanism encourages the agent to execute 
-#'    every action at least once, thereby promoting exploration.
+#'  \code{bias_func} is the function defined by the parameter (\eqn{\delta}). 
+#'    This function signifies that the expected value of an action is not 
+#'    solely determined by the received reward, but is also influenced by the 
+#'    number of times the action has been executed. Specifically, an action 
+#'    that has been executed fewer times receives a larger exploration bias. 
+#'    This mechanism prompts exploration and ensures the agent to execute 
+#'    every action at least once.
 #' 
 #'  \deqn{
 #'    \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
@@ -111,10 +111,10 @@
 #' 
 #' @section Epsilon–First, Greedy, Decreasing (\eqn{\epsilon}):  
 #' 
-#'  \code{expl_func} is the function defined by the exploration rate parameter 
-#'    (\eqn{\epsilon}) and the constant threshold. This function controls the 
-#'    probability with which the agent engages in exploration (i.e., making a 
-#'    random choice) versus exploitation (i.e., making a value-based choice).
+#'  \code{expl_func} is the function defined by the parameter (\eqn{\epsilon}) 
+#'    and the constant threshold. This function controls the probability with 
+#'    which the agent engages in exploration (i.e., making a random choice) 
+#'    versus exploitation (i.e., making a value-based choice).
 #' 
 #'  \eqn{\epsilon–first}: The agent must choose randomly for a fixed number of 
 #'    initial trials. Once the number of trials exceeds the threshold, the agent 
@@ -156,18 +156,19 @@
 #' 
 #'  \code{dcay_func} is the function defined by the decay rate parameter 
 #'    (\eqn{\zeta}) and the constant bonus. This function indicates that at the 
-#'    end of each trial, upon receiving value feedback, the value of the chosen 
-#'    action is not the only one to change according to the learning rate. The 
-#'    values of the unchosen actions also undergo change. Due to the limitations 
-#'    of working memory capacity, the values of the unchosen actions are 
-#'    hypothesized to decay back towards their initial value at a rate 
-#'    determined by the decay rate parameter (\eqn{\zeta}). 
+#'    end of each trial, not only the value of the chosen option will be changed 
+#'    according to the learning rate, but also the values of the unchosen 
+#'    options also undergo change. 
+#'    
+#'  It is due to the limitations of working memory capacity, the values of the 
+#'    unchosen options are hypothesized to decay back towards their initial 
+#'    value at a rate determined by the decay rate parameter (\eqn{\zeta}). 
 #'    
 #'  \deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
 #'    
-#'  Furthermore, if the chosen action provides information relevant to the 
-#'    unchosen actions, this decay rate may be enhanced or mitigated by the 
-#'    constant bonus.
+#'  Furthermore, if the feedback of the chosen option provides information 
+#'    relevant to the unchosen options, this decay rate may be enhanced or 
+#'    mitigated by the constant bonus.
 #' 
 #' @section Example: 
 #' \preformatted{ # inner functions

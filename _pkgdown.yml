@@ -8,11 +8,13 @@ template:
   
 reference:
 
-  - title: "Datasets"
+  - title: "Steps"
     contents:
-      - TAB
-      - MAB
-      
+      - run_m
+      - rcv_d
+      - fit_p
+      - rpl_e
+  
   - title: "Document"
     contents:
       - data
@@ -27,19 +29,12 @@ reference:
       - algorithm
       - control
       
-  - title: "Steps"
-    contents:
-      - run_m
-      - rcv_d
-      - fit_p
-      - rpl_e
-
   - title: "Models"
     contents:
       - TD
       - RSTD
       - Utility
-
+      
   - title: "Functions"
     contents:
       - func_alpha
@@ -71,6 +66,11 @@ reference:
       - engine_RNN
       - estimation_methods
       
+  - title: "Datasets"
+    contents:
+      - TAB
+      - MAB
+      
   - title: "Summary"
     contents:
       - summary,multiRL.model-method
@@ -80,6 +80,11 @@ reference:
       - plot.multiRL.replay
 
 articles:
+
+  - title: "Background"
+    navbar: "Background"
+    contents:
+      - background   
   - title: "Tutorial"
     navbar: "Tutorial"
     contents:
@@ -87,7 +92,7 @@ articles:
       - Step_2_rcv_d         
       - Step_3_fit_p         
       - Step_4_rpl_e 
-
+      
 navbar:
   structure:
     left: [intro, reference, news, articles, extensions]

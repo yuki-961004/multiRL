@@ -7,14 +7,18 @@
 Users must specify one of the two function types (\code{stats::?func}). 
    Either the Density Function (d-func) or the Random Function (r-func)
    
-   These functions can represent either the sampling distribution for 
-   generating random numbers or the prior distribution the free parameters 
-   are assumed to follow. 
+   \itemize{
+     \item Density Function (\code{stats::dfunc}) represents the prior 
+           distribution the free parameters are assumed to follow
+     \item Random Function (\code{stats::rfunc}) represents the sampling 
+           distribution for generating random numbers 
+   }
    
    Users do not need to memorize when to input the d-func or the r-func; 
-   the program will handle the necessary conversion automatically. The 
-   standard format for the currently supported functions will be displayed 
-   below. Please modify only the numerical values within these functions.
+   the program will handle the necessary conversion automatically. Since 
+   this conversion function relies on regular expressions for string 
+   transformation, it is relatively brittle. Users must strictly follow the 
+   examples provided below.
 }
 \section{Class}{
  

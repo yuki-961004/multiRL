@@ -34,6 +34,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Background</h6></li>
+    <li><a class="dropdown-item" href="../articles/background.html">Markov Decision Process</a></li>
+    <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Tutorial</h6></li>
     <li><a class="dropdown-item" href="../articles/Step_1_run_m.html">Step 1: run_m</a></li>
     <li><a class="dropdown-item" href="../articles/Step_2_rcv_d.html">Step 2: rcv_d</a></li>
@@ -69,19 +72,10 @@
 <p><code>colnames [List]</code></p>
     </div>
     <div class="section level2">
-    <h2 id="slot">Slot<a class="anchor" aria-label="anchor" href="#slot"></a></h2>
+    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
 
 
-<ul><li><p>Users can reference these variables within the model’s functions. For
-   instance, <code>subid</code>, <code>block</code>, and <code>trial</code> will be merged
-   into <code>idinfo</code>. You can then access them inside <code>func_alpha</code>
-   using <code>Trial &lt;- idinfo["Trial"]</code> to retrieve the current trial index.
-   Any additional trial-level variables required by your model can be
-   specified in <code>exinfo</code>. Regarding <code>object</code>, <code>reward</code>, and
-   <code>action</code>, these variables are required by the MDP framework and may
-   appear under different names (e.g., <code>qvalue</code>). They are typically
-   not meant to be manipulated directly by users.</p></li>
-</ul><ol><li><p><code>subid [Character]</code></p>
+<ol><li><p><code>subid [Character]</code></p>
 <p>The column name of subject identifier.</p>
 <p>Column name that is exactly "Subject" can be recognized
          automatically.</p></li>
@@ -112,6 +106,13 @@
 <p>The column names of extra information that the model may use during
          the markov decision process.</p></li>
 </ol></div>
+    <div class="section level2">
+    <h2 id="tips">Tips<a class="anchor" aria-label="anchor" href="#tips"></a></h2>
+
+
+<p>Users can use these variables within the model’s functions. see
+   <a href="https://yuki-961004.github.io/multiRL/articles/Step_1_run_m.html">tutorial</a>.</p>
+    </div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
 

@@ -6,6 +6,28 @@
 #'  Parameters used by the model’s internal functions,
 #'    see \link[multiRL]{params}
 #' 
+#' @section Body: 
+#' \preformatted{TD <- function(params){
+#'   
+#'   params <- list(
+#'     free = list(alpha = params[1], beta = params[2])
+#'   )
+#'   
+#'   multiRL.model <- multiRL::run_m(
+#'     data = data,
+#'     behrule = behrule,
+#'     colnames = colnames,
+#'     params = params,
+#'     funcs = funcs,
+#'     priors = priors,
+#'     settings = settings
+#'   )
+#'   
+#'   assign(x = "multiRL.model", value = multiRL.model, envir = multiRL.env)
+#'   return(.return_result(multiRL.model))
+#' }
+#' }
+#' 
 TD <- function(params){
   
   params <- list(
