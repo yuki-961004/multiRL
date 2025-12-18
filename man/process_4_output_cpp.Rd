@@ -7,7 +7,9 @@
 process_4_output_cpp(record, extra)
 }
 \arguments{
-\item{A}{list of extra information passed from R.}
+\item{record}{multiRL.record}
+
+\item{extra}{A list of extra information passed from R.}
 }
 \description{
 multiRL.output

@@ -5,8 +5,8 @@
 
 //' multiRL.output
 //'
-//' @param multiRL.record
-//' @param A list of extra information passed from R.
+//' @param record multiRL.record
+//' @param extra A list of extra information passed from R.
 //' @export
 // [[Rcpp::export]]
 Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {

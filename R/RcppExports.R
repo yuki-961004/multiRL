@@ -3,8 +3,8 @@
 
 #' multiRL.output
 #'
-#' @param multiRL.record
-#' @param A list of extra information passed from R.
+#' @param record multiRL.record
+#' @param extra A list of extra information passed from R.
 #' @export
 process_4_output_cpp <- function(record, extra) {
     .Call(`_multiRL_process_4_output_cpp`, record, extra)
