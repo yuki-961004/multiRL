@@ -1,4 +1,4 @@
-#' @title Model Parameter Configuration
+#' @title Model Parameters
 #' @name params
 #' @description 
 #'  

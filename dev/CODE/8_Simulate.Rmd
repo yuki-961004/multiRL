@@ -1,0 +1,68 @@
+---
+title: "Untitled"
+author: "yuki"
+date: "2025-12-18"
+output: html_document
+---
+```{r}
+data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ]
+
+behrule = list(
+  cue = c("Red", "Yellow", "Green", "Blue"),
+  rsp = c("Up", "Down", "Left", "Right")
+)
+# 额外设定, 关键在于mode, 如果是ABC, 则一定使用的是模拟数据, 所以是simulating
+settings = list(
+  name = "RSTD",
+  mode = "simulating",
+  estimate = "ABC",
+  policy = "on"
+)
+# 生成的随机数, 取自哪个分布
+priors = list(
+  alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+  beta = function(x) {stats::rexp(n = 1, rate = 1)}
+)
+# 使用的哪个强化学习模型
+model = multiRL::TD
+
+control = list(
+  sample = 30
+)
+```
+
+```{r}
+multiRL.env <- multiRL::estimate_0_ENV(
+  data = data,
+  behrule = behrule,
+  settings = settings
+)
+```
+
+```{r}
+list_simulated <- multiRL::estimate_2_SBI(
+  model = model,
+  env = multiRL.env,
+  priors = priors,
+  control = control
+)
+
+data <- list()
+
+for (i in 1:30) {
+  sub_data <- list_simulated[[i]]$data
+  sub_data$Subject <- i
+  data[[i]] <- sub_data
+}
+```
+
+```{r}
+data <- dplyr::bind_rows(data)
+write.csv(data, row.names = FALSE, file = "../DATA/MAB.csv")
+```
+
+```{r}
+MAB <- data
+usethis::use_data(MAB, overwrite = TRUE)
+```
+

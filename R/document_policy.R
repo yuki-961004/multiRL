@@ -1,4 +1,4 @@
-#' @title Policy
+#' @title Policy of Robot
 #' @name policy
 #' @description 
 #' 

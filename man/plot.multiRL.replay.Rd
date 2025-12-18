@@ -18,7 +18,7 @@
 \item{...}{extra}
 }
 \value{
-plot
+List
 }
 \description{
 plot.multiRL.replay

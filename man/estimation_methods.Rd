@@ -60,7 +60,7 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-results
+data.frame
 }
 \description{
 estimation_methods

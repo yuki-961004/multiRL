@@ -9,6 +9,38 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## 0. Data Structure
+
+| Subject | Block | Trial | L_choice | R_choice | L_reward | R_reward | Sub_Choose | - |
+|---------|-------|-------|----------|----------|----------|----------|------------|---|
+| 1       | 1     | 1     | A        | B        | 36       | 40       | A          |...|
+| 1       | 1     | 2     | B        | A        | 0        | 36       | B          |...|
+| 1       | 1     | 3     | C        | D        | -36      |-40       | C          |...|
+| 1       | 1     | 4     | D        | C        | 0        |-36       | D          |...|
+| ...     | ...   | ...   | ...      | ...      | ...      | ...      | ...        |...|
+
+```{r}
+data = multiRL::TAB
+colnames = list(
+  subid = "Subject", block = "Block", trial = "Trial",
+  object = c("L_choice", "R_choice"), 
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose",
+  exinfo = c("...", "...", "...")
+)
+behrule = list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
+)
+```
+
+**Note**  
+
+1. The number of `object` and `reward` can be multiple (> 2), but they must have a strict one-to-one correspondence.  
+2. An object can consist of multiple elements; please separate them with "_" (e.g., 'context_target_behavior').  
+3. An action can point to either an entire object or a specific part of it. For details, see [this](https://yuki-961004.github.io/multiRL/reference/behrule.html)  
+4. Any additional information (column names) should be passed to `exinfo` as a character vector.  
+
 <!---------------------------------------------------------->
 
 ## 1. Run Model {#1-run-model}
@@ -16,11 +48,11 @@ vignette: >
 Create a function with **ONLY ONE** argument, `params`
 
 ```{r eval=FALSE}
-TD <- function(params){
+Model <- function(params){
   
-  params <- list(
-    free = list(alpha = params[1], beta = params[2])
-  )
+############################# [Modify Here] ####################################
+  params <- list(free = list(alpha = params[1], beta = params[2]))
+############################# [Modify Here] ####################################
 
   multiRL.model <- multiRL::run_m(
     data = data,
@@ -37,31 +69,15 @@ TD <- function(params){
 }
 ```
 
-Configure dataset-specific parameters.
+<!---------------------------------------------------------->
 
-```{r}
-data = multiRL::TAB
-colnames = list(
-  object = c("L_choice", "R_choice"), 
-  reward = c("L_reward", "R_reward"),
-  action = "Sub_Choose"
-)
-behrule = list(
-  cue = c("A", "B", "C", "D"),
-  rsp = c("A", "B", "C", "D")
-)
-```
-
+### How to define a new model?
 
 <!---------------------------------------------------------->
 
-### Custom Functions
-
-<!---------------------------------------------------------->
-
-The default function is applicable to three basic models **TD**, **RSTD** and **Utility**.  
-
-  * You can also customize all the six core functions to build your own RL model. 
+1. Customize the following six core functions.  
+2. Figure out the free parameters within your model.
+3. Declare these parameters as free when defining the object function above.
 
 <!---------------------------------------------------------->
 
@@ -322,7 +338,10 @@ func_zeta <- function(
 
 ## 2. Recovery {#2-recovery}
 
-Here, using the publicly available data from Mason et al. [(2024)](https://doi.org/10.3758/s13423-023-02415-x), we demonstrate how to perform parameter recovery and model recovery following the method suggested by Wilson & Collins [(2019)](https://doi.org/10.7554/eLife.49547).  
+Randomly generate free parameters for Model A and use them to produce simulated data. Subsequently, fit all candidate models to this simulated data.  
+
+> 1. If Model A can successfully recover its true generative parameters from the simulated data, it indicates strong parameter recovery for the model.  
+> 2. If Model A yields the best fit indices compared to all other candidate models when fitted to the data it generated, it demonstrates robust model recovery.
 
 <!---------------------------------------------------------->
 
@@ -336,7 +355,22 @@ recovery.MLE <- multiRL::rcv_d(
 
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
-  
+  priors = list(
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    ),
+    list(
+      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    ),
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)},
+      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
+    )
+  ),
   algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
@@ -358,11 +392,8 @@ Fitting TD
 <!---------------------------------------------------------->
 
 ## 3. Fit Real Data {#3-fit-real-data}
-Following the recommendations of Wilson & Collins [(2019)](https://doi.org/10.7554/eLife.49547), a model is only worth fitting to real data if it demonstrates good performance in the parameter recovery and model recovery.
 
-> "Once all the previous steps have been completed, you can finally move on to modeling your empirical data."
-
-> "If the model-independent analyses do not show evidence of the expected results, there is almost no point in fitting the model. Instead, you should go back to the beginning, either re-thinking the computational models if the analyses show interesting patterns of behavior, or re-thinking the experimental design or even the scientific question you are trying to answer."
+A model is only worth fitting to real data if it demonstrates good performance in the parameter recovery and model recovery.
 
 ```{r eval=FALSE}
 fitting.MLE <- multiRL::fit_p(
@@ -390,7 +421,8 @@ Fitting TD
 <!---------------------------------------------------------->
 
 ## 4. Replay the Experiment {#4-replay-the-experiment}
-Users can use the simple code snippet below to load the model fitting results, retrieve the best-fitting parameters, and feed them back into the model to reproduce the behavioral data generated by each reinforcement learning model.
+
+The results from recovery(`rcv_d`) and fitting(`fit_p`) can be passed to the `rpl_e` function to reproduce the behavioral patterns generated by re-incorporating these parameters into the model.  
 
 ```{r eval=FALSE}
 replay.recovery <- multiRL::rpl_e(

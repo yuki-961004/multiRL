@@ -2,7 +2,7 @@
 % Please edit documentation in R/document_policy.R
 \name{policy}
 \alias{policy}
-\title{Policy}
+\title{Policy of Robot}
 \description{
 The term "policy" in this context is debatable, but the core meaning is 
    whether the model itself acts based on the probabilities it estimates.

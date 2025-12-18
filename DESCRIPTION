@@ -1,7 +1,13 @@
 Package: multiRL
 Version: 0.1.7
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
-Description: Reinforcement Learning Tools for Multi-Armed Bandit.
+Description: This package represents a significant extension of binaryRL. 
+  Beyond handling complex multi-alternative choice tasks, multiRL enables the 
+  specification of latent learning rules 
+  Eckstein & Collins (2019) <doi:10.1073/pnas.1912330117>. 
+  and incorporates the influence of working memory systems 
+  Collins & Frank (2012) <doi:10.1111/j.1460-9568.2011.07980.x>. 
+  within the framework of Markov Decision Processes.
 Authors@R:
   c(
     person(

@@ -13,7 +13,7 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns simulated data
+#' @returns List
 #' 
 estimate_2_SBI <- function(
     model,

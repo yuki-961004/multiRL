@@ -8,7 +8,7 @@
 #'  The name of parameter that you want to plot
 #' @param ... extra
 #'
-#' @returns plot
+#' @returns List
 #' 
 plot.multiRL.replay <- function(
     x, y = NULL,

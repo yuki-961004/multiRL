@@ -38,7 +38,7 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns results
+#' @returns data.frame
 #' 
 estimation_methods <- function(
     estimate,

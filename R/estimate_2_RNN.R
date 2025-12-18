@@ -28,7 +28,7 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns params
+#' @returns data.frame
 #' 
 estimate_2_RNN <- function(
     data,

@@ -54,14 +54,14 @@ binaryRL::func_epsilon          ->             multiRL::func_epsilon
 
 ### Latent Learning Rules 
 
+<p align="center">
+    <img src="./fig/arrow.png" alt="arrow" width="80%" style="display: inline;">
+</p>
+
 ```r
-multiRL::run_m(
-  ...,
-  behrule = c(
-    cue = c(...),
-    rsp = c(...)
-  )
-  ...
+behrule = list(
+  cue = c("Red", "Yellow", "Green", "Blue"),
+  rsp = c("Up", "Down", "Left", "Right")
 )
 ```
 
@@ -69,18 +69,12 @@ multiRL::run_m(
 - Eckstein, M. K., & Collins, A. G. (2020). Computational evidence for hierarchically structured reinforcement learning in humans. Proceedings of the National Academy of Sciences, 117(47), 29381-29389. https://doi.org/10.1073/pnas.1912330117
 
 ### Working-Memory System 
-
 ```r
-# multiRL::func_zeta()
-
-if (reward == 0) {
-  decay <- values + zeta * (value0 - values)
-} else if (reward < 0) {
-  decay <- values + zeta * (value0 - values) + bonus
-} else if (reward > 0) {
-  decay <- values + zeta * (value0 - values) - bonus
-}
+multiRL::func_zeta()
 ```
+$$
+  W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
+$$
+
 **Reference**  
 - Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. https://doi.org/10.1111/j.1460-9568.2011.07980.x  
-- Hitchcock, P. F., Kim, J., & Frank, M. J. (2025). How working memory and reinforcement learning interact when avoiding punishment and pursuing reward concurrently. Journal of Experimental Psychology: General. https://psycnet.apa.org/doi/10.1037/xge0001817

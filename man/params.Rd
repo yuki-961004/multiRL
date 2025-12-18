@@ -2,7 +2,7 @@
 % Please edit documentation in R/document_params.R
 \name{params}
 \alias{params}
-\title{Model Parameter Configuration}
+\title{Model Parameters}
 \description{
 The names of all these parameters are not necessarily fixed. You can define 
    the parameters you need and set their names according to the functions 

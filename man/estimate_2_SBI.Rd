@@ -20,7 +20,7 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-simulated data
+List
 }
 \description{
 estimate_2_SBI

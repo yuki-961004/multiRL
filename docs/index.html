@@ -17,8 +17,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Reinforcement Learning Tools for Multi-Armed Bandit">
-<meta name="description" content="Reinforcement Learning Tools for Multi-Armed Bandit.">
-<meta property="og:description" content="Reinforcement Learning Tools for Multi-Armed Bandit.">
+<meta name="description" content="This package represents a significant extension of binaryRL. Beyond handling complex multi-alternative choice tasks, multiRL enables the specification of latent learning rules Eckstein &amp; Collins (2019) &lt;doi:10.1073/pnas.1912330117&gt;. and incorporates the influence of working memory systems Collins &amp; Frank (2012) &lt;doi:10.1111/j.1460-9568.2011.07980.x&gt;. within the framework of Markov Decision Processes.">
+<meta property="og:description" content="This package represents a significant extension of binaryRL. Beyond handling complex multi-alternative choice tasks, multiRL enables the specification of latent learning rules Eckstein &amp; Collins (2019) &lt;doi:10.1073/pnas.1912330117&gt;. and incorporates the influence of working memory systems Collins &amp; Frank (2012) &lt;doi:10.1111/j.1460-9568.2011.07980.x&gt;. within the framework of Markov Decision Processes.">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-BNYYX0HD3L"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -137,14 +137,13 @@
 <div class="section level3">
 <h3 id="latent-learning-rules">Latent Learning Rules<a class="anchor" aria-label="anchor" href="#latent-learning-rules"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>multiRL<span class="sc">::</span><span class="fu">run_m</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  ...,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">behrule =</span> <span class="fu">c</span>(</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">cue =</span> <span class="fu">c</span>(...),</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">rsp =</span> <span class="fu">c</span>(...)</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  )</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  ...</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>)</span></code></pre></div>
+<p align="center">
+<img src="./fig/arrow.png" alt="arrow" width="80%" style="display: inline;"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">behrule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  cue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Red"</span>, <span class="st">"Yellow"</span>, <span class="st">"Green"</span>, <span class="st">"Blue"</span><span class="op">)</span>,</span>
+<span>  rsp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Up"</span>, <span class="st">"Down"</span>, <span class="st">"Left"</span>, <span class="st">"Right"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><strong>Reference</strong><br>
 - Eckstein, M. K., &amp; Collins, A. G. (2020). Computational evidence for hierarchically structured reinforcement learning in humans. Proceedings of the National Academy of Sciences, 117(47), 29381-29389. <a href="https://doi.org/10.1073/pnas.1912330117" class="external-link uri">https://doi.org/10.1073/pnas.1912330117</a></p>
 </div>
@@ -152,18 +151,12 @@
 <h3 id="working-memory-system">Working-Memory System<a class="anchor" aria-label="anchor" href="#working-memory-system"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># multiRL::func_zeta()</span></span>
-<span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">+</span> <span class="va">bonus</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">-</span> <span class="va">bonus</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="reference/func_zeta.html">func_zeta</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><span class="math display">\[
+  W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
+\]</span></p>
 <p><strong>Reference</strong><br>
-- Collins, A. G., &amp; Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link uri">https://doi.org/10.1111/j.1460-9568.2011.07980.x</a><br>
-- Hitchcock, P. F., Kim, J., &amp; Frank, M. J. (2025). How working memory and reinforcement learning interact when avoiding punishment and pursuing reward concurrently. Journal of Experimental Psychology: General. <a href="https://psycnet.apa.org/doi/10.1037/xge0001817" class="external-link uri">https://psycnet.apa.org/doi/10.1037/xge0001817</a></p>
+- Collins, A. G., &amp; Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link uri">https://doi.org/10.1111/j.1460-9568.2011.07980.x</a></p>
 </div>
 </div>
 </div>

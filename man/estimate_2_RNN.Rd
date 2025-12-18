@@ -46,7 +46,7 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-params
+data.frame
 }
 \description{
 estimate_2_RNN

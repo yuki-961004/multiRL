@@ -3,12 +3,8 @@
 
 #' multiRL.output
 #'
-#' This function processes the multiRL record and generates output.
-#' It accepts an S4 object `record` and a list `extra`.
-#'
-#' @param record An S4 object containing the multiRL record.
-#' @param extra A list of extra infomation passed from R.
-#' @return multiRL.output
+#' @param multiRL.record
+#' @param A list of extra information passed from R.
 #' @export
 process_4_output_cpp <- function(record, extra) {
     .Call(`_multiRL_process_4_output_cpp`, record, extra)

@@ -5,12 +5,8 @@
 
 //' multiRL.output
 //'
-//' This function processes the multiRL record and generates output.
-//' It accepts an S4 object `record` and a list `extra`.
-//'
-//' @param record An S4 object containing the multiRL record.
-//' @param extra A list of extra infomation passed from R.
-//' @return multiRL.output
+//' @param multiRL.record
+//' @param A list of extra information passed from R.
 //' @export
 // [[Rcpp::export]]
 Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
