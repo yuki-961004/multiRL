@@ -59,7 +59,6 @@
 #'    id = 1,
 #' 
 #'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
 #'    priors = list(
 #'      list(
 #'        alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
@@ -76,6 +75,7 @@
 #'        gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
 #'      )
 #'    ),
+#'    settings = list(name = c("TD", "RSTD", "Utility")),
 #' 
 #'    algorithm = "NLOPT_GN_MLSL",
 #'    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
@@ -133,16 +133,12 @@ rcv_d <- function(
     funcs[[i]] <- utils::modifyList(x = default, val = funcs[[i]])
   }
   
-  # 默认先验
-  if (is.null(priors)) {
-    priors <- rep(list(list()), length(models))
-  } else {
-    sim_priors <- .convert_priors(priors = priors, to = "rfunc")
-    fit_priors <- .convert_priors(priors = priors, to = "dfunc")
-  }
+  # 必须有先验
+  sim_priors <- .convert_priors(priors = priors, to = "rfunc")
+  fit_priors <- .convert_priors(priors = priors, to = "dfunc")
   
   # 默认设置
-  if (is.null(settings)) {settings <- rep(list(list()), length(models))}
+  settings <- .restructure_settings(x = settings, n = length(models))
   for (i in 1:length(settings)) {
     default <- list(
       name = paste0("Unknown_", i),

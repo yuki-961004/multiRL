@@ -83,7 +83,6 @@ Step 2: Generating fake data for parameter and model recovery
    id = 1,
 
    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
    priors = list(
      list(
        alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
@@ -100,6 +99,7 @@ Step 2: Generating fake data for parameter and model recovery
        gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
      )
    ),
+   settings = list(name = c("TD", "RSTD", "Utility")),
 
    algorithm = "NLOPT_GN_MLSL",
    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),

@@ -24,8 +24,9 @@ The names of all these parameters are not necessarily fixed. You can define
    \code{beta} are the required free parameters.
 }
 
-\section{free}{
+\section{Slots}{
  
+\subsection{free}{
 \itemize{
    \item \code{alpha [double]} 
    
@@ -55,8 +56,7 @@ The names of all these parameters are not necessarily fixed. You can define
 }
 }
 
-\section{fixed}{
- 
+\subsection{fixed}{
 \itemize{
    \item \code{gamma [double]} 
    
@@ -114,8 +114,7 @@ The names of all these parameters are not necessarily fixed. You can define
 }
 }
 
-\section{constant}{
- 
+\subsection{constant}{
 \itemize{
    \item \code{Q0 [double]} 
    
@@ -177,6 +176,7 @@ The names of all these parameters are not necessarily fixed. You can define
          
          Note: The default value for this \code{bonus} is 0, which assumes 
          that no such bonus value change exists.
+}
 }
 }
 

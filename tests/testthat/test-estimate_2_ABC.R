@@ -15,8 +15,8 @@ testthat::test_that("ABC", {
       reward = c("L_reward", "R_reward"),
       action = "Sub_Choose"
     ),
-    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
     
+    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
     priors = list(
       list(
         alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
@@ -33,7 +33,7 @@ testthat::test_that("ABC", {
         gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
       )
     ),
-    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+    settings = list(name = c("TD", "RSTD", "Utility")),
     
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),

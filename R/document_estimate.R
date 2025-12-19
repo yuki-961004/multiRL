@@ -14,9 +14,8 @@
 #'  This estimation approach is adopted when latent rules are absent and human 
 #'    behavior aligns with the value update objective. In other words, it is the 
 #'    estimation method employed when the log-likelihood can be calculated.
-#' 
-#' @section 1.1 Maximum Likelihood Estimation (MLE): 
-#' 
+#'    
+#' \subsection{1.1 Maximum Likelihood Estimation (MLE)}{
 #'  Log-likelihood reflects the similarity between the human's observed choice 
 #'    and the model's prediction. The free parameters (e.g., learning rate) 
 #'    govern the entire Markov Decision Process, thereby controlling the 
@@ -36,8 +35,9 @@
 #'    \item The likelihood is defined as the product of the human actions and 
 #'          the log-probabilities estimated by the model.
 #' }
+#' }
 #' 
-#' @section 1.2 Maximum A Posteriori (MAP): 
+#' \subsection{1.2 Maximum A Posteriori (MAP)}{
 #' 
 #'  MAP is an extension of MLE. In addition to optimizing parameters for each 
 #'    individual subject based on the likelihood, MAP incorporates information 
@@ -56,6 +56,7 @@
 #'          parameter estimates.
 #'    \item The above steps are repeated until the log-posterior converges.
 #' }
+#' }
 #' 
 #' @section 2. Simulation Based Inference (SBI): 
 #'    Simulation-Based Inference (SBI) can be employed when calculating the 
@@ -64,7 +65,7 @@
 #'    data and the parameters, without compressing the behavioral data into a 
 #'    single value (log-likelihood). 
 #'    
-#' @section 2.1 Approximate Bayesian Computation (ABC): 
+#' \subsection{2.1 Approximate Bayesian Computation (ABC)}{
 #' 
 #'  The ABC model is trained by finding a mapping between the summary 
 #'    statistics and the free parameters. Once the model is trained, given a 
@@ -82,8 +83,9 @@
 #'    \item Given a new set of summary statistics, the trained model outputs 
 #'          the input parameters most likely to have generated those statistics.
 #' }
-#' @section 2.2 Recurrent Neural Network (RNN): 
+#' }
 #' 
+#' \subsection{2.2 Recurrent Neural Network (RNN)}{
 #' 
 #'  The Recurrent Neural Network (RNN) directly seeks a mapping between the 
 #'    simulated dataset itself and the input free parameters. When provided 
@@ -117,6 +119,7 @@
 #'    suggesting that the RNN model may lack generalization ability.
 #'    \item Given a new dataset, the trained model infers the input parameters 
 #'    that are most likely to have generated that dataset.
+#' }
 #' }
 #' 
 #' @section Example: 

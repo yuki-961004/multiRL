@@ -11,7 +11,23 @@ Utility(params)
 see \link[multiRL]{params}}
 }
 \description{
-\deqn{Q_{new} = Q_{old} + \alpha \cdot (U(R) - Q_{old})}
+Learning Rate: \eqn{\alpha}
+ 
+ \deqn{Q_{new} = Q_{old} + \alpha \cdot (U(R) - Q_{old})}
+ 
+ Inverse Temperature: \eqn{\beta}
+ 
+ \deqn{
+   P_{t}(a) = 
+   \frac{
+     \exp(\beta \cdot Q_{t}(a))
+   }{
+     \sum_{i=1}^{k} \exp(\beta \cdot Q_{t}(a_{i}))
+   }
+ }
+ 
+ Stevens' Power-law Exponent: \eqn{\gamma}
+ 
  \deqn{U(R) = {R}^{\gamma}}
 }
 \section{Body}{

@@ -17,27 +17,12 @@ vignette: >
 replay.recovery <- multiRL::rpl_e(
   result = recovery.MLE,
 
-  data = multiRL::TAB,
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
   
-  models = list(
-    multiRL::TD, 
-    multiRL::RSTD, 
-    multiRL::Utility
-  ),
-  settings = list(
-    list(name = "TD"), 
-    list(name = "RSTD"), 
-    list(name = "Utility")
-  ),
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  settings = list(name = c("TD", "RSTD", "Utility")),
 
   omit = c("data", "funcs")
 )
@@ -71,27 +56,12 @@ plot(x = replay.recovery)
 replay.fitting <- multiRL::rpl_e(
   result = fitting.MLE,
 
-  data = multiRL::TAB,
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
   
-  models = list(
-    multiRL::TD, 
-    multiRL::RSTD, 
-    multiRL::Utility
-  ),
-  settings = list(
-    list(name = "TD"), 
-    list(name = "RSTD"), 
-    list(name = "Utility")
-  ),
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
+  settings = list(name = c("TD", "RSTD", "Utility")),
   
   omit = c("funcs")
 )
@@ -104,3 +74,7 @@ plot(x = replay.fitting)
 <p align="center">
     <img src="./fig/Block_Ratio.png" alt="Block_Ratio" width="80%" style="display: inline;">
 </p>
+
+**Note**  
+
+`rpl_e` includes a specialized argument called `omit`, which is used to remove specific slots from the returned results. Since the output is a complete `multiRL.model` (an S4 method object), it may contain data that lacks value for further analysis. Users can specify slot names in `omit` to reduce the memory footprint of the result.

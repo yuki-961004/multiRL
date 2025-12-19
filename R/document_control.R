@@ -14,7 +14,7 @@
 #'    need to worry if you set unnecessary slots, as this will not affect the 
 #'    execution.
 #'    
-#' @section LBI: 
+#' @section 1. Likelihood Based Inference (LBI): 
 #' \itemize{
 #'    \item \code{sample [int]} 
 #'    
@@ -70,13 +70,14 @@
 #'          on their system specifications.
 #' }
 #'    
-#' @section MLE: 
+#' \subsection{1.1 Maximum Likelihood Estimation (MLE)}{
 #' 
 #' \itemize{
 #'    \item Nothing special
 #' }
+#' }
 #'
-#' @section MAP: 
+#' \subsection{1.2 Maximum A Posteriori (MAP)}{
 #' 
 #' \itemize{
 #'    \item \code{diff [double]} 
@@ -100,8 +101,9 @@
 #'          reaches zero.
 #'          
 #' }
+#' }
 #' 
-#' @section SBI: 
+#' @section 2. Simulation Based Inference (SBI): 
 #' \itemize{
 #'    \item \code{sample [int]} 
 #'    
@@ -145,7 +147,7 @@
 #'          data.
 #' }
 #' 
-#' @section ABC: 
+#' \subsection{2.1 Approximate Bayesian Computation (ABC)}{
 #' 
 #' \itemize{
 #'          
@@ -158,8 +160,9 @@
 #'          closest to your actual data is used. 
 #'          
 #' }
+#' }
 #' 
-#' @section RNN: 
+#' \subsection{2.2 Recurrent Neural Network (RNN)}{
 #' 
 #' \itemize{
 #'    \item \code{info [CharacterVector]} 
@@ -205,6 +208,7 @@
 #'          every training sample once. More epochs allow for more training but 
 #'          increase the risk of overfitting.
 #'          
+#' }
 #' }
 #' 
 #' @section Example: 

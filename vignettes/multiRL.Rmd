@@ -354,7 +354,6 @@ recovery.MLE <- multiRL::rcv_d(
   behrule = behrule,
 
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
   priors = list(
     list(
       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
@@ -371,6 +370,8 @@ recovery.MLE <- multiRL::rcv_d(
       gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
     )
   ),
+  settings = list(name = c("TD", "RSTD", "Utility")),
+  
   algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
@@ -404,7 +405,7 @@ fitting.MLE <- multiRL::fit_p(
   behrule = behrule,
 
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  settings = list(name = c("TD", "RSTD", "Utility")),
   
   algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
@@ -433,7 +434,7 @@ replay.recovery <- multiRL::rpl_e(
   behrule = behrule,
   
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  settings = list(name = c("TD", "RSTD", "Utility")),
 
   omit = c("data", "funcs")
 )
@@ -467,7 +468,7 @@ replay.fitting <- multiRL::rpl_e(
   behrule = behrule,
   
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  settings = list(name = c("TD", "RSTD", "Utility")),
   
   omit = c("funcs")
 )

@@ -62,12 +62,10 @@
 #'  \deqn{
 #'    P_{t}(a) = 
 #'    \frac{
-#'      \exp(\beta \cdot (Q_t(a) - \max_{a' \in \mathcal{A}} Q_t(a')))
-#'    }
-#'    {
-#'    \sum_{a' \in \mathcal{A}} 
-#'      \exp(
-#'        \beta \cdot (Q_t(a') - \max_{a'_{i} \in \mathcal{A}} Q_t(a'_{i}))
+#'      \exp\left( \beta \cdot \left( Q_t(a) - \max_{j} Q_t(a_j) \right) \right)
+#'    }{
+#'      \sum_{i=1}^{k} \exp\left(
+#'        \beta \cdot \left( Q_t(a_i) - \max_{j} Q_t(a_j) \right) \right
 #'      )
 #'    }
 #'  }

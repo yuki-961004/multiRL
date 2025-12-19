@@ -12,7 +12,7 @@ vignette: >
 </p>
 
 ```{r}
-data <- multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ]
+data <- multiRL::TAB
 behrule = list(
   cue = c("A", "B", "C", "D"),
   rsp = c("A", "B", "C", "D")
@@ -30,7 +30,7 @@ colnames = list(
 
 ```{r}
 multiRL.model <- multiRL::run_m(
-  data = data,
+  data = data[data[, "Subject"] == 1, ],
   behrule = behrule,
   colnames = colnames,
   params = list(
@@ -48,11 +48,12 @@ multiRL.model <- multiRL::run_m(
 
 multiRL.summary <- multiRL::summary(multiRL.model)
 ```
+
 ## RSTD
 
 ```{r}
 multiRL.model <- multiRL::run_m(
-  data = data,
+  data = data[data[, "Subject"] == 1, ],
   behrule = behrule,
   colnames = colnames,
   params = list(
@@ -74,9 +75,10 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 ## Utility
+
 ```{r}
 multiRL.model <- multiRL::run_m(
-  data = data,
+  data = data[data[, "Subject"] == 1, ],
   behrule = behrule,
   colnames = colnames,
   params = list(
@@ -98,12 +100,16 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 ## Prospect
+
+Below, I will implement a new `func_gamma` to ensure compatibility with both Stevens' Power Law and Prospect Theory.
+
 ```{r}
 my_func_gamma <- function(
     reward,
     params,
     ...
 ){
+  # `get_param` is an internal function and must be accessed using `:::`
   lambda    <-  multiRL:::get_param(params, "lambda")
   gamma     <-  multiRL:::get_param(params, "gamma")
   gammaN    <-  multiRL:::get_param(params, "gammaN")
@@ -139,7 +145,7 @@ my_func_gamma <- function(
 
 ```{r}
 multiRL.model <- multiRL::run_m(
-  data = data,
+  data = data[data[, "Subject"] == 1, ],
   behrule = behrule,
   colnames = colnames,
   params = list(
@@ -159,6 +165,7 @@ multiRL.model <- multiRL::run_m(
     gammaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
   ),
   funcs = list(
+    # Other unmodified `funcs` will use the built-in functions.
     util_func = my_func_gamma
   ),
   settings = list(name = "Prospect", policy = "on")

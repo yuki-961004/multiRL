@@ -269,7 +269,7 @@ testthat::test_that("NLOPT", {
   multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
     env = multiRL.env,
-    algorithm = "NLOPT_GN_DIRECT",
+    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0),
     upper = c(1, 1),
     iteration = 5,

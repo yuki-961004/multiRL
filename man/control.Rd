@@ -20,7 +20,7 @@ The \code{control} argument is a mandatory list used to customize and manage
    execution.
 }
 
-\section{LBI}{
+\section{1. Likelihood Based Inference (LBI)}{
  
 \itemize{
    \item \code{sample [int]} 
@@ -76,18 +76,15 @@ The \code{control} argument is a mandatory list used to customize and manage
          fitting, they can increase the number of cores appropriately based 
          on their system specifications.
 }
-}
-
-\section{MLE}{
- 
+   
+\subsection{1.1 Maximum Likelihood Estimation (MLE)}{
 
 \itemize{
    \item Nothing special
 }
 }
 
-\section{MAP}{
- 
+\subsection{1.2 Maximum A Posteriori (MAP)}{
 
 \itemize{
    \item \code{diff [double]} 
@@ -112,8 +109,9 @@ The \code{control} argument is a mandatory list used to customize and manage
          
 }
 }
+}
 
-\section{SBI}{
+\section{2. Simulation Based Inference (SBI)}{
  
 \itemize{
    \item \code{sample [int]} 
@@ -157,10 +155,8 @@ The \code{control} argument is a mandatory list used to customize and manage
          \code{core > 1} will only accelerate the generation of simulated 
          data.
 }
-}
 
-\section{ABC}{
- 
+\subsection{2.1 Approximate Bayesian Computation (ABC)}{
 
 \itemize{
          
@@ -175,8 +171,7 @@ The \code{control} argument is a mandatory list used to customize and manage
 }
 }
 
-\section{RNN}{
- 
+\subsection{2.2 Recurrent Neural Network (RNN)}{
 
 \itemize{
    \item \code{info [CharacterVector]} 
@@ -222,6 +217,7 @@ The \code{control} argument is a mandatory list used to customize and manage
          every training sample once. More epochs allow for more training but 
          increase the risk of overfitting.
          
+}
 }
 }
 

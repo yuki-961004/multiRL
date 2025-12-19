@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,12 +84,8 @@
 <p>This estimation approach is adopted when latent rules are absent and human
    behavior aligns with the value update objective. In other words, it is the
    estimation method employed when the log-likelihood can be calculated.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="-maximum-likelihood-estimation-mle-">1.1 Maximum Likelihood Estimation (MLE)<a class="anchor" aria-label="anchor" href="#-maximum-likelihood-estimation-mle-"></a></h2>
-
-
-
+<div class="section">
+<h3 id="-maximum-likelihood-estimation-mle-">1.1 Maximum Likelihood Estimation (MLE)<a class="anchor" aria-label="anchor" href="#-maximum-likelihood-estimation-mle-"></a></h3>
 <p>Log-likelihood reflects the similarity between the human's observed choice
    and the model's prediction. The free parameters (e.g., learning rate)
    govern the entire Markov Decision Process, thereby controlling the
@@ -106,9 +102,9 @@
 <li><p>The likelihood is defined as the product of the human actions and
          the log-probabilities estimated by the model.</p></li>
 </ol></div>
-    <div class="section level2">
-    <h2 id="-maximum-a-posteriori-map-">1.2 Maximum A Posteriori (MAP)<a class="anchor" aria-label="anchor" href="#-maximum-a-posteriori-map-"></a></h2>
 
+<div class="section">
+<h3 id="-maximum-a-posteriori-map-">1.2 Maximum A Posteriori (MAP)<a class="anchor" aria-label="anchor" href="#-maximum-a-posteriori-map-"></a></h3>
 
 
 <p>MAP is an extension of MLE. In addition to optimizing parameters for each
@@ -126,6 +122,8 @@
          parameter estimates.</p></li>
 <li><p>The above steps are repeated until the log-posterior converges.</p></li>
 </ol></div>
+
+    </div>
     <div class="section level2">
     <h2 id="-simulation-based-inference-sbi-">2. Simulation Based Inference (SBI)<a class="anchor" aria-label="anchor" href="#-simulation-based-inference-sbi-"></a></h2>
 
@@ -135,10 +133,8 @@
    generally seeks to establish a direct relationship between the behavioral
    data and the parameters, without compressing the behavioral data into a
    single value (log-likelihood).</p>
-    </div>
-    <div class="section level2">
-    <h2 id="-approximate-bayesian-computation-abc-">2.1 Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#-approximate-bayesian-computation-abc-"></a></h2>
-
+<div class="section">
+<h3 id="-approximate-bayesian-computation-abc-">2.1 Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#-approximate-bayesian-computation-abc-"></a></h3>
 
 
 <p>The ABC model is trained by finding a mapping between the summary
@@ -155,10 +151,9 @@
 <li><p>Given a new set of summary statistics, the trained model outputs
          the input parameters most likely to have generated those statistics.</p></li>
 </ol></div>
-    <div class="section level2">
-    <h2 id="-recurrent-neural-network-rnn-">2.2 Recurrent Neural Network (RNN)<a class="anchor" aria-label="anchor" href="#-recurrent-neural-network-rnn-"></a></h2>
 
-
+<div class="section">
+<h3 id="-recurrent-neural-network-rnn-">2.2 Recurrent Neural Network (RNN)<a class="anchor" aria-label="anchor" href="#-recurrent-neural-network-rnn-"></a></h3>
 
 
 <p>The Recurrent Neural Network (RNN) directly seeks a mapping between the
@@ -188,6 +183,8 @@
 <li><p>Given a new dataset, the trained model infers the input parameters
    that are most likely to have generated that dataset.</p></li>
 </ol></div>
+
+    </div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
 

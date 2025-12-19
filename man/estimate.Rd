@@ -19,11 +19,8 @@ The method used for parameter estimation, including \code{"MLE"}
  This estimation approach is adopted when latent rules are absent and human 
    behavior aligns with the value update objective. In other words, it is the 
    estimation method employed when the log-likelihood can be calculated.
-}
-
-\section{1.1 Maximum Likelihood Estimation (MLE)}{
- 
-
+   
+\subsection{1.1 Maximum Likelihood Estimation (MLE)}{
  Log-likelihood reflects the similarity between the human's observed choice 
    and the model's prediction. The free parameters (e.g., learning rate) 
    govern the entire Markov Decision Process, thereby controlling the 
@@ -45,8 +42,7 @@ The method used for parameter estimation, including \code{"MLE"}
 }
 }
 
-\section{1.2 Maximum A Posteriori (MAP)}{
- 
+\subsection{1.2 Maximum A Posteriori (MAP)}{
 
  MAP is an extension of MLE. In addition to optimizing parameters for each 
    individual subject based on the likelihood, MAP incorporates information 
@@ -66,6 +62,7 @@ The method used for parameter estimation, including \code{"MLE"}
    \item The above steps are repeated until the log-posterior converges.
 }
 }
+}
 
 \section{2. Simulation Based Inference (SBI)}{
  
@@ -73,11 +70,9 @@ The method used for parameter estimation, including \code{"MLE"}
    log-likelihood is impossible or computationally intractable. SBI 
    generally seeks to establish a direct relationship between the behavioral 
    data and the parameters, without compressing the behavioral data into a 
-   single value (log-likelihood).
-}
-
-\section{2.1 Approximate Bayesian Computation (ABC)}{
- 
+   single value (log-likelihood). 
+   
+\subsection{2.1 Approximate Bayesian Computation (ABC)}{
 
  The ABC model is trained by finding a mapping between the summary 
    statistics and the free parameters. Once the model is trained, given a 
@@ -97,9 +92,7 @@ The method used for parameter estimation, including \code{"MLE"}
 }
 }
 
-\section{2.2 Recurrent Neural Network (RNN)}{
- 
-
+\subsection{2.2 Recurrent Neural Network (RNN)}{
 
  The Recurrent Neural Network (RNN) directly seeks a mapping between the 
    simulated dataset itself and the input free parameters. When provided 
@@ -133,6 +126,7 @@ The method used for parameter estimation, including \code{"MLE"}
    suggesting that the RNN model may lack generalization ability.
    \item Given a new dataset, the trained model infers the input parameters 
    that are most likely to have generated that dataset.
+}
 }
 }
 

@@ -56,7 +56,7 @@
 #'    ),
 #'   
 #'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+#'    settings = list(name = c("TD", "RSTD", "Utility")),
 #'   
 #'    algorithm = "NLOPT_GN_MLSL",
 #'    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
@@ -116,13 +116,13 @@ fit_p <- function(
   
   # 默认先验
   if (is.null(priors)) {
-    priors <- rep(list(list()), length(models))
+    fit_priors <- rep(list(list()), length(models))
   } else {
     fit_priors <- .convert_priors(priors = priors, to = "dfunc")
   }
   
   # 默认设置
-  if (is.null(settings)) {settings <- rep(list(list()), length(models))}
+  settings <- .restructure_settings(x = settings, n = length(models))
   for (i in 1:length(settings)) {
     default <- list(
       name = paste0("Unknown_", i)

@@ -32,13 +32,9 @@ testthat::test_that("MLE", {
         gamma = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
       )
     ),
-    settings = list(
-      list(name = "TD"),
-      list(name = "RSTD"),
-      list(name = "Utility")
-    ),
+    settings = list(name = c("TD", "RSTD", "Utility"), policy = "off"),
     # 算法
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+    algorithm = algorithm = "NLOPT_GN_MLSL",
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
     control = list(core = 4, iter = 5)

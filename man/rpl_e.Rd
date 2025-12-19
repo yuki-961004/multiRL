@@ -73,7 +73,7 @@ Step 4: Replaying the experiment with optimal parameters
    behrule = behrule,
   
    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+   settings = list(name = c("TD", "RSTD", "Utility")),
   
    omit = c("data", "funcs")
  )
@@ -86,7 +86,7 @@ Step 4: Replaying the experiment with optimal parameters
    behrule = behrule,
   
    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+   settings = list(name = c("TD", "RSTD", "Utility")),
   
    omit = c("funcs")
  )

@@ -32,13 +32,9 @@ testthat::test_that("MAP", {
         gamma = function(x) {stats::dlogis(x, location = 0, scale = 1, log = TRUE)}
       )
     ),
-    settings = list(
-      list(name = "TD"),
-      list(name = "RSTD"),
-      list(name = "Utility")
-    ),
+    settings = list(name = c("TD", "RSTD", "Utility")),
     # 算法
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+    algorithm = "NLOPT_GN_MLSL",
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
     control = list(core = 4, iter = c(10, 3))

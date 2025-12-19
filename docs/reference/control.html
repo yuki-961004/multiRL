@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
    execution.</p>
     </div>
     <div class="section level2">
-    <h2 id="lbi">LBI<a class="anchor" aria-label="anchor" href="#lbi"></a></h2>
+    <h2 id="-likelihood-based-inference-lbi-">1. Likelihood Based Inference (LBI)<a class="anchor" aria-label="anchor" href="#-likelihood-based-inference-lbi-"></a></h2>
 
 
 <ul><li><p><code>sample [int]</code></p>
@@ -124,17 +124,15 @@
          with the default set to 1. If the user wishes to speed up the
          fitting, they can increase the number of cores appropriately based
          on their system specifications.</p></li>
-</ul></div>
-    <div class="section level2">
-    <h2 id="mle">MLE<a class="anchor" aria-label="anchor" href="#mle"></a></h2>
-
+</ul><div class="section">
+<h3 id="-maximum-likelihood-estimation-mle-">1.1 Maximum Likelihood Estimation (MLE)<a class="anchor" aria-label="anchor" href="#-maximum-likelihood-estimation-mle-"></a></h3>
 
 
 <ul><li><p>Nothing special</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="map">MAP<a class="anchor" aria-label="anchor" href="#map"></a></h2>
 
+<div class="section">
+<h3 id="-maximum-a-posteriori-map-">1.2 Maximum A Posteriori (MAP)<a class="anchor" aria-label="anchor" href="#-maximum-a-posteriori-map-"></a></h3>
 
 
 <ul><li><p><code>diff [double]</code></p>
@@ -154,8 +152,10 @@
          The iteration is prematurely terminated when the patience count
          reaches zero.</p></li>
 </ul></div>
+
+    </div>
     <div class="section level2">
-    <h2 id="sbi">SBI<a class="anchor" aria-label="anchor" href="#sbi"></a></h2>
+    <h2 id="-simulation-based-inference-sbi-">2. Simulation Based Inference (SBI)<a class="anchor" aria-label="anchor" href="#-simulation-based-inference-sbi-"></a></h2>
 
 
 <ul><li><p><code>sample [int]</code></p>
@@ -189,10 +189,8 @@
          model training is typically handled by the GPU, setting
          <code>core &gt; 1</code> will only accelerate the generation of simulated
          data.</p></li>
-</ul></div>
-    <div class="section level2">
-    <h2 id="abc">ABC<a class="anchor" aria-label="anchor" href="#abc"></a></h2>
-
+</ul><div class="section">
+<h3 id="-approximate-bayesian-computation-abc-">2.1 Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#-approximate-bayesian-computation-abc-"></a></h3>
 
 
 <ul><li><p><code>tol [double]</code></p>
@@ -202,9 +200,9 @@
          (the default) means only the 10 percent of simulated data that is
          closest to your actual data is used.</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="rnn">RNN<a class="anchor" aria-label="anchor" href="#rnn"></a></h2>
 
+<div class="section">
+<h3 id="-recurrent-neural-network-rnn-">2.2 Recurrent Neural Network (RNN)<a class="anchor" aria-label="anchor" href="#-recurrent-neural-network-rnn-"></a></h3>
 
 
 <ul><li><p><code>info [CharacterVector]</code></p>
@@ -241,6 +239,8 @@
          every training sample once. More epochs allow for more training but
          increase the risk of overfitting.</p></li>
 </ul></div>
+
+    </div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
 

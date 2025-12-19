@@ -80,7 +80,7 @@ Step 3: Optimizing parameters to fit real data
    ),
   
    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-   settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+   settings = list(name = c("TD", "RSTD", "Utility")),
   
    algorithm = "NLOPT_GN_MLSL",
    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),

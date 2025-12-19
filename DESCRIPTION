@@ -1,5 +1,5 @@
 Package: multiRL
-Version: 0.1.7
+Version: 0.1.8
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
 Description: This package represents a significant extension of binaryRL. 
   Beyond handling complex multi-alternative choice tasks, multiRL enables the 

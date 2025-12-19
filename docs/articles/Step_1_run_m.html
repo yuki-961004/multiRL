@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
 <p align="center">
 <img src="fig/rl_step1.png" alt="Step 1" width="80%" style="display: inline;"></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TAB.html">TAB</a></span><span class="op">[</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TAB.html">TAB</a></span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TAB.html">TAB</a></span></span>
 <span><span class="va">behrule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  cue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span>,</span>
 <span>  rsp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span></span>
@@ -107,7 +107,7 @@
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
 <span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
 <span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -137,7 +137,7 @@
 </h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
 <span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
 <span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -169,7 +169,7 @@
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
 <span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
 <span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -199,12 +199,15 @@
 <div class="section level2">
 <h2 id="prospect">Prospect<a class="anchor" aria-label="anchor" href="#prospect"></a>
 </h2>
+<p>Below, I will implement a new <code>func_gamma</code> to ensure
+compatibility with both Stevens’ Power Law and Prospect Theory.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_func_gamma</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">reward</span>,</span>
 <span>    <span class="va">params</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="co"># `get_param` is an internal function and must be accessed using `:::`</span></span>
 <span>  <span class="va">lambda</span>    <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"lambda"</span><span class="op">)</span></span>
 <span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gamma"</span><span class="op">)</span></span>
 <span>  <span class="va">gammaN</span>    <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gammaN"</span><span class="op">)</span></span>
@@ -238,7 +241,7 @@
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
 <span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
 <span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -258,6 +261,7 @@
 <span>    gammaP <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  funcs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="co"># Other unmodified `funcs` will use the built-in functions.</span></span>
 <span>    util_func <span class="op">=</span> <span class="va">my_func_gamma</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Prospect"</span>, policy <span class="op">=</span> <span class="st">"on"</span><span class="op">)</span></span>

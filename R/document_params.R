@@ -18,7 +18,8 @@
 #'    By default, the learning rate \code{alpha} and the inverse-temperature 
 #'    \code{beta} are the required free parameters. 
 #'  
-#' @section free: 
+#' @section Slots: 
+#' \subsection{free}{
 #' \itemize{
 #'    \item \code{alpha [double]} 
 #'    
@@ -46,7 +47,9 @@
 #'          probability of executing different actions becomes nearly equal, 
 #'          regardless of the differences in their expected values.
 #' }
-#' @section fixed: 
+#' }
+#' 
+#' \subsection{fixed}{
 #' \itemize{
 #'    \item \code{gamma [double]} 
 #'    
@@ -102,7 +105,9 @@
 #'          value back to the initial value. The default value is set to 0, 
 #'          which assumes that no such working memory system exists.
 #' }
-#' @section constant: 
+#' }
+#' 
+#' \subsection{constant}{
 #' \itemize{
 #'    \item \code{Q0 [double]} 
 #'    
@@ -164,6 +169,7 @@
 #'          
 #'          Note: The default value for this \code{bonus} is 0, which assumes 
 #'          that no such bonus value change exists.
+#' }
 #' }
 #' 
 #' @section Example: 

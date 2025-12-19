@@ -52,7 +52,7 @@
 #'    behrule = behrule,
 #'   
 #'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+#'    settings = list(name = c("TD", "RSTD", "Utility")),
 #'   
 #'    omit = c("data", "funcs")
 #'  )
@@ -65,7 +65,7 @@
 #'    behrule = behrule,
 #'   
 #'    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-#'    settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+#'    settings = list(name = c("TD", "RSTD", "Utility")),
 #'   
 #'    omit = c("funcs")
 #'  )

@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,8 +91,11 @@
    <code>beta</code> are the required free parameters.</p>
     </div>
     <div class="section level2">
-    <h2 id="free">free<a class="anchor" aria-label="anchor" href="#free"></a></h2>
+    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
 
+
+<div class="section">
+<h3 id="free">free<a class="anchor" aria-label="anchor" href="#free"></a></h3>
 
 <ul><li><p><code>alpha [double]</code></p>
 <p>Learning Rate <code>alpha</code> specifies how aggressively or
@@ -115,9 +118,9 @@
          probability of executing different actions becomes nearly equal,
          regardless of the differences in their expected values.</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="fixed">fixed<a class="anchor" aria-label="anchor" href="#fixed"></a></h2>
 
+<div class="section">
+<h3 id="fixed">fixed<a class="anchor" aria-label="anchor" href="#fixed"></a></h3>
 
 <ul><li><p><code>gamma [double]</code></p>
 <p>The physical reward received is often distinct from the
@@ -160,9 +163,9 @@
          value back to the initial value. The default value is set to 0,
          which assumes that no such working memory system exists.</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="constant">constant<a class="anchor" aria-label="anchor" href="#constant"></a></h2>
 
+<div class="section">
+<h3 id="constant">constant<a class="anchor" aria-label="anchor" href="#constant"></a></h3>
 
 <ul><li><p><code>Q0 [double]</code></p>
 <p>This parameter represents the initial value assigned to each action
@@ -213,6 +216,8 @@
 <p>Note: The default value for this <code>bonus</code> is 0, which assumes
          that no such bonus value change exists.</p></li>
 </ul></div>
+
+    </div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
 

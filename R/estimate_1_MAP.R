@@ -86,7 +86,7 @@ estimate_1_MAP <- function(
   priors <- .convert_priors(priors = priors, to = "dfunc")
   
   # 默认设置
-  if (is.null(settings)) {settings <- rep(list(list()), length(models))}
+  settings <- .restructure_settings(x = settings, n = length(models))
   for (i in 1:length(settings)) {
     default <- list(
       name = paste0("Unknown_", i),

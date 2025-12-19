@@ -15,23 +15,11 @@ vignette: >
 recovery.MLE <- multiRL::rcv_d(
   estimate = "MLE",
 
-  data = multiRL::TAB,
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  id = 1,
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
 
-  models = list(
-    multiRL::TD, 
-    multiRL::RSTD, 
-    multiRL::Utility
-  ),
+  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   priors = list(
     list(
       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
@@ -48,18 +36,59 @@ recovery.MLE <- multiRL::rcv_d(
       gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
     )
   ),
-  settings = list(
-    list(name = "TD"), 
-    list(name = "RSTD"), 
-    list(name = "Utility")
-  ),
+  settings = list(name = c("TD", "RSTD", "Utility")),
   
-  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
   control = list(core = 10, sample = 100, iter = 100)
 )
 
 save(recovery.MLE, file = "./recovery.MLE.Rdata")
+```
+
+## Estimate Methods
+
+With minimal configuration, users can estimate optimal parameters using four distinct methods. In the following code snippets, I only highlight the `arguments` that vary by estimation method. Unless explicitly noted, other arguments can be duplicated from the above example.
+
+```{r eval=FALSE}
+# How to use MLE as estimate method
+recovery.MLE <- multiRL::rcv_d(
+  estimate = "MLE",
+  control = list(
+    core = 10, sample = 100, iter = 100
+  ),
+  ...
+)
+# How to use MAP as estimate method
+recovery.MAP <- multiRL::rcv_d(
+  estimate = "MAP",
+  control = list(
+    core = 10, sample = 100, iter = 100,
+    diff = 0.001, patience = 10
+  ),
+  ...
+)
+# How to use ABC as estimate method
+recovery.ABC <- multiRL::rcv_d(
+  estimate = "ABC",
+  control = list(
+    core = 10, sample = 100, train = 1000,
+    tol = 0.1
+  ),
+  ...
+)
+
+# How to use RNN as estimate method
+reticulate::use_condaenv(condaenv = "your_tensorflow_env_name", required = TRUE)
+
+recovery.RNN <- multiRL::rcv_d(
+  estimate = "RNN",
+  control = list(
+    core = 1, sample = 100, train = 1000,
+    layer = "GRU", units = 128, batch_size = 10, epochs = 100
+  ),
+  ...
+)
 ```
 

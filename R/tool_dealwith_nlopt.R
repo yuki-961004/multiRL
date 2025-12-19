@@ -16,4 +16,5 @@
     global_opts = global_opts, 
     local_opts = local_opts
   )
+  return(result)
 }

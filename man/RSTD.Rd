@@ -11,8 +11,21 @@ RSTD(params)
 see \link[multiRL]{params}}
 }
 \description{
-\deqn{Q_{new} = Q_{old} + \alpha_{-} \cdot (R - Q_{old}), R < Q_{old}}
+Learning Rate: \eqn{\alpha}
+ 
+ \deqn{Q_{new} = Q_{old} + \alpha_{-} \cdot (R - Q_{old}), R < Q_{old}}
  \deqn{Q_{new} = Q_{old} + \alpha_{+} \cdot (R - Q_{old}), R \ge Q_{old}}
+ 
+ Inverse Temperature: \eqn{\beta}
+ 
+ \deqn{
+   P_{t}(a) = 
+   \frac{
+     \exp(\beta \cdot Q_{t}(a))
+   }{
+     \sum_{i=1}^{k} \exp(\beta \cdot Q_{t}(a_{i}))
+   }
+ }
 }
 \section{Body}{
  

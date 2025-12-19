@@ -90,7 +90,7 @@ estimate_1_MLE <- function(
   }
   
   # 默认设置
-  if (is.null(settings)) {settings <- rep(list(list()), length(models))}
+  settings <- .restructure_settings(x = settings, n = length(models))
   for (i in 1:length(settings)) {
     default <- list(
       name = paste0("Unknown_", i),
