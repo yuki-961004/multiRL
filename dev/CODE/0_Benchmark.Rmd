@@ -11,7 +11,7 @@ binaryRL.res <- binaryRL::run_m(
   id = 1,
   n_params = 3,
   n_trials = 360,
-  initial_value = 100,
+  initial_value = NA_real_,
   threshold = 1,
   pi = 0.1,
   epsilon = NA_real_,
@@ -53,7 +53,7 @@ multiRL.model <- multiRL::run_m(
       zeta = 0
     ),
     constant = list(
-      Q0 = 100, 
+      Q0 = NA_real_, 
       lapse = 0.01,
       threshold = 1,
       bonus = 0

@@ -9,7 +9,7 @@ output: html_document
 ```{r}
 recovery <- binaryRL::rcv_d(
   policy = "off",
-  data = binaryRL::Mason_2024_G2,
+  data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
   model_names = c("TD"),
   simulate_models = list(binaryRL::TD),
   fit_models = list(binaryRL::TD),
@@ -19,10 +19,16 @@ recovery <- binaryRL::rcv_d(
       beta = function(x) {stats::rexp(n = 1, rate = 1)}
     )
   ),
+  dfun = list(
+    TD = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    )
+  ),
   lower = list(c(0, 0)),
   upper = list(c(1, 5)),
-  iteration_s = 100,
-  iteration_f = 100,
+  iteration_s = 200,
+  iteration_f = 200,
   nc = 10,
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA")
 )
@@ -40,8 +46,8 @@ cor(result$input_param_2, result$output_param_2)
 # [1] 0.6965698
 
 # off
-# [1] 0.6877152
-# [1] 0.8534783
+# [1] 0.8669876
+# [1] 0.8618929
 ```
 
 ```{r}
@@ -71,7 +77,7 @@ recovery.MLE <- multiRL::rcv_d(
   algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
   lowers = list(c(0, 0)),
   uppers = list(c(1, 5)),
-  control = list(sample = 100, core = 10, iter = 100)
+  control = list(sample = 200, core = 10, iter = 200)
 )
 ```
 
@@ -97,8 +103,8 @@ cor(df_true, df_pred)
 # [1] 0.8791621
 
 # policy = "off"
-# [1] 0.9666269
-# [1] 0.8918622
+# [1] 0.9230782
+# [1] 0.8678845
 ```
 
 ## MAP

@@ -1,0 +1,342 @@
+---
+title: "Untitled"
+author: "yuki"
+date: "2025-12-22"
+output: html_document
+---
+```{r}
+check_binary <- binaryRL.res$data %>%
+  dplyr::select(L_prob, R_prob)
+
+check_multi <- multiRL.summary@data %>%
+  dplyr::select(P_A, P_B, P_C, P_D)
+```
+
+
+```{r}
+obj_binary <- function(params){
+  binaryRL.res <- binaryRL::run_m(
+    mode = "fit",
+    data = binaryRL::Mason_2024_G2,
+    id = 1,
+    n_params = 3,
+    n_trials = 360,
+    initial_value = NA,
+    threshold = 1,
+    pi = 0.1,
+    epsilon = NA_real_,
+    eta = params[1],
+    tau = params[2],
+    priors = list(
+      eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    ),
+    policy = "off",
+    engine = "cpp"
+  )
+  
+  return(binaryRL.res$ll)
+}
+
+obj_binary(params = c(0.5, 0.5))
+
+obj_multi <- function(params){
+  multiRL.model <- multiRL::run_m(
+    data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+    behrule = list(
+      cue = c("A", "B", "C", "D"),
+      rsp = c("A", "B", "C", "D")
+    ),
+    colnames = list(
+      subid = "Subject", block = "Block", trial = "Trial",
+      object = c("L_choice", "R_choice"), 
+      reward = c("L_reward", "R_reward"),
+      action = "Sub_Choose",
+      exinfo = c("Frame", "NetWorth", "RT")
+    ),
+    params = list(
+      free = list(
+        alpha = params[1],
+        beta = params[2]
+      ),
+      fixed = list(
+        gamma = 1, 
+        delta = 0.1, 
+        epsilon = NA_real_,
+        zeta = 0
+      ),
+      constant = list(
+        Q0 = NA_real_, 
+        lapse = 0.01,
+        threshold = 1,
+        bonus = 0
+      )
+    ),
+    priors = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    ),
+    settings = list(
+      name = "TD",
+      mode = "fitting",
+      estimate = "MLE",
+      policy = "off"
+    ),
+    engine = "Cpp",
+    anythingelse = c(1, 2, 3)
+  )
+  
+  return(multiRL.model@sumstat@LL)
+}
+
+obj_multi(params = c(0.5, 0.5))
+```
+
+```{r}
+result_binary <- nloptr::nloptr(
+  x0 = c(0.1, 0.1, 0.1),
+  eval_f = obj_binary,
+  lb = c(0.00001, 0.00001, 0.00001),
+  ub = c(0.99999, 0.99999, 0.99999),
+  opts = list(
+    algorithm = "NLOPT_GN_MLSL", 
+    local_opts = list(
+        algorithm = "NLOPT_LN_BOBYQA", 
+        xtol_rel = 1.0e-8            
+      ),
+    maxeval = 100,
+    ranseed = 123
+  )
+)
+
+result_multi <- nloptr::nloptr(
+  x0 = c(0.1, 0.1, 0.1),
+  eval_f = obj_multi,
+  lb = c(0.00001, 0.00001, 0.00001),
+  ub = c(0.99999, 0.99999, 0.99999),
+  opts = list(
+    algorithm = "NLOPT_GN_MLSL", 
+    local_opts = list(
+        algorithm = "NLOPT_LN_BOBYQA", 
+        xtol_rel = 1.0e-8            
+      ),
+    maxeval = 100,
+    ranseed = 123
+  )
+)
+
+result_binary$solution
+result_multi$solution
+```
+
+```{r}
+fitting.binaryRL <- binaryRL::fit_p(
+  policy = "off",
+  data = binaryRL::Mason_2024_G2,
+  id = 1:5,
+  model_name = c("TD"),
+  fit_model = list(binaryRL::TD),
+  lower = list(c(0, 0)),
+  upper = list(c(1, 1)),
+  iteration_i = 100,
+  nc = 1,
+  seed = 123,
+  algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA")
+)
+
+fitting.multiRL <- multiRL::fit_p(
+    estimate = "MLE",
+    data = multiRL::TAB,
+    ids = 1:5,
+    behrule = list(
+      cue = c("A", "B", "C", "D"),
+      rsp = c("A", "B", "C", "D")
+    ),
+    colnames = list(
+      object = c("L_choice", "R_choice"), 
+      reward = c("L_reward", "R_reward"),
+      action = "Sub_Choose"
+    ),
+    models = list(multiRL::TD),
+    settings = list(list(name = "TD", policy = "off", estimate = "MLE")),
+    priors = list(
+      list(
+        alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+        beta = function(x) {stats::rexp(n = 1, rate = 1)}
+      )
+    ),
+    
+    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
+    lowers = list(c(0, 0)),
+    uppers = list(c(1, 1)),
+    control = list(core = 1, iter = 100, seed = 123)
+  )
+```
+
+```{r}
+# 创建临时环境
+binaryRL.env <- new.env()
+
+# 给临时环境创建全局变量
+binaryRL.env$mode <- "fit"
+binaryRL.env$policy <- "off"
+
+binaryRL.env$estimate <- "MLE"
+binaryRL.env$priors <- list(
+  alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+  beta = function(x) {stats::rexp(n = 1, rate = 1)}
+)
+
+binaryRL.env$data <- binaryRL::Mason_2024_G2
+binaryRL.env$id <- 1
+binaryRL.env$n_params <- 2
+binaryRL.env$n_trials <- 360
+
+binaryRL.TD <- binaryRL::TD
+
+environment(binaryRL.TD) <- binaryRL.env
+
+binaryRL.TD(params = c(0.5, 0.5))
+```
+
+```{r}
+multiRL.env <- new.env()
+
+multiRL.env$data <- multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ]
+multiRL.env$behrule <- list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
+)
+
+multiRL.env$colnames <- list(
+  subid = "Subject", block = "Block", trial = "Trial",
+  object = c("L_choice", "R_choice"), 
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose"
+)
+multiRL.env$funcs <- list(
+  rate_func = multiRL::func_alpha,
+  prob_func = multiRL::func_beta,
+  util_func = multiRL::func_gamma,
+  bias_func = multiRL::func_delta,
+  expl_func = multiRL::func_epsilon,
+  dcay_func = multiRL::func_zeta
+)
+multiRL.env$priors <- list(
+  alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+  beta = function(x) {stats::rexp(n = 1, rate = 1)}
+)
+multiRL.env$settings <- list(name = "TD", policy = "off", estimate = "MLE")
+
+multiRL.TD <- multiRL::TD
+
+environment(multiRL.TD) <- multiRL.env
+
+multiRL.TD(params = c(0.5, 0.5))
+```
+
+```{r}
+df_simulate <- binaryRL::run_m(
+  mode = "simulate",
+  data = binaryRL::Mason_2024_G2,
+  id = 1,
+  n_params = 2,
+  n_trials = 360,
+  initial_value = NA,
+  threshold = 1,
+  pi = 0.1,
+  epsilon = NA_real_,
+  eta = 0.60260929,
+  tau = 0.833578742,
+  priors = list(
+    eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+  ),
+  policy = "off",
+  engine = "cpp"
+)
+```
+
+```{r}
+params = c(0.60, 0.83)
+
+obj_binary <- function(params){
+  binaryRL.res <- binaryRL::run_m(
+    mode = "simulate",
+    data = df_simulate$data,
+    id = 1,
+    n_params = 2,
+    n_trials = 360,
+    initial_value = NA,
+    threshold = 1,
+    pi = 0.1,
+    epsilon = NA_real_,
+    eta = params[1],
+    tau = params[2],
+    priors = list(
+      eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    ),
+    policy = "off",
+    engine = "cpp"
+  )
+  
+  return(binaryRL.res$ll)
+}
+
+obj_binary(params = c(0.60, 0.83))
+```
+
+```{r}
+obj_multi <- function(params){
+  multiRL.model <- multiRL::run_m(
+    data = df_simulate$data,
+    behrule = list(
+      cue = c("A", "B", "C", "D"),
+      rsp = c("A", "B", "C", "D")
+    ),
+    colnames = list(
+      subid = "Subject", block = "Block", trial = "Trial",
+      object = c("L_choice", "R_choice"), 
+      reward = c("L_reward", "R_reward"),
+      action = "Sub_Choose",
+      exinfo = c("Frame", "NetWorth", "RT")
+    ),
+    params = list(
+      free = list(
+        alpha = params[1],
+        beta = params[2]
+      ),
+      fixed = list(
+        gamma = 1, 
+        delta = 0.1, 
+        epsilon = NA_real_,
+        zeta = 0
+      ),
+      constant = list(
+        Q0 = NA_real_, 
+        lapse = 0.01,
+        threshold = 1,
+        bonus = 0
+      )
+    ),
+    priors = list(
+      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+    ),
+    settings = list(
+      name = "TD",
+      mode = "fitting",
+      estimate = "MLE",
+      policy = "off"
+    ),
+    engine = "Cpp",
+    anythingelse = c(1, 2, 3)
+  )
+  
+  return(multiRL.model@sumstat@LL)
+}
+
+obj_multi(params = c(0.60, 0.83))
+```
+
