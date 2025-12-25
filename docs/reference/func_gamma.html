@@ -99,7 +99,7 @@ the user.</p></dd>
 <span>  <span class="co"># Trial &lt;- idinfo["Trial"]</span></span>
 <span>  <span class="co"># Frame &lt;- exinfo["Frame"]</span></span>
 <span></span>
-<span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gamma"</span><span class="op">)</span></span>
+<span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gamma"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">utility</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">^</span> <span class="va">gamma</span><span class="op">)</span></span>
 <span></span>

@@ -82,7 +82,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This package is designed to help users build the <strong>Rescorla-Wagner Model</strong> for <strong>Multi-Armed Bandit</strong> tasks (for TAFC see <a href="https://yuki-961004.github.io/binaryRL/" class="external-link">binaryRL</a>). Beginners can define models using simple <strong><code>if-else</code></strong> logic, making model construction more accessible.</p>
+<p>This package is designed to help users build the <strong>Rescorla-Wagner Model</strong> for <strong>Multi-Armed Bandit</strong> tasks (see Sutton &amp; Barto, <a href="https://mitpress.mit.edu/9780262039246/reinforcement-learning/" class="external-link">2018</a>). Beginners can define models using simple <strong><code>if-else</code></strong> logic, making model construction more accessible (built-in three basic models, see Niv et al., <a href="https://doi.org/10.1523/JNEUROSCI.5498-10.2012" class="external-link">2012</a>).</p>
 <ul>
 <li>
 <a href="./articles/multiRL.html#id_1-run-model">Step 1</a>: Build Reinforcement Learning Models <code><a href="reference/run_m.html">run_m()</a></code>
@@ -97,6 +97,7 @@
 <a href="./articles/multiRL.html#id_4-replay-the-experiment">Step 4</a>: Replay the Experiment <code><a href="reference/rpl_e.html">rpl_e()</a></code>
 </li>
 </ul>
+<p>These four steps follow the ten simple rules for the computational modeling of behavioral data (Wilson &amp; Collins <a href="https://doi.org/10.7554/eLife.49547" class="external-link">2019</a>)</p>
 <!---------------------------------------------------------->
 </div>
 <div class="section level2">
@@ -109,55 +110,78 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yuki-961004.github.io/multiRL/">multiRL</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+<h2 id="markov-decision-process">Markov Decision Process<a class="anchor" aria-label="anchor" href="#markov-decision-process"></a>
 </h2>
-<ol style="list-style-type: decimal">
-<li>Designed for Multi-Armed Bandit Tasks (see Sutton &amp; Barto, <a href="https://mitpress.mit.edu/9780262039246/reinforcement-learning/" class="external-link">2018</a>).<br>
-</li>
-<li>Includes three basic models (Niv et al., <a href="https://doi.org/10.1523/JNEUROSCI.5498-10.2012" class="external-link">2012</a>)</li>
-<li>Follows the ten simple rules (Wilson &amp; Collins <a href="https://doi.org/10.7554/eLife.49547" class="external-link">2019</a>)</li>
-</ol>
 <p align="center">
-<img src="./fig/rl_intro.png" alt="RL Intro" width="27%" style="display: inline;"><img src="./fig/rl_models.png" alt="RL Models" width="34.9%" style="display: inline;"><span style="display:inline-block; width:20px;"></span> <img src="./fig/rl_process.png" alt="RL Process" width="19.6%" style="display: inline;"></p>
-</div>
-<div class="section level2">
-<h2 id="upgrades">Upgrades<a class="anchor" aria-label="anchor" href="#upgrades"></a>
-</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># learning-rate </span></span>
-<span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_eta.html" class="external-link">func_eta</a></span>              <span class="op">-&gt;</span>             <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_alpha.html">func_alpha</a></span></span>
-<span><span class="co"># soft-max  </span></span>
-<span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_tau.html" class="external-link">func_tau</a></span>              <span class="op">-&gt;</span>             <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_beta.html">func_beta</a></span></span>
-<span><span class="co"># utility function</span></span>
-<span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_gamma.html" class="external-link">func_gamma</a></span>            <span class="op">-&gt;</span>             <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_gamma.html">func_gamma</a></span></span>
-<span><span class="co"># upper-confidence-bound</span></span>
-<span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_pi.html" class="external-link">func_pi</a></span>               <span class="op">-&gt;</span>             <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_delta.html">func_delta</a></span></span>
-<span><span class="co"># ε-(first, greedy, decrasing)  </span></span>
-<span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_epsilon.html" class="external-link">func_epsilon</a></span>          <span class="op">-&gt;</span>             <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_epsilon.html">func_epsilon</a></span></span></code></pre></div>
+<img src="./fig/clock.png" alt="RL Intro" width="50%" style="display: inline;"></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># learning-rate </span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_eta              <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_alpha</span></code></pre></div>
+<p><span class="math display">\[
+  Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})
+\]</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># soft-max  </span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_tau              <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_beta</span></code></pre></div>
+<p><span class="math display">\[
+  P_{t}(a) =
+    \frac{
+      \exp\left( \beta \cdot \left( Q_t(a) - \max_{j} Q_t(a_j) \right) \right)
+    }{
+      \sum_{i=1}^{k} \exp\left(
+        \beta \cdot \left( Q_t(a_i) - \max_{j} Q_t(a_j) \right) \right
+      )
+    }
+\]</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># utility function</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_gamma            <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_gamma</span></code></pre></div>
+<p><span class="math display">\[
+  U(R) = {R}^{\gamma}
+\]</span></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># upper-confidence-bound</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_pi               <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_delta</span></code></pre></div>
+<p><span class="math display">\[
+  \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
+\]</span></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># ε-(first, greedy, decrasing)  </span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_epsilon          <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_epsilon</span></code></pre></div>
+<p><span class="math display">\[
+  P(x) =
+    \begin{cases}
+      \epsilon, &amp; x=1  \\
+      1-\epsilon, &amp; x=0
+    \end{cases}
+\]</span></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># working memory system</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                                [<span class="sc">+</span>]             multiRL<span class="sc">::</span>func_zeta</span></code></pre></div>
+<p><span class="math display">\[
+  W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
+\]</span></p>
 <div class="section level3">
-<h3 id="latent-learning-rules">Latent Learning Rules<a class="anchor" aria-label="anchor" href="#latent-learning-rules"></a>
+<h3 id="latent-rules-learning">Latent Rules Learning<a class="anchor" aria-label="anchor" href="#latent-rules-learning"></a>
 </h3>
 <p align="center">
 <img src="./fig/arrow.png" alt="arrow" width="80%" style="display: inline;"></p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">behrule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  cue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Red"</span>, <span class="st">"Yellow"</span>, <span class="st">"Green"</span>, <span class="st">"Blue"</span><span class="op">)</span>,</span>
 <span>  rsp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Up"</span>, <span class="st">"Down"</span>, <span class="st">"Left"</span>, <span class="st">"Right"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><strong>Reference</strong><br>
-- Eckstein, M. K., &amp; Collins, A. G. (2020). Computational evidence for hierarchically structured reinforcement learning in humans. Proceedings of the National Academy of Sciences, 117(47), 29381-29389. <a href="https://doi.org/10.1073/pnas.1912330117" class="external-link uri">https://doi.org/10.1073/pnas.1912330117</a></p>
 </div>
-<div class="section level3">
-<h3 id="working-memory-system">Working-Memory System<a class="anchor" aria-label="anchor" href="#working-memory-system"></a>
-</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="reference/func_zeta.html">func_zeta</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><span class="math display">\[
-  W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
-\]</span></p>
-<p><strong>Reference</strong><br>
-- Collins, A. G., &amp; Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link uri">https://doi.org/10.1111/j.1460-9568.2011.07980.x</a></p>
 </div>
+<div class="section level2">
+<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+</h2>
+<ul>
+<li>Sutton, R. S., &amp; Barto, A. G. (2018). <em>Reinforcement Learning: An Introduction</em> (2nd ed). MIT press.<br>
+</li>
+<li>Wilson, R. C., &amp; Collins, A. G. (2019). Ten simple rules for the computational modeling of behavioral data. <em>Elife, 8</em>, e49547. <a href="https://doi.org/10.7554/eLife.49547" class="external-link uri">https://doi.org/10.7554/eLife.49547</a><br>
+</li>
+<li>Niv, Y., Edlund, J. A., Dayan, P., &amp; O’Doherty, J. P. (2012). Neural prediction errors reveal a risk-sensitive reinforcement-learning process in the human brain. <em>Journal of Neuroscience, 32</em>(2), 551-562. <a href="https://doi.org/10.1523/JNEUROSCI.5498-10.2012" class="external-link uri">https://doi.org/10.1523/JNEUROSCI.5498-10.2012</a><br>
+</li>
+<li>Collins, A. G., &amp; Frank, M. J. (2012). How much of reinforcement learning is working memory, not reinforcement learning? A behavioral, computational, and neurogenetic analysis. European Journal of Neuroscience, 35(7), 1024-1035. <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link uri">https://doi.org/10.1111/j.1460-9568.2011.07980.x</a><br>
+</li>
+<li>Eckstein, M. K., &amp; Collins, A. G. (2020). Computational evidence for hierarchically structured reinforcement learning in humans. Proceedings of the National Academy of Sciences, 117(47), 29381-29389. <a href="https://doi.org/10.1073/pnas.1912330117" class="external-link uri">https://doi.org/10.1073/pnas.1912330117</a>
+</li>
+</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

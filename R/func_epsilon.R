@@ -51,8 +51,8 @@
 #'   # Trial <- idinfo["Trial"]
 #'   # Frame <- exinfo["Frame"]
 #'   
-#'   epsilon   <-  get_param(params, "epsilon")
-#'   threshold <-  get_param(params, "threshold")
+#'   epsilon   <-  multiRL:::get_param(params, "epsilon")
+#'   threshold <-  multiRL:::get_param(params, "threshold")
 #'   
 #'   if (is.na(epsilon) && threshold > 0) {
 #'     model <- "first"

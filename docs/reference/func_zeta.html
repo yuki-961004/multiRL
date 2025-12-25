@@ -109,8 +109,8 @@ the user.</p></dd>
 <span>  <span class="co"># Trial &lt;- idinfo["Trial"]</span></span>
 <span>  <span class="co"># Frame &lt;- exinfo["Frame"]</span></span>
 <span></span>
-<span>  <span class="va">zeta</span>       <span class="op">&lt;-</span>  <span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"zeta"</span><span class="op">)</span></span>
-<span>  <span class="va">bonus</span>      <span class="op">&lt;-</span>  <span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"bonus"</span><span class="op">)</span></span>
+<span>  <span class="va">zeta</span>       <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"zeta"</span><span class="op">)</span></span>
+<span>  <span class="va">bonus</span>      <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"bonus"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span></span>

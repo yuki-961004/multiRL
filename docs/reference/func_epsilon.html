@@ -167,8 +167,8 @@ the user.</p></dd>
 <span>  <span class="co"># Trial &lt;- idinfo["Trial"]</span></span>
 <span>  <span class="co"># Frame &lt;- exinfo["Frame"]</span></span>
 <span></span>
-<span>  <span class="va">epsilon</span>   <span class="op">&lt;-</span>  <span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"epsilon"</span><span class="op">)</span></span>
-<span>  <span class="va">threshold</span> <span class="op">&lt;-</span>  <span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"threshold"</span><span class="op">)</span></span>
+<span>  <span class="va">epsilon</span>   <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"epsilon"</span><span class="op">)</span></span>
+<span>  <span class="va">threshold</span> <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"threshold"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">epsilon</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">threshold</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"first"</span></span>

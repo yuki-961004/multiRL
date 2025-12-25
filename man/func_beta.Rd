@@ -48,8 +48,8 @@ the user.}
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  beta      <-  get_param(params, "beta")
-  lapse     <-  get_param(params, "lapse")
+  beta      <-  multiRL:::get_param(params, "beta")
+  lapse     <-  multiRL:::get_param(params, "lapse")
   
   n_options <- length(qvalue)
   prob      <- rep(x = NA_real_, times = n_options)

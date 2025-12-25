@@ -27,9 +27,9 @@
 #'   # Trial <- idinfo["Trial"]
 #'   # Frame <- exinfo["Frame"]
 #'   
-#'   alpha     <-  get_param(params, "alpha")
-#'   alphaN    <-  get_param(params, "alphaN")
-#'   alphaP    <-  get_param(params, "alphaP")
+#'   alpha     <-  multiRL:::get_param(params, "alpha")
+#'   alphaN    <-  multiRL:::get_param(params, "alphaN")
+#'   alphaP    <-  multiRL:::get_param(params, "alphaP")
 #'   
 #'   if (
 #'     !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)

@@ -53,6 +53,14 @@ The method used for parameter estimation, including \code{"MLE"}
          individual subject.
    \item Use these best-fitting parameters to estimate the Probability 
          Density Function of the population-level parameter distribution.
+         (The EM-MAP framework is inspired by the 
+         \href{https://github.com/sjgershm/mfit}{\code{sjgershm/mfit}}. 
+         However, unlike \code{mfit}, which typically assumes a normal 
+         distribution for the posterior. In my opinion, the posterior 
+         density is derived based on the specific prior distribution. For
+         example, if the prior follows an exponential distribution, the 
+         estimation remains within the exponential family rather than being 
+         forced into a normal distribution.)
    \item Perform MLE again for each subject. However, instead of returning 
          the log-likelihood, the returned value is the log-posterior. 
          In other words, this step considers the probability of the 

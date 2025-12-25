@@ -93,10 +93,10 @@
 </ul></li>
 <li><p>Value Update</p><ul><li><p>Step 4: Agent uses <code>util_func</code>
              to translate the objective reward into subjective utility.</p></li>
-<li><p>Step 5: Agent uses <code>rate_func</code>
+<li><p>Step 5: Agent uses <code>dcay_func</code>
+             to regress the values of unchosen options toward a baseline.</p></li>
+<li><p>Step 6: Agent uses <code>rate_func</code>
              to update the value of the chosen option.</p></li>
-<li><p>Step 6: Agent uses <code>dcay_func</code>
-             to update the value of the unchosen options.</p></li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -139,11 +139,13 @@
  $$</p>
 <p>The function below, which incorporates the constant lapse rate, is a
    correction to the standard soft-max rule. This is designed to prevent the
-   probability of any action from becoming exactly 0. When the lapse
-   parameter is set to 0.01, every action has at least a 1% probability
-   of being executed. If the number of available actions becomes excessively
-   large (e.g., greater than 100), it would be more appropriate to set the
-   lapse parameter to a much smaller value.</p>
+   probability of any action from becoming exactly 0
+   (Wilson and Collins,
+   <a href="https://doi.org/10.7554/eLife.49547" class="external-link">2019</a>).
+   When the lapse parameter is set to 0.01, every action has at least a 1%
+   probability of being executed. If the number of available actions becomes
+   excessively large (e.g., greater than 100), it would be more appropriate
+   to set the lapse parameter to a much smaller value.</p>
 <p>$$
    P_{t}(a) = (1 - lapse \cdot N_{shown}) \cdot P_{t}(a) + lapse
  $$</p>
@@ -170,6 +172,8 @@
    solely determined by the received reward, but is also influenced by the
    number of times the action has been executed. Specifically, an action
    that has been executed fewer times receives a larger exploration bias.
+   (Sutton and Barto,
+   <a href="http://incompleteideas.net/book/the-book-2nd.html" class="external-link">2018</a>)
    This mechanism prompts exploration and ensures the agent to execute
    every action at least once.</p>
 <p>$$
@@ -228,11 +232,15 @@
    options also undergo change.</p>
 <p>It is due to the limitations of working memory capacity, the values of the
    unchosen options are hypothesized to decay back towards their initial
-   value at a rate determined by the decay rate parameter (\(\zeta\)).</p>
+   value at a rate determined by the decay rate parameter (\(\zeta\))
+   (Collins and Frank,
+   <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link">2012</a>).</p>
 <p>$$W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})$$</p>
-<p>Furthermore, if the feedback of the chosen option provides information
-   relevant to the unchosen options, this decay rate may be enhanced or
-   mitigated by the constant bonus.</p>
+<p>Furthermore, Hitchcock, Kim and Frank
+   (<a href="https://dx.doi.org/10.1037/xge0001817" class="external-link">2025</a>) suggest that
+   if the feedback of the chosen option provides information relevant to the
+   unchosen options, this decay rate may be enhanced or mitigated by the
+   constant bonus.</p>
     </div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
@@ -249,6 +257,23 @@
  )
 </code></pre></div>
 
+    </div>
+    <div class="section level2">
+    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
+    <p>Sutton, R. S., &amp; Barto, A. G. (2018). Reinforcement Learning:
+An Introduction (2nd ed). MIT press.</p>
+<p>Collins, A. G., &amp; Frank, M. J. (2012). How much of reinforcement learning
+is working memory, not reinforcement learning? A behavioral, computational,
+and neurogenetic analysis. <em>European Journal of Neuroscience, 35</em>(7),
+1024-1035.
+<a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link">https://doi.org/10.1111/j.1460-9568.2011.07980.x</a></p>
+<p>Wilson, R. C., &amp; Collins, A. G. (2019). Ten simple rules for the
+computational modeling of behavioral data. <em>Elife, 8</em>, e49547.
+<a href="https://doi.org/10.7554/eLife.49547" class="external-link">https://doi.org/10.7554/eLife.49547</a></p>
+<p>Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory
+and reinforcement learning interact when avoiding punishment and pursuing
+reward concurrently. <em>Journal of Experimental Psychology: General</em>.
+<a href="https://dx.doi.org/10.1037/xge0001817" class="external-link">https://dx.doi.org/10.1037/xge0001817</a></p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

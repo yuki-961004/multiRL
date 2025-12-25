@@ -26,10 +26,11 @@
 #'    \itemize{
 #'        \item Step 4: Agent uses \code{util_func} 
 #'              to translate the objective reward into subjective utility.
-#'        \item Step 5: Agent uses \code{rate_func} 
+#'        \item Step 5: Agent uses \code{dcay_func} 
+#'              to regress the values of unchosen options toward a baseline.
+#'        \item Step 6: Agent uses \code{rate_func} 
 #'              to update the value of the chosen option.
-#'        \item Step 6: Agent uses \code{dcay_func} 
-#'              to update the value of the unchosen options.
+#'        
 #'    }
 #' }
 #' 
@@ -72,11 +73,13 @@
 #' 
 #'  The function below, which incorporates the constant lapse rate, is a 
 #'    correction to the standard soft-max rule. This is designed to prevent the 
-#'    probability of any action from becoming exactly 0. When the lapse 
-#'    parameter is set to 0.01, every action has at least a 1\% probability 
-#'    of being executed. If the number of available actions becomes excessively 
-#'    large (e.g., greater than 100), it would be more appropriate to set the 
-#'    lapse parameter to a much smaller value.
+#'    probability of any action from becoming exactly 0 
+#'    (Wilson and Collins, 
+#'    \href{https://doi.org/10.7554/eLife.49547}{2019}). 
+#'    When the lapse parameter is set to 0.01, every action has at least a 1\% 
+#'    probability of being executed. If the number of available actions becomes 
+#'    excessively large (e.g., greater than 100), it would be more appropriate 
+#'    to set the lapse parameter to a much smaller value. 
 #' 
 #'  \deqn{
 #'    P_{t}(a) = (1 - lapse \cdot N_{shown}) \cdot P_{t}(a) + lapse
@@ -100,6 +103,8 @@
 #'    solely determined by the received reward, but is also influenced by the 
 #'    number of times the action has been executed. Specifically, an action 
 #'    that has been executed fewer times receives a larger exploration bias. 
+#'    (Sutton and Barto, 
+#'    \href{http://incompleteideas.net/book/the-book-2nd.html}{2018})
 #'    This mechanism prompts exploration and ensures the agent to execute 
 #'    every action at least once.
 #' 
@@ -160,13 +165,17 @@
 #'    
 #'  It is due to the limitations of working memory capacity, the values of the 
 #'    unchosen options are hypothesized to decay back towards their initial 
-#'    value at a rate determined by the decay rate parameter (\eqn{\zeta}). 
+#'    value at a rate determined by the decay rate parameter (\eqn{\zeta}) 
+#'    (Collins and Frank, 
+#'    \href{https://doi.org/10.1111/j.1460-9568.2011.07980.x}{2012}).
 #'    
 #'  \deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
 #'    
-#'  Furthermore, if the feedback of the chosen option provides information 
-#'    relevant to the unchosen options, this decay rate may be enhanced or 
-#'    mitigated by the constant bonus.
+#'  Furthermore, Hitchcock, Kim and Frank 
+#'    (\href{https://dx.doi.org/10.1037/xge0001817}{2025}) suggest that 
+#'    if the feedback of the chosen option provides information relevant to the 
+#'    unchosen options, this decay rate may be enhanced or mitigated by the 
+#'    constant bonus.
 #' 
 #' @section Example: 
 #' \preformatted{ # inner functions
@@ -179,5 +188,24 @@
 #'    dcay_func = multiRL::func_zeta
 #'  )
 #' }
+#' 
+#' @references 
+#' Sutton, R. S., & Barto, A. G. (2018). Reinforcement Learning: 
+#' An Introduction (2nd ed). MIT press.
+#' 
+#' Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning 
+#' is working memory, not reinforcement learning? A behavioral, computational, 
+#' and neurogenetic analysis. \emph{European Journal of Neuroscience, 35}(7), 
+#' 1024-1035.
+#' \url{https://doi.org/10.1111/j.1460-9568.2011.07980.x}
+#' 
+#' Wilson, R. C., & Collins, A. G. (2019). Ten simple rules for the 
+#' computational modeling of behavioral data. \emph{Elife, 8}, e49547. 
+#' \url{https://doi.org/10.7554/eLife.49547}
+#' 
+#' Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory 
+#' and reinforcement learning interact when avoiding punishment and pursuing 
+#' reward concurrently. \emph{Journal of Experimental Psychology: General}. 
+#' \url{https://dx.doi.org/10.1037/xge0001817}
 #' 
 NULL

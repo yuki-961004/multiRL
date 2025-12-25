@@ -28,6 +28,10 @@ colnames = list(
 
 ## TD
 
+<p align="center">
+    <img src="./fig/TD.png" alt="TD" width="80%" style="display: inline;">
+</p>
+
 ```{r}
 multiRL.model <- multiRL::run_m(
   data = data[data[, "Subject"] == 1, ],
@@ -50,6 +54,10 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 ## RSTD
+
+<p align="center">
+    <img src="./fig/RSTD.png" alt="RSTD" width="80%" style="display: inline;">
+</p>
 
 ```{r}
 multiRL.model <- multiRL::run_m(
@@ -76,6 +84,10 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 
 ## Utility
 
+<p align="center">
+    <img src="./fig/Utility.png" alt="Utility" width="80%" style="display: inline;">
+</p>
+
 ```{r}
 multiRL.model <- multiRL::run_m(
   data = data[data[, "Subject"] == 1, ],
@@ -100,6 +112,10 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
 ## Prospect
+
+<p align="center">
+    <img src="./fig/Prospect.png" alt="Prospect" width="80%" style="display: inline;">
+</p>
 
 Below, I will implement a new `func_gamma` to ensure compatibility with both Stevens' Power Law and Prospect Theory.
 

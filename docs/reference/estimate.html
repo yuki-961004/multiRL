@@ -113,7 +113,15 @@
 <ol><li><p>Perform an initial MLE to find the best-fitting parameters for each
          individual subject.</p></li>
 <li><p>Use these best-fitting parameters to estimate the Probability
-         Density Function of the population-level parameter distribution.</p></li>
+         Density Function of the population-level parameter distribution.
+         (The EM-MAP framework is inspired by the
+         <a href="https://github.com/sjgershm/mfit" class="external-link"><code>sjgershm/mfit</code></a>.
+         However, unlike <code>mfit</code>, which typically assumes a normal
+         distribution for the posterior. In my opinion, the posterior
+         density is derived based on the specific prior distribution. For
+         example, if the prior follows an exponential distribution, the
+         estimation remains within the exponential family rather than being
+         forced into a normal distribution.)</p></li>
 <li><p>Perform MLE again for each subject. However, instead of returning
          the log-likelihood, the returned value is the log-posterior.
          In other words, this step considers the probability of the

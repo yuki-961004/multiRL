@@ -131,9 +131,11 @@
          physical quantity is equivalent to the psychological quantity.</p></li>
 <li><p><code>delta [double]</code></p>
 <p>This parameter represents the weight given to the number of times
-         an option has been selected.In the context of Upper Confidence
-         Bound (UCB), an option that has been selected few times should be
-         assigned a higher exploratory bias.</p>
+         an option has been selected. Following the Upper Confidence Bound
+         (UCB) algorithm proposed by Sutton and Barto
+         (<a href="http://incompleteideas.net/book/the-book-2nd.html" class="external-link">2018</a>)
+         options that have been selected less frequently should be assigned
+         a higher exploratory bias.</p>
 <p>Note: With the default set to 0.1, a bias value is effectively
          applied only to options that have never been chosen. Once an action
          has been executed even a single time, the assigned bias value

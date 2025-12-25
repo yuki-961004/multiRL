@@ -64,9 +64,11 @@
 #'    \item \code{delta [double]} 
 #'    
 #'          This parameter represents the weight given to the number of times 
-#'          an option has been selected.In the context of Upper Confidence 
-#'          Bound (UCB), an option that has been selected few times should be 
-#'          assigned a higher exploratory bias.
+#'          an option has been selected. Following the Upper Confidence Bound 
+#'          (UCB) algorithm proposed by Sutton and Barto 
+#'          (\href{http://incompleteideas.net/book/the-book-2nd.html}{2018})
+#'          options that have been selected less frequently should be assigned 
+#'          a higher exploratory bias.
 #'          
 #'          Note: With the default set to 0.1, a bias value is effectively 
 #'          applied only to options that have never been chosen. Once an action 
