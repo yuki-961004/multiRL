@@ -7,7 +7,7 @@
 
 ## Overview
 
-This package is designed to help users build the **Rescorla-Wagner Model** for **Multi-Armed Bandit** tasks (see Sutton & Barto, [2018](https://mitpress.mit.edu/9780262039246/reinforcement-learning/)). Beginners can define models using simple **`if-else`** logic, making model construction more accessible (built-in three basic models, see Niv et al., [2012](https://doi.org/10.1523/JNEUROSCI.5498-10.2012)).  
+This package modularizes the **Markov Decision Process (MDP)** into **six** core components, enabling users to flexibly construct the **Rescorla-Wagner Model** for **Multi-Armed Bandit** tasks (see Sutton & Barto, [2018](https://mitpress.mit.edu/9780262039246/reinforcement-learning/)). Beginners can define models using simple **`if-else`** logic, making model construction more accessible (built-in three basic models, see Niv et al., [2012](https://doi.org/10.1523/JNEUROSCI.5498-10.2012)).  
 
 * [Step 1](./articles/multiRL.html#id_1-run-model): Build Reinforcement Learning Models `run_m()`
 * [Step 2](./articles/multiRL.html#id_2-recovery): Parameter and Model Recovery `rcv_d()`
@@ -21,10 +21,15 @@ These four steps follow the ten simple rules for the computational modeling of b
 ## Installation
 
 ```r
+# Install the stable version from CRAN  
+install.packages("multiRL")
 # Install the latest version from GitHub
 remotes::install_github("yuki-961004/multiRL@*release")
+
 # Load package
 library(multiRL)
+# Obtain help document
+?binaryRL
 ```
 
 ## Markov Decision Process  
@@ -88,6 +93,8 @@ $$
 $$
 
 ### Latent Rules Learning  
+
+Sometimes, you do not know what humans treat as the target when they encounter a particular state and update their values, especially when the **cue** and the **response** are not the same. In such cases, the agent typically needs to learn latent rules.
 
 <p align="center">
     <img src="./fig/arrow.png" alt="arrow" width="80%" style="display: inline;">

@@ -38,6 +38,7 @@ the user.}
   alphaN    <-  multiRL:::get_param(params, "alphaN")
   alphaP    <-  multiRL:::get_param(params, "alphaP")
   
+  # Determine the model currently in use based on which parameters are free.
   if (
     !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
   ) {

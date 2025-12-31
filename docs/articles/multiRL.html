@@ -37,7 +37,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -456,7 +456,10 @@ Working Memory (ζ)
 </h2>
 <p>Randomly generate free parameters for Model A and use them to produce
 simulated data. Subsequently, fit all candidate models to this simulated
-data.</p>
+data. This step involves parameter recovery and model recovery for each
+candidate model. If a model meets the following two criteria, it can be
+considered robust and suitable for fitting real data and for model
+comparison.</p>
 <blockquote>
 <ol style="list-style-type: decimal">
 <li>If Model A can successfully recover its true generative parameters
@@ -468,6 +471,13 @@ candidate models when fitted to the data it generated, it demonstrates
 robust model recovery.</li>
 </ol>
 </blockquote>
+<p><strong>Note</strong></p>
+<p>if a researcher skips this step and directly fits the candidate
+models to real data and conducts model comparison, then when one model
+emerges as the winner, it is impossible to determine whether this is
+because the model is genuinely superior or because the other models are
+not robust at all and thus are not even qualified to be included in a
+model comparison.</p>
 <!---------------------------------------------------------->
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">recovery.MLE</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/rcv_d.html">rcv_d</a></span><span class="op">(</span></span>
@@ -514,8 +524,13 @@ Fitting TD
 <div class="section level2">
 <h2 id="id_3-fit-real-data">3. Fit Real Data<a class="anchor" aria-label="anchor" href="#id_3-fit-real-data"></a>
 </h2>
-<p>A model is only worth fitting to real data if it demonstrates good
-performance in the parameter recovery and model recovery.</p>
+<p>A model that achieves good parameter recovery in Step 2 indicates
+that it has reliability. A model that achieves good model recovery in
+Step 2 indicates that it is distinguishable from other models.</p>
+<p>Only models that possess both reliability and distinguishability
+should be used to fit real data. The optimal model is then determined
+based on how similar the experimental effects reproduced by the model
+are to those observed in human participants.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitting.MLE</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
 <span>  estimate <span class="op">=</span> <span class="st">"MLE"</span>,</span>

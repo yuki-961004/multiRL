@@ -61,6 +61,7 @@ the user.}
   epsilon   <-  multiRL:::get_param(params, "epsilon")
   threshold <-  multiRL:::get_param(params, "threshold")
   
+  # Determine the model currently in use based on which parameters are free.
   if (is.na(epsilon) && threshold > 0) {
     model <- "first"
   } else if (!(is.na(epsilon)) && threshold == 0) {

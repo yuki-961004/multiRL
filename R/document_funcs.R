@@ -180,11 +180,17 @@
 #' @section Example: 
 #' \preformatted{ # inner functions
 #'  funcs = list(
+#'    # Learning Rate
 #'    rate_func = multiRL::func_alpha
+#'    # Inverse Temperature
 #'    prob_func = multiRL::func_beta
+#'    # Utility Function (Stevens' Power Law)
 #'    util_func = multiRL::func_gamma
+#'    # Upper-Confidence-Bound
 #'    bias_func = multiRL::func_delta
+#'    # Epsilon-First, Greedy, Decreasing
 #'    expl_func = multiRL::func_epsilon
+#'    # Working Memory System
 #'    dcay_func = multiRL::func_zeta
 #'  )
 #' }

@@ -33,6 +33,7 @@ the user.}
   
   gamma     <-  multiRL:::get_param(params, "gamma")
   
+  # Stevens' Power Law
   utility <- sign(reward) * (abs(reward) ^ gamma)
   
   return(utility)

@@ -338,10 +338,14 @@ func_zeta <- function(
 
 ## 2. Recovery {#2-recovery}
 
-Randomly generate free parameters for Model A and use them to produce simulated data. Subsequently, fit all candidate models to this simulated data.  
+Randomly generate free parameters for Model A and use them to produce simulated data. Subsequently, fit all candidate models to this simulated data. This step involves parameter recovery and model recovery for each candidate model. If a model meets the following two criteria, it can be considered robust and suitable for fitting real data and for model comparison.   
 
 > 1. If Model A can successfully recover its true generative parameters from the simulated data, it indicates strong parameter recovery for the model.  
 > 2. If Model A yields the best fit indices compared to all other candidate models when fitted to the data it generated, it demonstrates robust model recovery.
+
+**Note**  
+
+if a researcher skips this step and directly fits the candidate models to real data and conducts model comparison, then when one model emerges as the winner, it is impossible to determine whether this is because the model is genuinely superior or because the other models are not robust at all and thus are not even qualified to be included in a model comparison.
 
 <!---------------------------------------------------------->
 
@@ -394,7 +398,9 @@ Fitting TD
 
 ## 3. Fit Real Data {#3-fit-real-data}
 
-A model is only worth fitting to real data if it demonstrates good performance in the parameter recovery and model recovery.
+A model that achieves good parameter recovery in Step 2 indicates that it has reliability. A model that achieves good model recovery in Step 2 indicates that it is distinguishable from other models.
+
+Only models that possess both reliability and distinguishability should be used to fit real data. The optimal model is then determined based on how similar the experimental effects reproduced by the model are to those observed in human participants.
 
 ```{r eval=FALSE}
 fitting.MLE <- multiRL::fit_p(

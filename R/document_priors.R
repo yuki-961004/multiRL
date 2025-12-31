@@ -22,7 +22,7 @@
 #' \code{priors [List]} 
 #' 
 #' @section Density Function: 
-#' \preformatted{ #standard format dfunc
+#' \preformatted{ # standard format dfunc (Only the numerical values can be modified.)
 #'  function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
 #'  function(x) {stats::dexp(x, rate = 1, log = TRUE)}
 #'  function(x) {stats::dunif(x, min = 0, max = 1, log = TRUE)}
@@ -33,7 +33,7 @@
 #' }
 #' 
 #' @section Random Function: 
-#' \preformatted{ #standard format rfunc
+#' \preformatted{ # standard format rfunc  (Only the numerical values can be modified.)
 #'  function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
 #'  function(x) {stats::rexp(n = 1, rate = 1)}
 #'  function(x) {stats::runif(n = 1, min = 0, max = 1)}
@@ -42,4 +42,33 @@
 #'  function(x) {stats::rgamma(n = 1, shape = 2, rate = 3)}
 #'  function(x) {stats::rlogis(n = 1, location = 0, scale = 1)}
 #' }
+#' 
+#' @section Example: 
+#' \preformatted{ # TD
+#'  params = list(
+#'    free = list(
+#'      alpha = x[1],
+#'      beta = x[2]
+#'    ),
+#'    fixed = list(
+#'      gamma = 1, 
+#'      delta = 0.1, 
+#'      epsilon = NA_real_, 
+#'      zeta = 0
+#'    ),
+#'    constant = list(
+#'      Q0 = NA_real_, 
+#'      lapse = 0.01,
+#'      threshold = 1,
+#'      bonus = 0
+#'    )
+#'  )
+#'  
+#'  priors = list(
+#'    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+#'    beta = function(x) {stats::rexp(n = 1, rate = 1)}
+#'  )
+#' }
+#' 
+
 NULL

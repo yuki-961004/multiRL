@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,6 +101,7 @@ the user.</p></dd>
 <span></span>
 <span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gamma"</span><span class="op">)</span></span>
 <span></span>
+<span>  <span class="co"># Stevens' Power Law</span></span>
 <span>  <span class="va">utility</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">^</span> <span class="va">gamma</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">utility</span><span class="op">)</span></span>

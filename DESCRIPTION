@@ -1,13 +1,22 @@
 Package: multiRL
-Version: 0.1.8
+Version: 0.1.9
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
-Description: This package represents a significant extension of binaryRL. 
-  Beyond handling complex multi-alternative choice tasks, multiRL enables the 
-  specification of latent learning rules 
-  Eckstein & Collins (2019) <doi:10.1073/pnas.1912330117>. 
-  and incorporates the influence of working memory systems 
-  Collins & Frank (2012) <doi:10.1111/j.1460-9568.2011.07980.x>. 
-  within the framework of Markov Decision Processes.
+Description: 
+  A flexible general-purpose toolbox for implementing Rescorla-Wagner models 
+    in multi-armed bandit tasks. 
+  As the successor and functional extension of the 'binaryRL' package, 
+    'multiRL' modularizes the Markov Decision Process (MDP) into six core 
+    components. This framework enables users to construct custom models via 
+    intuitive if-else syntax and define latent learning rules for agents. 
+  For parameter estimation, it provides both likelihood-based 
+    inference (MLE and MAP) and simulation-based inference (ABC and 
+    RNN), with full support for parallel processing across subjects. 
+  The workflow is highly standardized, featuring four main functions 
+    that strictly follow the four-step protocol (and ten rules) 
+    proposed by Wilson & Collins (2019) <doi:10.7554/eLife.49547>. 
+  Beyond the three built-in models (TD, RSTD, and Utility), users 
+    can easily derive new variants by declaring which variables are 
+    treated as free parameters.
 Authors@R:
   c(
     person(

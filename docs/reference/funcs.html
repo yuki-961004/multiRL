@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -248,11 +248,17 @@
 
 <div class="sourceCode"><pre><code> # inner functions
  funcs = list(
+   # Learning Rate
    rate_func = multiRL::func_alpha
+   # Inverse Temperature
    prob_func = multiRL::func_beta
+   # Utility Function (Stevens' Power Law)
    util_func = multiRL::func_gamma
+   # Upper-Confidence-Bound
    bias_func = multiRL::func_delta
+   # Epsilon-First, Greedy, Decreasing
    expl_func = multiRL::func_epsilon
+   # Working Memory System
    dcay_func = multiRL::func_zeta
  )
 </code></pre></div>

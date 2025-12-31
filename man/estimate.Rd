@@ -141,9 +141,13 @@ The method used for parameter estimation, including \code{"MLE"}
 \section{Example}{
  
 \preformatted{ # supported estimate methods
+ # Maximum Likelihood Estimation
  estimate = "MLE"
+ # Maximum A Posteriori
  estimate = "MAP"
+ # Approximate Bayesian Computation
  estimate = "ABC"
+ # Recurrent Neural Network
  estimate = "RNN"
 }
 }
