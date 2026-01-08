@@ -38,6 +38,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      PAK_LOCKFILE: ""
 
     steps:
       - uses: actions/checkout@v4
