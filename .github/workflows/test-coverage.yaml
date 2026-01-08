@@ -50,6 +50,7 @@ jobs:
         with:
           extra-packages: any::covr, any::xml2, any::testthat
           needs: coverage
+          lockfile: false
 
       - name: Install suggested packages
         run: |
