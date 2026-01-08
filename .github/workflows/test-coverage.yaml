@@ -47,6 +47,10 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Force source packages on all OS
+        run: |
+          Rscript -e 'options(pkgType = "source")'
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::covr, any::xml2, any::testthat
