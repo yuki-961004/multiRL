@@ -38,8 +38,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      PKGCACHE_HTTP_VERSION: "1.1"
-      PAK_LOCKFILE: ""
 
     steps:
       - uses: actions/checkout@v4
@@ -48,15 +46,18 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Force source packages on all OS
-        run: |
-          Rscript -e 'options(pkgType = "source")'
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, any::xml2, any::testthat
-          needs: coverage
-          lockfile: false
+          extra-packages: any::rcmdcheck
+          needs: check
+          # 1. 升级缓存版本，彻底清洗之前残留的损坏文件
+          cache-version: 2
+          # 2. 统一禁用 RSPM，防止中间节点的二进制包缓存不同步
+          use-public-rspm: false
+        env:
+          # 3. 强制 pak 在所有 OS 上忽略二进制包，仅下载源码编译
+          # 这能绕过任何 CDN 的 404 或文件损坏问题
+          R_PKG_TYPE: source
 
       - name: Install suggested packages
         run: |
