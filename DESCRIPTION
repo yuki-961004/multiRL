@@ -40,7 +40,7 @@ Encoding: UTF-8
 LazyData: TRUE
 ByteCompile: TRUE
 RoxygenNote: 7.3.3
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.1.0)
 Imports: 
   methods, utils, Rcpp, compiler,
   future, doFuture, foreach, doRNG, progressr,

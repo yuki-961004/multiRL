@@ -10,8 +10,8 @@ In most instances of the Multi-Armed Bandit (MAB) task, the cue aligns with
    expected value of the selected bandit.
  
  When the cue and the response are inconsistent, the agent needs to form a 
-   latent rule. For example, in the arrow paradigm of Rmus et al. 
-   (\href{https://doi.org/10.1371/journal.pcbi.1012119}{2024}), 
+   latent rule. For example, in the arrow paradigm of Rmus et al. (2024) 
+   \doi{10.1371/journal.pcbi.1012119}, 
    participants can only choose left or right, but what they actually need 
    to learn is the value associated with arrows of different colors. 
    
@@ -40,8 +40,8 @@ In most instances of the Multi-Armed Bandit (MAB) task, the cue aligns with
    
          The \code{rsp} represents the action the agent actually makes. 
          It typically has a mapping relationship with the cue. For example, 
-         in the arrow paradigm of Rmus et al. 
-         (\href{https://doi.org/10.1371/journal.pcbi.1012119}{2024}), 
+         in the arrow paradigm of Rmus et al. (2024) 
+         \doi{10.1371/journal.pcbi.1012119}, 
          the agent updates the value associated with the arrow’s color, but 
          the overt response is the direction corresponding to the currently 
          chosen color arrow.
@@ -63,5 +63,5 @@ In most instances of the Multi-Armed Bandit (MAB) task, the cue aligns with
 Rmus, M., Pan, T. F., Xia, L., & Collins, A. G. (2024). Artificial neural 
 networks for model identification and parameter estimation in computational 
 cognitive models. \emph{PLOS Computational Biology, 20}(5), e1012119. 
-\url{https://doi.org/10.1371/journal.pcbi.1012119}
+\doi{10.1371/journal.pcbi.1012119}
 }

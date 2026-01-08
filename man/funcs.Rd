@@ -83,8 +83,7 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
  The function below, which incorporates the constant lapse rate, is a 
    correction to the standard soft-max rule. This is designed to prevent the 
    probability of any action from becoming exactly 0 
-   (Wilson and Collins, 
-   \href{https://doi.org/10.7554/eLife.49547}{2019}). 
+   (Wilson and Collins, 2019 \doi{10.7554/eLife.49547}). 
    When the lapse parameter is set to 0.01, every action has at least a 1\% 
    probability of being executed. If the number of available actions becomes 
    excessively large (e.g., greater than 100), it would be more appropriate 
@@ -183,16 +182,14 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
  It is due to the limitations of working memory capacity, the values of the 
    unchosen options are hypothesized to decay back towards their initial 
    value at a rate determined by the decay rate parameter (\eqn{\zeta}) 
-   (Collins and Frank, 
-   \href{https://doi.org/10.1111/j.1460-9568.2011.07980.x}{2012}).
+   (Collins and Frank, 2012 \doi{10.1111/j.1460-9568.2011.07980.x}).
    
  \deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
    
- Furthermore, Hitchcock, Kim and Frank 
-   (\href{https://dx.doi.org/10.1037/xge0001817}{2025}) suggest that 
-   if the feedback of the chosen option provides information relevant to the 
-   unchosen options, this decay rate may be enhanced or mitigated by the 
-   constant bonus.
+ Furthermore, Hitchcock, Kim and Frank, (2025) \doi{10.1037/xge0001817} 
+   suggest that if the feedback of the chosen option provides information 
+   relevant to the unchosen options, this decay rate may be enhanced or 
+   mitigated by the constant bonus.
 }
 
 \section{Example}{
@@ -223,14 +220,14 @@ Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning
 is working memory, not reinforcement learning? A behavioral, computational, 
 and neurogenetic analysis. \emph{European Journal of Neuroscience, 35}(7), 
 1024-1035.
-\url{https://doi.org/10.1111/j.1460-9568.2011.07980.x}
+\doi{10.1111/j.1460-9568.2011.07980.x}
 
 Wilson, R. C., & Collins, A. G. (2019). Ten simple rules for the 
 computational modeling of behavioral data. \emph{Elife, 8}, e49547. 
-\url{https://doi.org/10.7554/eLife.49547}
+\doi{10.7554/eLife.49547}
 
 Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory 
 and reinforcement learning interact when avoiding punishment and pursuing 
 reward concurrently. \emph{Journal of Experimental Psychology: General}. 
-\url{https://dx.doi.org/10.1037/xge0001817}
+\doi{10.1037/xge0001817}
 }

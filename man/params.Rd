@@ -102,8 +102,7 @@ The names of all these parameters are not necessarily fixed. You can define
          
    \item \code{zeta [double]} 
    
-         Collins and Frank 
-         (\href{https://doi.org/10.1111/j.1460-9568.2011.07980.x}{2012}) 
+         Collins and Frank, (2012) \doi{10.1111/j.1460-9568.2011.07980.x} 
          proposed that in every trial, not only the chosen option undergoes 
          value updating, but the expected values of unchosen options also 
          decay towards their initial value, due to the constraints of 
@@ -140,8 +139,7 @@ The names of all these parameters are not necessarily fixed. You can define
          
    \item \code{lapse [double]} 
    
-         Wilson and Collins 
-         (\href{https://doi.org/10.7554/eLife.49547}{2019}) 
+         Wilson and Collins, (2019) \doi{10.7554/eLife.49547} 
          introduced the concept of the Lapse Rate, which represents the 
          probability that a subject makes a error (lapse). This parameter 
          ensures that every option has a minimum probability of being chosen, 
@@ -166,8 +164,7 @@ The names of all these parameters are not necessarily fixed. You can define
          
    \item \code{bonus [double]} 
    
-         Hitchcock, Kim and Frank 
-         (\href{https://dx.doi.org/10.1037/xge0001817}{2025}) 
+         Hitchcock, Kim and Frank, (2025) \doi{10.1037/xge0001817} 
          introduced modifications to the working memory model, positing that 
          the value of unchosen options is not merely subject to decay toward 
          the initial value. They suggest that the outcome obtained after 
@@ -214,14 +211,14 @@ Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning
 is working memory, not reinforcement learning? A behavioral, computational, 
 and neurogenetic analysis. \emph{European Journal of Neuroscience, 35}(7), 
 1024-1035.
-\url{https://doi.org/10.1111/j.1460-9568.2011.07980.x}
+\doi{10.1111/j.1460-9568.2011.07980.x}
 
 Wilson, R. C., & Collins, A. G. (2019). Ten simple rules for the 
 computational modeling of behavioral data. \emph{Elife, 8}, e49547. 
-\url{https://doi.org/10.7554/eLife.49547}
+\doi{10.7554/eLife.49547}
 
 Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory 
 and reinforcement learning interact when avoiding punishment and pursuing 
 reward concurrently. \emph{Journal of Experimental Psychology: General}. 
-\url{https://dx.doi.org/10.1037/xge0001817}
+\doi{10.1037/xge0001817}
 }

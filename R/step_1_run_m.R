@@ -27,55 +27,54 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'  
-#' @section Example: 
-#' \preformatted{ # multiRL.model
-#'  multiRL.model <- multiRL::run_m(
-#'    data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
-#'    behrule = list(
-#'      cue = c("A", "B", "C", "D"),
-#'      rsp = c("A", "B", "C", "D")
-#'    ),
-#'    colnames = list(
-#'      subid = "Subject", block = "Block", trial = "Trial",
-#'      object = c("L_choice", "R_choice"), 
-#'      reward = c("L_reward", "R_reward"),
-#'      action = "Sub_Choose",
-#'      exinfo = c("Frame", "NetWorth", "RT")
-#'    ),
-#'    params = list(
-#'      free = list(
-#'        alpha = 0.5,
-#'        beta = 0.5
-#'      ),
-#'      fixed = list(
-#'        gamma = 1, 
-#'        delta = 0.1, 
-#'        epsilon = NA_real_,
-#'        zeta = 0
-#'      ),
-#'      constant = list(
-#'        Q0 = NA, 
-#'        lapse = 0.01,
-#'        threshold = 1,
-#'        bonus = 0
-#'      )
-#'    ),
-#'    priors = list(
-#'      alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-#'      beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
-#'    ),
-#'    settings = list(
-#'      name = "TD",
-#'      mode = "fitting",
-#'      estimate = "MLE",
-#'      policy = "off"
-#'    ),
-#'    engine = "Cpp"
-#'  )
+#' @examples
+#' multiRL.model <- multiRL::run_m(
+#'   data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
+#'   behrule = list(
+#'     cue = c("A", "B", "C", "D"),
+#'     rsp = c("A", "B", "C", "D")
+#'   ),
+#'   colnames = list(
+#'     subid = "Subject", block = "Block", trial = "Trial",
+#'     object = c("L_choice", "R_choice"), 
+#'     reward = c("L_reward", "R_reward"),
+#'     action = "Sub_Choose",
+#'     exinfo = c("Frame", "NetWorth", "RT")
+#'   ),
+#'   params = list(
+#'     free = list(
+#'       alpha = 0.5,
+#'       beta = 0.5
+#'     ),
+#'     fixed = list(
+#'       gamma = 1, 
+#'       delta = 0.1, 
+#'       epsilon = NA_real_,
+#'       zeta = 0
+#'     ),
+#'     constant = list(
+#'       Q0 = NA_real_, 
+#'       lapse = 0.01,
+#'       threshold = 1,
+#'       bonus = 0
+#'     )
+#'   ),
+#'   priors = list(
+#'     alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+#'     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
+#'   ),
+#'   settings = list(
+#'     name = "TD",
+#'     mode = "fitting",
+#'     estimate = "MLE",
+#'     policy = "off"
+#'  ),
+#'  engine = "Cpp"
+#' )
 #'  
-#'  multiRL.summary <- multiRL::summary(multiRL.model)
-#' }
+#' multiRL.summary <- multiRL::summary(multiRL.model)
 #' 
+#'  
 run_m <- function(
     data,
     colnames = list(),
