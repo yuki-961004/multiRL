@@ -17,6 +17,9 @@
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
 #'    
+#' @return A \code{NumericVector} representing the values of unchosen options 
+#'    after decay according to the decay rate.
+#'    
 #' @section Body: 
 #' \preformatted{func_zeta <- function(
 #'     value0, 

@@ -36,7 +36,9 @@ see \link[multiRL]{settings}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-multiRL.env
+An \code{environment}, \code{multiRL.env} contains all variables 
+   required by the objective function and is used to isolate environments 
+   during parallel computation.
 }
 \description{
 estimate_0_ENV

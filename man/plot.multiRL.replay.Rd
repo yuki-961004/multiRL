@@ -18,7 +18,7 @@
 \item{...}{extra}
 }
 \value{
-List
+An S3 object of class \code{ggplot2}
 }
 \description{
 plot.multiRL.replay

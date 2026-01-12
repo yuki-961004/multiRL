@@ -17,7 +17,8 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns multiRL.model
+#' @returns An S4 object of class \code{multiRL.model} 
+#'  generated using the estimated optimal parameters.
 #' 
 estimate_1_LBI <- function(
     model,

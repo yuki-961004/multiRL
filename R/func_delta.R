@@ -14,6 +14,9 @@
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
 #'    
+#' @return A \code{NumericVector} containing the bias for each option based on 
+#'    the number of times it has been selected.
+#'    
 #' @section Body: 
 #' \preformatted{func_delta <- function(
 #'     count,

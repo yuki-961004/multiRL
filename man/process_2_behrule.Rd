@@ -12,6 +12,23 @@ see \link[multiRL]{behrule}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+An S4 object of class \code{multiRL.behrule}.
+
+  \describe{
+    \item{\code{cue}}{
+      A \code{CharacterVector} containing the cue (state) presented on each 
+      trial.
+    }
+    \item{\code{rsp}}{
+      A \code{CharacterVector} containing the set of possible actions
+      available to the agent.
+    }
+    \item{\code{extra}}{
+      A \code{List} containing additional user-defined information.
+    }
+  }
+}
 \description{
 multiRL.behrule
 }

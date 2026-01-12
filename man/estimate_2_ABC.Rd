@@ -52,7 +52,8 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-data.frame
+An S3 object of class \code{DataFrame} containing, for each model, 
+ the estimated optimal parameters and associated model fit metrics.
 }
 \description{
 estimate_2_ABC

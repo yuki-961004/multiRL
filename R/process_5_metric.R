@@ -5,6 +5,30 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #' 
+#' @return An S4 object of class \code{multiRL.metric}.
+#' 
+#'   \describe{
+#'     \item{\code{input}}{
+#'       An S4 object of class \code{multiRL.input},
+#'       containing the raw data, column specifications, parameters and ...
+#'     }
+#'     \item{\code{behrule}}{
+#'       An S4 object of class \code{multiRL.behrule},
+#'       defining the latent learning rules.
+#'     }
+#'     \item{\code{result}}{
+#'       An S4 object of class \code{multiRL.result},
+#'       storing trial-level outputs of the Markov Decision Process.
+#'     }
+#'     \item{\code{sumstat}}{
+#'       An S4 object of class \code{multiRL.sumstat},
+#'       providing summary statistics across different estimation methods.
+#'     }
+#'     \item{\code{extra}}{
+#'       A \code{List} containing additional user-defined information.
+#'     }
+#'   }
+#' 
 process_5_metric <- function(
     output,
     ...

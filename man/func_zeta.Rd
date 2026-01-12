@@ -20,6 +20,10 @@ see \link[multiRL]{params}}
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
 }
+\value{
+A \code{NumericVector} representing the values of unchosen options 
+   after decay according to the decay rate.
+}
 \description{
 \deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
 }

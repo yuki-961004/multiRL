@@ -10,6 +10,12 @@ Utility(params)
 \item{params}{Parameters used by the model’s internal functions,
 see \link[multiRL]{params}}
 }
+\value{
+Depending on the \code{mode} and \code{estimate} defined in the 
+   runtime environment, the corresponding outputs for different estimation 
+   methods are produced, such as a single log-likelihood value or summary 
+   statistics used for ABC.
+}
 \description{
 Learning Rate: \eqn{\alpha}
  

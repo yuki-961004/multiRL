@@ -21,6 +21,11 @@
 #'  Parameters used by the model’s internal functions,
 #'    see \link[multiRL]{params}
 #' 
+#' @return Depending on the \code{mode} and \code{estimate} defined in the 
+#'    runtime environment, the corresponding outputs for different estimation 
+#'    methods are produced, such as a single log-likelihood value or summary 
+#'    statistics used for ABC.
+#' 
 #' @section Body: 
 #' \preformatted{RSTD <- function(params){
 #'   

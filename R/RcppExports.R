@@ -5,6 +5,26 @@
 #'
 #' @param record multiRL.record
 #' @param extra A list of extra information passed from R.
+#' @return An S4 object of class \code{multiRL.output}.
+#' 
+#'  \describe{
+#'     \item{\code{input}}{
+#'       An object of class \code{multiRL.input},
+#'       containing the raw data, column specifications, parameters and ...
+#'     }
+#'     \item{\code{behrule}}{
+#'       An object of class \code{multiRL.behrule},
+#'       defining the latent learning rules.
+#'     }
+#'     \item{\code{result}}{
+#'       An object of class \code{multiRL.result},
+#'       storing trial-level outputs of the Markov Decision Process.
+#'     }
+#'     \item{\code{extra}}{
+#'       A \code{List} containing additional user-defined information.
+#'     }
+#'   }
+#' 
 #' @export
 process_4_output_cpp <- function(record, extra) {
     .Call(`_multiRL_process_4_output_cpp`, record, extra)

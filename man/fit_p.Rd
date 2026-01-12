@@ -59,6 +59,11 @@ see \link[multiRL]{control}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+An S3 object of class \code{multiRL.fitting}.
+  A \code{list} containing, for each model, the estimated optimal parameters
+  and associated model fit metrics.
+}
 \description{
 Step 3: Optimizing parameters to fit real data
 }

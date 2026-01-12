@@ -42,6 +42,11 @@ see \link[multiRL]{control}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+A \code{List} containing a \code{DataFrame} of the parameters used to 
+   generate the simulated data and the summary statistics for Approximate
+   Bayesian Computation (ABC).
+}
 \description{
 engine_ABC
 }

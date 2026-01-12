@@ -13,6 +13,9 @@
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
 #'    
+#' @return A \code{NumericVector} of length one representing the subjective 
+#'    value transformed from the objective reward via the utility function.
+#'    
 #' @section Body: 
 #' \preformatted{func_gamma <- function(
 #'     reward,

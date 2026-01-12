@@ -48,6 +48,13 @@ see \link[multiRL]{settings}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+An S3 object of class \code{multiRL.replay}.
+  A \code{List} containing, for each subject and each fitted model, the
+  estimated optimal parameters, along with the resulting
+  \code{multiRL.model} and \code{multiRL.summary} objects obtained by
+  replaying the model with those parameters.
+}
 \description{
 Step 4: Replaying the experiment with optimal parameters
 }

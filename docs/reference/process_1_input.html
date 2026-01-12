@@ -112,6 +112,56 @@ see <a href="settings.html">settings</a></p></dd>
 <dd><p>Additional arguments passed to internal functions.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>An S4 object of class <code>multiRL.input</code>.</p>
+<p></p><dl><dt><code>data</code></dt>
+<dd><p>A <code>DataFrame</code> containing the trial-level raw data.</p></dd>
+
+    <dt><code>colnames</code></dt>
+<dd><p>An S4 object of class <code>multiRL.colnames</code>,
+      specifying the column names used in the input data.</p></dd>
+
+    <dt><code>features</code></dt>
+<dd><p>An S4 object of class <code>multiRL.features</code>,
+      containing standardized representations of states and actions
+      transformed from the raw data.</p></dd>
+
+    <dt><code>params</code></dt>
+<dd><p>An S4 object of class <code>multiRL.params</code>,
+      containing model parameters.</p></dd>
+
+    <dt><code>priors</code></dt>
+<dd><p>A <code>List</code> specifying prior distributions for free parameters.</p></dd>
+
+    <dt><code>funcs</code></dt>
+<dd><p>An S4 object of class <code>multiRL.funcs</code>,
+      containing functions used in model.</p></dd>
+
+    <dt><code>settings</code></dt>
+<dd><p>An S4 object of class <code>multiRL.settings</code>,
+      storing global settings for model estimation.</p></dd>
+
+    <dt><code>elements</code></dt>
+<dd><p>A <code>Integer</code> indicating the number of elements within states.</p></dd>
+
+    <dt><code>subid</code></dt>
+<dd><p>A <code>Character</code> string identifying the subject.</p></dd>
+
+    <dt><code>n_block</code></dt>
+<dd><p>A <code>Integer</code> value indicating the number of blocks.</p></dd>
+
+    <dt><code>n_trial</code></dt>
+<dd><p>A <code>Integer</code> value indicating the number of trials.</p></dd>
+
+    <dt><code>n_rows</code></dt>
+<dd><p>A <code>Integer</code> value indicating the number of rows in the data.</p></dd>
+
+    <dt><code>extra</code></dt>
+<dd><p>A <code>List</code> containing additional user-defined information.</p></dd>
+
+
+</dl></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

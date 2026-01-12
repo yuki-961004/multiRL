@@ -38,7 +38,8 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns data.frame
+#' @returns An S3 object of class \code{DataFrame} containing, for each model, 
+#'  the estimated optimal parameters and associated model fit metrics.
 #' 
 estimation_methods <- function(
     estimate,

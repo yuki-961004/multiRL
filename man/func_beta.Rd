@@ -17,6 +17,10 @@ see \link[multiRL]{params}}
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
 }
+\value{
+A \code{NumericVector} containing the probability of choosing each 
+   option.
+}
 \description{
 \deqn{
    P_{t}(a) = 

@@ -20,7 +20,8 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-List
+A \code{List} containing, for each model, simulated data generated
+  using randomly sampled parameters.
 }
 \description{
 estimate_2_SBI

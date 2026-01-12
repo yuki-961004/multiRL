@@ -39,6 +39,10 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'  
+#' @return An S3 object of class \code{multiRL.fitting}.
+#'   A \code{list} containing, for each model, the estimated optimal parameters
+#'   and associated model fit metrics.
+#'  
 #' @section Example: 
 #' \preformatted{ # fitting
 #'  fitting.MLE <- multiRL::fit_p(

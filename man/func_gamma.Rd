@@ -16,6 +16,10 @@ see \link[multiRL]{params}}
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
 }
+\value{
+A \code{NumericVector} of length one representing the subjective 
+   value transformed from the objective reward via the utility function.
+}
 \description{
 \deqn{U(R) = {R}^{\gamma}}
 }

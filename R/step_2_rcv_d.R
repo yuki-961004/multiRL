@@ -41,6 +41,19 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
+#' @return An S3 object of class \code{multiRL.recovery}.
+#'
+#'   \describe{
+#'     \item{\code{simulate}}{
+#'       A \code{List} containing, for each model, the parameters used to 
+#'       simulate the data.
+#'     }
+#'     \item{\code{recovery}}{
+#'       A \code{List} containing, for each model,  the parameters estimated 
+#'       as optimal by the algorithm.
+#'     }
+#'   }
+#'
 #' @section Example: 
 #' \preformatted{ # recovery
 #'  recovery.MLE <- multiRL::rcv_d(

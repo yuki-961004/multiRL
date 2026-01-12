@@ -24,7 +24,8 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-multiRL.model
+An S4 object of class \code{multiRL.model} 
+ generated using the estimated optimal parameters.
 }
 \description{
 estimate_1_LBI

@@ -15,6 +15,9 @@
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
 #'    
+#' @return A \code{NumericVector} containing the updated values computed based 
+#'    on the learning rate. 
+#'    
 #' @section Body: 
 #' \preformatted{func_alpha <- function(
 #'     qvalue,

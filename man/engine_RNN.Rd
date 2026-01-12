@@ -42,6 +42,12 @@ see \link[multiRL]{control}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+A specialized TensorFlow-trained Recurrent Neural Network (RNN) object.
+ The model can be used with the \code{predict()} function to make predictions 
+ on a new data frame, estimating the input parameters that are most likely 
+ to have generated the given dataset.
+}
 \description{
 engine_RNN
 }

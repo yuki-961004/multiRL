@@ -35,6 +35,57 @@ see \link[multiRL]{settings}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+An S4 object of class \code{multiRL.input}.
+
+  \describe{
+    \item{\code{data}}{
+      A \code{DataFrame} containing the trial-level raw data.
+    }
+    \item{\code{colnames}}{
+      An S4 object of class \code{multiRL.colnames},
+      specifying the column names used in the input data.
+    }
+    \item{\code{features}}{
+      An S4 object of class \code{multiRL.features},
+      containing standardized representations of states and actions
+      transformed from the raw data. 
+    }
+    \item{\code{params}}{
+      An S4 object of class \code{multiRL.params}, 
+      containing model parameters.
+    }
+    \item{\code{priors}}{
+      A \code{List} specifying prior distributions for free parameters.
+    }
+    \item{\code{funcs}}{
+      An S4 object of class \code{multiRL.funcs},
+      containing functions used in model.
+    }
+    \item{\code{settings}}{
+      An S4 object of class \code{multiRL.settings},
+      storing global settings for model estimation.
+    }
+    \item{\code{elements}}{
+      A \code{Integer} indicating the number of elements within states.
+    }
+    \item{\code{subid}}{
+      A \code{Character} string identifying the subject.
+    }
+    \item{\code{n_block}}{
+      A \code{Integer} value indicating the number of blocks.
+    }
+    \item{\code{n_trial}}{
+      A \code{Integer} value indicating the number of trials.
+    }
+    \item{\code{n_rows}}{
+      A \code{Integer} value indicating the number of rows in the data.
+    }
+    \item{\code{extra}}{
+      A \code{List} containing additional user-defined information.
+    }
+  }
+}
 \description{
 multiRL.input
 }

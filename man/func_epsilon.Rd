@@ -15,6 +15,10 @@ see \link[multiRL]{params}}
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
 }
+\value{
+An \code{Integer}, either 0 or 1, indicating exploration or 
+   exploitation on the current trial.
+}
 \description{
 \eqn{\epsilon–first}: 
  

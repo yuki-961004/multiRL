@@ -15,6 +15,10 @@ see \link[multiRL]{params}}
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
 }
+\value{
+A \code{NumericVector} containing the bias for each option based on 
+   the number of times it has been selected.
+}
 \description{
 \deqn{
    \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}

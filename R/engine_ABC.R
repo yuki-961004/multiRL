@@ -26,6 +26,10 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #' 
+#' @return A \code{List} containing a \code{DataFrame} of the parameters used to 
+#'    generate the simulated data and the summary statistics for Approximate
+#'    Bayesian Computation (ABC).
+#' 
 engine_ABC <- function(
     data,
     colnames,

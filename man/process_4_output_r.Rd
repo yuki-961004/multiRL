@@ -11,6 +11,27 @@ process_4_output_r(record, ...)
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+An S4 object of class \code{multiRL.output}.
+
+  \describe{
+    \item{\code{input}}{
+      An object of class \code{multiRL.input},
+      containing the raw data, column specifications, parameters and ...
+    }
+    \item{\code{behrule}}{
+      An object of class \code{multiRL.behrule},
+      defining the latent learning rules.
+    }
+    \item{\code{result}}{
+      An object of class \code{multiRL.result},
+      storing trial-level outputs of the Markov Decision Process.
+    }
+    \item{\code{extra}}{
+      A \code{List} containing additional user-defined information.
+    }
+  }
+}
 \description{
 multiRL.output
 }

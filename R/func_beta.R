@@ -29,6 +29,9 @@
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
 #'    
+#' @return A \code{NumericVector} containing the probability of choosing each 
+#'    option.
+#'    
 #' @section Body: 
 #' \preformatted{func_beta <- function(
 #'     qvalue, 

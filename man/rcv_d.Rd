@@ -61,6 +61,20 @@ see \link[multiRL]{control}}
 
 \item{...}{Additional arguments passed to internal functions.}
 }
+\value{
+An S3 object of class \code{multiRL.recovery}.
+
+  \describe{
+    \item{\code{simulate}}{
+      A \code{List} containing, for each model, the parameters used to 
+      simulate the data.
+    }
+    \item{\code{recovery}}{
+      A \code{List} containing, for each model,  the parameters estimated 
+      as optimal by the algorithm.
+    }
+  }
+}
 \description{
 Step 2: Generating fake data for parameter and model recovery
 }

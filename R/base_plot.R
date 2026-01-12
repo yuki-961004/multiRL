@@ -8,7 +8,7 @@
 #'  The name of parameter that you want to plot
 #' @param ... extra
 #'
-#' @returns List
+#' @returns An S3 object of class \code{ggplot2}
 #' 
 plot.multiRL.replay <- function(
     x, y = NULL,

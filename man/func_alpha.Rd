@@ -18,6 +18,10 @@ see \link[multiRL]{params}}
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
 }
+\value{
+A \code{NumericVector} containing the updated values computed based 
+   on the learning rate.
+}
 \description{
 \deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
 }

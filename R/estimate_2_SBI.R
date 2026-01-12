@@ -13,7 +13,8 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns List
+#' @return A \code{List} containing, for each model, simulated data generated
+#'   using randomly sampled parameters.
 #' 
 estimate_2_SBI <- function(
     model,

@@ -21,7 +21,9 @@
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'
-#' @returns multiRL.env
+#' @returns An \code{environment}, \code{multiRL.env} contains all variables 
+#'    required by the objective function and is used to isolate environments 
+#'    during parallel computation. 
 #' 
 estimate_0_ENV <- function(
     data,
