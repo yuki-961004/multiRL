@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,6 +109,7 @@
 <img src="fig/TD.png" alt="TD" width="80%" style="display: inline;"></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
+<span>  engine <span class="op">=</span> <span class="st">"Cpp"</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
 <span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
 <span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>

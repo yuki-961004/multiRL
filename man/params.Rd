@@ -136,6 +136,15 @@ The names of all these parameters are not necessarily fixed. You can define
          Note: This is what I consider the reasonable setting. If you 
          think this interpretation unsuitable, you may explicitly set 
          \code{Q0} to 0 or another optimistic initial value instead.
+   
+   \item \code{reset [double]} 
+   
+         If changes may occur between blocks, you can choose whether to 
+         reset the learned values for each option. By default, no reset is 
+         applied. For example, setting \code{reset = 0} means that upon 
+         entering a new block, the values of all options are reset to 0. In 
+         addition, if \code{Q0} is also set to 0, this implies that the 
+         learning rate on the first trial of each block will be 100%. 
          
    \item \code{lapse [double]} 
    

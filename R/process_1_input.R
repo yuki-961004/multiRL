@@ -107,6 +107,7 @@ process_1_input <- function(
     ),
     constant = list(
       Q0 = NA_real_, 
+      reset = NA_real_,
       lapse = 0.01,
       threshold = 1,
       bonus = 0
@@ -272,14 +273,8 @@ process_1_input <- function(
   
   # element: col-object-element
   state <- base::aperm(a = state, perm = c(1, 3, 2))
-  
-  idinfo <- matrix(as.character(idinfo), nrow(idinfo), ncol(idinfo))
-  object <- matrix(as.character(object), nrow(object), ncol(object))
-  reward <- matrix(as.character(reward), nrow(reward), ncol(reward))
-  action <- matrix(as.character(action), nrow(action), ncol(action))
-  exinfo <- matrix(as.character(exinfo), nrow(exinfo), ncol(exinfo))
 
-  # 整合拆分后的数据, 分别是id, state和action
+  # 整合拆分后的数据, 分别是id, state, action和其他信息
   features <- methods::new(
     Class = "multiRL.features",
     idinfo = idinfo,

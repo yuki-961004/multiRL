@@ -37,6 +37,10 @@ process_4_output_r <- function(
   policy      <- record@input@settings@policy
   
   idinfo      <- record@input@features@idinfo
+  subid       <- idinfo[, 1]
+  block       <- idinfo[, 2]
+  trial       <- idinfo[, 3]
+  
   state       <- record@input@features@state
   action      <- record@input@features@action
   exinfo      <- record@input@features@exinfo
@@ -70,6 +74,7 @@ process_4_output_r <- function(
 ############################# [initial value] ##################################
   
   Q0          <- get_param(params, "Q0")
+  reset       <- get_param(params, "reset")
   value[1, ]  <- ifelse(is.na(Q0), yes = 0, no = Q0)
   count[1, ]  <- 0
   value       <- rbind(value, rep(NA, ncol(value)))
@@ -148,25 +153,37 @@ process_4_output_r <- function(
       exinfo = exinfo[i, ]
     )
     
-    # 继承上一列的所有值
+    # 判断是否需要重置：Block是否发生变化
+    is.nb <- i > 1 && block[i] != block[i - 1]
+    
+    # 如果设置了reset, 且发生变动
+    if (!is.na(reset) && is.nb) {
+      values <- rep(reset, length(value[i, ]))
+      Qi <- reset
+    } else {
+      values <- value[i, ]
+      Qi <- value[i, latent[i, ]]
+    }
+    
+    # 继承上一行的所有值
     value[i + 1, ] <- dcay_func(
       value0 = value[1, ],
-      values = value[i, ],
+      values = values,
       reward = as.numeric(reward[i, ]), 
       params = params,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ]
     )
-    # 记录此时被选选项的值
-    Qi <- value[i, latent[i, ]]
     
     if (is.na(Q0) & Qi == 0) {
       # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
       value[i + 1, latent[i, ]] <- utility[i, ]
+      # 修改初始值为第一次见到的值
+      value[1, latent[i, ]]     <- utility[i, ]
     } else {
       # learning rate function: 如果不是第一次选, 则按照学习率方程更新
       value[i + 1, latent[i, ]] <- rate_func(
-        qvalue = as.numeric(value[i, latent[i, ]]),
+        qvalue = Qi,
         reward = as.numeric(utility[i, ]), 
         params = params,
         idinfo = idinfo[i, ],

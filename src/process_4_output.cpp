@@ -44,6 +44,9 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     const Rcpp::CharacterMatrix idinfo = Rcpp::as<Rcpp::CharacterMatrix>(
         features.slot("idinfo")
     );
+    const Rcpp::CharacterVector subid  = idinfo(Rcpp::_, 0);
+    const Rcpp::CharacterVector block  = idinfo(Rcpp::_, 1);
+    const Rcpp::CharacterVector trial  = idinfo(Rcpp::_, 2);
 
     // R: record@input@features@state
     const Rcpp::CharacterVector state_raw = features.slot("state");
@@ -163,6 +166,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 /****************************** [initial value] *******************************/
 
     double Q0 = get_param(params, "Q0");
+    double reset = get_param(params, "reset");
     std::fill( value.row(0).begin(), value.row(0).end(), std::isnan(Q0) ? 0.0 : Q0 );
     std::fill( count.row(0).begin(), count.row(0).end(), 0.0 );
 
@@ -299,33 +303,45 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             )
         ); 
 
+        // 提取此次选择的latent为target
+        const std::string target = Rcpp::as<std::string>( latent(i,0) );
+        // 在cue中寻找target
+        col_index = cue_map[target];
+        
+        bool is_nb = (i > 0) && (block[i] != block[i - 1]);
+        double Qi;
+        Rcpp::NumericVector values;
+        // 记录此时价值
+        if (!std::isnan(reset) && is_nb) {
+            values = Rcpp::rep(reset, value.ncol());
+            Qi = reset;
+        } else {
+            values = Rcpp::NumericVector(value.row(i));
+            Qi = value(i, col_index);
+        }
+    
         // decay function: 未被选择选项的价值也会更新
         value.row(i+1) = Rcpp::as<Rcpp::NumericVector>(
             dcay_func(
                 Rcpp::_["value0"] = Rcpp::NumericVector(value.row(0)),
-                Rcpp::_["values"] = Rcpp::NumericVector(value.row(i)),
+                Rcpp::_["values"] = values,
                 Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
             )
         ); 
-        // 提取此次选择的latent为target
-        const std::string target = Rcpp::as<std::string>( latent(i,0) );
-        // 在cue中寻找target
-        col_index = cue_map[target];
-        // 记录此时价值
-        double Qi = value(i, col_index);
 
         // learning rate function: 以什么比例采信预测误差
         if (std::isnan(Q0) && Qi == 0) {
             // learning rate = 100%
             value(i+1, col_index) = utility(i, 0);
+            value(0, col_index) = utility(i, 0);
         } else {
             // learning rate = alpha
             value(i+1, col_index) = Rcpp::as<double>(
                 rate_func(
-                    Rcpp::_["qvalue"] = value(i, col_index),
+                    Rcpp::_["qvalue"] = Qi,
                     Rcpp::_["reward"] = utility(i, 0),
                     Rcpp::_["params"] = params,
                     Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),

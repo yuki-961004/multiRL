@@ -1,10 +1,10 @@
 # multiRL <a href="https://yuki-961004.github.io/multiRL/"><img src="./fig/logo.png" alt="LOGO" align="right" width="120"/></a>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/yuki-961004/multiRL/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yuki-961004/multiRL/actions/workflows/R-CMD-check.yaml)  
-[![Code Coverage](https://codecov.io/gh/yuki-961004/multiRL/graph/badge.svg)](https://app.codecov.io/gh/yuki-961004/multiRL)  
-[![CRAN-Version](https://www.r-pkg.org/badges/version/multiRL?color=%231E63B5)](https://CRAN.R-project.org/package=multiRL)  
-[![CRAN-Downloads](https://cranlogs.r-pkg.org/badges/grand-total/multiRL?color=%23FA812F)](https://CRAN.R-project.org/package=multiRL)  
+[![R-CMD-check](https://github.com/yuki-961004/multiRL/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yuki-961004/multiRL/actions/workflows/R-CMD-check.yaml)
+[![Code Coverage](https://codecov.io/gh/yuki-961004/multiRL/graph/badge.svg)](https://app.codecov.io/gh/yuki-961004/multiRL)
+[![CRAN-Version](https://www.r-pkg.org/badges/version/multiRL?color=%231E63B5)](https://CRAN.R-project.org/package=multiRL)
+[![CRAN-Downloads](https://cranlogs.r-pkg.org/badges/grand-total/multiRL?color=%23FA812F)](https://CRAN.R-project.org/package=multiRL)
 <!-- badges: end -->
 
 ## Overview

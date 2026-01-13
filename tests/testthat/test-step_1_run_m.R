@@ -23,6 +23,7 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
       ),
       constant = list(
         Q0 = NA_real_,
+        reset = 0,
         lapse = 0.01,
         threshold = 20,
         bonus = 0
@@ -70,6 +71,7 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
       ),
       constant = list(
         Q0 = 0,
+        reset = NA_real_,
         lapse = 0.01,
         threshold = 1,
         bonus = 0
@@ -125,7 +127,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
         zeta = 0
       ),
       constant = list(
-        Q0 = NA_real_,
+        Q0 = 0,
+        reset = 0,
         lapse = 0.01,
         threshold = 0,
         bonus = 0

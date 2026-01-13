@@ -34,6 +34,7 @@ colnames = list(
 
 ```{r}
 multiRL.model <- multiRL::run_m(
+  engine = "Cpp",
   data = data[data[, "Subject"] == 1, ],
   behrule = behrule,
   colnames = colnames,
