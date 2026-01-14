@@ -42,7 +42,7 @@ process_3_record <- function(
   # 生成行数等量的多列表格
   nulldf <- matrix(
     data = NA_real_,
-    nrow = input@n_trial * input@n_block,
+    nrow = input@n_rows,
     ncol = length(behrule@cue)
   )
   # 列数表示需要更新的价值, 即潜在规则
@@ -51,7 +51,7 @@ process_3_record <- function(
   # 生成行数等量的单列表格
   singledf <- matrix(
     data = NA_real_,
-    nrow = input@n_trial * input@n_block,
+    nrow = input@n_rows,
     ncol = 1
   )
   

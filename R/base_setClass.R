@@ -54,6 +54,8 @@ methods::setClass(
   )
 )
 
+methods::setClassUnion("numORchar", c("numeric", "character"))
+
 methods::setClass(
   Class = "multiRL.input",
   slots = list(
@@ -67,7 +69,7 @@ methods::setClass(
     elements = "numeric",
     subid = "character",
     n_block = "numeric",
-    n_trial = "numeric",
+    n_trial = "numORchar",
     n_rows = "numeric",
     extra = "list"
   )

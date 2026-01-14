@@ -306,8 +306,12 @@ process_1_input <- function(
   
   subid <- as.character(unique(data[[colnames@subid]]))
   n_block <- length(unique(data[[colnames@block]]))
-  n_trial <- length(unique(data[[colnames@trial]]))
-  n_rows <- n_block * n_trial
+  if (length(unique(as.numeric(table(data[[colnames@block]])))) == 1) {
+    n_trial <- length(unique(data[[colnames@trial]]))
+  } else {
+    n_trial <- "varying"
+  }
+  n_rows <- nrow(data)
   
   multiRL.input <- methods::new(
     Class = "multiRL.input",
