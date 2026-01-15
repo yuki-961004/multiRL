@@ -47,6 +47,13 @@
 #'          
 #'          For details, please refer to the documentation for 
 #'          \link[multiRL]{policy}.
+#'          
+#'    \item \code{system [Character]} 
+#'    
+#'          In decision-making paradigms, multiple systems may operate jointly 
+#'          to influence human decisions. These systems can include a 
+#'          reinforcement learning system, as well as working memory, and even 
+#'          habitual choice tendencies.
 #' }
 #' 
 #' @section Example: 

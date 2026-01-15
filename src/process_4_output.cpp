@@ -38,6 +38,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     // R: record@input@settings
     const Rcpp::S4 settings = input.slot("settings");
     const std::string policy = settings.slot("policy");
+    const Rcpp::CharacterVector system = settings.slot("system");
+    int n_system = system.size();
 
     // R: record@input@features@idinfo
     const Rcpp::S4 features = input.slot("features");
@@ -109,7 +111,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     );
 
     // R: record@result [action select]
-    Rcpp::NumericMatrix value = Rcpp::clone(Rcpp::as<Rcpp::NumericMatrix>(
+    Rcpp::List value = Rcpp::clone(Rcpp::as<Rcpp::List>(
         result.slot("value")
     ));
     Rcpp::NumericMatrix bias = Rcpp::clone(Rcpp::as<Rcpp::NumericMatrix>(
@@ -167,13 +169,21 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
     double Q0 = get_param(params, "Q0");
     double reset = get_param(params, "reset");
-    std::fill( value.row(0).begin(), value.row(0).end(), std::isnan(Q0) ? 0.0 : Q0 );
-    std::fill( count.row(0).begin(), count.row(0).end(), 0.0 );
 
     Rcpp::Function r_rbind("rbind");
-
     Rcpp::NumericVector new_row(n_cues, NA_REAL);
-    value = Rcpp::as<Rcpp::NumericMatrix>( r_rbind(value, new_row) );
+
+    for (int i = 0; i < value.size(); i++) {
+        Rcpp::NumericMatrix sub_value = value[i];
+        std::fill( 
+            sub_value.row(0).begin(), sub_value.row(0).end(), 
+            std::isnan(Q0) ? 0.0 : Q0 
+        );
+        sub_value = Rcpp::as<Rcpp::NumericMatrix>( r_rbind(sub_value, new_row) );
+        value[i] = sub_value;
+    }
+    
+    std::fill( count.row(0).begin(), count.row(0).end(), 0.0 );
     count = Rcpp::as<Rcpp::NumericMatrix>( r_rbind(count, new_row) );
 
 /******************************** [main loop] *********************************/
@@ -208,17 +218,24 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             )
         );   
         // probability function: 选择每个选项的概率 
-        Rcpp::NumericVector qvalue(n_cues);
+        Rcpp::List qvalue(n_system);
 
-        for (int j = 0; j < n_cues; j++) {
-            qvalue[j] = ( value(i, j) + bias(i, j) ) * shown(i, j);
-        }   
-        
+        for (int s = 0; s < n_system; s++) {
+            Rcpp::NumericMatrix sub_value = value[s];
+            Rcpp::NumericVector sub_qvalue(n_cues);
+            for (int j = 0; j < n_cues; j++) {
+                sub_qvalue[j] =
+                    ( sub_value(i, j) + bias(i, j) ) * shown(i, j);
+            }
+            qvalue[s] = sub_qvalue;
+        }
+
         prob.row(i) = Rcpp::as<Rcpp::NumericVector>(
             prob_func(
                 Rcpp::_["qvalue"] = qvalue,
                 Rcpp::_["explor"] = Rcpp::NumericVector(exploration.row(i)),
                 Rcpp::_["params"] = params,
+                Rcpp::_["system"] = system,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
             )
@@ -309,45 +326,59 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         col_index = cue_map[target];
         
         bool is_nb = (i > 0) && (block[i] != block[i - 1]);
-        double Qi;
-        Rcpp::NumericVector values;
-        // 记录此时价值
-        if (!std::isnan(reset) && is_nb) {
-            values = Rcpp::rep(reset, value.ncol());
-            Qi = reset;
-        } else {
-            values = Rcpp::NumericVector(value.row(i));
-            Qi = value(i, col_index);
-        }
-    
-        // decay function: 未被选择选项的价值也会更新
-        value.row(i+1) = Rcpp::as<Rcpp::NumericVector>(
-            dcay_func(
-                Rcpp::_["value0"] = Rcpp::NumericVector(value.row(0)),
-                Rcpp::_["values"] = values,
-                Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
-                Rcpp::_["params"] = params,
-                Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
-            )
-        ); 
 
-        // learning rate function: 以什么比例采信预测误差
-        if (std::isnan(Q0) && Qi == 0) {
-            // learning rate = 100%
-            value(i+1, col_index) = utility(i, 0);
-            value(0, col_index) = utility(i, 0);
-        } else {
-            // learning rate = alpha
-            value(i+1, col_index) = Rcpp::as<double>(
-                rate_func(
-                    Rcpp::_["qvalue"] = Qi,
-                    Rcpp::_["reward"] = utility(i, 0),
-                    Rcpp::_["params"] = params,
-                    Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                    Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
-                )
-            );
+        for (int s = 0; s < n_system; s++) {
+
+            std::string sub_system = Rcpp::as<std::string>(system[s]);
+
+            Rcpp::NumericMatrix sub_value = value[sub_system];
+
+            double Qi;
+            Rcpp::NumericVector values;
+
+            // 是否在进入新 block 时重置
+            if (!std::isnan(reset) && is_nb) {
+                values = Rcpp::rep(reset, sub_value.ncol());
+                Qi     = reset;
+            } else {
+                values = Rcpp::NumericVector(sub_value.row(i));
+                Qi     = sub_value(i, col_index);
+            }
+
+            // decay：未被选择选项的价值衰减
+            sub_value.row(i + 1) =
+                Rcpp::as<Rcpp::NumericVector>(
+                    dcay_func(
+                        Rcpp::_["value0"] = Rcpp::NumericVector(sub_value.row(0)),
+                        Rcpp::_["values"] = values,
+                        Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
+                        Rcpp::_["params"] = params,
+                        Rcpp::_["system"] = sub_system,
+                        Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
+                        Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                    )
+                );
+
+            // learning rate 更新
+            if (std::isnan(Q0) && Qi == 0) {
+                sub_value(i + 1, col_index) = utility(i, 0);
+                sub_value(0,     col_index) = utility(i, 0);
+            } else {
+                sub_value(i + 1, col_index) =
+                    Rcpp::as<double>(
+                        rate_func(
+                            Rcpp::_["qvalue"] = Qi,
+                            Rcpp::_["reward"] = utility(i, 0),
+                            Rcpp::_["params"] = params,
+                            Rcpp::_["system"] = sub_system,
+                            Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
+                            Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                        )
+                    );
+            }
+
+            // 写回 list
+            value[sub_system] = sub_value;
         }
 
         count.row(i+1) = count.row(i);
@@ -358,10 +389,14 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
     Rcpp::Range rows_to_keep(1, n_rows);
     
-    value = value(rows_to_keep, Rcpp::_);
-    count = count(rows_to_keep, Rcpp::_);
+    for (int s = 0; s < n_system; s++) {
+        Rcpp::NumericMatrix sub_value = value[s];
+        sub_value = sub_value(rows_to_keep, Rcpp::_);
+        Rcpp::colnames(sub_value) = cue;
+        value[s] = sub_value;
+    }
 
-    Rcpp::colnames(value) = cue;
+    count = count(rows_to_keep, Rcpp::_);
     Rcpp::colnames(count) = cue;
 
 /********************************* [save result] ******************************/

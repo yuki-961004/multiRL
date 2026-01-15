@@ -35,6 +35,7 @@ process_4_output_r <- function(
 ################################## [load] ######################################
   
   policy      <- record@input@settings@policy
+  system      <- record@input@settings@system
   
   idinfo      <- record@input@features@idinfo
   subid       <- idinfo[, 1]
@@ -75,11 +76,15 @@ process_4_output_r <- function(
   
   Q0          <- get_param(params, "Q0")
   reset       <- get_param(params, "reset")
-  value[1, ]  <- ifelse(is.na(Q0), yes = 0, no = Q0)
-  count[1, ]  <- 0
-  value       <- rbind(value, rep(NA, ncol(value)))
-  count       <- rbind(count, rep(NA, ncol(count)))
   
+  value       <- lapply(value, function(x) {
+    x[1, ] <- ifelse(is.na(Q0), yes = 0, no = Q0)
+    rbind(x, rep(NA, ncol(x)))
+  })
+
+  count[1, ]  <- 0
+  count       <- rbind(count, rep(NA, ncol(count)))
+
 ############################# [action select] ##################################
   
   set.seed(123)
@@ -109,11 +114,15 @@ process_4_output_r <- function(
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ]
     )
+
+    qvalue <- lapply(value, function(x) (x[i, ] + bias[i, ]) * shown[i, ])
+
     # probability function: 选择每个选项的概率 
     prob[i, ] <- prob_func(
-      qvalue = (value[i, ] + bias[i, ]) * shown[i, ], 
+      qvalue = qvalue, 
       explor = exploration[i, ],
       params = params,
+      system = system,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ]
     )
@@ -156,39 +165,48 @@ process_4_output_r <- function(
     # 判断是否需要重置：Block是否发生变化
     is.nb <- i > 1 && block[i] != block[i - 1]
     
-    # 如果设置了reset, 且发生变动
-    if (!is.na(reset) && is.nb) {
-      values <- rep(reset, length(value[i, ]))
-      Qi <- reset
-    } else {
-      values <- value[i, ]
-      Qi <- value[i, latent[i, ]]
-    }
-    
-    # 继承上一行的所有值
-    value[i + 1, ] <- dcay_func(
-      value0 = value[1, ],
-      values = values,
-      reward = as.numeric(reward[i, ]), 
-      params = params,
-      idinfo = idinfo[i, ],
-      exinfo = exinfo[i, ]
-    )
-    
-    if (is.na(Q0) & Qi == 0) {
-      # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
-      value[i + 1, latent[i, ]] <- utility[i, ]
-      # 修改初始值为第一次见到的值
-      value[1, latent[i, ]]     <- utility[i, ]
-    } else {
-      # learning rate function: 如果不是第一次选, 则按照学习率方程更新
-      value[i + 1, latent[i, ]] <- rate_func(
-        qvalue = Qi,
-        reward = as.numeric(utility[i, ]), 
+    # 多系统更新价值
+    for (sub_system in system) {
+      sub_value <- value[[sub_system]]
+      
+      # 是否在进入新block时重置
+      if (!is.na(reset) && is.nb) {
+        cur_value <- rep(reset, length(sub_value[i, ]))
+        Qi <- reset
+      } else {
+        cur_value <- sub_value[i, ]
+        Qi <- sub_value[i, latent[i, ]]
+      }
+      
+      # 工作记忆容量有限导致未被选择选项的价值衰减
+      sub_value[i + 1, ] <- dcay_func(
+        value0 = sub_value[1, ],
+        values = cur_value,
+        reward = as.numeric(reward[i, ]),
         params = params,
+        system = sub_system,
         idinfo = idinfo[i, ],
         exinfo = exinfo[i, ]
       )
+      
+      if (is.na(Q0) & Qi == 0) {
+        # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
+        sub_value[i + 1, latent[i, ]] <- utility[i, ]
+        # 修改初始值为第一次见到的值
+        sub_value[1, latent[i, ]]     <- utility[i, ]
+      } else {
+        # learning rate function: 如果不是第一次选, 则按照学习率方程更新
+        sub_value[i + 1, latent[i, ]] <- rate_func(
+          qvalue = Qi,
+          reward = as.numeric(utility[i, ]),
+          params = params,
+          system = sub_system,
+          idinfo = idinfo[i, ],
+          exinfo = exinfo[i, ]
+        )
+      }
+      
+      value[[sub_system]] <- sub_value
     }
     
     count[i + 1, ] <- count[i, ]
@@ -196,7 +214,7 @@ process_4_output_r <- function(
   }
   
   # 删掉初始值和初始计数器
-  value <- value[-1, ]
+  value <- lapply(value, function(x) {x[-1, ]})
   count <- count[-1, ]
 
 ################################# [output] #####################################

@@ -184,6 +184,24 @@ The names of all these parameters are not necessarily fixed. You can define
          
          Note: The default value for this \code{bonus} is 0, which assumes 
          that no such bonus value change exists.
+         
+   \item \code{weight [NumericVector]} 
+   
+         The \code{weight} parameter governs the policy integration stage. 
+         After each cognitive system (e.g., RL, WM) calculates action 
+         probabilities using a soft-max function based on its internal value 
+         estimates, the agent combines these suggestions into a single 
+         choice probability. 
+         
+         The default is \code{1}, which is equivalent to 
+         \code{weight = c(1, 0, ...)}. This represents exclusive reliance on 
+         the first system (typically the incremental Reinforcement Learning 
+         system).
+         
+         In a dual-system model (e.g., RL + WM), setting \code{weight = 0.5} 
+         implies that the agent places equal trust in both the long-term RL 
+         rewards and the immediate WM memory. 
+         
 }
 }
 }
@@ -206,7 +224,8 @@ The names of all these parameters are not necessarily fixed. You can define
      Q0 = NA_real_, 
      lapse = 0.01,
      threshold = 1,
-     bonus = 0
+     bonus = 0,
+     weight = 1
    )
  )
 }

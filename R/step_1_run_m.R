@@ -93,7 +93,7 @@
 #'     estimate = "MLE",
 #'     policy = "off"
 #'  ),
-#'  engine = "Cpp"
+#'  engine = "R"
 #' )
 #'  
 #' multiRL.summary <- multiRL::summary(multiRL.model)

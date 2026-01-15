@@ -4,7 +4,7 @@
 \alias{func_zeta}
 \title{Function: Decay Rate}
 \usage{
-func_zeta(value0, values, reward, params, ...)
+func_zeta(value0, values, reward, params, system, ...)
 }
 \arguments{
 \item{value0}{The initial values for all actions.}
@@ -16,6 +16,10 @@ following the execution of action(a)}
 
 \item{params}{Parameters used by the model’s internal functions,
 see \link[multiRL]{params}}
+
+\item{system}{When the agent makes a decision, is a single system at work, or are multiple 
+systems involved?
+  see \link[multiRL]{system}}
 
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}

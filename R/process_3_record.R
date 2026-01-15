@@ -37,6 +37,9 @@ process_3_record <- function(
   
   extra <- list(...)
   
+  system <- input@settings@system
+  n_system <- length(system)
+  
 ############################### [null matrix] ##################################
   
   # 生成行数等量的多列表格
@@ -55,7 +58,9 @@ process_3_record <- function(
     ncol = 1
   )
   
-  value       <- nulldf
+  value <- replicate(n = n_system, expr = nulldf, simplify = FALSE)
+  names(value) <- system
+  
   bias        <- nulldf
   shown       <- nulldf
   prob        <- nulldf

@@ -26,7 +26,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
         reset = 0,
         lapse = 0.01,
         threshold = 20,
-        bonus = 0
+        bonus = 0,
+        weight = c(0.5, 0.5)
       )
     ),
     priors = list(),
@@ -34,7 +35,8 @@ testthat::test_that("Epsilon-First, non-priors, on-policy", {
       name = "RSTD",
       mode = "fitting",
       estimate = "ABC",
-      policy = "on"
+      policy = "on",
+      system = c("RL", "WM")
     ),
     engine = "R",
     anythingelse = c(1, 2, 3)
@@ -74,7 +76,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
         reset = NA_real_,
         lapse = 0.01,
         threshold = 1,
-        bonus = 0
+        bonus = 0,
+        weight = 1
       )
     ),
     priors = list(
@@ -86,7 +89,8 @@ testthat::test_that("Epsilon-Greedy, priors, on-policy", {
       name = "RSTD",
       mode = "fit",
       estimate = "RNN",
-      policy = "on"
+      policy = "on",
+      system = "RL"
     ),
     anythingelse = c(1, 2, 3),
     engine = "Cpp"
@@ -131,7 +135,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
         reset = 0,
         lapse = 0.01,
         threshold = 0,
-        bonus = 0
+        bonus = 0,
+        weight = 1
       )
     ),
     priors = list(
@@ -143,7 +148,8 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
       name = "RSTD",
       mode = "fit",
       estimate = "MLE",
-      policy = "off"
+      policy = "off",
+      system = "WM"
     ),
     engine = "Cpp",
     anythingelse = c(1, 2, 3)

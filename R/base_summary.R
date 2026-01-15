@@ -12,16 +12,25 @@ methods::setMethod(
 
 ################################## [return] ####################################
     
-    raw <- object@input@data
+    raw     <- object@input@data
+    value   <- object@result@value
+    bias    <- object@result@bias
+    prob    <- object@result@prob
+    shown   <- object@result@shown
+    count   <- object@result@count
     
-    object@result@value <- round(x = object@result@value, digits = 2)
-    object@result@bias  <- round(x = object@result@bias, digits = 2)
-    object@result@prob  <- round(x = object@result@prob, digits = 2)
+    system  <- object@input@settings@system
     
-    vlaue <- .prefix_colnames(as.data.frame(object@result@value), "V_")
-    bias  <- .prefix_colnames(as.data.frame(object@result@bias), "B_")
+    # 对小数点多的列, 保留两位小数
+    value <- lapply(value, function(x) round(x = x, digits = 2))
+    bias  <- round(bias, digits = 2)
+    prob  <- round(prob, digits = 2)
+    
+    # 对不同类型的列增加前缀
+    value <- lapply(value, function(x) {.prefix_colnames(as.data.frame(x), "V_")})
+    bias  <- .prefix_colnames(as.data.frame(bias), "B_")
+    prob  <- .prefix_colnames(as.data.frame(prob), "P_")
     shown <- .prefix_colnames(as.data.frame(object@result@shown), "S_")
-    prob  <- .prefix_colnames(as.data.frame(object@result@prob), "P_")
     count <- .prefix_colnames(as.data.frame(object@result@count), "C_")
     
     behavior <- data.frame(
@@ -32,13 +41,17 @@ methods::setMethod(
       Simulation  = object@result@simulation
     )
     
-    data    <- cbind(raw, vlaue, bias, shown, prob, count, behavior)
+    data <- cbind(raw, bias, shown, prob, count, behavior)
+    process <- value
+    names(process) <- system
+
     params  <- object@input@params
     metrics <- object@sumstat
     
     multiRL.summary <- methods::new(
       Class = "multiRL.summary",
       data = data,
+      process = process,
       params = params, 
       metrics = metrics
     )

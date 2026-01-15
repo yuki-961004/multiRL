@@ -50,11 +50,12 @@ methods::setClass(
     name = "character",
     mode = "character",
     estimate = "character",
-    policy = "character"
+    policy = "character",
+    system = "character"
   )
 )
 
-methods::setClassUnion("numORchar", c("numeric", "character"))
+methods::setClassUnion("numericORcharacter", c("numeric", "character"))
 
 methods::setClass(
   Class = "multiRL.input",
@@ -69,7 +70,7 @@ methods::setClass(
     elements = "numeric",
     subid = "character",
     n_block = "numeric",
-    n_trial = "numORchar",
+    n_trial = "numericORcharacter",
     n_rows = "numeric",
     extra = "list"
   )
@@ -91,7 +92,7 @@ methods::setClass(
 methods::setClass(
   Class = "multiRL.result",
   slots = list(
-    value = "matrix",
+    value = "list",
     bias = "matrix",
     shown = "matrix",
     prob = "matrix",
@@ -103,7 +104,6 @@ methods::setClass(
     simulation = "matrix"
   )
 )
-
 
 methods::setClass(
   Class = "multiRL.record",
@@ -162,6 +162,7 @@ methods::setClass(
   Class = "multiRL.summary",
   slots = list(
     data = "data.frame",
+    process = "list",
     params = "multiRL.params",
     metrics = "multiRL.sumstat"
   )

@@ -4,7 +4,7 @@
 \alias{func_alpha}
 \title{Function: Learning Rate}
 \usage{
-func_alpha(qvalue, reward, params, ...)
+func_alpha(qvalue, reward, params, system, ...)
 }
 \arguments{
 \item{qvalue}{The estimated expected value of taking action(a) at trial(t).}
@@ -14,6 +14,10 @@ following the execution of action(a)}
 
 \item{params}{Parameters used by the model’s internal functions,
 see \link[multiRL]{params}}
+
+\item{system}{When the agent makes a decision, is a single system at work, or are multiple 
+systems involved?
+  see \link[multiRL]{system}}
 
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
@@ -44,13 +48,18 @@ A \code{NumericVector} containing the updated values computed based
   
   # Determine the model currently in use based on which parameters are free.
   if (
-    !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
+    system == "RL" && !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
   ) {
     model <- "TD"
   } else if (
-    is.na(alpha) && !(is.na(alphaN)) && !(is.na(alphaP))
+    system == "RL" && is.na(alpha) && !(is.na(alphaN)) && !(is.na(alphaP))
   ) {
     model <- "RSTD"
+  } else if (
+    system == "WM"
+  ) {
+    model <- "WM"
+    alpha <- 1
   } else {
     stop("Unknown Model! Plase modify your learning rate function")
   }
@@ -58,11 +67,14 @@ A \code{NumericVector} containing the updated values computed based
   # TD
   if (model == "TD") {
     update <- qvalue + alpha   * (reward - qvalue)
-    # RSTD
+  # RSTD
   } else if (model == "RSTD" && reward < qvalue) {
     update <- qvalue + alphaN * (reward - qvalue)
   } else if (model == "RSTD" && reward >= qvalue) {
     update <- qvalue + alphaP * (reward - qvalue)
+  # WM
+  } else if (model == "WM") {
+    update <- qvalue + alpha  * (reward - qvalue)
   }
   
   return(update)

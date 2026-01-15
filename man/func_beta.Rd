@@ -4,7 +4,7 @@
 \alias{func_beta}
 \title{Function: Soft-Max}
 \usage{
-func_beta(qvalue, explor, params, ...)
+func_beta(qvalue, explor, params, system, ...)
 }
 \arguments{
 \item{qvalue}{The estimated expected value of taking action(a) at trial(t) with bias.}
@@ -13,6 +13,10 @@ func_beta(qvalue, explor, params, ...)
 
 \item{params}{Parameters used by the model’s internal functions,
 see \link[multiRL]{params}}
+
+\item{system}{When the agent makes a decision, is a single system at work, or are multiple 
+systems involved?
+  see \link[multiRL]{system}}
 
 \item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
 the user.}
@@ -54,20 +58,36 @@ A \code{NumericVector} containing the probability of choosing each
   
   beta      <-  multiRL:::get_param(params, "beta")
   lapse     <-  multiRL:::get_param(params, "lapse")
+  weight    <-  get_param(params, "weight")
   
-  n_options <- length(qvalue)
-  prob      <- rep(x = NA_real_, times = n_options)
-  index     <- which(!is.na(qvalue))
+  n_system <- length(qvalue)
+  
+  if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
+  
+  weight <- weight / base::sum(weight)
+  
+  n_options <- length(qvalue[[1]])
+  index     <- which(!is.na(qvalue[[1]]))
   n_shown   <- length(index)
   
-  if (explor == 1) {
-    # Exploration
-    prob[index] <- 1 / n_shown
-  } else {
-    # Exploitation
-    exp_stable <- exp(beta * (qvalue - max(qvalue, na.rm = TRUE)))
-    prob <- exp_stable / sum(exp_stable, na.rm = TRUE)
+  prob_list <- vector("list", length(qvalue))
+  for (i in seq_along(qvalue)) {
+    
+    sub_qvalue <- qvalue[[i]]
+    prob <- rep(NA_real_, n_options)
+    
+    if (explor == 1) {
+      prob[index] <- 1 / n_shown
+    } else {
+      exp_stable <- exp(beta * (sub_qvalue - max(sub_qvalue, na.rm = TRUE)))
+      prob <- exp_stable / sum(exp_stable, na.rm = TRUE)
+    }
+    
+    prob_list[[i]] <- prob
   }
+  
+  prob <- Reduce(f = `+`, x = Map(`*`, prob_list, weight))
+  prob <- as.vector(prob)
   
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse

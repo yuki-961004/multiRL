@@ -28,7 +28,7 @@ multiRL.input <- process_1_input(
   settings = list(
     name = "RSTD",
     mode = "fitting",
-    estimate = "ABC",
+    estimate = "MLE",
     policy = "on"
   )
 )
@@ -51,7 +51,7 @@ multiRL.record <- process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output_cpp(
+multiRL.output <- process_4_output_r(
   record = multiRL.record,
   extra = multiRL.record@extra
 )
@@ -76,6 +76,7 @@ View(multiRL.output@result@prob)
 
 ```{r}
 multiRL.model <- run_m(
+  engine = "Cpp",
   data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   behrule = list(
     cue = c("Red", "Yellow", "Green", "Blue"),
@@ -92,7 +93,8 @@ multiRL.model <- run_m(
     name = "unknown",
     mode = "fitting",
     estimate = "MLE",
-    policy = "on"
+    policy = "on",
+    system = c("RL", "WM")
   ),
   anythingelse = c(1, 2, 3)
 )
@@ -122,16 +124,8 @@ multiRL.model <- multiRL::run_m(
       alphaP = 0.7,
       beta = 0.5
     ),
-    fixed = list(
-      gamma = 1, 
-      delta = 0.1, 
-      epsilon = NA_real_, zeta = 1, eta = NA_real_, 
-      theta = 0
-    ),
     constant = list(
-      Q0 = 100, 
-      lapse = 0.01,
-      bonus = 0
+      Q0 = 100
     )
   ),
   priors = list(
@@ -143,14 +137,23 @@ multiRL.model <- multiRL::run_m(
     name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
-    policy = "off"
+    policy = "off",
+    system = c("RL", "WM")
   ),
-  #engine = "R",
+  engine = "Cpp",
   anythingelse = c(1, 2, 3)
 )
 
 multiRL.summary <- multiRL::summary(multiRL.model)
 ```
+
+Model Fit:
+  Accuracy: 100%
+  Log-Likelihood: -394.07
+  Log-Prior Probability: -0.04
+  Log-Posterior Probability: -394.11
+  AIC: 794.14
+  BIC: 805.8
 
 ```{r}
 binaryRL.res <- binaryRL::run_m(
@@ -193,6 +196,9 @@ multiRL.input <- process_1_input(
       alphaN = 0.3,
       alphaP = 0.7,
       beta = 0.5
+    ),
+    constant = list(
+      weight = c(0.5, 0.5)
     )
   ),
   priors = list(
@@ -204,7 +210,8 @@ multiRL.input <- process_1_input(
     name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
-    policy = "off"
+    policy = "on",
+    system = c("RL", "WM")
   )
 )
 ```
@@ -239,8 +246,10 @@ multiRL.metric <- process_5_metric(
 ```
 
 ```{r}
+View(multiRL.output@result@value$RL)
+View(multiRL.output@result@value$WM)
+
 View(multiRL.output@input@features@action)
-View(multiRL.output@result@value)
 View(multiRL.output@result@reward)
 View(multiRL.output@result@utility)
 View(multiRL.output@result@count)

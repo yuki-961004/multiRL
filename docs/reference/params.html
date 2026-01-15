@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -224,6 +224,19 @@
          unchosen options.</p>
 <p>Note: The default value for this <code>bonus</code> is 0, which assumes
          that no such bonus value change exists.</p></li>
+<li><p><code>weight [NumericVector]</code></p>
+<p>The <code>weight</code> parameter governs the policy integration stage.
+         After each cognitive system (e.g., RL, WM) calculates action
+         probabilities using a soft-max function based on its internal value
+         estimates, the agent combines these suggestions into a single
+         choice probability.</p>
+<p>The default is <code>1</code>, which is equivalent to
+         <code>weight = c(1, 0, ...)</code>. This represents exclusive reliance on
+         the first system (typically the incremental Reinforcement Learning
+         system).</p>
+<p>In a dual-system model (e.g., RL + WM), setting <code>weight = 0.5</code>
+         implies that the agent places equal trust in both the long-term RL
+         rewards and the immediate WM memory.</p></li>
 </ul></div>
 
     </div>
@@ -247,7 +260,8 @@
 <span>     Q0 <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>     lapse <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>     threshold <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>     bonus <span class="op">=</span> <span class="fl">0</span></span>
+<span>     bonus <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>     weight <span class="op">=</span> <span class="fl">1</span></span>
 <span>   <span class="op">)</span></span>
 <span> <span class="op">)</span></span></code></pre></div>
 

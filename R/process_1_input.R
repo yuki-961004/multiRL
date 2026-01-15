@@ -110,7 +110,8 @@ process_1_input <- function(
       reset = NA_real_,
       lapse = 0.01,
       threshold = 1,
-      bonus = 0
+      bonus = 0,
+      weight = 1
     )
   )
   # 如果一个参数在一个地方(free, fixed, constant)设置过, 则在其他地方取消
@@ -132,7 +133,8 @@ process_1_input <- function(
     name = "unknown",
     mode = "fitting",
     estimate = "MLE",
-    policy = "on"
+    policy = "on",
+    system = "RL"
   )
   settings <- utils::modifyList(x = default, val = settings)
   
@@ -299,7 +301,8 @@ process_1_input <- function(
     name = settings$name,
     mode = settings$mode,
     estimate = settings$estimate,
-    policy = settings$policy
+    policy = settings$policy,
+    system = settings$system
   )
   
 ################################### [input] ####################################

@@ -13,6 +13,10 @@
 #' @param params 
 #'  Parameters used by the model’s internal functions,
 #'    see \link[multiRL]{params}
+#' @param system
+#'  When the agent makes a decision, is a single system at work, or are multiple 
+#'  systems involved?
+#'    see \link[multiRL]{system} 
 #' @param ... 
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
@@ -53,6 +57,7 @@ func_zeta <- function(
     values,
     reward,
     params,
+    system,
     ...
 ){
   # if you need extra information
