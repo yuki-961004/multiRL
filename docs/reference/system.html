@@ -95,10 +95,33 @@
           action-value representations through prediction errors.
           It is robust but slow to adapt to sudden changes.</p></li>
 <li><p>Working Memory: A rapid-acquisition system that allows for
-          near-instantaneous updating of stimulus-response associations
-         . However, its contribution is strictly constrained by
+          near-instantaneous updating of stimulus-response associations.
+          However, its contribution is strictly constrained by
           limited storage capacity and is highly susceptible to decay
           over time or interference from intervening trials.</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
+
+
+<ul><li><p><code>system = "RL"</code>:
+         A single-system model based on incremental Reinforcement Learning
+         (RL). The agent updates option values using a learning
+         rate (alpha) typically less than 1, representing a slow,
+         integrative process linked to corticostriatal circuitry.</p></li>
+<li><p><code>system = "WM"</code>:
+         A single-system model representing Working Memory (WM).
+         Unlike RL, this system has the capacity to instantly update values
+         with a fixed learning rate of 1, effectively "remembering" the
+         most recent outcome for each stimulus.</p></li>
+<li><p><code>system = c("RL", "WM")</code>:
+         A hybrid model where RL and WM systems operate in parallel,
+         maintaining two distinct Q-value tables. The final
+         decision is a weighted integration of both systems' choice
+         probabilities. The contribution of WM is constrained
+         by its <code>capacity</code>; if the stimulus set size exceeds
+         <code>capacity</code>, the agent's reliance shifts toward the RL
+         system as the WM reliability diminishes.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

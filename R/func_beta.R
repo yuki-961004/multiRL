@@ -51,12 +51,12 @@
 #'   beta      <-  multiRL:::get_param(params, "beta")
 #'   lapse     <-  multiRL:::get_param(params, "lapse")
 #'   weight    <-  get_param(params, "weight")
+#'   capacity  <-  get_param(params, "capacity")
 #'   
 #'   n_system <- length(qvalue)
 #'   
 #'   if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
-#'   
-#'   weight <- weight / base::sum(weight)
+#'   weight <- weight / sum(weight)
 #'   
 #'   n_options <- length(qvalue[[1]])
 #'   index     <- which(!is.na(qvalue[[1]]))
@@ -104,12 +104,12 @@ func_beta <- function(
   beta      <-  get_param(params, "beta")
   lapse     <-  get_param(params, "lapse")
   weight    <-  get_param(params, "weight")
+  capacity  <-  get_param(params, "capacity")
   
   n_system <- length(qvalue)
   
   if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
-  
-  weight <- weight / base::sum(weight)
+  weight <- weight / sum(weight)
   
   n_options <- length(qvalue[[1]])
   index     <- which(!is.na(qvalue[[1]]))

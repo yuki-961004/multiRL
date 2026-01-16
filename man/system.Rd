@@ -26,11 +26,37 @@ Value updating is governed by the strategic interaction of two distinct
           It is robust but slow to adapt to sudden changes.
           
     \item Working Memory: A rapid-acquisition system that allows for 
-          near-instantaneous updating of stimulus-response associations 
-         . However, its contribution is strictly constrained by 
+          near-instantaneous updating of stimulus-response associations. 
+          However, its contribution is strictly constrained by 
           limited storage capacity and is highly susceptible to decay 
           over time or interference from intervening trials.
-  }
+ }
+}
+
+\section{Example}{
+
+\itemize{
+   \item \code{system = "RL"}: 
+         A single-system model based on incremental Reinforcement Learning 
+         (RL). The agent updates option values using a learning 
+         rate (alpha) typically less than 1, representing a slow, 
+         integrative process linked to corticostriatal circuitry.
+        
+   \item \code{system = "WM"}: 
+         A single-system model representing Working Memory (WM). 
+         Unlike RL, this system has the capacity to instantly update values 
+         with a fixed learning rate of 1, effectively "remembering" the 
+         most recent outcome for each stimulus.
+        
+   \item \code{system = c("RL", "WM")}: 
+         A hybrid model where RL and WM systems operate in parallel, 
+         maintaining two distinct Q-value tables. The final 
+         decision is a weighted integration of both systems' choice 
+         probabilities. The contribution of WM is constrained 
+         by its \code{capacity}; if the stimulus set size exceeds 
+         \code{capacity}, the agent's reliance shifts toward the RL 
+         system as the WM reliability diminishes.
+ }
 }
 
 \references{

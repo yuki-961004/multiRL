@@ -34,7 +34,34 @@ library(multiRL)
 ?binaryRL
 ```
 
-## Markov Decision Process  
+### Multiple Choices  
+
+Obviously, this package supports multi-choice tasks. In addition, we do not know what humans treat as the target when they encounter a particular state and update their values, especially when the **cue** and the **response** are not the same. In such cases, the agent typically needs to learn latent rules. 
+
+<p align="center">
+    <img src="./fig/arrow.png" alt="arrow" width="80%" style="display: inline;">
+</p>
+
+```r
+behrule = list(
+  cue = c("Red", "Yellow", "Green", "Blue"),
+  rsp = c("Up", "Down", "Left", "Right")
+)
+```
+
+### Multiple Systems
+
+When humans make decisions, multiple cognitive processing systems may be involved (e.g., RL, WM, ...). Each cognitive system may update its own Q-value representation, and these multiple Q-value estimates are then combined with different weights to influence the final choice.
+
+<p align="center">
+    <img src="./fig/system.png" alt="arrow" width="80%" style="display: inline;">
+</p>
+
+```r
+system = c("RL", "WM", "...")
+```
+
+## Multiple Modules  
 
 <p align="center">
     <img src="./fig/clock.png" alt="RL Intro" width="50%" style="display: inline;">
@@ -93,21 +120,6 @@ $$
 $$
   W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
 $$
-
-### Latent Rules Learning  
-
-Sometimes, you do not know what humans treat as the target when they encounter a particular state and update their values, especially when the **cue** and the **response** are not the same. In such cases, the agent typically needs to learn latent rules.
-
-<p align="center">
-    <img src="./fig/arrow.png" alt="arrow" width="80%" style="display: inline;">
-</p>
-
-```r
-behrule = list(
-  cue = c("Red", "Yellow", "Green", "Blue"),
-  rsp = c("Up", "Down", "Left", "Right")
-)
-```
 
 ## Reference  
 

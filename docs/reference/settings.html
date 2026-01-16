@@ -105,7 +105,17 @@
 <p>In decision-making paradigms, multiple systems may operate jointly
          to influence human decisions. These systems can include a
          reinforcement learning system, as well as working memory, and even
-         habitual choice tendencies.</p></li>
+         habitual choice tendencies.</p>
+<p>If <code>system = "RL"</code>, the learning process follows the
+         Rescorla-Wagner (RW) model using a learning rate less than 1,
+         representing a slow, incremental value update system.</p>
+<p>If <code>system = "WM"</code>, the process still follows the RW model
+         but with a fixed learning rate of 1, functioning as a pure memory
+         system that immediately updates an option's value.</p>
+<p>If <code>system = c("RL", "WM")</code>, the agent maintains two distinct
+         Q-tables, one for RL and one for WM, during the decision-making
+         process, integrating their values based on the provided
+         <code>weight</code> to determine the final choice.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>

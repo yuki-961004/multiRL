@@ -111,7 +111,8 @@ process_1_input <- function(
       lapse = 0.01,
       threshold = 1,
       bonus = 0,
-      weight = 1
+      weight = 1,
+      capacity = 0
     )
   )
   # 如果一个参数在一个地方(free, fixed, constant)设置过, 则在其他地方取消

@@ -237,6 +237,17 @@
 <p>In a dual-system model (e.g., RL + WM), setting <code>weight = 0.5</code>
          implies that the agent places equal trust in both the long-term RL
          rewards and the immediate WM memory.</p></li>
+<li><p><code>capacity [double]</code></p>
+<p>This parameter represents the maximum number of stimulus-action
+         associations an individual can actively maintain in working memory
+         \(weight = weight_{0} * min(1, (capacity / ns))\).</p>
+<p>This parameter determines the extent to which working memory (WM)
+         Q-values are prioritized during decision-making. When the stimulus
+         set size (<code>ns</code>) is within the capacity (<code>capacity</code>),
+         the model fully relies on the WM system, resulting in a WM weight
+         of 1. However, if <code>ns</code> exceeds <code>capacity</code>, the
+         decision-making process partially integrates Q-values from the
+         Reinforcement Learning (RL) system.</p></li>
 </ul></div>
 
     </div>

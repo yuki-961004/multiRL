@@ -54,6 +54,19 @@
 #'          to influence human decisions. These systems can include a 
 #'          reinforcement learning system, as well as working memory, and even 
 #'          habitual choice tendencies.
+#'          
+#'          If \code{system = "RL"}, the learning process follows the 
+#'          Rescorla-Wagner (RW) model using a learning rate less than 1, 
+#'          representing a slow, incremental value update system. 
+#'          
+#'          If \code{system = "WM"}, the process still follows the RW model 
+#'          but with a fixed learning rate of 1, functioning as a pure memory 
+#'          system that immediately updates an option's value. 
+#'          
+#'          If \code{system = c("RL", "WM")}, the agent maintains two distinct 
+#'          Q-tables, one for RL and one for WM, during the decision-making 
+#'          process, integrating their values based on the provided 
+#'          \code{weight} to determine the final choice.
 #' }
 #' 
 #' @section Example: 
