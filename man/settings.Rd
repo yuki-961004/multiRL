@@ -31,8 +31,10 @@ The \code{settings} argument is responsible for defining the model's name,
          
    \item \code{estimate [Character]} 
    
-         The package supports four estimation methods: MLE, MAP, ABC, and 
-         RNN. Generally, users no longer need to specify the estimation 
+         The package supports four estimation methods: Maximum Likelihood 
+         Estimation (MLE), Maximum A Posteriori Estimation (MAP), Approximate 
+         Bayesian Computation (ABC), and Recurrent Neural Network (RNN). 
+         Generally, users no longer need to specify the estimation 
          method in the settings object. This slot has been moved to an 
          argument within the main functions, \code{rcv_d} and \code{fit_p}. 
          For details, please refer to the documentation for 
@@ -64,14 +66,16 @@ The \code{settings} argument is responsible for defining the model's name,
          Rescorla-Wagner (RW) model using a learning rate less than 1, 
          representing a slow, incremental value update system. 
          
-         If \code{system = "WM"}, the process still follows the RW model 
-         but with a fixed learning rate of 1, functioning as a pure memory 
-         system that immediately updates an option's value. 
+         If \code{system = "WM"}, the process still follows the 
+         Rescorla-Wagner (RW) model but with a fixed learning rate of 1, 
+         functioning as a pure memory system that immediately updates an 
+         option's value. 
          
          If \code{system = c("RL", "WM")}, the agent maintains two distinct 
-         Q-tables, one for RL and one for WM, during the decision-making 
-         process, integrating their values based on the provided 
-         \code{weight} to determine the final choice.
+         Q-tables, one for reinforcement learning (RL) and one for working 
+         memory (WM), during the decision-making process, integrating their 
+         values based on the provided \code{weight} to determine the final 
+         choice.
 }
 }
 
@@ -82,7 +86,8 @@ The \code{settings} argument is responsible for defining the model's name,
    name = "TD",
    mode = "fitting",
    estimate = "MLE",
-   policy = "off"
+   policy = "off",
+   system = "RL"
  )
 }
 }

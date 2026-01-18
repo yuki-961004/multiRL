@@ -1,4 +1,4 @@
-#' @title TD Model
+#' @title Temporal Differences Model
 #' @description
 #' 
 #'  Learning Rate: \eqn{\alpha}
@@ -23,7 +23,7 @@
 #' @return Depending on the \code{mode} and \code{estimate} defined in the 
 #'    runtime environment, the corresponding outputs for different estimation 
 #'    methods are produced, such as a single log-likelihood value or summary 
-#'    statistics used for ABC.
+#'    statistics.
 #' 
 #' @section Body: 
 #' \preformatted{TD <- function(params){

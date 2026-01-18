@@ -38,7 +38,8 @@ see \link[multiRL]{priors}}
 \item{settings}{Other model settings, 
 see \link[multiRL]{settings}}
 
-\item{engine}{Specifies whether the core MDP update loop is executed in C++ or in R.}
+\item{engine}{Specifies whether the core Markov Decision Process (MDP) update loop is 
+executed in C++ or in R.}
 
 \item{...}{Additional arguments passed to internal functions.}
 }

@@ -23,7 +23,8 @@
 #'  Other model settings, 
 #'    see \link[multiRL]{settings}
 #' @param engine 
-#'  Specifies whether the core MDP update loop is executed in C++ or in R.
+#'  Specifies whether the core Markov Decision Process (MDP) update loop is 
+#'    executed in C++ or in R.
 #' @param ... 
 #'  Additional arguments passed to internal functions.
 #'  

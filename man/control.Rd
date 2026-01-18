@@ -89,23 +89,23 @@ The \code{control} argument is a mandatory list used to customize and manage
 \itemize{
    \item \code{diff [double]} 
    
-         In the EM-MAP algorithm, after estimating the optimal parameters 
-         for all subjects in each iteration, the posterior distribution of 
-         each free parameter is calculated, followed by continuous 
-         refinement of the prior distribution. The process stops when the 
-         change in the log-posterior value is less than the \code{diff}, 
-         which defaults to 0.001.
+         In the Expectation–Maximization with Maximum A Posteriori algorithm, 
+         after estimating the optimal parameters for all subjects in each 
+         iteration, the posterior distribution of each free parameter is 
+         calculated, followed by continuous refinement of the prior 
+         distribution. The process stops when the change in the log-posterior 
+         value is less than the \code{diff}, which defaults to 0.001.
          
    \item \code{patience [int]} 
    
-         Given that the EM-MAP process can be time-consuming and often 
-         encounters non-convergence issues—for instance, when the 
-         log-posterior oscillates around a certain value—the patience 
-         parameter is used to manage early termination.Specifically, 
-         patience is incremented by 1 when the current result is better than 
-         the best previous result, and decremented by 1 when it is worse. 
-         The iteration is prematurely terminated when the patience count 
-         reaches zero.
+         Given that the Expectation–Maximization with Maximum A Posteriori 
+         (EM-MAP) process can be time-consuming and often encounters 
+         non-convergence issues—for instance, when the log-posterior 
+         oscillates around a certain value—the patience parameter is used to 
+         manage early termination.Specifically, patience is incremented by 
+         1 when the current result is better than the best previous result, 
+         and decremented by 1 when it is worse. The iteration is prematurely 
+         terminated when the patience count reaches zero.
          
 }
 }
@@ -122,13 +122,15 @@ The \code{control} argument is a mandatory list used to customize and manage
    \item \code{train [int]} 
    
          This parameter is used to specify the quantity of simulated data 
-         utilized when training the ABC or RNN models.
+         utilized when training the Approximate Bayesian Computation (ABC) or 
+         Recurrent Neural Network (RNN) models.
          
    \item \code{scope [Character]} 
    
          This parameter can be defined as individual or shared. The former 
          indicates that a separate ABC or RNN model is trained for each 
-         dataset, while the latter means that only one ABC or RNN model is 
+         dataset, while the latter means that only one Approximate Bayesian 
+         Computation (ABC) or Recurrent Neural Network (RNN) model is 
          trained and shared across all datasets. In the context of the 
          \code{rcv_d} function, the default setting is \code{"shared"}, 
          whereas in \code{fit_p}, the default is \code{"individual"}.
@@ -138,7 +140,8 @@ The \code{control} argument is a mandatory list used to customize and manage
          When performing parameter recovery using Simulation-Based Inference 
          (SBI) estimation methods, two sets of simulated data are involved: 
          one used to generate the data for recovery, and another used to 
-         train the ABC or RNN models. To guarantee the independence of these 
+         train the Approximate Bayesian Computation (ABC) or Recurrent 
+         Neural Network (RNN) models. To guarantee the independence of these 
          two datasets, the seed for generating the training data is 
          automatically multiplied by 2.
          
@@ -162,11 +165,11 @@ The \code{control} argument is a mandatory list used to customize and manage
          
    \item \code{tol [double]} 
    
-         This parameter, aka tolerance, controls how strict the ABC 
-         algorithm is when selecting good simulated data. It sets the 
-         acceptance rate. For example, setting \code{tol = 0.1} 
-         (the default) means only the 10 percent of simulated data that is 
-         closest to your actual data is used. 
+         This parameter, aka tolerance, controls how strict the Approximate 
+         Bayesian Computation (ABC) algorithm is when selecting good 
+         simulated data. It sets the acceptance rate. For example, setting 
+         \code{tol = 0.1} (the default) means only the 10 percent of 
+         simulated data that is closest to your actual data is used. 
          
 }
 }
@@ -176,14 +179,14 @@ The \code{control} argument is a mandatory list used to customize and manage
 \itemize{
    \item \code{info [CharacterVector]} 
    
-         The RNN needs to find the mapping relationship between the dataset 
-         and the free parameters. To minimize the time required for this 
-         process, we should only include useful information in the input 
-         dataset. The \code{info} parameter accepts a character vector which 
-         represents the amount of information (i.e., the specific columns) 
-         you deem necessary for training the RNN model. By default, only the 
-         \code{colnames$object} and \code{colnames$action} columns are 
-         included as input.
+         The Recurrent Neural Network (RNN) needs to find the mapping 
+         relationship between the dataset and the free parameters. To 
+         minimize the time required for this process, we should only include 
+         useful information in the input dataset. The \code{info} parameter 
+         accepts a character vector which represents the amount of 
+         information (i.e., the specific columns) you deem necessary for 
+         training the RNN model. By default, only the \code{colnames$object} 
+         and \code{colnames$action} columns are included as input.
          
    \item \code{layer [Character]} 
    

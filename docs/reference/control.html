@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,21 +136,21 @@
 
 
 <ul><li><p><code>diff [double]</code></p>
-<p>In the EM-MAP algorithm, after estimating the optimal parameters
-         for all subjects in each iteration, the posterior distribution of
-         each free parameter is calculated, followed by continuous
-         refinement of the prior distribution. The process stops when the
-         change in the log-posterior value is less than the <code>diff</code>,
-         which defaults to 0.001.</p></li>
+<p>In the Expectation–Maximization with Maximum A Posteriori algorithm,
+         after estimating the optimal parameters for all subjects in each
+         iteration, the posterior distribution of each free parameter is
+         calculated, followed by continuous refinement of the prior
+         distribution. The process stops when the change in the log-posterior
+         value is less than the <code>diff</code>, which defaults to 0.001.</p></li>
 <li><p><code>patience [int]</code></p>
-<p>Given that the EM-MAP process can be time-consuming and often
-         encounters non-convergence issues—for instance, when the
-         log-posterior oscillates around a certain value—the patience
-         parameter is used to manage early termination.Specifically,
-         patience is incremented by 1 when the current result is better than
-         the best previous result, and decremented by 1 when it is worse.
-         The iteration is prematurely terminated when the patience count
-         reaches zero.</p></li>
+<p>Given that the Expectation–Maximization with Maximum A Posteriori
+         (EM-MAP) process can be time-consuming and often encounters
+         non-convergence issues—for instance, when the log-posterior
+         oscillates around a certain value—the patience parameter is used to
+         manage early termination.Specifically, patience is incremented by
+         1 when the current result is better than the best previous result,
+         and decremented by 1 when it is worse. The iteration is prematurely
+         terminated when the patience count reaches zero.</p></li>
 </ul></div>
 
     </div>
@@ -163,11 +163,13 @@
          during the parameter recovery process.</p></li>
 <li><p><code>train [int]</code></p>
 <p>This parameter is used to specify the quantity of simulated data
-         utilized when training the ABC or RNN models.</p></li>
+         utilized when training the Approximate Bayesian Computation (ABC) or
+         Recurrent Neural Network (RNN) models.</p></li>
 <li><p><code>scope [Character]</code></p>
 <p>This parameter can be defined as individual or shared. The former
          indicates that a separate ABC or RNN model is trained for each
-         dataset, while the latter means that only one ABC or RNN model is
+         dataset, while the latter means that only one Approximate Bayesian
+         Computation (ABC) or Recurrent Neural Network (RNN) model is
          trained and shared across all datasets. In the context of the
          <code>rcv_d</code> function, the default setting is <code>"shared"</code>,
          whereas in <code>fit_p</code>, the default is <code>"individual"</code>.</p></li>
@@ -175,7 +177,8 @@
 <p>When performing parameter recovery using Simulation-Based Inference
          (SBI) estimation methods, two sets of simulated data are involved:
          one used to generate the data for recovery, and another used to
-         train the ABC or RNN models. To guarantee the independence of these
+         train the Approximate Bayesian Computation (ABC) or Recurrent
+         Neural Network (RNN) models. To guarantee the independence of these
          two datasets, the seed for generating the training data is
          automatically multiplied by 2.</p></li>
 <li><p><code>core [int]</code></p>
@@ -194,11 +197,11 @@
 
 
 <ul><li><p><code>tol [double]</code></p>
-<p>This parameter, aka tolerance, controls how strict the ABC
-         algorithm is when selecting good simulated data. It sets the
-         acceptance rate. For example, setting <code>tol = 0.1</code>
-         (the default) means only the 10 percent of simulated data that is
-         closest to your actual data is used.</p></li>
+<p>This parameter, aka tolerance, controls how strict the Approximate
+         Bayesian Computation (ABC) algorithm is when selecting good
+         simulated data. It sets the acceptance rate. For example, setting
+         <code>tol = 0.1</code> (the default) means only the 10 percent of
+         simulated data that is closest to your actual data is used.</p></li>
 </ul></div>
 
 <div class="section">
@@ -206,14 +209,14 @@
 
 
 <ul><li><p><code>info [CharacterVector]</code></p>
-<p>The RNN needs to find the mapping relationship between the dataset
-         and the free parameters. To minimize the time required for this
-         process, we should only include useful information in the input
-         dataset. The <code>info</code> parameter accepts a character vector which
-         represents the amount of information (i.e., the specific columns)
-         you deem necessary for training the RNN model. By default, only the
-         <code>colnames$object</code> and <code>colnames$action</code> columns are
-         included as input.</p></li>
+<p>The Recurrent Neural Network (RNN) needs to find the mapping
+         relationship between the dataset and the free parameters. To
+         minimize the time required for this process, we should only include
+         useful information in the input dataset. The <code>info</code> parameter
+         accepts a character vector which represents the amount of
+         information (i.e., the specific columns) you deem necessary for
+         training the RNN model. By default, only the <code>colnames$object</code>
+         and <code>colnames$action</code> columns are included as input.</p></li>
 <li><p><code>layer [Character]</code></p>
 <p>Recurrent Neural Networks (RNNs) are neural networks where the
          sequence order is meaningful. Currently, the package supports two

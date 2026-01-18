@@ -186,7 +186,8 @@ reticulate::use_condaenv(condaenv = "tf-gpu", required = TRUE)
 
 ```{r}
 result.RNN <- multiRL::estimate_2_RNN(
-  data = simulated_data[[i]],
+  data = multiRL::TAB,
+  ids = 1:10,
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")

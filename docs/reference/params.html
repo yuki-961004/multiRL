@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -169,19 +169,27 @@
 <div class="section">
 <h3 id="constant">constant<a class="anchor" aria-label="anchor" href="#constant"></a></h3>
 
-<ul><li><p><code>Q0 [double]</code></p>
+<ul><li><p><code>seed [Integer]</code>
+         This seed controls the random choice of actions in the
+         reinforcement learning model when the <code><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample()</a></code> function is
+         called to select actions based on probabilities estimated by the
+         softmax. It is not the seed used by the algorithm package when
+         searching for optimal input parameters. In most cases, there is no
+         need to modify this value; please keep it at the default value of
+         <code>123</code>.</p></li>
+<li><p><code>Q0 [double]</code></p>
 <p>This parameter represents the initial value assigned to each action
-         at the start of the MDP. As argued by Sutton and Barto (2018),
-         initial values are often set to be optimistic (i.e., higher than
-         all possible rewards) to encourage exploration. Conversely, an
-         overly low initial value might lead the agent to cease exploring
-         other options after receiving the first reward, resulting in
-         repeated selection of the initially chosen action.</p>
+         at the start of the Markov Decision Process. As argued by Sutton
+         and Barto (2018), initial values are often set to be optimistic
+         (i.e., higher than all possible rewards) to encourage exploration.
+         Conversely, an overly low initial value might lead the agent to
+         cease exploring other options after receiving the first reward,
+         resulting in repeated selection of the initially chosen action.</p>
 <p>The default value is set to <code>NA</code>, which implies that the agent
          will use the first observed reward as the initial value for that
-         action. When combined with UCB, this setting ensures that every
-         option is selected at least once, and their first rewards are
-         immediately memorized.</p>
+         action. When combined with Upper Confidence Bound, this setting
+         ensures that every option is selected at least once, and their
+         first rewards are immediately memorized.</p>
 <p>Note: This is what I consider the reasonable setting. If you
          think this interpretation unsuitable, you may explicitly set
          <code>Q0</code> to 0 or another optimistic initial value instead.</p></li>
@@ -226,10 +234,10 @@
          that no such bonus value change exists.</p></li>
 <li><p><code>weight [NumericVector]</code></p>
 <p>The <code>weight</code> parameter governs the policy integration stage.
-         After each cognitive system (e.g., RL, WM) calculates action
-         probabilities using a soft-max function based on its internal value
-         estimates, the agent combines these suggestions into a single
-         choice probability.</p>
+         After each cognitive system (e.g., reinforcement learning (RL) and
+         working memory (WM)) calculates action probabilities using a soft-max
+         function based on its internal value estimates, the agent combines
+         these suggestions into a single choice probability.</p>
 <p>The default is <code>1</code>, which is equivalent to
          <code>weight = c(1, 0, ...)</code>. This represents exclusive reliance on
          the first system (typically the incremental Reinforcement Learning
@@ -244,10 +252,10 @@
 <p>This parameter determines the extent to which working memory (WM)
          Q-values are prioritized during decision-making. When the stimulus
          set size (<code>ns</code>) is within the capacity (<code>capacity</code>),
-         the model fully relies on the WM system, resulting in a WM weight
-         of 1. However, if <code>ns</code> exceeds <code>capacity</code>, the
-         decision-making process partially integrates Q-values from the
-         Reinforcement Learning (RL) system.</p></li>
+         the model fully relies on the working memory system, resulting in a
+         working memory weight of 1. However, if <code>ns</code> exceeds
+         <code>capacity</code>, the decision-making process partially integrates
+         Q-values from the reinforcement learning (RL) system.</p></li>
 </ul></div>
 
     </div>
@@ -272,7 +280,8 @@
 <span>     lapse <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>     threshold <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>     bonus <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>     weight <span class="op">=</span> <span class="fl">1</span></span>
+<span>     weight <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>     capacity <span class="op">=</span> <span class="fl">0</span></span>
 <span>   <span class="op">)</span></span>
 <span> <span class="op">)</span></span></code></pre></div>
 

@@ -106,6 +106,7 @@ process_1_input <- function(
       zeta = 0
     ),
     constant = list(
+      seed = 123,
       Q0 = NA_real_, 
       reset = NA_real_,
       lapse = 0.01,

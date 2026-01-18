@@ -39,16 +39,18 @@
 #' 
 #' \subsection{1.2 Maximum A Posteriori (MAP)}{
 #' 
-#'  MAP is an extension of MLE. In addition to optimizing parameters for each 
-#'    individual subject based on the likelihood, MAP incorporates information 
+#'  Maximum A Posteriori (MAP) is an extension of Maximum Likelihood Estimation 
+#'    (MLE) In addition to optimizing parameters for each individual subject 
+#'    based on the likelihood, Maximum A Posteriori incorporates information 
 #'    about the population distribution of the parameters.
 #' 
 #' \enumerate{
-#'    \item Perform an initial MLE to find the best-fitting parameters for each 
-#'          individual subject.
+#'    \item Perform an initial Maximum Likelihood Estimation to find the 
+#'          best-fitting parameters for each individual subject.
 #'    \item Use these best-fitting parameters to estimate the Probability 
 #'          Density Function of the population-level parameter distribution.
-#'          (The EM-MAP framework is inspired by the 
+#'          (The Expectation–Maximization with Maximum A Posteriori estimation 
+#'          (EM-MAP) framework is inspired by the 
 #'          \href{https://github.com/sjgershm/mfit}{\code{sjgershm/mfit}}. 
 #'          However, unlike \code{mfit}, which typically assumes a normal 
 #'          distribution for the posterior. In my opinion, the posterior 
@@ -56,12 +58,12 @@
 #'          example, if the prior follows an exponential distribution, the 
 #'          estimation remains within the exponential family rather than being 
 #'          forced into a normal distribution.)
-#'    \item Perform MLE again for each subject. However, instead of returning 
-#'          the log-likelihood, the returned value is the log-posterior. 
-#'          In other words, this step considers the probability of the 
-#'          best-fitting parameter occurring within its derived population 
-#'          distribution. This penalization helps avoid finding extreme 
-#'          parameter estimates.
+#'    \item Perform Maximum Likelihood Estimation again for each subject. 
+#'          However, instead of returning the log-likelihood, the returned 
+#'          value is the log-posterior. In other words, this step considers 
+#'          the probability of the best-fitting parameter occurring within its 
+#'          derived population distribution. This penalization helps avoid 
+#'          finding extreme parameter estimates.
 #'    \item The above steps are repeated until the log-posterior converges.
 #' }
 #' }
@@ -75,10 +77,10 @@
 #'    
 #' \subsection{2.1 Approximate Bayesian Computation (ABC)}{
 #' 
-#'  The ABC model is trained by finding a mapping between the summary 
-#'    statistics and the free parameters. Once the model is trained, given a 
-#'    new set of summary statistics, the model can instantly determine the 
-#'    corresponding input parameters.
+#'  The Approximate Bayesian Computation (ABC) model is trained by finding a 
+#'    mapping between the summary statistics and the free parameters. Once the 
+#'    model is trained, given a new set of summary statistics, the model can 
+#'    instantly determine the corresponding input parameters.
 #' 
 #' \enumerate{
 #'    \item Generate a large amount of simulated data using randomly sampled 
@@ -87,7 +89,8 @@
 #'          by calculating the proportion of times each action was executed 
 #'          within different blocks.
 #'    \item Establish the mapping between these summary statistics and the 
-#'          input parameters, which constitutes training the ABC model.
+#'          input parameters, which constitutes training the Approximate 
+#'          Bayesian Computation (ABC) model.
 #'    \item Given a new set of summary statistics, the trained model outputs 
 #'          the input parameters most likely to have generated those statistics.
 #' }
@@ -102,13 +105,14 @@
 #' 
 #' 
 #' \itemize{
-#'    \item The RNN component included in \code{multiRL} is merely a shell for 
-#'          TensorFlow. Consequently, users who intend to use 
-#'          \code{estimate = "RNN"} must first install TensorFlow.
+#'    \item The Recurrent Neural Network (RNN) component included in 
+#'          \code{multiRL} is merely a shell for TensorFlow. Consequently, 
+#'          users who intend to use \code{estimate = "RNN"} must first install 
+#'          TensorFlow.
 #' }
 #' 
-#'  The RNN model is trained using only \code{state} and \code{action} data 
-#'    as the raw dataset by default. In other words, the developer assumes that 
+#'  The Recurrent Neural Network (RNN) model is trained using only \code{state} 
+#'    and \code{action} data as the raw dataset by default. In other words, the developer assumes that 
 #'    the only necessary input information for the RNN comprises the 
 #'    trial-by-trial object presentation (the state) and the agent's resultant 
 #'    action. This constraint is adopted because excessive input information 
@@ -124,7 +128,8 @@
 #'    \item The iteration stops when both the training and validation sets 
 #'    converge. If the Mean Squared Error (MSE) of the validation set is high 
 #'    while the MSE of the training set is low, this indicates overfitting, 
-#'    suggesting that the RNN model may lack generalization ability.
+#'    suggesting that the Recurrent Neural Network (RNN) model may lack 
+#'    generalization ability. 
 #'    \item Given a new dataset, the trained model infers the input parameters 
 #'    that are most likely to have generated that dataset.
 #' }

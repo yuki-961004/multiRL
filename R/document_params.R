@@ -110,21 +110,31 @@
 #' 
 #' \subsection{constant}{
 #' \itemize{
+#'    \item \code{seed [Integer]} 
+#'          This seed controls the random choice of actions in the 
+#'          reinforcement learning model when the \code{sample()} function is 
+#'          called to select actions based on probabilities estimated by the 
+#'          softmax. It is not the seed used by the algorithm package when 
+#'          searching for optimal input parameters. In most cases, there is no 
+#'          need to modify this value; please keep it at the default value of 
+#'          \code{123}.
+#'    
+#'    
 #'    \item \code{Q0 [double]} 
 #'    
 #'          This parameter represents the initial value assigned to each action 
-#'          at the start of the MDP. As argued by Sutton and Barto (2018), 
-#'          initial values are often set to be optimistic (i.e., higher than 
-#'          all possible rewards) to encourage exploration. Conversely, an 
-#'          overly low initial value might lead the agent to cease exploring 
-#'          other options after receiving the first reward, resulting in 
-#'          repeated selection of the initially chosen action.
+#'          at the start of the Markov Decision Process. As argued by Sutton 
+#'          and Barto (2018), initial values are often set to be optimistic 
+#'          (i.e., higher than all possible rewards) to encourage exploration. 
+#'          Conversely, an overly low initial value might lead the agent to 
+#'          cease exploring other options after receiving the first reward, 
+#'          resulting in repeated selection of the initially chosen action.
 #'          
 #'          The default value is set to \code{NA}, which implies that the agent 
 #'          will use the first observed reward as the initial value for that 
-#'          action. When combined with UCB, this setting ensures that every 
-#'          option is selected at least once, and their first rewards are 
-#'          immediately memorized.
+#'          action. When combined with Upper Confidence Bound, this setting 
+#'          ensures that every option is selected at least once, and their 
+#'          first rewards are immediately memorized.
 #'          
 #'          Note: This is what I consider the reasonable setting. If you 
 #'          think this interpretation unsuitable, you may explicitly set 
@@ -181,10 +191,10 @@
 #'    \item \code{weight [NumericVector]} 
 #'    
 #'          The \code{weight} parameter governs the policy integration stage. 
-#'          After each cognitive system (e.g., RL, WM) calculates action 
-#'          probabilities using a soft-max function based on its internal value 
-#'          estimates, the agent combines these suggestions into a single 
-#'          choice probability. 
+#'          After each cognitive system (e.g., reinforcement learning (RL) and 
+#'          working memory (WM)) calculates action probabilities using a soft-max 
+#'          function based on its internal value estimates, the agent combines 
+#'          these suggestions into a single choice probability. 
 #'          
 #'          The default is \code{1}, which is equivalent to 
 #'          \code{weight = c(1, 0, ...)}. This represents exclusive reliance on 
@@ -204,10 +214,10 @@
 #'          This parameter determines the extent to which working memory (WM) 
 #'          Q-values are prioritized during decision-making. When the stimulus 
 #'          set size (\code{ns}) is within the capacity (\code{capacity}), 
-#'          the model fully relies on the WM system, resulting in a WM weight 
-#'          of 1. However, if \code{ns} exceeds \code{capacity}, the 
-#'          decision-making process partially integrates Q-values from the 
-#'          Reinforcement Learning (RL) system.
+#'          the model fully relies on the working memory system, resulting in a 
+#'          working memory weight of 1. However, if \code{ns} exceeds 
+#'          \code{capacity}, the decision-making process partially integrates 
+#'          Q-values from the reinforcement learning (RL) system.
 #' }
 #' }
 #' 
@@ -229,7 +239,8 @@
 #'      lapse = 0.01,
 #'      threshold = 1,
 #'      bonus = 0,
-#'      weight = 1
+#'      weight = 1,
+#'      capacity = 0
 #'    )
 #'  )
 #' }

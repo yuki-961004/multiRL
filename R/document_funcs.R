@@ -5,8 +5,9 @@
 #'  The Markov Decision Process (MDP) underlying Reinforcement Learning can be 
 #'    decomposed into six fundamental components. By modifying these six 
 #'    functions, an immense number of distinct RL models can be created. Users 
-#'    only need to grasp the basic MDP process and subsequently tailor these 
-#'    six functions to construct a unique reinforcement learning model.
+#'    only need to grasp the basic Markov Decision Process process and 
+#'    subsequently tailor these six functions to construct a unique 
+#'    reinforcement learning model.
 #' 
 #' @section Class:  
 #' \code{funcs [List]}

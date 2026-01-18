@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_TD.R
 \name{TD}
 \alias{TD}
-\title{TD Model}
+\title{Temporal Differences Model}
 \usage{
 TD(params)
 }
@@ -14,7 +14,7 @@ see \link[multiRL]{params}}
 Depending on the \code{mode} and \code{estimate} defined in the 
    runtime environment, the corresponding outputs for different estimation 
    methods are produced, such as a single log-likelihood value or summary 
-   statistics used for ABC.
+   statistics.
 }
 \description{
 Learning Rate: \eqn{\alpha}

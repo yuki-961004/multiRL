@@ -104,7 +104,7 @@ engine_RNN <- function(
 
   tensorflow::tf$get_logger()$setLevel('ERROR')
   
-  set.seed(123)
+  set.seed(seed)
   
   # Initialize Model (sequential decision making)
   RNN <- keras::keras_model_sequential()

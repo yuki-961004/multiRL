@@ -167,6 +167,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
 /****************************** [initial value] *******************************/
 
+    int seed = get_param(params, "seed");
     double Q0 = get_param(params, "Q0");
     double reset = get_param(params, "reset");
 
@@ -190,7 +191,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
     // 设置随机种子
     Rcpp::Function r_set_seed("set.seed");
-    r_set_seed(123);
+    r_set_seed(seed);
 
     for (int i = 0; i < n_rows; i++) {
 

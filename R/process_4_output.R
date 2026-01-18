@@ -74,6 +74,7 @@ process_4_output_r <- function(
   
 ############################# [initial value] ##################################
   
+  seed        <- get_param(params, "seed")
   Q0          <- get_param(params, "Q0")
   reset       <- get_param(params, "reset")
   
@@ -87,7 +88,7 @@ process_4_output_r <- function(
 
 ############################# [action select] ##################################
   
-  set.seed(123)
+  set.seed(seed)
   
   for (i in 1:n_rows) {
     
