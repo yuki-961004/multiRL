@@ -50,8 +50,8 @@
 #'   
 #'   beta      <-  multiRL:::get_param(params, "beta")
 #'   lapse     <-  multiRL:::get_param(params, "lapse")
-#'   weight    <-  get_param(params, "weight")
-#'   capacity  <-  get_param(params, "capacity")
+#'   weight    <-  multiRL:::get_param(params, "weight")
+#'   capacity  <-  multiRL:::get_param(params, "capacity")
 #'   
 #'   n_system <- length(qvalue)
 #'   

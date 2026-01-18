@@ -55,7 +55,7 @@
 #'          
 #'          If one assumes that multiple cognitive processing systems are 
 #'          involved in the Markov Decision Process, their relative influence 
-#'          can be controlled by assigning weights to each system. 
+#'          can be controlled by assigning \code{weights} to each system. 
 #'          See \link[multiRL]{params} for details.
 #'  }
 #'

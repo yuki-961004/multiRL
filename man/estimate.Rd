@@ -50,7 +50,7 @@ The method used for parameter estimation, including \code{"MLE"}
    about the population distribution of the parameters.
 
 \enumerate{
-   \item Perform an initial Maximum Likelihood Estimation to find the 
+   \item Perform an initial Maximum Likelihood Estimation (MLE) to find the 
          best-fitting parameters for each individual subject.
    \item Use these best-fitting parameters to estimate the Probability 
          Density Function of the population-level parameter distribution.
@@ -63,7 +63,7 @@ The method used for parameter estimation, including \code{"MLE"}
          example, if the prior follows an exponential distribution, the 
          estimation remains within the exponential family rather than being 
          forced into a normal distribution.)
-   \item Perform Maximum Likelihood Estimation again for each subject. 
+   \item Perform Maximum Likelihood Estimation (MLE) again for each subject. 
          However, instead of returning the log-likelihood, the returned 
          value is the log-posterior. In other words, this step considers 
          the probability of the best-fitting parameter occurring within its 
@@ -119,12 +119,13 @@ The method used for parameter estimation, including \code{"MLE"}
 }
 
  The Recurrent Neural Network (RNN) model is trained using only \code{state} 
-   and \code{action} data as the raw dataset by default. In other words, the developer assumes that 
-   the only necessary input information for the RNN comprises the 
-   trial-by-trial object presentation (the state) and the agent's resultant 
-   action. This constraint is adopted because excessive input information 
-   may not only interfere with model training but also lead to unnecessary 
-   time consumption.
+   and \code{action} data as the raw dataset by default. In other words, 
+   the developer assumes that the only necessary input information for the 
+   Recurrent Neural Network (RNN) comprises the trial-by-trial object 
+   presentation (the state) and the agent's resultant action. This 
+   constraint is adopted because excessive input information may not only 
+   interfere with model training but also lead to unnecessary time 
+   consumption.
 
 \enumerate{
    \item The raw simulated data is limited to the state (object information 

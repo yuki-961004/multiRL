@@ -76,6 +76,9 @@ The \code{settings} argument is responsible for defining the model's name,
          memory (WM), during the decision-making process, integrating their 
          values based on the provided \code{weight} to determine the final 
          choice.
+         
+         For details, please refer to the documentation for 
+         \link[multiRL]{system}.
 }
 }
 

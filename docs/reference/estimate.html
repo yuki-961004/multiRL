@@ -111,7 +111,7 @@
    (MLE) In addition to optimizing parameters for each individual subject
    based on the likelihood, Maximum A Posteriori incorporates information
    about the population distribution of the parameters.</p>
-<ol><li><p>Perform an initial Maximum Likelihood Estimation to find the
+<ol><li><p>Perform an initial Maximum Likelihood Estimation (MLE) to find the
          best-fitting parameters for each individual subject.</p></li>
 <li><p>Use these best-fitting parameters to estimate the Probability
          Density Function of the population-level parameter distribution.
@@ -124,7 +124,7 @@
          example, if the prior follows an exponential distribution, the
          estimation remains within the exponential family rather than being
          forced into a normal distribution.)</p></li>
-<li><p>Perform Maximum Likelihood Estimation again for each subject.
+<li><p>Perform Maximum Likelihood Estimation (MLE) again for each subject.
          However, instead of returning the log-likelihood, the returned
          value is the log-posterior. In other words, this step considers
          the probability of the best-fitting parameter occurring within its
@@ -177,12 +177,13 @@
          users who intend to use <code>estimate = "RNN"</code> must first install
          TensorFlow.</p></li>
 </ul><p>The Recurrent Neural Network (RNN) model is trained using only <code>state</code>
-   and <code>action</code> data as the raw dataset by default. In other words, the developer assumes that
-   the only necessary input information for the RNN comprises the
-   trial-by-trial object presentation (the state) and the agent's resultant
-   action. This constraint is adopted because excessive input information
-   may not only interfere with model training but also lead to unnecessary
-   time consumption.</p>
+   and <code>action</code> data as the raw dataset by default. In other words,
+   the developer assumes that the only necessary input information for the
+   Recurrent Neural Network (RNN) comprises the trial-by-trial object
+   presentation (the state) and the agent's resultant action. This
+   constraint is adopted because excessive input information may not only
+   interfere with model training but also lead to unnecessary time
+   consumption.</p>
 <ol><li><p>The raw simulated data is limited to the state (object information
    presented on each trial) and the action chosen by the agent in response
    to that state.</p></li>

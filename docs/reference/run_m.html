@@ -176,10 +176,14 @@ executed in C++ or in R.</p></dd>
 <span class="r-in"><span>      zeta <span class="op">=</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span>,</span></span>
 <span class="r-in"><span>    constant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      seed <span class="op">=</span> <span class="fl">123</span>,</span></span>
 <span class="r-in"><span>      Q0 <span class="op">=</span> <span class="cn">NA_real_</span>, </span></span>
+<span class="r-in"><span>      reset <span class="op">=</span> <span class="cn">NA_real_</span>,</span></span>
 <span class="r-in"><span>      lapse <span class="op">=</span> <span class="fl">0.01</span>,</span></span>
 <span class="r-in"><span>      threshold <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>      bonus <span class="op">=</span> <span class="fl">0</span></span></span>
+<span class="r-in"><span>      bonus <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>      weight <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>      capacity <span class="op">=</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
@@ -190,7 +194,8 @@ executed in C++ or in R.</p></dd>
 <span class="r-in"><span>    name <span class="op">=</span> <span class="st">"TD"</span>,</span></span>
 <span class="r-in"><span>    mode <span class="op">=</span> <span class="st">"fitting"</span>,</span></span>
 <span class="r-in"><span>    estimate <span class="op">=</span> <span class="st">"MLE"</span>,</span></span>
-<span class="r-in"><span>    policy <span class="op">=</span> <span class="st">"off"</span></span></span>
+<span class="r-in"><span>    policy <span class="op">=</span> <span class="st">"off"</span>,</span></span>
+<span class="r-in"><span>    system <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RL"</span>, <span class="st">"WM"</span><span class="op">)</span></span></span>
 <span class="r-in"><span> <span class="op">)</span>,</span></span>
 <span class="r-in"><span> engine <span class="op">=</span> <span class="st">"R"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

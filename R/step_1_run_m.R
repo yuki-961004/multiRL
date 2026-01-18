@@ -78,10 +78,14 @@
 #'       zeta = 0
 #'     ),
 #'     constant = list(
+#'       seed = 123,
 #'       Q0 = NA_real_, 
+#'       reset = NA_real_,
 #'       lapse = 0.01,
 #'       threshold = 1,
-#'       bonus = 0
+#'       bonus = 0,
+#'       weight = 1,
+#'       capacity = 0
 #'     )
 #'   ),
 #'   priors = list(
@@ -92,7 +96,8 @@
 #'     name = "TD",
 #'     mode = "fitting",
 #'     estimate = "MLE",
-#'     policy = "off"
+#'     policy = "off",
+#'     system = c("RL", "WM")
 #'  ),
 #'  engine = "R"
 #' )

@@ -25,15 +25,15 @@
 #'    
 #'          This parameter defines the maximum number of iterations. The 
 #'          iterative process will stop when this value is reached. The default 
-#'          value is 10. It is recommended that you set this value to at least 
-#'          100 for formal fitting procedures.
+#'          value is \code{10}. It is recommended that you set this value to at 
+#'          least \code{100} for formal fitting procedures.
 #'          
 #'    \item \code{pars [NumericVector]} 
 #'    
 #'          Some algorithms require the specification of initial iteration 
 #'          values. If this value is left as the default NA, the iteration will 
 #'          commence with an initial value set to the lower bound of the 
-#'          estimate plus 0.01.
+#'          estimate plus \code{0.01}.
 #'          
 #'    \item \code{dash [Numeric]} 
 #'    
@@ -42,9 +42,9 @@
 #'          small value is added to the lower bound and subtracted from the 
 #'          upper bound. 
 #'          
-#'          For instance, if the input parameter bounds are (0, 1), the actual 
-#'          bounds used for fitting will be [0.00001, 0.99999]. This design 
-#'          prevents the occurrence of Infinite values.
+#'          For instance, if the input parameter bounds are \code{(0, 1)}, 
+#'          the actual bounds used for fitting will be \code{[0.00001, 0.99999]}. 
+#'          This design prevents the occurrence of Infinite values.
 #'          
 #'    \item \code{size [int]} 
 #'    
@@ -52,12 +52,15 @@
 #'          specification of initial population values. For the definition of 
 #'          the population, users may refer to the relevant documentation on 
 #'          evolutionary algorithms. The default value is consistent with the 
-#'          standard default in \code{GA}, which is 50.
+#'          standard default in \code{GA}, which is \code{50}.
 #'          
 #'    \item \code{seed [int]} 
 #'    
 #'          The random seed controls the reproducibility of each iteration. 
-#'          The default value is 123.
+#'          Specifically, it determines how the algorithm package generates 
+#'          “random” input parameters when searching for the optimal parameters. 
+#'          Fixing the seed ensures that the optimal parameters found are the 
+#'          same in every run. The default value is \code{123}.
 #'          
 #'    \item \code{core [int]} 
 #'    
@@ -65,7 +68,7 @@
 #'          independent, this procedure can be accelerated using CPU 
 #'          parallelism. This argument specifies the number of subjects to 
 #'          be fitted simultaneously (the number of parallel threads), 
-#'          with the default set to 1. If the user wishes to speed up the 
+#'          with the default set to \code{1}. If the user wishes to speed up the 
 #'          fitting, they can increase the number of cores appropriately based 
 #'          on their system specifications.
 #' }
@@ -87,7 +90,7 @@
 #'          iteration, the posterior distribution of each free parameter is 
 #'          calculated, followed by continuous refinement of the prior 
 #'          distribution. The process stops when the change in the log-posterior 
-#'          value is less than the \code{diff}, which defaults to 0.001.
+#'          value is less than the \code{diff}, which defaults to \code{0.001}.
 #'          
 #'    \item \code{patience [int]} 
 #'    
@@ -142,7 +145,7 @@
 #'          independent, this procedure can be accelerated using CPU 
 #'          parallelism. This argument specifies the number of subjects to 
 #'          be fitted simultaneously (the number of parallel threads), 
-#'          with the default set to 1. If the user wishes to speed up the 
+#'          with the default set to \code{1}. If the user wishes to speed up the 
 #'          fitting, they can increase the number of cores appropriately based 
 #'          on their system specifications. When \code{estimate = "RNN"}, since 
 #'          model training is typically handled by the GPU, setting 
@@ -176,8 +179,9 @@
 #'          useful information in the input dataset. The \code{info} parameter 
 #'          accepts a character vector which represents the amount of 
 #'          information (i.e., the specific columns) you deem necessary for 
-#'          training the RNN model. By default, only the \code{colnames$object} 
-#'          and \code{colnames$action} columns are included as input.
+#'          training the Recurrent Neural Network (RNN) model. By default, only 
+#'          the \code{colnames$object} and \code{colnames$action} columns are 
+#'          included as input.
 #'          
 #'    \item \code{layer [Character]} 
 #'    
