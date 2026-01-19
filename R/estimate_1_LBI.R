@@ -1,4 +1,16 @@
-#' estimate_1_LBI
+#' @title 
+#' Likelihood-Based Inference (LBI)
+#' @name estimate_1_LBI
+#' @description 
+#'  This function provides a unified interface to multiple algorithm packages, 
+#'    allowing different optimization algorithms to be selected for estimating 
+#'    optimal model parameters. The entire optimization framework is based on 
+#'    the log-likelihood returned by the model (or object function), making 
+#'    this function a collection of likelihood-based inference (LBI) methods. 
+#'    By abstracting over algorithm-specific implementations, the function 
+#'    enables flexible and consistent parameter estimation across different 
+#'    optimization backends.
+#' 
 #'
 #' @param model 
 #'  Reinforcement Learning Model

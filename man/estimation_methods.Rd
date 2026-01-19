@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimation_methods.R
 \name{estimation_methods}
 \alias{estimation_methods}
-\title{estimation_methods}
+\title{Estimate Methods}
 \usage{
 estimation_methods(
   estimate,
@@ -64,5 +64,9 @@ An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-estimation_methods
+This function provides a unified interface for four estimation methods: 
+   Maximum Likelihood Estimation (MLE), Maximum A Posteriori (MAP), 
+   Approximate Bayesian Computation (ABC), and Recurrent Neural Network 
+   (RNN), allowing users to execute different methods simply by setting 
+   \code{estimate = "???"}.
 }

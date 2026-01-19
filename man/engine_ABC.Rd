@@ -2,7 +2,7 @@
 % Please edit documentation in R/engine_ABC.R
 \name{engine_ABC}
 \alias{engine_ABC}
-\title{engine_ABC}
+\title{The Engine of Approximate Bayesian Computation (ABC)}
 \usage{
 engine_ABC(
   data,
@@ -48,5 +48,8 @@ A \code{List} containing a \code{DataFrame} of the parameters used to
    Bayesian Computation (ABC).
 }
 \description{
-engine_ABC
+Because \code{abc::abc()} requires summary statistics together with the 
+   corresponding input parameters, this function converts the generated 
+   simulated data into a standardized collection of summary statistics and 
+   input parameters, facilitating subsequent execution of \code{abc::abc()}.
 }

@@ -2,7 +2,7 @@
 #' @name system
 #' @description 
 #' 
-#'   In a Markov decision process, an agent may not update only a single 
+#'   In a Markov Decision Process, an agent may not update only a single 
 #'    Q-value table. In other words, the process may not be governed by a 
 #'    single cognitive processing system, but rather by a weighted combination 
 #'    of multiple cognitive systems. Specifically, each cognitive processing 
@@ -44,19 +44,20 @@
 #'          most recent outcome for each stimulus.
 #'         
 #'    \item \code{system = c("RL", "WM")}: 
-#'          A hybrid model where RL and WM systems operate in parallel, 
-#'          maintaining two distinct Q-value tables. The final 
-#'          decision is a weighted integration of both systems' choice 
-#'          probabilities. The contribution of WM is constrained 
-#'          by its \code{capacity}; if the stimulus set size exceeds 
-#'          \code{capacity}, the agent's reliance shifts toward the RL 
-#'          system as the WM reliability diminishes.
-#'          See \link[multiRL]{params} for details.
+#'          A hybrid model where Reinforcement Learning (RL) and Working Memory 
+#'          (WM) systems operate in parallel, maintaining two distinct Q-value 
+#'          tables. The final decision is a weighted integration of both 
+#'          systems' choice probabilities. The contribution of Working Memory 
+#'          (WM) is constrained by its \code{capacity}; if the stimulus set 
+#'          size exceeds \code{capacity}, the agent's reliance shifts toward 
+#'          the Reinforcement Learning (RL) system as the Working Memory (WM) 
+#'          reliability diminishes.
+#'          See \code{capacity} in \link[multiRL]{params} for details.
 #'          
 #'          If one assumes that multiple cognitive processing systems are 
 #'          involved in the Markov Decision Process, their relative influence 
 #'          can be controlled by assigning \code{weights} to each system. 
-#'          See \link[multiRL]{params} for details.
+#'          See \code{weight} in \link[multiRL]{params} for details.
 #'  }
 #'
 #' @references 

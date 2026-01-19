@@ -1,4 +1,10 @@
-#' estimate_2_RNN
+#' @title 
+#' Estimation Method: Recurrent Neural Network (RNN)
+#' @name estimate_2_RNN
+#' @description 
+#'  This function takes a large set of simulated data to train an Recurrent 
+#'    Neural Network (RNN) model and then uses the trained model to 
+#'    estimate optimal parameters for the target data.
 #'
 #' @param data 
 #'  A data frame in which each row represents a single trial,

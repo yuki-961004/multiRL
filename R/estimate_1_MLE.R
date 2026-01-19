@@ -1,4 +1,11 @@
-#' estimate_1_MLE
+#' @title 
+#' Estimation Method: Maximum Likelihood Estimation (MLE)
+#' @name estimate_1_MLE
+#' @description 
+#'  This function essentially applies \code{estimate_1_LBI()} to each subject’s 
+#'    data, estimating subject-specific optimal parameters based on maximum 
+#'    likelihood. Because the fitting process for each subject is independent, 
+#'    the procedure can be accelerated using parallel computation.
 #'
 #' @param data 
 #'  A data frame in which each row represents a single trial,

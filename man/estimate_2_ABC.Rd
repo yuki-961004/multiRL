@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_2_ABC.R
 \name{estimate_2_ABC}
 \alias{estimate_2_ABC}
-\title{estimate_2_ABC}
+\title{Estimation Method: Approximate Bayesian Computation (ABC)}
 \usage{
 estimate_2_ABC(
   data,
@@ -56,5 +56,7 @@ An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-estimate_2_ABC
+This function takes a large set of simulated data to train an Approximate 
+   Bayesian Computation (ABC) model and then uses the trained model to 
+   estimate optimal parameters for the target data.
 }

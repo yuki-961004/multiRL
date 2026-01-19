@@ -48,7 +48,7 @@
 #'          
 #'    \item \code{size [int]} 
 #'    
-#'          Some algorithms, such as Genetic Algorithms \code{GA}, require the 
+#'          Some algorithms, such as Genetic Algorithms (\code{GA}), require the 
 #'          specification of initial population values. For the definition of 
 #'          the population, users may refer to the relevant documentation on 
 #'          evolutionary algorithms. The default value is consistent with the 
@@ -85,12 +85,13 @@
 #' \itemize{
 #'    \item \code{diff [double]} 
 #'    
-#'          In the Expectation–Maximization with Maximum A Posteriori algorithm, 
-#'          after estimating the optimal parameters for all subjects in each 
-#'          iteration, the posterior distribution of each free parameter is 
-#'          calculated, followed by continuous refinement of the prior 
-#'          distribution. The process stops when the change in the log-posterior 
-#'          value is less than the \code{diff}, which defaults to \code{0.001}.
+#'          In the Expectation–Maximization with Maximum A Posteriori algorithm 
+#'          (EM-MAP), after estimating the optimal parameters for all subjects 
+#'          in each iteration, the posterior distribution of each free 
+#'          parameter is calculated, followed by continuous refinement of the 
+#'          prior distribution. The process stops when the change in the 
+#'          log-posterior value is less than the \code{diff}, which defaults 
+#'          to \code{0.001}.
 #'          
 #'    \item \code{patience [int]} 
 #'    
@@ -121,13 +122,15 @@
 #'          
 #'    \item \code{scope [Character]} 
 #'    
-#'          This parameter can be defined as individual or shared. The former 
-#'          indicates that a separate ABC or RNN model is trained for each 
-#'          dataset, while the latter means that only one Approximate Bayesian 
+#'          This parameter can be defined as \code{individual} or \code{shared}. 
+#'          The former indicates that a separate Approximate Bayesian 
 #'          Computation (ABC) or Recurrent Neural Network (RNN) model is 
-#'          trained and shared across all datasets. In the context of the 
-#'          \code{rcv_d} function, the default setting is \code{"shared"}, 
-#'          whereas in \code{fit_p}, the default is \code{"individual"}.
+#'          trained for each dataset, while the latter means that only one 
+#'          Approximate Bayesian Computation (ABC) or Recurrent Neural Network 
+#'          (RNN) model is trained and shared across all datasets. In the 
+#'          context of the \code{rcv_d} function, the default setting is 
+#'          \code{"shared"}, whereas in \code{fit_p}, the default is 
+#'          \code{"individual"}. 
 #'          
 #'    \item \code{seed [int]} 
 #'    

@@ -1,4 +1,14 @@
-#' estimate_2_SBI
+#' @title 
+#' Simulated-Based Inference (SBI)
+#' @name estimate_2_SBI
+#' @description 
+#'  Since both Approximate Bayesian Computation (ABC) and Recurrent Neural 
+#'    Network (RNN) are simulation-based inference methods, they require a 
+#'    model built from a large amount of simulated data before running. This 
+#'    model is then used to predict the most likely input parameters 
+#'    corresponding to the real data. Therefore, this function generates random 
+#'    input parameters using user-specified distributions and produces 
+#'    simulated data based on these parameters.
 #'
 #' @param model 
 #'  Reinforcement Learning Model

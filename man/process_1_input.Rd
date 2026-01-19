@@ -67,19 +67,19 @@ An S4 object of class \code{multiRL.input}.
       storing global settings for model estimation.
     }
     \item{\code{elements}}{
-      A \code{Integer} indicating the number of elements within states.
+      A \code{int} indicating the number of elements within states.
     }
     \item{\code{subid}}{
       A \code{Character} string identifying the subject.
     }
     \item{\code{n_block}}{
-      A \code{Integer} value indicating the number of blocks.
+      A \code{int} value indicating the number of blocks.
     }
     \item{\code{n_trial}}{
-      A \code{Integer} value indicating the number of trials.
+      A \code{int} value indicating the number of trials.
     }
     \item{\code{n_rows}}{
-      A \code{Integer} value indicating the number of rows in the data.
+      A \code{int} value indicating the number of rows in the data.
     }
     \item{\code{extra}}{
       A \code{List} containing additional user-defined information.

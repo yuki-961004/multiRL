@@ -6,10 +6,10 @@
 \description{
 The Markov Decision Process (MDP) underlying Reinforcement Learning can be 
    decomposed into six fundamental components. By modifying these six 
-   functions, an immense number of distinct RL models can be created. Users 
-   only need to grasp the basic Markov Decision Process process and 
-   subsequently tailor these six functions to construct a unique 
-   reinforcement learning model.
+   functions, an immense number of distinct Reinforcement Learning models 
+   can be created. Users only need to grasp the basic Markov Decision 
+   Process process and subsequently tailor these six functions to construct 
+   a unique reinforcement learning model.
 }
 \section{Class}{
   
@@ -198,15 +198,15 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
 \preformatted{ # inner functions
  funcs = list(
    # Learning Rate
-   rate_func = multiRL::func_alpha
+   rate_func = multiRL::func_alpha,
    # Inverse Temperature
-   prob_func = multiRL::func_beta
+   prob_func = multiRL::func_beta,
    # Utility Function (Stevens' Power Law)
-   util_func = multiRL::func_gamma
+   util_func = multiRL::func_gamma,
    # Upper-Confidence-Bound
-   bias_func = multiRL::func_delta
+   bias_func = multiRL::func_delta,
    # Epsilon-First, Greedy, Decreasing
-   expl_func = multiRL::func_epsilon
+   expl_func = multiRL::func_epsilon,
    # Working Memory System
    dcay_func = multiRL::func_zeta
  )

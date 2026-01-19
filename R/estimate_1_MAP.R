@@ -1,4 +1,15 @@
-#' estimate_1_MAP
+#' @title 
+#' Estimation Method: Maximum A Posteriori (MAP)
+#' @name estimate_1_MAP
+#' @description 
+#'  This function first performs a maximum likelihood estimation (MLE) to 
+#'    obtain the best-fitting parameters for all subjects based on maximum 
+#'    likelihood. It then computes the likelihood-based posterior using 
+#'    user-specified prior distributions. Based on the current group-level 
+#'    data, the prior distributions are subsequently updated. This procedure 
+#'    is iteratively repeated until the likelihood-based posterior converges. 
+#'    The entire process is referred to as Expectation–Maximization with 
+#'    Maximum A Posteriori estimation(EM-MAP).
 #'
 #' @param data 
 #'  A data frame in which each row represents a single trial,

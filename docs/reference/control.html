@@ -108,7 +108,7 @@
          the actual bounds used for fitting will be <code>[0.00001, 0.99999]</code>.
          This design prevents the occurrence of Infinite values.</p></li>
 <li><p><code>size [int]</code></p>
-<p>Some algorithms, such as Genetic Algorithms <code>GA</code>, require the
+<p>Some algorithms, such as Genetic Algorithms (<code>GA</code>), require the
          specification of initial population values. For the definition of
          the population, users may refer to the relevant documentation on
          evolutionary algorithms. The default value is consistent with the
@@ -139,12 +139,13 @@
 
 
 <ul><li><p><code>diff [double]</code></p>
-<p>In the Expectation–Maximization with Maximum A Posteriori algorithm,
-         after estimating the optimal parameters for all subjects in each
-         iteration, the posterior distribution of each free parameter is
-         calculated, followed by continuous refinement of the prior
-         distribution. The process stops when the change in the log-posterior
-         value is less than the <code>diff</code>, which defaults to <code>0.001</code>.</p></li>
+<p>In the Expectation–Maximization with Maximum A Posteriori algorithm
+         (EM-MAP), after estimating the optimal parameters for all subjects
+         in each iteration, the posterior distribution of each free
+         parameter is calculated, followed by continuous refinement of the
+         prior distribution. The process stops when the change in the
+         log-posterior value is less than the <code>diff</code>, which defaults
+         to <code>0.001</code>.</p></li>
 <li><p><code>patience [int]</code></p>
 <p>Given that the Expectation–Maximization with Maximum A Posteriori
          (EM-MAP) process can be time-consuming and often encounters
@@ -169,13 +170,15 @@
          utilized when training the Approximate Bayesian Computation (ABC) or
          Recurrent Neural Network (RNN) models.</p></li>
 <li><p><code>scope [Character]</code></p>
-<p>This parameter can be defined as individual or shared. The former
-         indicates that a separate ABC or RNN model is trained for each
-         dataset, while the latter means that only one Approximate Bayesian
+<p>This parameter can be defined as <code>individual</code> or <code>shared</code>.
+         The former indicates that a separate Approximate Bayesian
          Computation (ABC) or Recurrent Neural Network (RNN) model is
-         trained and shared across all datasets. In the context of the
-         <code>rcv_d</code> function, the default setting is <code>"shared"</code>,
-         whereas in <code>fit_p</code>, the default is <code>"individual"</code>.</p></li>
+         trained for each dataset, while the latter means that only one
+         Approximate Bayesian Computation (ABC) or Recurrent Neural Network
+         (RNN) model is trained and shared across all datasets. In the
+         context of the <code>rcv_d</code> function, the default setting is
+         <code>"shared"</code>, whereas in <code>fit_p</code>, the default is
+         <code>"individual"</code>.</p></li>
 <li><p><code>seed [int]</code></p>
 <p>When performing parameter recovery using Simulation-Based Inference
          (SBI) estimation methods, two sets of simulated data are involved:

@@ -40,7 +40,7 @@
 #'  Subject ID, Block ID, Trial ID, and any additional information defined by 
 #'    the user.
 #'    
-#' @return An \code{Integer}, either 0 or 1, indicating exploration or 
+#' @return An \code{int}, either 0 or 1, indicating exploration or 
 #'    exploitation on the current trial.
 #'    
 #' @section Body: 

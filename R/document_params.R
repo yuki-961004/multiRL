@@ -110,7 +110,7 @@
 #' 
 #' \subsection{constant}{
 #' \itemize{
-#'    \item \code{seed [Integer]} 
+#'    \item \code{seed [int]} 
 #'          This seed controls the random choice of actions in the 
 #'          reinforcement learning model when the \code{sample()} function is 
 #'          called to select actions based on probabilities estimated by the 
@@ -123,8 +123,10 @@
 #'    \item \code{Q0 [double]} 
 #'    
 #'          This parameter represents the initial value assigned to each action 
-#'          at the start of the Markov Decision Process. As argued by Sutton 
-#'          and Barto (2018), initial values are often set to be optimistic 
+#'          at the start of the Markov Decision Process. As argued by 
+#'          Sutton and Barto 
+#'          (\href{http://incompleteideas.net/book/the-book-2nd.html}{2018}), 
+#'          initial values are often set to be optimistic 
 #'          (i.e., higher than all possible rewards) to encourage exploration. 
 #'          Conversely, an overly low initial value might lead the agent to 
 #'          cease exploring other options after receiving the first reward, 
@@ -197,7 +199,7 @@
 #'          these suggestions into a single choice probability. 
 #'          
 #'          The default is \code{1}, which is equivalent to 
-#'          \code{weight = c(1, 0, ...)}. This represents exclusive reliance on 
+#'          \code{weight = c(1, 0)}. This represents exclusive reliance on 
 #'          the first system (typically the incremental Reinforcement Learning 
 #'          system).
 #'          

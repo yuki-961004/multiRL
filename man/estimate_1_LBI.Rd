@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_1_LBI.R
 \name{estimate_1_LBI}
 \alias{estimate_1_LBI}
-\title{estimate_1_LBI}
+\title{Likelihood-Based Inference (LBI)}
 \usage{
 estimate_1_LBI(model, env, algorithm, lower, upper, control = list(), ...)
 }
@@ -28,5 +28,12 @@ An S4 object of class \code{multiRL.model}
  generated using the estimated optimal parameters.
 }
 \description{
-estimate_1_LBI
+This function provides a unified interface to multiple algorithm packages, 
+   allowing different optimization algorithms to be selected for estimating 
+   optimal model parameters. The entire optimization framework is based on 
+   the log-likelihood returned by the model (or object function), making 
+   this function a collection of likelihood-based inference (LBI) methods. 
+   By abstracting over algorithm-specific implementations, the function 
+   enables flexible and consistent parameter estimation across different 
+   optimization backends.
 }

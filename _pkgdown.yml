@@ -56,16 +56,17 @@ reference:
 
   - title: "Estimation"
     contents:
+      - estimation_methods
       - estimate_0_ENV
       - estimate_1_LBI
       - estimate_1_MLE
       - estimate_1_MAP
       - estimate_2_SBI
       - estimate_2_ABC
-      - engine_ABC
       - estimate_2_RNN
+      - engine_ABC
       - engine_RNN
-      - estimation_methods
+      
       
   - title: "Datasets"
     contents:

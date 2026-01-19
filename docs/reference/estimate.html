@@ -89,8 +89,9 @@
 <p>Log-likelihood reflects the similarity between the human's observed choice
    and the model's prediction. The free parameters (e.g., learning rate)
    govern the entire Markov Decision Process, thereby controlling the
-   returning log-likelihood value. MLE then involves finding the set of free
-   parameters that maximizes the sum of the log-likelihoods across all trials.</p>
+   returning log-likelihood value. Maximum Likelihood Estimation (MLE) then
+   involves finding the set of free parameters that maximizes the sum of the
+   log-likelihoods across all trials.</p>
 <p>The search for these optimal parameters can be accomplished using various
    algorithms. For details, please refer to the documentation for
    <a href="algorithm.html">algorithm</a>.</p>
@@ -139,10 +140,10 @@
 
 
 <p>Simulation-Based Inference (SBI) can be employed when calculating the
-   log-likelihood is impossible or computationally intractable. SBI
-   generally seeks to establish a direct relationship between the behavioral
-   data and the parameters, without compressing the behavioral data into a
-   single value (log-likelihood).</p>
+   log-likelihood is impossible or computationally intractable.
+   Simulation-Based Inference (SBI) generally seeks to establish a direct
+   relationship between the behavioral data and the parameters, without
+   compressing the behavioral data into a single value (log-likelihood).</p>
 <div class="section">
 <h3 id="-approximate-bayesian-computation-abc-">2.1 Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#-approximate-bayesian-computation-abc-"></a></h3>
 

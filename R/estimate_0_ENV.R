@@ -1,5 +1,15 @@
-#' estimate_0_ENV
-#'
+#' @title 
+#' Tool for Generating an Environment for Models
+#' @name estimate_0_ENV
+#' @description 
+#'  This function creates an independent R environment for each model (or 
+#'    object function) when searching for optimal parameters using an algorithm 
+#'    package. Such isolation is especially important when parameter 
+#'    optimization is performed in parallel across multiple subjects. The 
+#'    function transfers standardized input parameters into a dedicated 
+#'    environment, ensuring that each model is evaluated in a self-contained 
+#'    and interference-free context.
+#'  
 #' @param data 
 #'  A data frame in which each row represents a single trial,
 #'    see \link[multiRL]{data} 

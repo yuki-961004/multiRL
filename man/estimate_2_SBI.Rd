@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_2_SBI.R
 \name{estimate_2_SBI}
 \alias{estimate_2_SBI}
-\title{estimate_2_SBI}
+\title{Simulated-Based Inference (SBI)}
 \usage{
 estimate_2_SBI(model, env, priors, control = list(), ...)
 }
@@ -24,5 +24,11 @@ A \code{List} containing, for each model, simulated data generated
   using randomly sampled parameters.
 }
 \description{
-estimate_2_SBI
+Since both Approximate Bayesian Computation (ABC) and Recurrent Neural 
+   Network (RNN) are simulation-based inference methods, they require a 
+   model built from a large amount of simulated data before running. This 
+   model is then used to predict the most likely input parameters 
+   corresponding to the real data. Therefore, this function generates random 
+   input parameters using user-specified distributions and produces 
+   simulated data based on these parameters.
 }

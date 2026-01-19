@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_2_RNN.R
 \name{estimate_2_RNN}
 \alias{estimate_2_RNN}
-\title{estimate_2_RNN}
+\title{Estimation Method: Recurrent Neural Network (RNN)}
 \usage{
 estimate_2_RNN(
   data,
@@ -50,5 +50,7 @@ An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-estimate_2_RNN
+This function takes a large set of simulated data to train an Recurrent 
+   Neural Network (RNN) model and then uses the trained model to 
+   estimate optimal parameters for the target data.
 }

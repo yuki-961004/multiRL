@@ -61,7 +61,7 @@ see \link[multiRL]{control}}
 }
 \value{
 An S3 object of class \code{multiRL.fitting}.
-  A \code{list} containing, for each model, the estimated optimal parameters
+  A \code{List} containing, for each model, the estimated optimal parameters
   and associated model fit metrics.
 }
 \description{

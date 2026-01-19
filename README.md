@@ -31,7 +31,7 @@ remotes::install_github("yuki-961004/multiRL@*release")
 # Load package
 library(multiRL)
 # Obtain help document
-?binaryRL
+?multiRL
 ```
 
 ### Multiple Choices  
@@ -61,7 +61,7 @@ When humans make decisions, multiple cognitive processing systems may be involve
 system = c("RL", "WM", "...")
 ```
 
-## Multiple Modules  
+### Multiple Modules  
 
 <p align="center">
     <img src="./fig/clock.png" alt="RL Intro" width="50%" style="display: inline;">

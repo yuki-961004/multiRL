@@ -1,4 +1,10 @@
-#' estimate_2_ABC
+#' @title 
+#' Estimation Method: Approximate Bayesian Computation (ABC)
+#' @name estimate_2_ABC
+#' @description 
+#'  This function takes a large set of simulated data to train an Approximate 
+#'    Bayesian Computation (ABC) model and then uses the trained model to 
+#'    estimate optimal parameters for the target data.
 #'
 #' @param data 
 #'  A data frame in which each row represents a single trial,

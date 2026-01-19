@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Cognitive Processing System — system"><meta name="description" content="In a Markov decision process, an agent may not update only a single
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Cognitive Processing System — system"><meta name="description" content="In a Markov Decision Process, an agent may not update only a single
    Q-value table. In other words, the process may not be governed by a
    single cognitive processing system, but rather by a weighted combination
    of multiple cognitive systems. Specifically, each cognitive processing
@@ -13,7 +13,7 @@
    the probabilities of executing each action on a given trial. The agent
    then combines the action-selection probabilities provided by each
    cognitive system using weights to obtain the final probability of
-   executing each action."><meta property="og:description" content="In a Markov decision process, an agent may not update only a single
+   executing each action."><meta property="og:description" content="In a Markov Decision Process, an agent may not update only a single
    Q-value table. In other words, the process may not be governed by a
    single cognitive processing system, but rather by a weighted combination
    of multiple cognitive systems. Specifically, each cognitive processing
@@ -74,7 +74,7 @@
     </div>
 
     <div class="ref-description section level2">
-    <p>In a Markov decision process, an agent may not update only a single
+    <p>In a Markov Decision Process, an agent may not update only a single
    Q-value table. In other words, the process may not be governed by a
    single cognitive processing system, but rather by a weighted combination
    of multiple cognitive systems. Specifically, each cognitive processing
@@ -121,18 +121,19 @@
          with a fixed learning rate of 1, effectively "remembering" the
          most recent outcome for each stimulus.</p></li>
 <li><p><code>system = c("RL", "WM")</code>:
-         A hybrid model where RL and WM systems operate in parallel,
-         maintaining two distinct Q-value tables. The final
-         decision is a weighted integration of both systems' choice
-         probabilities. The contribution of WM is constrained
-         by its <code>capacity</code>; if the stimulus set size exceeds
-         <code>capacity</code>, the agent's reliance shifts toward the RL
-         system as the WM reliability diminishes.
-         See <a href="params.html">params</a> for details.</p>
+         A hybrid model where Reinforcement Learning (RL) and Working Memory
+         (WM) systems operate in parallel, maintaining two distinct Q-value
+         tables. The final decision is a weighted integration of both
+         systems' choice probabilities. The contribution of Working Memory
+         (WM) is constrained by its <code>capacity</code>; if the stimulus set
+         size exceeds <code>capacity</code>, the agent's reliance shifts toward
+         the Reinforcement Learning (RL) system as the Working Memory (WM)
+         reliability diminishes.
+         See <code>capacity</code> in <a href="params.html">params</a> for details.</p>
 <p>If one assumes that multiple cognitive processing systems are
          involved in the Markov Decision Process, their relative influence
          can be controlled by assigning <code>weights</code> to each system.
-         See <a href="params.html">params</a> for details.</p></li>
+         See <code>weight</code> in <a href="params.html">params</a> for details.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

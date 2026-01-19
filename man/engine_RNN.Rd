@@ -2,7 +2,7 @@
 % Please edit documentation in R/engine_RNN.R
 \name{engine_RNN}
 \alias{engine_RNN}
-\title{engine_RNN}
+\title{The Engine of Recurrent Neural Network (RNN)}
 \usage{
 engine_RNN(
   data,
@@ -49,5 +49,8 @@ A specialized TensorFlow-trained Recurrent Neural Network (RNN) object.
  to have generated the given dataset.
 }
 \description{
-engine_RNN
+Because TensorFlow requires numeric arrays and input parameters to learn 
+   the mapping between them when building a Recurrent Neural Network (RNN) 
+   model, this function transforms simulated data into a standardized 
+   dataset and invokes TensorFlow to train the model.
 }

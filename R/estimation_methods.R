@@ -1,4 +1,12 @@
-#' estimation_methods
+#' @title 
+#' Estimate Methods
+#' @name estimation_methods
+#' @description 
+#'  This function provides a unified interface for four estimation methods: 
+#'    Maximum Likelihood Estimation (MLE), Maximum A Posteriori (MAP), 
+#'    Approximate Bayesian Computation (ABC), and Recurrent Neural Network 
+#'    (RNN), allowing users to execute different methods simply by setting 
+#'    \code{estimate = "???"}.
 #'
 #' @param estimate 
 #'  Estimate method that you want to use, 

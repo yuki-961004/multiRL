@@ -1,5 +1,12 @@
-#' engine_ABC
-#'
+#' @title 
+#' The Engine of Approximate Bayesian Computation (ABC)
+#' @name engine_ABC
+#' @description 
+#'  Because \code{abc::abc()} requires summary statistics together with the 
+#'    corresponding input parameters, this function converts the generated 
+#'    simulated data into a standardized collection of summary statistics and 
+#'    input parameters, facilitating subsequent execution of \code{abc::abc()}.
+#'    
 #' @param data 
 #'  A data frame in which each row represents a single trial,
 #'    see \link[multiRL]{data} 

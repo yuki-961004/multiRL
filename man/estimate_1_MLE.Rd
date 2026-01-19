@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_1_MLE.R
 \name{estimate_1_MLE}
 \alias{estimate_1_MLE}
-\title{estimate_1_MLE}
+\title{Estimation Method: Maximum Likelihood Estimation (MLE)}
 \usage{
 estimate_1_MLE(
   data,
@@ -60,5 +60,8 @@ An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-estimate_1_MLE
+This function essentially applies \code{estimate_1_LBI()} to each subject’s 
+   data, estimating subject-specific optimal parameters based on maximum 
+   likelihood. Because the fitting process for each subject is independent, 
+   the procedure can be accelerated using parallel computation.
 }

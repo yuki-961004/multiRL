@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_0_ENV.R
 \name{estimate_0_ENV}
 \alias{estimate_0_ENV}
-\title{estimate_0_ENV}
+\title{Tool for Generating an Environment for Models}
 \usage{
 estimate_0_ENV(
   data,
@@ -41,5 +41,11 @@ An \code{environment}, \code{multiRL.env} contains all variables
    during parallel computation.
 }
 \description{
-estimate_0_ENV
+This function creates an independent R environment for each model (or 
+   object function) when searching for optimal parameters using an algorithm 
+   package. Such isolation is especially important when parameter 
+   optimization is performed in parallel across multiple subjects. The 
+   function transfers standardized input parameters into a dedicated 
+   environment, ensuring that each model is evaluated in a self-contained 
+   and interference-free context.
 }

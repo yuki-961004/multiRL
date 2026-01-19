@@ -1,4 +1,11 @@
-#' engine_RNN
+#' @title 
+#' The Engine of Recurrent Neural Network (RNN)
+#' @name engine_RNN
+#' @description 
+#'  Because TensorFlow requires numeric arrays and input parameters to learn 
+#'    the mapping between them when building a Recurrent Neural Network (RNN) 
+#'    model, this function transforms simulated data into a standardized 
+#'    dataset and invokes TensorFlow to train the model.
 #'
 #' @param data 
 #'  A data frame in which each row represents a single trial,

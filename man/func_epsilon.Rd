@@ -16,7 +16,7 @@ see \link[multiRL]{params}}
 the user.}
 }
 \value{
-An \code{Integer}, either 0 or 1, indicating exploration or 
+An \code{int}, either 0 or 1, indicating exploration or 
    exploitation on the current trial.
 }
 \description{

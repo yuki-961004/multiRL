@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_1_MAP.R
 \name{estimate_1_MAP}
 \alias{estimate_1_MAP}
-\title{estimate_1_MAP}
+\title{Estimation Method: Maximum A Posteriori (MAP)}
 \usage{
 estimate_1_MAP(
   data,
@@ -60,5 +60,12 @@ An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-estimate_1_MAP
+This function first performs a maximum likelihood estimation (MLE) to 
+   obtain the best-fitting parameters for all subjects based on maximum 
+   likelihood. It then computes the likelihood-based posterior using 
+   user-specified prior distributions. Based on the current group-level 
+   data, the prior distributions are subsequently updated. This procedure 
+   is iteratively repeated until the likelihood-based posterior converges. 
+   The entire process is referred to as Expectation–Maximization with 
+   Maximum A Posteriori estimation(EM-MAP).
 }
