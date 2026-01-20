@@ -35,7 +35,7 @@ A \code{NumericVector} of length one representing the subjective
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  gamma     <-  multiRL:::get_param(params, "gamma")
+  gamma     <-  params[["gamma"]]
   
   # Stevens' Power Law
   utility <- sign(reward) * (abs(reward) ^ gamma)

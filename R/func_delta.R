@@ -28,7 +28,7 @@
 #'   # Trial <- idinfo["Trial"]
 #'   # Frame <- exinfo["Frame"]
 #'   
-#'   delta     <-  multiRL:::get_param(params, "delta")
+#'   delta     <-  params[["delta"]]
 #'   
 #'   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10))
 #'   
@@ -46,7 +46,7 @@ func_delta <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  delta     <-  get_param(params, "delta")
+  delta     <-  params[["delta"]]
 
   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10))
   

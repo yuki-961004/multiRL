@@ -22,18 +22,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_param
-double get_param(const Rcpp::S4& x, const std::string& name);
-RcppExport SEXP _multiRL_get_param(SEXP xSEXP, SEXP nameSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::S4& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_param(x, name));
-    return rcpp_result_gen;
-END_RCPP
-}
 // record_shown
 Rcpp::NumericVector record_shown(const Rcpp::CharacterMatrix& state, const Rcpp::CharacterVector& cue);
 RcppExport SEXP _multiRL_record_shown(SEXP stateSEXP, SEXP cueSEXP) {
@@ -62,7 +50,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_multiRL_process_4_output_cpp", (DL_FUNC) &_multiRL_process_4_output_cpp, 2},
-    {"_multiRL_get_param", (DL_FUNC) &_multiRL_get_param, 2},
     {"_multiRL_record_shown", (DL_FUNC) &_multiRL_record_shown, 2},
     {"_multiRL_sample_choice", (DL_FUNC) &_multiRL_sample_choice, 3},
     {NULL, NULL, 0}

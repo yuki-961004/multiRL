@@ -147,12 +147,6 @@ multiRL_r <- function(x) {
         alphaP = 0.7,
         beta = 0.5
       ),
-      fixed = list(
-        gamma = 1, 
-        delta = 0.1, 
-        epsilon = NA_real_, zeta = 1, eta = NA_real_, 
-        theta = 0
-      ),
       constant = list(
         Q0 = 100, 
         lapse = 0.01,
@@ -168,7 +162,8 @@ multiRL_r <- function(x) {
       name = "RSTD",
       mode = "fitting",
       estimate = "MLE",
-      policy = "on"
+      policy = "on",
+      system = c("RL", "WM")
     ),
     engine = "R",
     anythingelse = c(1, 2, 3)
@@ -197,12 +192,6 @@ multiRL_cpp <- function(x) {
         alphaP = 0.7,
         beta = 0.5
       ),
-      fixed = list(
-        gamma = 1, 
-        delta = 0.1, 
-        epsilon = NA_real_, zeta = 1, eta = NA_real_, 
-        theta = 0
-      ),
       constant = list(
         Q0 = 100, 
         lapse = 0.01,
@@ -218,7 +207,8 @@ multiRL_cpp <- function(x) {
       name = "RSTD",
       mode = "fitting",
       estimate = "MLE",
-      policy = "on"
+      policy = "on",
+      system = c("RL", "WM")
     ),
     engine = "Cpp",
     anythingelse = c(1, 2, 3)
@@ -227,12 +217,21 @@ multiRL_cpp <- function(x) {
 ```
 
 ```{r}
+profvis::profvis({
+  for (i in 1:50) {
+    multiRL_cpp()
+  }
+})
+```
+
+
+```{r}
 microbenchmark::microbenchmark(
-  binaryRL_r = binaryRL_r(),
-  binaryRL_cpp = binaryRL_cpp(),
+  #binaryRL_r = binaryRL_r(),
+  #binaryRL_cpp = binaryRL_cpp(),
   multiRL_r = multiRL_r(),
   multiRL_cpp = multiRL_cpp(),
-  times = 100
+  times = 50
 )
 ```
 

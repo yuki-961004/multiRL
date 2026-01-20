@@ -62,8 +62,8 @@ An \code{int}, either 0 or 1, indicating exploration or
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  epsilon   <-  multiRL:::get_param(params, "epsilon")
-  threshold <-  multiRL:::get_param(params, "threshold")
+  epsilon   <-  params[["epsilon"]]
+  threshold <-  params[["threshold"]]
   
   # Determine the model currently in use based on which parameters are free.
   if (is.na(epsilon) && threshold > 0) {

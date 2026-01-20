@@ -30,10 +30,6 @@ process_4_output_cpp <- function(record, extra) {
     .Call(`_multiRL_process_4_output_cpp`, record, extra)
 }
 
-get_param <- function(x, name) {
-    .Call(`_multiRL_get_param`, x, name)
-}
-
 record_shown <- function(state, cue) {
     .Call(`_multiRL_record_shown`, state, cue)
 }

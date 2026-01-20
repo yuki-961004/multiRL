@@ -34,17 +34,17 @@
 #'   # Trial <- idinfo["Trial"]
 #'   # Frame <- exinfo["Frame"]
 #'   
-#'   alpha     <-  multiRL:::get_param(params, "alpha")
-#'   alphaN    <-  multiRL:::get_param(params, "alphaN")
-#'   alphaP    <-  multiRL:::get_param(params, "alphaP")
+#'   alpha     <-  params[["alpha"]]
+#'   alphaN    <-  params[["alphaN"]]
+#'   alphaP    <-  params[["alphaP"]]
 #'   
 #'   # Determine the model currently in use based on which parameters are free.
 #'   if (
-#'     system == "RL" && !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
+#'     system == "RL" && !(is.null(alpha)) && is.null(alphaN) && is.null(alphaP)
 #'   ) {
 #'     model <- "TD"
 #'   } else if (
-#'     system == "RL" && is.na(alpha) && !(is.na(alphaN)) && !(is.na(alphaP))
+#'     system == "RL" && is.null(alpha) && !(is.null(alphaN)) && !(is.null(alphaP))
 #'   ) {
 #'     model <- "RSTD"
 #'   } else if (
@@ -85,17 +85,17 @@ func_alpha <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
 
-  alpha     <-  get_param(params, "alpha")
-  alphaN    <-  get_param(params, "alphaN")
-  alphaP    <-  get_param(params, "alphaP")
+  alpha     <-  params[["alpha"]]
+  alphaN    <-  params[["alphaN"]]
+  alphaP    <-  params[["alphaP"]]
   
   # Determine the model currently in use based on which parameters are free.
   if (
-    system == "RL" && !(is.na(alpha)) && is.na(alphaN) && is.na(alphaP)
+    system == "RL" && !(is.null(alpha)) && is.null(alphaN) && is.null(alphaP)
   ) {
     model <- "TD"
   } else if (
-    system == "RL" && is.na(alpha) && !(is.na(alphaN)) && !(is.na(alphaP))
+    system == "RL" && is.null(alpha) && !(is.null(alphaN)) && !(is.null(alphaP))
   ) {
     model <- "RSTD"
   } else if (

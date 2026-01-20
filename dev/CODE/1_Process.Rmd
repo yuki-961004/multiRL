@@ -125,7 +125,8 @@ multiRL.model <- multiRL::run_m(
       beta = 0.5
     ),
     constant = list(
-      Q0 = 100
+      Q0 = 100,
+      weight = 1
     )
   ),
   priors = list(
@@ -139,8 +140,10 @@ multiRL.model <- multiRL::run_m(
     estimate = "MLE",
     policy = "off",
     system = c("RL", "WM")
+    #system = "RL"
   ),
   engine = "Cpp",
+  #engine = "R",
   anythingelse = c(1, 2, 3)
 )
 
@@ -198,7 +201,7 @@ multiRL.input <- process_1_input(
       beta = 0.5
     ),
     constant = list(
-      weight = c(0.5, 0.5)
+      weight = c(1, 0)
     )
   ),
   priors = list(
@@ -210,8 +213,9 @@ multiRL.input <- process_1_input(
     name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
-    policy = "on",
-    system = c("RL", "WM")
+    policy = "off",
+    #system = c("RL", "WM")
+    system = "RL"
   )
 )
 ```
@@ -233,7 +237,7 @@ multiRL.record <- process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output_cpp(
+multiRL.output <- process_4_output_r(
   record = multiRL.record,
   extra = multiRL.record@extra
 )

@@ -1,5 +1,4 @@
 #include <Rcpp.h>
-#include "../inst/include/tool_get_param.hpp" 
 #include "../inst/include/tool_record_shown.hpp" 
 #include "../inst/include/tool_sample_choice.hpp" 
 
@@ -81,7 +80,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     );
   
     // R: record@input@params
-    const Rcpp::S4 params = input.slot("params");
+    const Rcpp::S4 params_raw = input.slot("params");
 
     // R: record@input@funcs
     const Rcpp::S4 funcs = input.slot("funcs");
@@ -166,10 +165,16 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     }
 
 /****************************** [initial value] *******************************/
-
-    int seed = get_param(params, "seed");
-    double Q0 = get_param(params, "Q0");
-    double reset = get_param(params, "reset");
+    Rcpp::Function c_r("c");
+    Rcpp::List params = c_r(
+        params_raw.slot("free"), 
+        params_raw.slot("fixed"), 
+        params_raw.slot("constant")
+    );
+    
+    int seed = params["seed"];
+    double Q0 = params["Q0"];
+    double reset = params["reset"];
 
     Rcpp::Function r_rbind("rbind");
     Rcpp::NumericVector new_row(n_cues, NA_REAL);

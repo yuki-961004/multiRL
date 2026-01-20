@@ -74,9 +74,11 @@ process_4_output_r <- function(
   
 ############################# [initial value] ##################################
   
-  seed        <- get_param(params, "seed")
-  Q0          <- get_param(params, "Q0")
-  reset       <- get_param(params, "reset")
+  params      <- c(params@free, params@fixed, params@constant)
+  
+  seed        <- params[["seed"]]
+  Q0          <- params[["Q0"]]
+  reset       <- params[["reset"]]
   
   value       <- lapply(value, function(x) {
     x[1, ] <- ifelse(is.na(Q0), yes = 0, no = Q0)
@@ -164,14 +166,19 @@ process_4_output_r <- function(
     )
     
     # 判断是否需要重置：Block是否发生变化
-    is.nb <- i > 1 && block[i] != block[i - 1]
+    if (!is.na(reset)) {
+      is.nb <- i > 1 && block[i] != block[i - 1]
+    } else {
+      is.nb <- FALSE
+    }
+    
     
     # 多系统更新价值
     for (sub_system in system) {
       sub_value <- value[[sub_system]]
       
       # 是否在进入新block时重置
-      if (!is.na(reset) && is.nb) {
+      if (is.nb) {
         cur_value <- rep(reset, length(sub_value[i, ]))
         Qi <- reset
       } else {

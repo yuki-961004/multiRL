@@ -101,39 +101,34 @@ func_beta <- function(
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  beta      <-  get_param(params, "beta")
-  lapse     <-  get_param(params, "lapse")
-  weight    <-  get_param(params, "weight")
-  capacity  <-  get_param(params, "capacity")
-  
-  n_system <- length(qvalue)
+  beta     <- params[["beta"]]
+  lapse    <- params[["lapse"]]
+  weight   <- params[["weight"]]
+  capacity <- params[["capacity"]]
+  sticky   <- params[["sticky"]]
+
+  index     <- which(!is.na(qvalue[[1]]))
+  n_shown   <- length(index)
+  n_system  <- length(qvalue)
+  n_options <- length(qvalue[[1]])
   
   if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
   weight <- weight / sum(weight)
+  if (n_system == 1) {weight <- weight[1]}
   
-  n_options <- length(qvalue[[1]])
-  index     <- which(!is.na(qvalue[[1]]))
-  n_shown   <- length(index)
+  prob_mat <- matrix(0, nrow = n_options, ncol = n_system)
   
-  prob_list <- vector("list", length(qvalue))
-  
-  for (i in seq_along(qvalue)) {
-    
-    sub_qvalue <- qvalue[[i]]
-    prob <- rep(NA_real_, n_options)
-    
-    if (explor == 1) {
-      prob[index] <- 1 / n_shown
-    } else {
+  if (explor == 1) {
+    prob_mat[index, ] <- 1 / n_shown
+  } else {
+    for (s in seq_len(n_system)) {
+      sub_qvalue <- qvalue[[s]]
       exp_stable <- exp(beta * (sub_qvalue - max(sub_qvalue, na.rm = TRUE)))
-      prob <- exp_stable / sum(exp_stable, na.rm = TRUE)
+      prob_mat[, s] <- exp_stable / sum(exp_stable, na.rm = TRUE)
     }
-    
-    prob_list[[i]] <- prob
   }
-  
-  prob <- Reduce(f = `+`, x = Map(`*`, prob_list, weight))
-  prob <- as.vector(prob)
+
+  prob <- as.vector(prob_mat %*% weight)
   
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse

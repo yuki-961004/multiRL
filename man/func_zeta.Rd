@@ -45,8 +45,8 @@ A \code{NumericVector} representing the values of unchosen options
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  zeta       <-  multiRL:::get_param(params, "zeta")
-  bonus      <-  multiRL:::get_param(params, "bonus")
+  zeta       <-  params[["zeta"]]
+  bonus      <-  params[["bonus"]]
   
   if (reward == 0) {
     decay <- values + zeta * (value0 - values)

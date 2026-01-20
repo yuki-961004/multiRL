@@ -36,7 +36,7 @@ A \code{NumericVector} containing the bias for each option based on
   # Trial <- idinfo["Trial"]
   # Frame <- exinfo["Frame"]
   
-  delta     <-  multiRL:::get_param(params, "delta")
+  delta     <-  params[["delta"]]
   
   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10))
   
