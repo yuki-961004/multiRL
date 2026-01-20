@@ -73,7 +73,8 @@ Users must specify one of the two function types (\code{stats::?func}).
      threshold = 1,
      bonus = 0,
      weight = 1,
-     capacity = 0
+     capacity = 0,
+     sticky = 0
    )
  )
  

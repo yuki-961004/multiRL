@@ -142,8 +142,8 @@ multiRL.model <- multiRL::run_m(
     system = c("RL", "WM")
     #system = "RL"
   ),
-  engine = "Cpp",
-  #engine = "R",
+  #engine = "Cpp",
+  engine = "R",
   anythingelse = c(1, 2, 3)
 )
 
@@ -237,7 +237,7 @@ multiRL.record <- process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output_r(
+multiRL.output <- process_4_output_cpp(
   record = multiRL.record,
   extra = multiRL.record@extra
 )

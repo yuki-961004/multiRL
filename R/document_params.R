@@ -223,29 +223,26 @@
 #'          
 #'    \item \code{sticky [double]} 
 #'          
-#'          The sticky parameter (represented as \eqn{kappa} in Collins, 2025 
-#'          \doi{10.1038/s41562-025-02340-0}) quantifies the extent to which an 
-#'          agent tends to repeat the physical action performed in the previous 
-#'          trial. It captures a form of motor inertia or choice perseveration 
-#'          that is fundamentally stimulus-independent. 
+#'          The \code{sticky} parameter (represented as \eqn{kappa} in 
+#'          Collins, 2025 \doi{10.1038/s41562-025-02340-0}) quantifies the 
+#'          extent to which an agent tends to repeat the physical action 
+#'          performed in the previous trial. It captures a form of motor 
+#'          inertia that is fundamentally stimulus-independent. 
 #'          
 #'          Example: Consider a paradigm with four keys (e.g., Up, Down, Left, 
 #'          Right). If an agent pressed "Up" in the previous trial, they might 
-#'          press "Up" again in the current trial not because of a value-based 
-#'          decision, but simply due to a reluctance to switch their physical 
-#'          response (i.e., motor stickiness). 
+#'          press "Up" again in the current trial, simply due to a reluctance 
+#'          to switch their physical response (i.e., motor stickiness). 
 #'          
 #'          It is imperative that the definition of sticky aligns with the 
 #'          participant's actual physical execution. If a task involves choosing 
 #'          between four bandits (A, B, C, D) displayed on the left or right of 
 #'          a screen, sticky should track the repetition of the physical 
 #'          position (Left or Right) rather than the bandit's identity 
-#'          (A/B/C/D). By default, the model assumes that the recorded action 
-#'          is congruent with the physical keypress. If your experimental 
-#'          paradigm dissociates the value-updating entities (e.g., bandit IDs) 
-#'          from the physical response dimensions (e.g., spatial locations), 
-#'          you must define the sticky term based on the actual motor response 
-#'          to ensure accurate parameter estimation. 
+#'          (A/B/C/D). If your experimental paradigm dissociates the 
+#'          value-updating entities (e.g., bandit IDs) from the physical 
+#'          response dimensions (e.g., spatial locations), you must define the 
+#'          sticky term based on the actual motor response. 
 #' }
 #' }
 #' 
@@ -268,7 +265,8 @@
 #'      threshold = 1,
 #'      bonus = 0,
 #'      weight = 1,
-#'      capacity = 0
+#'      capacity = 0,
+#'      sticky = 0
 #'    )
 #'  )
 #' }

@@ -80,10 +80,13 @@ func_alpha <- function(
     system,
     ...
 ){
+  
+  list2env(list(...), envir = environment())
+  
   # if you need extra information
   # e.g.
-  # Trial <- idinfo["Trial"]
-  # Frame <- exinfo["Frame"]
+  # Trial <- idinfo[3]
+  # Frame <- exinfo[1]
 
   alpha     <-  params[["alpha"]]
   alphaN    <-  params[["alphaN"]]

@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -216,10 +216,10 @@ compatibility with both Stevens’ Power Law and Prospect Theory.</p>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># `get_param` is an internal function and must be accessed using `:::`</span></span>
-<span>  <span class="va">lambda</span>    <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"lambda"</span><span class="op">)</span></span>
-<span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gamma"</span><span class="op">)</span></span>
-<span>  <span class="va">gammaN</span>    <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gammaN"</span><span class="op">)</span></span>
-<span>  <span class="va">gammaP</span>    <span class="op">&lt;-</span>  <span class="fu">multiRL</span><span class="fu">:::</span><span class="fu">get_param</span><span class="op">(</span><span class="va">params</span>, <span class="st">"gammaP"</span><span class="op">)</span></span>
+<span>  <span class="va">lambda</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"lambda"</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"gamma"</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">gammaN</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"gammaN"</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">gammaP</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"gammaP"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  </span>
 <span>  <span class="kw">if</span> <span class="op">(</span></span>
 <span>    <span class="va">gamma</span> <span class="op">!=</span> <span class="fl">1</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">gammaN</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">gammaP</span><span class="op">)</span></span>

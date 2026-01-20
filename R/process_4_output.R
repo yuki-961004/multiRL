@@ -88,6 +88,9 @@ process_4_output_r <- function(
   count[1, ]  <- 0
   count       <- rbind(count, rep(NA, ncol(count)))
 
+  behave <- cbind(action, latent, simulation)
+  colnames(behave) <- c("action", "latent", "simulation")
+  
 ############################# [action select] ##################################
   
   set.seed(seed)
@@ -108,14 +111,16 @@ process_4_output_r <- function(
       count = count[i, ], 
       params = params,
       idinfo = idinfo[i, ],
-      exinfo = exinfo[i, ]
+      exinfo = exinfo[i, ],
+      behave = behave[i, ]
     )
     # exploration function: 此次是否进行探索
     exploration[i, ] <- expl_func(
       rownum = i,
       params = params,
       idinfo = idinfo[i, ],
-      exinfo = exinfo[i, ]
+      exinfo = exinfo[i, ],
+      behave = behave[i, ]
     )
 
     qvalue <- lapply(value, function(x) (x[i, ] + bias[i, ]) * shown[i, ])
@@ -127,7 +132,8 @@ process_4_output_r <- function(
       params = params,
       system = system,
       idinfo = idinfo[i, ],
-      exinfo = exinfo[i, ]
+      exinfo = exinfo[i, ],
+      behave = behave[i, ]
     )
     
     switch(
@@ -153,6 +159,9 @@ process_4_output_r <- function(
       }
     )
     
+    behave[i, 2] <- latent[i, ]
+    behave[i, 3] <- simulation[i, ]
+    
 ############################## [value update] ##################################
     
     # 读取此时的奖励
@@ -162,7 +171,8 @@ process_4_output_r <- function(
       reward = as.numeric(reward[i, ]), 
       params = params,
       idinfo = idinfo[i, ],
-      exinfo = exinfo[i, ]
+      exinfo = exinfo[i, ],
+      behave = behave[i, ]
     )
     
     # 判断是否需要重置：Block是否发生变化
@@ -194,7 +204,8 @@ process_4_output_r <- function(
         params = params,
         system = sub_system,
         idinfo = idinfo[i, ],
-        exinfo = exinfo[i, ]
+        exinfo = exinfo[i, ],
+        behave = behave[i, ]
       )
       
       if (is.na(Q0) & Qi == 0) {
@@ -210,7 +221,8 @@ process_4_output_r <- function(
           params = params,
           system = sub_system,
           idinfo = idinfo[i, ],
-          exinfo = exinfo[i, ]
+          exinfo = exinfo[i, ],
+          behave = behave[i, ]
         )
       }
       

@@ -64,7 +64,8 @@
 #'      threshold = 1,
 #'      bonus = 0,
 #'      weight = 1,
-#'      capacity = 0
+#'      capacity = 0,
+#'      sticky = 0
 #'    )
 #'  )
 #'  

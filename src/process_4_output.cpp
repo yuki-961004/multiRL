@@ -38,7 +38,6 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     const Rcpp::S4 settings = input.slot("settings");
     const std::string policy = settings.slot("policy");
     const Rcpp::CharacterVector system = settings.slot("system");
-    int n_system = system.size();
 
     // R: record@input@features@idinfo
     const Rcpp::S4 features = input.slot("features");
@@ -81,6 +80,12 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
   
     // R: record@input@params
     const Rcpp::S4 params_raw = input.slot("params");
+    Rcpp::Function c_r("c");
+    const Rcpp::List params = c_r(
+        params_raw.slot("free"), 
+        params_raw.slot("fixed"), 
+        params_raw.slot("constant")
+    );
 
     // R: record@input@funcs
     const Rcpp::S4 funcs = input.slot("funcs");
@@ -143,11 +148,22 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         result.slot("simulation")
     ));  
 
+    // behave
+    Rcpp::CharacterMatrix behave = Rcpp::cbind(
+        Rcpp::as<Rcpp::CharacterMatrix>(features.slot("action")),
+        Rcpp::as<Rcpp::CharacterMatrix>(result.slot("latent")),
+        Rcpp::as<Rcpp::CharacterMatrix>(result.slot("simulation"))
+    );
+    Rcpp::colnames(behave) = Rcpp::CharacterVector::create(
+        "action", "latent", "simulation"
+    );
+
 /******************************* [load others] ********************************/
 
     int n_rows = Rcpp::as<int>( input.slot("n_rows") );
     int n_cues = cue.size(); 
     int n_rsps = rsp.size();
+    int n_system = system.size();
 
     // cue建立哈希表
     std::unordered_map<std::string, int> cue_map;
@@ -165,13 +181,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     }
 
 /****************************** [initial value] *******************************/
-    Rcpp::Function c_r("c");
-    Rcpp::List params = c_r(
-        params_raw.slot("free"), 
-        params_raw.slot("fixed"), 
-        params_raw.slot("constant")
-    );
-    
+
     int seed = params["seed"];
     double Q0 = params["Q0"];
     double reset = params["reset"];
@@ -211,7 +221,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["count"]  = Rcpp::NumericVector(count.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
+                Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i))
             )
         );
         // exploration function: 此次是否进行探索
@@ -220,7 +231,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["rownum"] = i + 1,
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
+                Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i))
             )
         );   
         // probability function: 选择每个选项的概率 
@@ -243,7 +255,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["params"] = params,
                 Rcpp::_["system"] = system,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
+                Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i))
             )
         );
 
@@ -305,6 +318,9 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             }
         }
 
+        behave(i, 1) = latent(i, 0);
+        behave(i, 2) = simulation(i, 0);
+
         // 最后一列是奖励数值
         int col_reward = state_i.ncol()-1;   
 
@@ -322,7 +338,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
+                Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i))
             )
         ); 
 
@@ -361,7 +378,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                         Rcpp::_["params"] = params,
                         Rcpp::_["system"] = sub_system,
                         Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                        Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                        Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
+                        Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i))
                     )
                 );
 
@@ -378,7 +396,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                             Rcpp::_["params"] = params,
                             Rcpp::_["system"] = sub_system,
                             Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
-                            Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i))
+                            Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
+                            Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i))
                         )
                     );
             }

@@ -126,10 +126,10 @@ my_func_gamma <- function(
     ...
 ){
   # `get_param` is an internal function and must be accessed using `:::`
-  lambda    <-  multiRL:::get_param(params, "lambda")
-  gamma     <-  multiRL:::get_param(params, "gamma")
-  gammaN    <-  multiRL:::get_param(params, "gammaN")
-  gammaP    <-  multiRL:::get_param(params, "gammaP")
+  lambda    <-  params[["lambda"]]
+  gamma     <-  params[["gamma"]]
+  gammaN    <-  params[["gammaN"]]
+  gammaP    <-  params[["gammaP"]]
   
   if (
     gamma != 1 && is.na(gammaN) && is.na(gammaP)
