@@ -7,7 +7,8 @@
 func_beta(qvalue, explor, params, system, ...)
 }
 \arguments{
-\item{qvalue}{The estimated expected value of taking action(a) at trial(t) with bias.}
+\item{qvalue}{The expected Q values of different behaviors produced by different systems 
+when updated to this trial.}
 
 \item{explor}{Whether the agent made a random choice (exploration) in this trial.}
 
@@ -18,8 +19,34 @@ see \link[multiRL]{params}}
 systems involved?
   see \link[multiRL]{system}}
 
-\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
-the user.}
+\item{...}{It currently contains the following information; additional information 
+   may be added in future package versions.
+\itemize{
+  \item idinfo: 
+     \itemize{
+       \item subid
+       \item block
+       \item trial
+     }
+  \item exinfo: 
+     contains information whose column names are specified by the user.
+     \itemize{
+       \item Frame
+       \item RT
+       \item NetWorth
+       \item ...
+     }
+  \item behave: 
+     includes the following:
+     \itemize{
+       \item action: 
+         the behavior performed by the human in the given trial.
+       \item latent: 
+         the object updated by the agent in the given trial.
+       \item simulation: 
+         the actual behavior performed by the agent.
+     }
+}}
 }
 \value{
 A \code{NumericVector} containing the probability of choosing each 
@@ -51,43 +78,47 @@ A \code{NumericVector} containing the probability of choosing each
     params,
     ...
 ){
-  # if you need extra information
+
+  list2env(list(...), envir = environment())
+  
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo["Trial"]
-  # Frame <- exinfo["Frame"]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
   
-  beta      <-  multiRL:::get_param(params, "beta")
-  lapse     <-  multiRL:::get_param(params, "lapse")
-  weight    <-  multiRL:::get_param(params, "weight")
-  capacity  <-  multiRL:::get_param(params, "capacity")
+  beta     <- params[["beta"]]
+  lapse    <- params[["lapse"]]
+  weight   <- params[["weight"]]
+  capacity <- params[["capacity"]]
+  sticky   <- params[["sticky"]]
   
-  n_system <- length(qvalue)
-  
-  if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
-  weight <- weight / sum(weight)
-  
-  n_options <- length(qvalue[[1]])
   index     <- which(!is.na(qvalue[[1]]))
   n_shown   <- length(index)
+  n_system  <- length(qvalue)
+  n_options <- length(qvalue[[1]])
   
-  prob_list <- vector("list", length(qvalue))
-  for (i in seq_along(qvalue)) {
-    
-    sub_qvalue <- qvalue[[i]]
-    prob <- rep(NA_real_, n_options)
-    
-    if (explor == 1) {
-      prob[index] <- 1 / n_shown
-    } else {
+  # Assign weights to different systems
+  if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
+  weight <- weight / sum(weight)
+  if (n_system == 1) {weight <- weight[1]}
+  
+  # Compute the probabilities estimated by different systems
+  prob_mat <- matrix(0, nrow = n_options, ncol = n_system)
+  
+  if (explor == 1) {
+    prob_mat[index, ] <- 1 / n_shown
+  } else {
+    for (s in seq_len(n_system)) {
+      sub_qvalue <- qvalue[[s]]
       exp_stable <- exp(beta * (sub_qvalue - max(sub_qvalue, na.rm = TRUE)))
-      prob <- exp_stable / sum(exp_stable, na.rm = TRUE)
+      prob_mat[, s] <- exp_stable / sum(exp_stable, na.rm = TRUE)
     }
-    
-    prob_list[[i]] <- prob
   }
   
-  prob <- Reduce(f = `+`, x = Map(`*`, prob_list, weight))
-  prob <- as.vector(prob)
+  # Weighted average
+  prob <- as.vector(prob_mat %*% weight)
   
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse

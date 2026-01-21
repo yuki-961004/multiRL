@@ -99,11 +99,13 @@ func_alpha <- function(
   
   list2env(list(...), envir = environment())
   
-  # if you need extra information
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo[3]
-  # Frame <- exinfo[1]
-
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
+  
   alpha     <-  params[["alpha"]]
   alphaN    <-  params[["alphaN"]]
   alphaP    <-  params[["alphaP"]]
@@ -150,7 +152,7 @@ func_alpha <- function(
 <summary>Soft-Max (β)</summary>
 
 ```{r eval=FALSE}
-print(binaryRL::func_tau)
+print(multiRL::func_beta)
 ```
 
 ```{r eval=FALSE}
@@ -164,10 +166,12 @@ func_beta <- function(
   
   list2env(list(...), envir = environment())
   
-  # if you need extra information
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo[3]
-  # Frame <- exinfo[1]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
   
   beta     <- params[["beta"]]
   lapse    <- params[["lapse"]]
@@ -180,10 +184,12 @@ func_beta <- function(
   n_system  <- length(qvalue)
   n_options <- length(qvalue[[1]])
   
+  # Assign weights to different systems
   if (length(weight) == 1L) {weight <- c(weight, 1 - weight)}
   weight <- weight / sum(weight)
   if (n_system == 1) {weight <- weight[1]}
   
+  # Compute the probabilities estimated by different systems
   prob_mat <- matrix(0, nrow = n_options, ncol = n_system)
   
   if (explor == 1) {
@@ -195,7 +201,8 @@ func_beta <- function(
       prob_mat[, s] <- exp_stable / sum(exp_stable, na.rm = TRUE)
     }
   }
-
+  
+  # Weighted average
   prob <- as.vector(prob_mat %*% weight)
   
   # lapse
@@ -213,7 +220,7 @@ func_beta <- function(
 <summary>Utility Function (γ)</summary>
 
 ```{r eval=FALSE}
-print(binaryRL::func_gamma)
+print(multiRL::func_gamma)
 ```
 
 ```{r eval=FALSE}
@@ -225,10 +232,12 @@ func_gamma <- function(
   
   list2env(list(...), envir = environment())
   
-  # if you need extra information
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo[3]
-  # Frame <- exinfo[1]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
 
   gamma     <-  params[["gamma"]]
 
@@ -246,7 +255,7 @@ func_gamma <- function(
 <summary>Upper-Confidence-Bound (δ)</summary>
 
 ```{r eval=FALSE}
-print(binaryRL::func_pi)
+print(multiRL::func_delta)
 ```
 
 ```{r eval=FALSE}
@@ -258,10 +267,12 @@ func_delta <- function(
   
   list2env(list(...), envir = environment())
   
-  # if you need extra information
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo[3]
-  # Frame <- exinfo[1]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
   
   delta     <-  params[["delta"]]
 
@@ -278,7 +289,7 @@ func_delta <- function(
 <summary>Epsilon Related (ε)</summary>
 
 ```{r eval=FALSE}
-print(binaryRL::func_epsilon)
+print(multiRL::func_epsilon)
 ```
 
 ```{r eval=FALSE}
@@ -290,10 +301,12 @@ func_epsilon <- function(
   
   list2env(list(...), envir = environment())
   
-  # if you need extra information
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo[3]
-  # Frame <- exinfo[1]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
   
   epsilon   <-  params[["epsilon"]]
   threshold <-  params[["threshold"]]
@@ -344,7 +357,7 @@ func_epsilon <- function(
 <details>
 <summary>Working Memory (ζ)</summary>
 ```{r eval=FALSE}
-print(binaryRL::func_zeta)
+print(multiRL::func_zeta)
 ```
 
 ```{r eval=FALSE}
@@ -356,10 +369,15 @@ func_zeta <- function(
     system,
     ...
 ){
-  # if you need extra information
+  
+  list2env(list(...), envir = environment())
+  
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo["Trial"]
-  # Frame <- exinfo["Frame"]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
   
   zeta       <-  params[["zeta"]]
   bonus      <-  params[["bonus"]]

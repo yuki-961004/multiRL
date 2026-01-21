@@ -142,8 +142,8 @@ multiRL.model <- multiRL::run_m(
     system = c("RL", "WM")
     #system = "RL"
   ),
-  #engine = "Cpp",
-  engine = "R",
+  engine = "Cpp",
+  #engine = "R",
   anythingelse = c(1, 2, 3)
 )
 

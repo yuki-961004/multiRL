@@ -348,7 +348,12 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // 在cue中寻找target
         col_index = cue_map[target];
         
-        bool is_nb = (i > 0) && (block[i] != block[i - 1]);
+        bool is_nb;
+        if (!std::isnan(reset)) {
+            is_nb = (i > 0) && (block[i] != block[i - 1]);
+        } else {
+            is_nb = false;  
+        }
 
         for (int s = 0; s < n_system; s++) {
 
@@ -357,15 +362,15 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             Rcpp::NumericMatrix sub_value = value[sub_system];
 
             double Qi;
-            Rcpp::NumericVector values;
+            Rcpp::NumericVector cur_value;
 
             // 是否在进入新 block 时重置
-            if (!std::isnan(reset) && is_nb) {
-                values = Rcpp::rep(reset, sub_value.ncol());
-                Qi     = reset;
+            if (is_nb) {
+                cur_value = Rcpp::rep(reset, sub_value.ncol());
+                Qi        = reset;
             } else {
-                values = Rcpp::NumericVector(sub_value.row(i));
-                Qi     = sub_value(i, col_index);
+                cur_value = Rcpp::NumericVector(sub_value.row(i));
+                Qi        = sub_value(i, col_index);
             }
 
             // decay：未被选择选项的价值衰减
@@ -373,7 +378,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::as<Rcpp::NumericVector>(
                     dcay_func(
                         Rcpp::_["value0"] = Rcpp::NumericVector(sub_value.row(0)),
-                        Rcpp::_["values"] = values,
+                        Rcpp::_["values"] = cur_value,
                         Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                         Rcpp::_["params"] = params,
                         Rcpp::_["system"] = sub_system,

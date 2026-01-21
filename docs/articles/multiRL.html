@@ -256,11 +256,13 @@ Learning Rate (α)
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co"># if you need extra information</span></span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
 <span>  <span class="co"># e.g.</span></span>
-<span>  <span class="co"># Trial &lt;- idinfo[3]</span></span>
-<span>  <span class="co"># Frame &lt;- exinfo[1]</span></span>
-<span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
+<span>  </span>
 <span>  <span class="va">alpha</span>     <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"alpha"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">alphaN</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"alphaN"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">alphaP</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"alphaP"</span><span class="op">]</span><span class="op">]</span></span>
@@ -301,7 +303,7 @@ Learning Rate (α)
 </details><!----------------------------------------------------------><details><summary>
 Soft-Max (β)
 </summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_tau.html" class="external-link">func_tau</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_beta.html">func_beta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_beta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">qvalue</span>, </span>
@@ -313,10 +315,12 @@ Soft-Max (β)
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co"># if you need extra information</span></span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
 <span>  <span class="co"># e.g.</span></span>
-<span>  <span class="co"># Trial &lt;- idinfo[3]</span></span>
-<span>  <span class="co"># Frame &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
 <span>  </span>
 <span>  <span class="va">beta</span>     <span class="op">&lt;-</span> <span class="va">params</span><span class="op">[[</span><span class="st">"beta"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">lapse</span>    <span class="op">&lt;-</span> <span class="va">params</span><span class="op">[[</span><span class="st">"lapse"</span><span class="op">]</span><span class="op">]</span></span>
@@ -329,10 +333,12 @@ Soft-Max (β)
 <span>  <span class="va">n_system</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">qvalue</span><span class="op">)</span></span>
 <span>  <span class="va">n_options</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">qvalue</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span>  </span>
+<span>  <span class="co"># Assign weights to different systems</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">weight</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1L</span><span class="op">)</span> <span class="op">{</span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">weight</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">weight</span><span class="op">)</span><span class="op">}</span></span>
 <span>  <span class="va">weight</span> <span class="op">&lt;-</span> <span class="va">weight</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">weight</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">n_system</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span><span class="va">weight</span> <span class="op">&lt;-</span> <span class="va">weight</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">}</span></span>
 <span>  </span>
+<span>  <span class="co"># Compute the probabilities estimated by different systems</span></span>
 <span>  <span class="va">prob_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">n_options</span>, ncol <span class="op">=</span> <span class="va">n_system</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">explor</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
@@ -344,7 +350,8 @@ Soft-Max (β)
 <span>      <span class="va">prob_mat</span><span class="op">[</span>, <span class="va">s</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">exp_stable</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">exp_stable</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">}</span></span>
-<span></span>
+<span>  </span>
+<span>  <span class="co"># Weighted average</span></span>
 <span>  <span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">prob_mat</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">weight</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co"># lapse</span></span>
@@ -355,7 +362,7 @@ Soft-Max (β)
 </details><!----------------------------------------------------------><details><summary>
 Utility Function (γ)
 </summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_gamma.html" class="external-link">func_gamma</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_gamma.html">func_gamma</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_gamma</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">reward</span>,</span>
@@ -365,10 +372,12 @@ Utility Function (γ)
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co"># if you need extra information</span></span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
 <span>  <span class="co"># e.g.</span></span>
-<span>  <span class="co"># Trial &lt;- idinfo[3]</span></span>
-<span>  <span class="co"># Frame &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
 <span></span>
 <span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"gamma"</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
@@ -380,7 +389,7 @@ Utility Function (γ)
 </details><!----------------------------------------------------------><details><summary>
 Upper-Confidence-Bound (δ)
 </summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_pi.html" class="external-link">func_pi</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_delta.html">func_delta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_delta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">count</span>,</span>
@@ -390,10 +399,12 @@ Upper-Confidence-Bound (δ)
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co"># if you need extra information</span></span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
 <span>  <span class="co"># e.g.</span></span>
-<span>  <span class="co"># Trial &lt;- idinfo[3]</span></span>
-<span>  <span class="co"># Frame &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
 <span>  </span>
 <span>  <span class="va">delta</span>     <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"delta"</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
@@ -404,7 +415,7 @@ Upper-Confidence-Bound (δ)
 </details><!----------------------------------------------------------><details><summary>
 Epsilon Related (ε)
 </summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va"><a href="https://yuki-961004.github.io/binaryRL/reference/func_epsilon.html" class="external-link">func_epsilon</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_epsilon.html">func_epsilon</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_epsilon</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">rownum</span>,</span>
@@ -414,10 +425,12 @@ Epsilon Related (ε)
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co"># if you need extra information</span></span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
 <span>  <span class="co"># e.g.</span></span>
-<span>  <span class="co"># Trial &lt;- idinfo[3]</span></span>
-<span>  <span class="co"># Frame &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
 <span>  </span>
 <span>  <span class="va">epsilon</span>   <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"epsilon"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">threshold</span> <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"threshold"</span><span class="op">]</span><span class="op">]</span></span>
@@ -463,7 +476,7 @@ Epsilon Related (ε)
 </details><!----------------------------------------------------------><details><summary>
 Working Memory (ζ)
 </summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">binaryRL</span><span class="fu">::</span><span class="va">func_zeta</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_zeta.html">func_zeta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_zeta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">value0</span>, </span>
@@ -473,10 +486,15 @@ Working Memory (ζ)
 <span>    <span class="va">system</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="co"># if you need extra information</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
 <span>  <span class="co"># e.g.</span></span>
-<span>  <span class="co"># Trial &lt;- idinfo["Trial"]</span></span>
-<span>  <span class="co"># Frame &lt;- exinfo["Frame"]</span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
 <span>  </span>
 <span>  <span class="va">zeta</span>       <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"zeta"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">bonus</span>      <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"bonus"</span><span class="op">]</span><span class="op">]</span></span>

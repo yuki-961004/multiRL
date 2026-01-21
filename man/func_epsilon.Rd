@@ -12,8 +12,34 @@ func_epsilon(rownum, params, ...)
 \item{params}{Parameters used by the model’s internal functions,
 see \link[multiRL]{params}}
 
-\item{...}{Subject ID, Block ID, Trial ID, and any additional information defined by 
-the user.}
+\item{...}{It currently contains the following information; additional information 
+   may be added in future package versions.
+\itemize{
+  \item idinfo: 
+     \itemize{
+       \item subid
+       \item block
+       \item trial
+     }
+  \item exinfo: 
+     contains information whose column names are specified by the user.
+     \itemize{
+       \item Frame
+       \item RT
+       \item NetWorth
+       \item ...
+     }
+  \item behave: 
+     includes the following:
+     \itemize{
+       \item action: 
+         the behavior performed by the human in the given trial.
+       \item latent: 
+         the object updated by the agent in the given trial.
+       \item simulation: 
+         the actual behavior performed by the agent.
+     }
+}}
 }
 \value{
 An \code{int}, either 0 or 1, indicating exploration or 
@@ -57,10 +83,15 @@ An \code{int}, either 0 or 1, indicating exploration or
     params,
     ...
 ){
-  # if you need extra information
+
+  list2env(list(...), envir = environment())
+  
+  # If you need extra information(...)
+  # Column names may be lost(C++), indexes are recommended
   # e.g.
-  # Trial <- idinfo["Trial"]
-  # Frame <- exinfo["Frame"]
+  # Trial  <- idinfo[3]
+  # Frame  <- exinfo[1]
+  # Action <- behave[1]
   
   epsilon   <-  params[["epsilon"]]
   threshold <-  params[["threshold"]]
