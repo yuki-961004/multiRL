@@ -355,6 +355,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             is_nb = false;  
         }
 
+        bool is_fp = (count(i, col_index) == 0);
+
         for (int s = 0; s < n_system; s++) {
 
             std::string sub_system = Rcpp::as<std::string>(system[s]);
@@ -389,7 +391,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 );
 
             // learning rate 更新
-            if (std::isnan(Q0) && Qi == 0) {
+            if (std::isnan(Q0) && is_fp) {
                 sub_value(i + 1, col_index) = utility(i, 0);
                 sub_value(0,     col_index) = utility(i, 0);
             } else {

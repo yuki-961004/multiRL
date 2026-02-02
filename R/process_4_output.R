@@ -182,7 +182,8 @@ process_4_output_r <- function(
       is.nb <- FALSE
     }
     
-    
+    is.fp <- count[i, latent[i, ]] == 0
+
     # 多系统更新价值
     for (sub_system in system) {
       sub_value <- value[[sub_system]]
@@ -207,8 +208,8 @@ process_4_output_r <- function(
         exinfo = exinfo[i, ],
         behave = behave[i, ]
       )
-      
-      if (is.na(Q0) & Qi == 0) {
+
+      if (is.na(Q0) && is.fp) {
         # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
         sub_value[i + 1, latent[i, ]] <- utility[i, ]
         # 修改初始值为第一次见到的值
