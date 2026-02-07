@@ -89,24 +89,6 @@
     
 <p align="center">
 <img src="fig/rl_step3.png" alt="Step 4" width="80%" style="display: inline;"></p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fitting.MLE</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
-<span>  estimate <span class="op">=</span> <span class="st">"MLE"</span>,</span>
-<span></span>
-<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
-<span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
-<span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
-<span></span>
-<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
-<span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  </span>
-<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
-<span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>core <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">fitting.MLE</span>, file <span class="op">=</span> <span class="st">"./fitting.MLE.Rdata"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="estimate-methods">Estimate Methods<a class="anchor" aria-label="anchor" href="#estimate-methods"></a>
 </h2>
@@ -115,7 +97,7 @@ using four distinct methods. In the following code snippets, I only
 highlight the <code>arguments</code> that vary by estimation method.
 Unless explicitly noted, other arguments can be duplicated from the
 above example.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># How to use MLE as estimate method</span></span>
 <span><span class="va">fitting.MLE</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
 <span>  estimate <span class="op">=</span> <span class="st">"MLE"</span>,</span>
@@ -144,7 +126,7 @@ above example.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># How to use RNN as estimate method</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/reticulate/man/use_python.html" class="external-link">use_condaenv</a></span><span class="op">(</span>condaenv <span class="op">=</span> <span class="st">"your_tensorflow_env_name"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_condaenv</a></span><span class="op">(</span>condaenv <span class="op">=</span> <span class="st">"your_tensorflow_env_name"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fitting.RNN</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
 <span>  estimate <span class="op">=</span> <span class="st">"RNN"</span>,</span>
@@ -154,6 +136,182 @@ above example.</p>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><strong>Note</strong><br>
+All of the following figures were generated using
+<code><a href="../reference/rpl_e.html">multiRL::rpl_e()</a></code></p>
+</div>
+<div class="section level2">
+<h2 id="demo">Demo<a class="anchor" aria-label="anchor" href="#demo"></a>
+</h2>
+<div class="section level3">
+<h3 id="mle">MLE<a class="anchor" aria-label="anchor" href="#mle"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitting.MLE</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
+<span>  estimate <span class="op">=</span> <span class="st">"MLE"</span>,</span>
+<span></span>
+<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
+<span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
+<span></span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
+<span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  </span>
+<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
+<span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>core <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">fitting.MLE</span>, file <span class="op">=</span> <span class="st">"./fitting.MLE.Rdata"</span><span class="op">)</span></span></code></pre></div>
+<p align="center">
+<img src="fig/MLE/NLOPT/Block_Ratio(MLE).png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
+</div>
+<div class="section level3">
+<h3 id="map">MAP<a class="anchor" aria-label="anchor" href="#map"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitting.MAP</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
+<span>  estimate <span class="op">=</span> <span class="st">"MAP"</span>,</span>
+<span></span>
+<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
+<span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
+<span></span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
+<span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span><span class="va">x</span>, rate <span class="op">=</span> <span class="fl">1</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alphaN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      alphaP <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span><span class="va">x</span>, rate <span class="op">=</span> <span class="fl">1</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span><span class="va">x</span>, rate <span class="op">=</span> <span class="fl">1</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>      gamma <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  </span>
+<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
+<span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    core <span class="op">=</span> <span class="fl">10</span>, sample <span class="op">=</span> <span class="fl">100</span>, iter <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    diff <span class="op">=</span> <span class="fl">0.1</span>, patience <span class="op">=</span> <span class="fl">10</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">fitting.MAP</span>, file <span class="op">=</span> <span class="st">"./fitting.MAP.Rdata"</span><span class="op">)</span></span></code></pre></div>
+<p align="center">
+<img src="fig/MAP/Block_Ratio(MAP).png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
+</div>
+<div class="section level3">
+<h3 id="abc">ABC<a class="anchor" aria-label="anchor" href="#abc"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fitting.ABC</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
+<span>  estimate <span class="op">=</span> <span class="st">"ABC"</span>,</span>
+<span></span>
+<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
+<span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
+<span></span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
+<span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alphaN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      alphaP <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>      gamma <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  </span>
+<span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    core <span class="op">=</span> <span class="fl">10</span>, sample <span class="op">=</span> <span class="fl">100</span>, train <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    tol <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">fitting.ABC</span>, file <span class="op">=</span> <span class="st">"./fitting.ABC.Rdata"</span><span class="op">)</span></span></code></pre></div>
+<p align="center">
+<img src="fig/ABC/Block_Ratio(ABC).png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
+</div>
+<div class="section level3">
+<h3 id="rnn">RNN<a class="anchor" aria-label="anchor" href="#rnn"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/use_python.html" class="external-link">use_condaenv</a></span><span class="op">(</span>condaenv <span class="op">=</span> <span class="st">"tf-gpu"</span>, required <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#&gt; Show in New Window</span></span>
+<span><span class="co">#&gt; -------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; reticulate::use_condaenv(condaenv = "tensorflow", required = TRUE)</span></span>
+<span><span class="co">#&gt; -------------------------------------------------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Please confirm you have loaded TensorFlow into R (enter 1 or 2). </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; 1: Yes, it is loaded</span></span>
+<span><span class="co">#&gt; 2: No, it is not loaded</span></span>
+<span></span>
+<span><span class="va">fitting.RNN</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
+<span>  estimate <span class="op">=</span> <span class="st">"RNN"</span>,</span>
+<span></span>
+<span>  data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
+<span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
+<span></span>
+<span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
+<span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alphaN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      alphaP <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>      beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>      gamma <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">rbeta</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  </span>
+<span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    core <span class="op">=</span> <span class="fl">1</span>, sample <span class="op">=</span> <span class="fl">100</span>, train <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    layer <span class="op">=</span> <span class="st">"GRU"</span>, units <span class="op">=</span> <span class="fl">128</span>, batch_size <span class="op">=</span> <span class="fl">10</span>, epochs <span class="op">=</span> <span class="fl">100</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">fitting.RNN</span>, file <span class="op">=</span> <span class="st">"./fitting.RNN.Rdata"</span><span class="op">)</span></span></code></pre></div>
+<p align="center">
+<img src="fig/RNN/Block_Ratio(RNN).png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="comparison">Comparison<a class="anchor" aria-label="anchor" href="#comparison"></a>
+</h2>
+<p align="center">
+<img src="fig/Estimation_Comparison.png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
