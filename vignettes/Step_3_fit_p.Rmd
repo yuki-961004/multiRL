@@ -234,6 +234,10 @@ save(fitting.RNN, file = "./fitting.RNN.Rdata")
 
 ## Comparison
 
+Despite employing identical computational models with synchronized hyper-parameter settings (e.g., a fixed lapse rate of 0.1), the resulting parameter estimates exhibit substantial discrepancies across different estimation methods. Remarkably, all four estimation techniques had previously demonstrated robust parameter recovery capabilities in simulated environments.  
+
+As illustrated in the figure below, the probability density functions (PDFs) of the "optimal" parameters vary significantly by method. For instance, MLE and MAP tend to yield estimates clustered around extreme boundaries (near 0 or 1). 
+
 ```{r eval=FALSE, include = FALSE}
 df_mle <- dplyr::bind_rows(unclass(fitting.MLE)) |>
   dplyr::mutate(Estimate = "MLE")
@@ -288,11 +292,146 @@ df <- dplyr::bind_rows(df_mle, df_map, df_abc, df_rnn) |>
   ggplot2::labs(x = "Optimal Values", y = "Density")
 
 ggplot2::ggsave(
-  filename = "./fig/Estimation_Comparison.png", 
+  filename = "./fig/Estimation_Comparison(PDF).png", 
   width = 32, height = 18
 )
 ```
 
 <p align="center">
-    <img src="./fig/Estimation_Comparison.png" alt="Block_Ratio" width="80%" style="display: inline;">
+    <img src="./fig/Estimation_Comparison(PDF).png" alt="Block_Ratio" width="80%" style="display: inline;">
+</p>
+
+Furthermore, when examining the pairwise correlations between the optimal parameters, the convergence remains strikingly low. Only the MLE and MAP estimates for $\alpha$ show a moderate-to-high correlation, whereas almost no meaningful associations exist between other pairs of estimation techniques.
+
+```{r eval=FALSE, include = FALSE}
+df <- dplyr::bind_rows(df_mle, df_map, df_abc, df_rnn)
+
+model_params <- list(
+  TD = c("alpha", "beta"),
+  RSTD = c("alphaN", "alphaP", "beta"),
+  Utility = c("alpha", "beta", "gamma")
+)
+
+estimate_pairs <- list(
+  c("MLE", "MAP"), c("MLE", "ABC"), c("MLE", "RNN"),
+  c("MAP", "ABC"), c("MAP", "RNN"),
+  c("ABC", "RNN")
+)
+
+nodes <- data.frame(
+  method = c("MLE", "MAP", "ABC", "RNN"),
+  x = c(0.25, 0.75, 0.75, 0.25),
+  y = c(0.75, 0.75, 0.25, 0.25)
+)
+
+calc_cor <- function(data, m, p, meth1, meth2) {
+  v1 <- dplyr::filter(data, fit_model == m & Estimate == meth1)[[p]]
+  v2 <- dplyr::filter(data, fit_model == m & Estimate == meth2)[[p]]
+  
+  return(stats::cor(v1, v2, use = "complete.obs"))
+}
+
+plot_data <- purrr::map_df(names(model_params), function(m) {
+  purrr::map_df(model_params[[m]], function(p) {
+    purrr::map_df(estimate_pairs, function(pair) {
+      data.frame(
+        model = m,
+        estimate1 = pair[1],
+        estimate2 = pair[2],
+        parameter = p,
+        cor = calc_cor(df, m, p, pair[1], pair[2])
+      )
+    })
+  })
+}) |>
+  dplyr::left_join(nodes, by = stats::setNames("method", "estimate1")) |>
+  dplyr::rename(x1 = x, y1 = y) |>
+  dplyr::left_join(nodes, by = stats::setNames("method", "estimate2")) |>
+  dplyr::rename(x2 = x, y2 = y) |>
+  dplyr::mutate(
+    cor_color = base::ifelse(cor < 0, -0.1, cor),
+    model = factor(model, levels = c("TD", "RSTD", "Utility"))
+  )
+```
+
+```{r eval=FALSE, include = FALSE}
+draw_network <- function(data_subset, nodes_data, title_text) {
+  ggplot2::ggplot(data_subset) +
+    ggplot2::geom_segment(
+      ggplot2::aes(
+        x = x1, y = y1, xend = x2, yend = y2, 
+        linewidth = base::abs(cor), color = cor_color
+      ),
+      alpha = 0.8
+    ) +
+    ggplot2::geom_point(
+      data = nodes_data, 
+      ggplot2::aes(x = x, y = y, fill = method), 
+      size = 14, color = "white", shape = 21, stroke = 1
+    ) +
+    ggplot2::geom_text(
+      data = nodes_data, 
+      ggplot2::aes(x = x, y = y, label = method),
+      size = 3.5, fontface = "bold", color = "white"
+    ) +
+    ggplot2::facet_wrap(~ parameter, ncol = 3) +
+    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::scale_x_continuous(limits = c(0, 1)) +
+    # 统一主题设置
+    ggplot2::theme(
+      panel.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      axis.text = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      strip.background = ggplot2::element_blank(),
+      strip.text = ggplot2::element_text(face = "bold", size = 11),
+      plot.title = ggplot2::element_text(hjust = 0, face = "bold", size = 14)
+    ) +
+    ggplot2::labs(title = title_text, x = "", y = "")
+}
+
+# 基础预处理
+plot_base <- plot_data |> 
+  dplyr::mutate(cor_color = base::ifelse(cor < 0, -0.1, cor))
+
+# 生成三张独立的图
+p1 <- plot_base |> 
+  dplyr::filter(model == "TD") |> 
+  draw_network(nodes, "TD")
+
+p2 <- plot_base |> 
+  dplyr::filter(model == "RSTD") |> 
+  draw_network(nodes, "RSTD")
+
+p3 <- plot_base |> 
+  dplyr::filter(model == "Utility") |> 
+  draw_network(nodes, "Utility")
+
+final_plot <- (p1 / p2 / p3) + 
+  patchwork::plot_layout(
+    heights = base::c(1, 1, 1), 
+    guides = "collect"          
+  ) & 
+  ggplot2::scale_color_gradientn(
+    colors = base::c("grey70", "blue", "cyan", "green", "yellow", "orange", "red"),
+    values = scales::rescale(c(-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1)),
+    limits = c(-0.1, 1),
+    name = "Correlation"
+  ) &
+  ggplot2::scale_fill_manual(
+    values = c(
+      "MLE" = "#ff6b6b", "MAP" = "#ffd93d", "ABC" = "#6bcb77", "RNN" = "#4d96ff"
+    ),
+    guide = "none"
+  ) &
+  ggplot2::scale_linewidth(range = c(0.2, 4), guide = "none")
+
+ggplot2::ggsave(
+  filename = "./fig/Estimation_Comparison(NET).png", 
+  width = 16, height = 9
+)
+```
+
+<p align="center">
+    <img src="./fig/Estimation_Comparison(NET).png" alt="Block_Ratio" width="80%" style="display: inline;">
 </p>

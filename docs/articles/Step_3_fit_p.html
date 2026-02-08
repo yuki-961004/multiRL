@@ -310,8 +310,25 @@ All of the following figures were generated using
 <div class="section level2">
 <h2 id="comparison">Comparison<a class="anchor" aria-label="anchor" href="#comparison"></a>
 </h2>
+<p>Despite employing identical computational models with synchronized
+hyper-parameter settings (e.g., a fixed lapse rate of 0.1), the
+resulting parameter estimates exhibit substantial discrepancies across
+different estimation methods. Remarkably, all four estimation techniques
+had previously demonstrated robust parameter recovery capabilities in
+simulated environments.</p>
+<p>As illustrated in the figure below, the probability density functions
+(PDFs) of the “optimal” parameters vary significantly by method. For
+instance, MLE and MAP tend to yield estimates clustered around extreme
+boundaries (near 0 or 1).</p>
 <p align="center">
-<img src="fig/Estimation_Comparison.png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
+<img src="fig/Estimation_Comparison(PDF).png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
+<p>Furthermore, when examining the pairwise correlations between the
+optimal parameters, the convergence remains strikingly low. Only the MLE
+and MAP estimates for <span class="math inline">\(\alpha\)</span> show a
+moderate-to-high correlation, whereas almost no meaningful associations
+exist between other pairs of estimation techniques.</p>
+<p align="center">
+<img src="fig/Estimation_Comparison(NET).png" alt="Block_Ratio" width="80%" style="display: inline;"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
