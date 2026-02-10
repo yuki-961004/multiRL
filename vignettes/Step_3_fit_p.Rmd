@@ -120,8 +120,8 @@ fitting.MAP <- multiRL::fit_p(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
-    core = 10, sample = 100, iter = 100,
-    diff = 0.1, patience = 10
+    core = 10, iter = 100,
+    diff = 0.1, patience = 1
   )
 )
 
@@ -164,7 +164,7 @@ fitting.ABC <- multiRL::fit_p(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
-    core = 10, sample = 100, train = 1000,
+    core = 10, train = 1000,
     tol = 0.1
   )
 )
@@ -220,7 +220,7 @@ fitting.RNN <- multiRL::fit_p(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
-    core = 1, sample = 100, train = 1000,
+    core = 1, train = 1000,
     layer = "GRU", units = 128, batch_size = 10, epochs = 100
   )
 )
@@ -406,6 +406,8 @@ p2 <- plot_base |>
 p3 <- plot_base |> 
   dplyr::filter(model == "Utility") |> 
   draw_network(nodes, "Utility")
+
+library(patchwork)
 
 final_plot <- (p1 / p2 / p3) + 
   patchwork::plot_layout(

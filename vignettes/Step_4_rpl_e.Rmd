@@ -54,7 +54,7 @@ plot(x = replay.recovery)
 
 ```{r eval=FALSE}
 replay.fitting <- multiRL::rpl_e(
-  result = fitting.RNN,
+  result = fitting.XXX,
 
   data = data,
   behrule = behrule,

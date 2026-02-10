@@ -239,7 +239,7 @@ estimate_1_MAP <- function(
     iter <- 0
     stuck <- 0
     
-    hp <- patience
+    hp <- patience - 1
     best_LogPo <- -Inf
     
     # 当LogPo的变化值不小于diff, 或迭代次数未达到, 则不断执行
@@ -327,7 +327,7 @@ estimate_1_MAP <- function(
           "Iteration limit reached without convergence."
         ))
         break
-      } else if (stuck > 1 || hp < 0) {
+      } else if (stuck > 1 || hp == 0) {
         message(paste0(
           "EM-MAP seems to be stuck",
           ". ",
