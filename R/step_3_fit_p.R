@@ -139,7 +139,9 @@ fit_p <- function(
     fit_settings[[i]] <- list(
       name = settings[[i]]$name,
       mode = "fitting",
-      estimate = estimate
+      estimate = estimate,
+      policy = settings[[i]]$policy,
+      system = settings[[i]]$system
     )
   }
   

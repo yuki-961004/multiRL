@@ -37,7 +37,7 @@ testthat::test_that("MAP", {
     algorithm = "NLOPT_GN_MLSL",
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 4, iter = c(10, 3))
+    control = list(core = 4, iter = 10, patience = 1)
   )
   
   testthat::expect_s3_class(result.MAP, "data.frame")

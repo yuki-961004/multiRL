@@ -116,6 +116,11 @@ save(recovery.MLE, file = "./recovery.MLE.Rdata")
     <img src="./fig/MLE/NLOPT/Utility_gamma(MLE).png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
+<p align="center">
+    <img src="./fig/MLE/NLOPT/Confusion_Matrix(MLE).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Inversion_Matrix(MLE).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+</p>
+
 ### MAP
 
 ```{r eval=FALSE}
@@ -174,6 +179,11 @@ save(recovery.MAP, file = "./recovery.MAP.Rdata")
     <img src="./fig/MAP/Utility_gamma(MAP).png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
+<p align="center">
+    <img src="./fig/MAP/Confusion_Matrix(MAP).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/MAP/Inversion_Matrix(MAP).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+</p>
+
 ### ABC
 
 ```{r eval=FALSE}
@@ -229,6 +239,11 @@ save(recovery.ABC, file = "./recovery.ABC.Rdata")
     <img src="./fig/ABC/Utility_alpha(ABC).png" alt="Utility_alpha" width="30%" style="display: inline;">
     <img src="./fig/ABC/Utility_beta(ABC).png" alt="Utility_beta" width="30%" style="display: inline;">
     <img src="./fig/ABC/Utility_gamma(ABC).png" alt="Utility_gamma" width="30%" style="display: inline;">
+</p>
+
+<p align="center">
+    <img src="./fig/ABC/Confusion_Matrix(ABC).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/ABC/Inversion_Matrix(ABC).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
 </p>
 
 ### RNN
@@ -300,3 +315,7 @@ save(recovery.RNN, file = "./recovery.RNN.Rdata")
     <img src="./fig/RNN/Utility_gamma(RNN).png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
+<p align="center">
+    <img src="./fig/RNN/Confusion_Matrix(RNN).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/RNN/Inversion_Matrix(RNN).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+</p>

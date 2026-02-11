@@ -75,7 +75,7 @@ View(multiRL.output@result@prob)
 ```
 
 ```{r}
-multiRL.model <- run_m(
+multiRL.model <- multiRL::run_m(
   engine = "Cpp",
   data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   behrule = list(

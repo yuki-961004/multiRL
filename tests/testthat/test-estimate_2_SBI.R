@@ -29,7 +29,7 @@ testthat::test_that("SBI", {
       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
       beta = function(x) {stats::rexp(n = 1, rate = 1)}
     ),
-    control = list(sample = 10)
+    control = list(core = 2, sample = 10)
   )
 
   testthat::expect_type(list_simulated, "list")

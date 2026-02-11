@@ -166,7 +166,8 @@ rcv_d <- function(
       name = settings[[i]]$name,
       mode = "simulating",
       estimate = estimate,
-      policy = "on"
+      policy = "on",
+      system = settings[[i]]$system
     )
   }
   
@@ -175,7 +176,9 @@ rcv_d <- function(
     fit_settings[[i]] <- list(
       name = settings[[i]]$name,
       mode = "fitting",
-      estimate = estimate
+      estimate = estimate,
+      policy = settings[[i]]$policy,
+      system = settings[[i]]$system
     )
   }
   

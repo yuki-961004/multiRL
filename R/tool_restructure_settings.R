@@ -1,6 +1,6 @@
 .restructure_settings <- function(x, n){
   
-  slots <- c("name", "mode", "estimate", "policy")
+  slots <- c("name", "mode", "estimate", "policy", "system")
   
   # 每个元素都没名字, 且第一个元素是list
   if (is.null(names(x)) && is.list(x[[1]])) {
@@ -17,10 +17,10 @@
         settings[[i]][[s]] <- if (length(val) == 1) val[[1]] else val[[i]]
       }
     }
+  # nocov start
   # 如果settings里没设置, 就传出一个空list
   } else if (is.null(x)) {
     settings <- rep(list(list()), n)
-  # nocov start
   } else {
     stop("Invalid settings value.")
   }

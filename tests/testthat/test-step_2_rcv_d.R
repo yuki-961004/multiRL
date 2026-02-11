@@ -45,6 +45,7 @@ testthat::test_that("MLE", {
   
 })
 
+# ABC
 testthat::test_that("ABC", {
   
   recovery.ABC <- multiRL::rcv_d(

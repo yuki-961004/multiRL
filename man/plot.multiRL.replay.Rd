@@ -4,7 +4,7 @@
 \alias{plot.multiRL.replay}
 \title{plot.multiRL.replay}
 \usage{
-\method{plot}{multiRL.replay}(x, y = NULL, model = NULL, param = NULL, ...)
+\method{plot}{multiRL.replay}(x, y = NULL, model = NULL, param = NULL, metric = "BIC", ...)
 }
 \arguments{
 \item{x}{multiRL.replay}
@@ -14,6 +14,9 @@
 \item{model}{The name of model that you want to plot}
 
 \item{param}{The name of parameter that you want to plot}
+
+\item{metric}{The metric for identifying the optimal model defaults to BIC; if the LogL 
+cannot be calculated, ACC is used instead.}
 
 \item{...}{extra}
 }
