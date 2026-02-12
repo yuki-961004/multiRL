@@ -40,7 +40,9 @@ multiRL.model <- multiRL::run_m(
   params = list(
     free = list(
       alpha = 0.5,
-      beta = 0.5
+      beta = 0.5,
+      delta = 0,
+      sticky = 100
     )
   ),
   priors = list(

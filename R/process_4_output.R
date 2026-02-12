@@ -82,13 +82,14 @@ process_4_output_r <- function(
   
   value       <- lapply(value, function(x) {
     x[1, ] <- ifelse(is.na(Q0), yes = 0, no = Q0)
-    rbind(x, rep(NA, ncol(x)))
+    rbind(x, rep(NA_real_, ncol(x)))
   })
 
   count[1, ]  <- 0
-  count       <- rbind(count, rep(NA, ncol(count)))
+  count       <- rbind(count, rep(NA_real_, ncol(count)))
 
   behave <- cbind(action, latent, simulation)
+  behave <- rbind(behave, rep(NA_character_, ncol(behave)))
   colnames(behave) <- c("action", "latent", "simulation")
   
 ############################# [action select] ##################################
@@ -112,7 +113,8 @@ process_4_output_r <- function(
       params = params,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
-      behave = behave[i, ]
+      behave = behave[i, ],
+      cue = cue, rsp = rsp
     )
     # exploration function: 此次是否进行探索
     exploration[i, ] <- expl_func(
@@ -120,7 +122,8 @@ process_4_output_r <- function(
       params = params,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
-      behave = behave[i, ]
+      behave = behave[i, ],
+      cue = cue, rsp = rsp
     )
 
     qvalue <- lapply(value, function(x) (x[i, ] + bias[i, ]) * shown[i, ])
@@ -133,7 +136,8 @@ process_4_output_r <- function(
       system = system,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
-      behave = behave[i, ]
+      behave = behave[i, ],
+      cue = cue, rsp = rsp
     )
     
     switch(
@@ -158,9 +162,13 @@ process_4_output_r <- function(
         simulation[i, ] <- action[i, ]
       }
     )
-    
+
+    # 记录当前行为到当前试次, 会覆盖上一次的行为
     behave[i, 2] <- latent[i, ]
     behave[i, 3] <- simulation[i, ]
+    # 记录当前行为到下一个试次, 用于action select三函数读取
+    behave[i + 1, 2] <- latent[i, ]
+    behave[i + 1, 3] <- simulation[i, ]
     
 ############################## [value update] ##################################
     
@@ -172,7 +180,8 @@ process_4_output_r <- function(
       params = params,
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
-      behave = behave[i, ]
+      behave = behave[i, ],
+      cue = cue, rsp = rsp
     )
     
     # 判断是否需要重置：Block是否发生变化
@@ -206,7 +215,8 @@ process_4_output_r <- function(
         system = sub_system,
         idinfo = idinfo[i, ],
         exinfo = exinfo[i, ],
-        behave = behave[i, ]
+        behave = behave[i, ],
+        cue = cue, rsp = rsp
       )
 
       if (is.na(Q0) && is.fp) {
@@ -223,7 +233,8 @@ process_4_output_r <- function(
           system = sub_system,
           idinfo = idinfo[i, ],
           exinfo = exinfo[i, ],
-          behave = behave[i, ]
+          behave = behave[i, ],
+          cue = cue, rsp = rsp
         )
       }
       
@@ -237,6 +248,7 @@ process_4_output_r <- function(
   # 删掉初始值和初始计数器
   value <- lapply(value, function(x) {x[-1, ]})
   count <- count[-1, ]
+  behave <- behave[-1, ]
 
 ################################# [output] #####################################
     

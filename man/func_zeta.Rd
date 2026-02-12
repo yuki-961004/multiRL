@@ -48,6 +48,9 @@ systems involved?
        \item simulation: 
          the actual behavior performed by the agent.
      }
+   \item cue and rsp:
+     Cues and responses within latent learning rules, 
+       see \link[multiRL]{behrule} 
 }}
 }
 \value{

@@ -1,5 +1,7 @@
 utils::globalVariables(c(
   "multiRL.env",
+  # variables
+  "idinfo", "exinfo", "behave", "cue", "rsp",
   # model
   "data", "behrule", "colnames", "funcs", "priors", "settings",
   # MLE

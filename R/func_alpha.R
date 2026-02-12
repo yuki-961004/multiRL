@@ -44,6 +44,9 @@
 #'        \item simulation: 
 #'          the actual behavior performed by the agent.
 #'      }
+#'    \item cue and rsp:
+#'      Cues and responses within latent learning rules, 
+#'        see \link[multiRL]{behrule} 
 #' }
 #'    
 #' @return A \code{NumericVector} containing the updated values computed based 

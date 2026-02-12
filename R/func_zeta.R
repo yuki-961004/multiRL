@@ -45,6 +45,9 @@
 #'        \item simulation: 
 #'          the actual behavior performed by the agent.
 #'      }
+#'    \item cue and rsp:
+#'      Cues and responses within latent learning rules, 
+#'        see \link[multiRL]{behrule} 
 #' }
 #'    
 #' @return A \code{NumericVector} representing the values of unchosen options 

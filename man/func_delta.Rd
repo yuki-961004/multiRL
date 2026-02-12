@@ -39,6 +39,9 @@ see \link[multiRL]{params}}
        \item simulation: 
          the actual behavior performed by the agent.
      }
+   \item cue and rsp:
+     Cues and responses within latent learning rules, 
+       see \link[multiRL]{behrule} 
 }}
 }
 \value{
@@ -66,11 +69,17 @@ A \code{NumericVector} containing the bias for each option based on
   # Trial  <- idinfo[3]
   # Frame  <- exinfo[1]
   # Action <- behave[1]
+  latent <- behave[2]
+  position <- as.numeric(cue %in% latent)
   
-  delta     <-  params[["delta"]]
+  delta     <- params[["delta"]]
+  sticky    <- params[["sticky"]]
   
-  bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10))
-  
+  # Upper-Confidence-Bound
+  bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) +
+   # Sticky to the same response
+   sticky * position
+   
   return(bias)
 }
 }

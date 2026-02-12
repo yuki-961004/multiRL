@@ -46,6 +46,9 @@ systems involved?
        \item simulation: 
          the actual behavior performed by the agent.
      }
+   \item cue and rsp:
+     Cues and responses within latent learning rules, 
+       see \link[multiRL]{behrule} 
 }}
 }
 \value{
@@ -92,7 +95,6 @@ A \code{NumericVector} containing the probability of choosing each
   lapse    <- params[["lapse"]]
   weight   <- params[["weight"]]
   capacity <- params[["capacity"]]
-  sticky   <- params[["sticky"]]
   
   index     <- which(!is.na(qvalue[[1]]))
   n_shown   <- length(index)

@@ -64,6 +64,9 @@
 #'        \item simulation: 
 #'          the actual behavior performed by the agent.
 #'      }
+#'    \item cue and rsp:
+#'      Cues and responses within latent learning rules, 
+#'        see \link[multiRL]{behrule} 
 #' }
 #'    
 #' @return An \code{int}, either 0 or 1, indicating exploration or 
