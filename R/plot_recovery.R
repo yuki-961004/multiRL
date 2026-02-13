@@ -118,6 +118,15 @@
   
 ############################## [model recovery] ################################
   
+  if (length(x$simulate) == 1){
+    message(paste0(
+      "It looks like you're just doing parameter recovery for one model, ", 
+      "so there aren't any plots for the model recovery."
+    ))
+    output$model <- NULL
+    return(invisible(list(param = output$param, model = output$model)))
+  }
+  
   is.latent <- is.na(x$simulate[[1]][[1]]$multiRL.summary@metrics@LL)
   
   if (is.latent) {

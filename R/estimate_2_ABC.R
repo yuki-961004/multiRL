@@ -99,6 +99,7 @@ estimate_2_ABC <- function(
   for (i in 1:length(settings)) {
     settings[[i]]$mode <- "fitting"
     settings[[i]]$estimate <- "ABC"
+    settings[[i]]$policy <- "on"
   }
   
   # 转换先验
@@ -132,6 +133,9 @@ estimate_2_ABC <- function(
   # 如果没有输入要拟合的被试序号, 就拟合所有的被试
   if (is.null(ids)){ids <- dfinfo$all_ids}
 
+  n_block <- length(unique(data[[colnames$block]]))
+  n_rsp <- length(behrule$rsp)
+  
 ################################ [ Parallel ] ################################## 
   
   sys <- Sys.info()[["sysname"]]
@@ -201,6 +205,14 @@ estimate_2_ABC <- function(
                 data = x, colname = colnames$action, levels = behrule$rsp
             )})
             
+            if ((n_block * n_rsp) > 100) {
+              df_target <- t(sapply(X = df_target, FUN = function(x) {
+                sum(x * (2 ^ seq_along(x)))
+              }))
+            } else {
+              df_target <- .for_abc(df_target)
+            }
+            
             n_params <- length(priors[[i]])
             
             utils::capture.output(
@@ -244,6 +256,14 @@ estimate_2_ABC <- function(
                 action_prop  <- .block_ratio(
                   data = x, colname = colnames$action, levels = behrule$rsp
             )})
+            
+            if ((n_block * n_rsp) > 100) {
+              df_target <- t(sapply(X = df_target, FUN = function(x) {
+                sum(x * (2 ^ seq_along(x)))
+              }))
+            } else {
+              df_target <- .for_abc(df_target)
+            }
             
             n_params <- length(priors[[i]])
             

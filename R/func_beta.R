@@ -71,9 +71,10 @@
 #'     qvalue, 
 #'     explor,
 #'     params,
+#'     system,
 #'     ...
 #' ){
-#' 
+#'   
 #'   list2env(list(...), envir = environment())
 #'   
 #'   # If you need extra information(...)
@@ -112,11 +113,11 @@
 #'   }
 #'   
 #'   # Weighted average
-#'   prob <- as.vector(prob_mat %*% weight)
+#'   prob <- as.vector(prob_mat \%*\% weight)
 #'   
 #'   # lapse
 #'   prob <- (1 - lapse * n_shown) * prob + lapse
-#'   
+#'    
 #'   return(prob)
 #' }
 #' }

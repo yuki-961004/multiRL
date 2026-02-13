@@ -375,6 +375,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             is_nb = false;  
         }
 
+        // 检查此时是否是第一次选(全局第一次 or 局部第一次, 都算)
         bool is_fp = (count(i, col_index) == 0);
 
         for (int s = 0; s < n_system; s++) {
@@ -434,8 +435,14 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             // 写回 list
             value[sub_system] = sub_value;
         }
-
-        count.row(i+1) = count.row(i);
+        
+        //如果需要重置, 且进入了新block, 则计数器也要归零
+        if (is_nb) {
+            std::fill( count.row(i+1).begin(), count.row(i+1).end(), 0.0 );
+        } else {
+            count.row(i+1) = count.row(i);
+        }
+        
         count(i+1, col_index) = count(i+1, col_index)+1;
     }
 

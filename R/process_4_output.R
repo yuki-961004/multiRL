@@ -190,7 +190,8 @@ process_4_output_r <- function(
     } else {
       is.nb <- FALSE
     }
-    
+
+    # 检查此时是否是第一次选(全局第一次 or 局部第一次, 都算)
     is.fp <- count[i, latent[i, ]] == 0
 
     # 多系统更新价值
@@ -241,7 +242,13 @@ process_4_output_r <- function(
       value[[sub_system]] <- sub_value
     }
     
-    count[i + 1, ] <- count[i, ]
+    # 如果需要重置, 且进入了新block, 则计数器也要归零
+    if (is.nb) {
+      count[i + 1, ] <- 0
+    } else {
+      count[i + 1, ] <- count[i, ]
+    }
+    
     count[i + 1, latent[i, ]] <- count[i + 1, latent[i, ]] + 1
   }
   

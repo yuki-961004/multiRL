@@ -93,6 +93,7 @@ estimate_2_RNN <- function(
   for (i in 1:length(settings)) {
     settings[[i]]$mode <- "fitting"
     settings[[i]]$estimate <- "RNN"
+    settings[[i]]$policy <- "on"
   }
   
   # 转换先验
