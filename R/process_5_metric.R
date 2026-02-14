@@ -85,7 +85,6 @@ process_5_metric <- function(
 
 ################################## [ABC] #######################################
   
-  n_block     <- output@input@n_block
   idinfo      <- output@input@features@idinfo
   latent      <- output@result@latent
   simulation  <- output@result@simulation
@@ -94,20 +93,10 @@ process_5_metric <- function(
   behavior$Trial <- as.numeric(behavior$Trial)
   colnames(behavior) <- c("Subject", "Block", "Trial", "Latent", "Simulation")
   
-  # 计算每个block中simulation的选择比率
-  ratio <- lapply(X = split(behavior, behavior[, "Block"]), FUN = function(x) {
-    action_prop  <- .block_ratio(data = x, colname = "Simulation", levels = rsp)
-  })
-  
-  if ((n_block * length(rsp)) > 100) {
-    onerow <- t(sapply(X = ratio, FUN = function(x) {
-      sum(x * (2 ^ seq_along(x)))
-    }))
-  } else {
-    onerow <- .for_abc(ratio)
-  }
-  
-  ABC <- list(ratio = ratio, onerow = onerow)
+  ABC <- .for_abc(
+    data = behavior, rsp = rsp,
+    block = "Block", action = "Simulation"
+  )
   
 ################################# [return] ##################################### 
   

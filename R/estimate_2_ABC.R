@@ -132,9 +132,6 @@ estimate_2_ABC <- function(
   }
   # 如果没有输入要拟合的被试序号, 就拟合所有的被试
   if (is.null(ids)){ids <- dfinfo$all_ids}
-
-  n_block <- length(unique(data[[colnames$block]]))
-  n_rsp <- length(behrule$rsp)
   
 ################################ [ Parallel ] ################################## 
   
@@ -199,26 +196,17 @@ estimate_2_ABC <- function(
           ) %dorng% {
             sub_data <- data[data[, subid] == j, ]
             
-            df_target <- lapply(
-              X = split(sub_data, sub_data[, colnames$block]), FUN = function(x) {
-              action_prop  <- .block_ratio(
-                data = x, colname = colnames$action, levels = behrule$rsp
-            )})
-            
-            if ((n_block * n_rsp) > 100) {
-              df_target <- t(sapply(X = df_target, FUN = function(x) {
-                sum(x * (2 ^ seq_along(x)))
-              }))
-            } else {
-              df_target <- .for_abc(df_target)
-            }
+            target <- .for_abc(
+              data = sub_data, rsp = behrule$rsp,
+              block = colnames$block, action = colnames$action
+            )
             
             n_params <- length(priors[[i]])
             
             utils::capture.output(
               suppressWarnings({
                 opt_params_j <- summary(abc::abc(
-                  target = df_target, 
+                  target = target$onerow, 
                   param = ABC$df_params, 
                   sumstat = ABC$df_sumstats, 
                   tol = tol, 
@@ -250,27 +238,18 @@ estimate_2_ABC <- function(
               model = models[[i]],
               control = control
             )
-
-            df_target <- lapply(
-              X = split(sub_data, sub_data[, colnames$block]), FUN = function(x) {
-                action_prop  <- .block_ratio(
-                  data = x, colname = colnames$action, levels = behrule$rsp
-            )})
             
-            if ((n_block * n_rsp) > 100) {
-              df_target <- t(sapply(X = df_target, FUN = function(x) {
-                sum(x * (2 ^ seq_along(x)))
-              }))
-            } else {
-              df_target <- .for_abc(df_target)
-            }
+            df_target <- .for_abc(
+              data = sub_data, rsp = behrule$rsp,
+              block = colnames$block, action = colnames$action
+            )
             
             n_params <- length(priors[[i]])
             
             utils::capture.output(
               suppressWarnings({
                 opt_params_j <- summary(abc::abc(
-                  target = df_target, 
+                  target = target$onerow, 
                   param = ABC$df_params, 
                   sumstat = ABC$df_sumstats, 
                   tol = tol, 

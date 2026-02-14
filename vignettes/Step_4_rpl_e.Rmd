@@ -15,7 +15,7 @@ vignette: >
 
 ```{r eval=FALSE}
 replay.recovery <- multiRL::rpl_e(
-  result = recovery.XXX,
+  result = recovery.ABC,
 
   data = data,
   behrule = behrule,
@@ -27,7 +27,7 @@ replay.recovery <- multiRL::rpl_e(
   omit = c("data", "funcs")
 )
   
-save(replay.recovery, file = "./replay.recovery.XXX.Rdata")
+save(replay.recovery, file = "./replay.recovery.ABC.Rdata")
 
 plot(x = replay.recovery)
 ```

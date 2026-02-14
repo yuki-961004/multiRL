@@ -36,7 +36,7 @@ priors = list(
 model = multiRL::RSTD
 # 生成多少个模拟数据集, 使用多少个核心用于生成
 # 核心数量, 在任务管理器里查看, 尽可能多
-control = list(sample = 1100, core = 8)
+control = list(sample = 100, core = 1)
 ```
 
 ```{r}
