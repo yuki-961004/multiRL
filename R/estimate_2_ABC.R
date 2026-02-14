@@ -239,7 +239,7 @@ estimate_2_ABC <- function(
               control = control
             )
             
-            df_target <- .for_abc(
+            target <- .for_abc(
               data = sub_data, rsp = behrule$rsp,
               block = colnames$block, action = colnames$action
             )

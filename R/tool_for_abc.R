@@ -1,6 +1,4 @@
-.for_abc <- function(
-  data, rsp, block, action
-) {
+.for_abc <- function(data, rsp, block, action) {
   
   n_block <- length(unique(data[[block]]))
   n_rsp <- length(rsp)
