@@ -5,7 +5,7 @@
 }
 
 .extract_sumstats <- function(x) {
-  stats_vector <- x$sumstat
-  names(stats_vector) <- colnames(x$sumstat)
-  return(stats_vector)
+  stats_matrix <- x$sumstat
+  colnames(stats_matrix) <- colnames(x$sumstat)
+  return(stats_matrix)
 }

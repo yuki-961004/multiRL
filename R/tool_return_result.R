@@ -27,7 +27,7 @@
   LPo               <- model@sumstat@LPo
   
   # for ABC
-  sumstat           <- model@sumstat@ABC$onerow
+  sumstat           <- model@sumstat@ABC$ratio
   
   # for RNN
   matrix            <- .df2matrix(df = data)

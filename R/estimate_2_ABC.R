@@ -114,7 +114,8 @@ estimate_2_ABC <- function(
     sample = 100,
     train = 1000,
     scope = "individual",
-    tol = 0.1
+    tol = 0.1,
+    reduction = "NONE"
   )
   control <- utils::modifyList(x = default, val = control)
   # 解放control中的设定, 变成全局变量
@@ -159,6 +160,7 @@ estimate_2_ABC <- function(
   for (i in 1:length(models)) {
     
     model_name <- settings[[i]]$name
+    n_params <- length(priors[[i]])
 
 ################################## [ABC] #######################################
     
@@ -190,7 +192,7 @@ estimate_2_ABC <- function(
             model = models[[i]],
             control = control
           )
-
+          
           opt_params <- foreach::foreach(
             j = ids, .packages = c("multiRL")
           ) %dorng% {
@@ -201,14 +203,16 @@ estimate_2_ABC <- function(
               block = colnames$block, action = colnames$action
             )
             
-            n_params <- length(priors[[i]])
+            reduced_sumstats <- .reduce_sumstats(
+              method = reduction, abc = ABC, target = target
+            ) 
             
             utils::capture.output(
               suppressWarnings({
                 opt_params_j <- summary(abc::abc(
-                  target = target$onerow, 
-                  param = ABC$df_params, 
-                  sumstat = ABC$df_sumstats, 
+                  target = reduced_sumstats$target$onerow, 
+                  param = reduced_sumstats$abc$df_params, 
+                  sumstat = reduced_sumstats$abc$df_sumstats, 
                   tol = tol, 
                   method = "neuralnet", 
                   transf = rep("logit", n_params),
@@ -244,14 +248,16 @@ estimate_2_ABC <- function(
               block = colnames$block, action = colnames$action
             )
             
-            n_params <- length(priors[[i]])
+            reduced_sumstats <- .reduce_sumstats(
+              method = reduction, abc = ABC, target = target
+            ) 
             
             utils::capture.output(
               suppressWarnings({
                 opt_params_j <- summary(abc::abc(
-                  target = target$onerow, 
-                  param = ABC$df_params, 
-                  sumstat = ABC$df_sumstats, 
+                  target = reduced_sumstats$target$onerow, 
+                  param = reduced_sumstats$abc$df_params, 
+                  sumstat = reduced_sumstats$abc$df_sumstats, 
                   tol = tol, 
                   method = "neuralnet", 
                   transf = rep("logit", n_params),

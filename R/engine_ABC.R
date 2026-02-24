@@ -83,11 +83,10 @@ engine_ABC <- function(
   
   #Step 2: Summary Statistics
   list_sumstats <- lapply(list_simulated, .extract_sumstats)
-  df_sumstats <- as.data.frame(do.call(rbind, list_sumstats))
   
   ABC <- list(
     df_params = df_params,
-    df_sumstats = df_sumstats
+    list_sumstats = list_sumstats
   )
     
   return(ABC)

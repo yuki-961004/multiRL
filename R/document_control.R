@@ -168,6 +168,43 @@
 #'          \code{tol = 0.1} (the default) means only the 10 percent of 
 #'          simulated data that is closest to your actual data is used. 
 #'          
+#'    \item \code{reduction [Character]} 
+#'    
+#'          Specifies the dimension reduction method for summary statistics. 
+#'          In ABC, high-dimensional summary statistics often lead to the 
+#'          "curse of dimensionality," where the algorithm struggles to find a 
+#'          solution or suffers from extremely slow convergence. Reducing the 
+#'          dimensions (compressing the data) helps retain the "fingerprint" 
+#'          of the original data while removing noise, ensuring the program 
+#'          can efficiently identify the underlying parameters.
+#'          
+#'          \itemize{
+#'              \code{"NONE"}: 
+#'                  No compression is applied. This is suitable for 
+#'                  smaller datasets where the total number of features 
+#'                  (e.g., blocks * responses) is relatively low 
+#'                  (typically less than 200).
+#'          }
+#'          \itemize{
+#'              \code{"PLS"} (Partial Least Squares): 
+#'                  A supervised reduction method that compresses the summary 
+#'                  statistics into a space with dimensions equal to the number 
+#'                  of parameters. It identifies the linear combinations of 
+#'                  statistics that have the maximum covariance with the input 
+#'                  parameters, effectively "guiding" the compression to 
+#'                  prioritize information most relevant to parameter estimation.
+#'          }
+#'          \itemize{
+#'              \code{"PCA"} (Principal Component Analysis): 
+#'                  An unsupervised reduction method that compresses the 
+#'                  information into a space with dimensions equal to the 
+#'                  number of blocks. It identifies the directions (principal 
+#'                  components) that capture the maximum variance within the 
+#'                  summary statistics themselves, preserving the most 
+#'                  characteristic features of the data without considering the 
+#'                  underlying parameters.
+#'          }
+#'          
 #' }
 #' }
 #' 
@@ -242,6 +279,7 @@
 #'    scope = "individual", 
 #'    # ABC
 #'    tol = 0.1,
+#'    reduction = "PCA",
 #'    # 
 #'    info = c(colnames$object, colnames$action), 
 #'    layer = "GRU", 

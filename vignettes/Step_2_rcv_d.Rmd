@@ -217,7 +217,7 @@ recovery.ABC <- multiRL::rcv_d(
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
     core = 10, sample = 100, train = 1000,
-    tol = 0.1
+    tol = 0.1, reduction = "NONE"
   )
 )
 
