@@ -9,7 +9,7 @@ utils::globalVariables(c(
   # MAP
   "diff", "patience", 
   # ABC
-  "tol", "reduction",
+  "tol", "reduction", "ncomp",
   # RNN,
   "sample", "train", "scope", "info", "layer", "units", "batch_size", "epochs"
 ))

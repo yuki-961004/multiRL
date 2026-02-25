@@ -115,7 +115,8 @@ estimate_2_ABC <- function(
     train = 1000,
     scope = "individual",
     tol = 0.1,
-    reduction = "NONE"
+    reduction = "NONE",
+    ncomp = NULL
   )
   control <- utils::modifyList(x = default, val = control)
   # 解放control中的设定, 变成全局变量
@@ -204,7 +205,8 @@ estimate_2_ABC <- function(
             )
             
             reduced_sumstats <- .reduce_sumstats(
-              method = reduction, abc = ABC, target = target
+              abc = ABC, target = target, 
+              method = reduction, ncomp = ncomp
             ) 
             
             utils::capture.output(
@@ -249,7 +251,8 @@ estimate_2_ABC <- function(
             )
             
             reduced_sumstats <- .reduce_sumstats(
-              method = reduction, abc = ABC, target = target
+              abc = ABC, target = target, 
+              method = reduction, ncomp = ncomp
             ) 
             
             utils::capture.output(

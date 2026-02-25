@@ -224,19 +224,29 @@
 </ul><p></p><ul><li><p><code>"PLS"</code> (Partial Least Squares):
                  A supervised reduction method that compresses the summary
                  statistics into a space with dimensions equal to the number
-                 of parameters. It identifies the linear combinations of
-                 statistics that have the maximum covariance with the input
-                 parameters, effectively "guiding" the compression to
-                 prioritize information most relevant to parameter estimation.</p></li>
+                 users set (as default, it is equal to the number of blocks).
+                 It identifies the linear combinations of statistics that
+                 have the maximum covariance with the input parameters,
+                 effectively "guiding" the compression to prioritize
+                 information most relevant to parameter estimation.</p></li>
 </ul><p></p><ul><li><p><code>"PCA"</code> (Principal Component Analysis):
                  An unsupervised reduction method that compresses the
-                 information into a space with dimensions equal to the
-                 number of blocks. It identifies the directions (principal
-                 components) that capture the maximum variance within the
-                 summary statistics themselves, preserving the most
-                 characteristic features of the data without considering the
-                 underlying parameters.</p></li>
+                 information into a space with dimensions equal to users set
+                 (as default, it is equal to the number of blocks). It
+                 identifies the directions (principal components) that
+                 capture the maximum variance within the summary statistics
+                 themselves, preserving the most characteristic features of
+                 the data without considering the underlying parameters.</p></li>
 </ul></li>
+<li><p><code>ncomp [int]</code></p>
+<p>The number of components represents the quantity of information
+         after compression. By default, this value is equal to the number
+         of blocks. Since the summary statistics consist of the selection
+         ratios for each action within each block, an excessive number of
+         blocks or available actions can lead to high-dimensional
+         information, making it difficult for the ABC to converge on a
+         solution. In such cases, PLS or PCA can be selected for
+         dimensionality reduction.</p></li>
 </ul></div>
 
 <div class="section">
@@ -305,6 +315,7 @@
 <span>   <span class="co"># ABC</span></span>
 <span>   tol <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>   reduction <span class="op">=</span> <span class="st">"PCA"</span>,</span>
+<span>   ncomp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>   <span class="co">#</span></span>
 <span>   info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">colnames</span><span class="op">$</span><span class="va">object</span>, <span class="va">colnames</span><span class="op">$</span><span class="va">action</span><span class="op">)</span>,</span>
 <span>   layer <span class="op">=</span> <span class="st">"GRU"</span>,</span>

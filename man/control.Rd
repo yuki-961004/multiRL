@@ -198,21 +198,33 @@ The \code{control} argument is a mandatory list used to customize and manage
              \code{"PLS"} (Partial Least Squares): 
                  A supervised reduction method that compresses the summary 
                  statistics into a space with dimensions equal to the number 
-                 of parameters. It identifies the linear combinations of 
-                 statistics that have the maximum covariance with the input 
-                 parameters, effectively "guiding" the compression to 
-                 prioritize information most relevant to parameter estimation.
+                 users set (as default, it is equal to the number of blocks). 
+                 It identifies the linear combinations of statistics that 
+                 have the maximum covariance with the input parameters, 
+                 effectively "guiding" the compression to prioritize 
+                 information most relevant to parameter estimation.
          }
          \itemize{
              \code{"PCA"} (Principal Component Analysis): 
                  An unsupervised reduction method that compresses the 
-                 information into a space with dimensions equal to the 
-                 number of blocks. It identifies the directions (principal 
-                 components) that capture the maximum variance within the 
-                 summary statistics themselves, preserving the most 
-                 characteristic features of the data without considering the 
-                 underlying parameters.
+                 information into a space with dimensions equal to users set 
+                 (as default, it is equal to the number of blocks). It 
+                 identifies the directions (principal components) that 
+                 capture the maximum variance within the summary statistics 
+                 themselves, preserving the most characteristic features of 
+                 the data without considering the underlying parameters.
          }
+         
+   \item \code{ncomp [int]} 
+         
+         The number of components represents the quantity of information 
+         after compression. By default, this value is equal to the number 
+         of blocks. Since the summary statistics consist of the selection 
+         ratios for each action within each block, an excessive number of 
+         blocks or available actions can lead to high-dimensional 
+         information, making it difficult for the ABC to converge on a 
+         solution. In such cases, PLS or PCA can be selected for 
+         dimensionality reduction.
          
 }
 }
@@ -291,6 +303,7 @@ The \code{control} argument is a mandatory list used to customize and manage
    # ABC
    tol = 0.1,
    reduction = "PCA",
+   ncomp = NULL,
    # 
    info = c(colnames$object, colnames$action), 
    layer = "GRU", 

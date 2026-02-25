@@ -1,7 +1,10 @@
-.reduce_sumstats <- function(method, abc, target) {
+.reduce_sumstats <- function(abc, target, method, ncomp) {
 
   # 读取基本信息
-  n_params <- ncol(abc$df_params)
+  if (is.null(ncomp)) {
+    ncomp <- nrow(target$ratio)
+  }
+
   # 不修改原始变量
   abc_reduction <- abc
   target_reduction <- target
@@ -33,17 +36,24 @@
     
     pls_model <- pls::plsr(
       as.matrix(abc$df_params) ~ as.matrix(abc_reduction$df_sumstats),
-      ncomp = n_params,
-      method = "oscorespls"
+      ncomp = ncomp,
+      method = "simpls",
+      center = TRUE,
+      scale. = TRUE
     )
     
     abc_reduction$df_sumstats <- as.data.frame(
-      pls::scores(pls_model)[, 1:n_params]
+      pls::scores(pls_model)[, 1:ncomp]
     )
     
-    target_reduction$onerow <- t(matrix(stats::predict(
-      pls_model, newdata = target$onerow, comps = 1:n_params
-    )))
+    target_reduction$onerow <- as.matrix(
+      stats::predict(
+        pls_model,
+        newdata = target$onerow,
+        type = "scores",
+        comps = 1:ncomp
+      )
+    )
     
   # 如果降维方法是PCA, 则降维到一维, 且信息量和block数相等.   
   } else if (method == "PCA") {
@@ -51,16 +61,25 @@
     df_sumstats <- as.data.frame(do.call(
       rbind,
       lapply(abc_reduction$list_sumstats, function(ratio_mat) {
-        t(stats::prcomp(x = ratio_mat, center = TRUE, rank. = 1)$x[, 1])
+        as.vector(t(ratio_mat))
       })
     ))
     
-    abc_reduction$df_sumstats <- df_sumstats
+    colnames(df_sumstats) <- NULL
     
-    target_reduction$onerow <- t(
-      stats::prcomp(x = target_reduction$ratio, center = TRUE, rank. = 1)$x[, 1]
+    pca_model <- stats::prcomp(
+      df_sumstats,
+      center = TRUE,
+      scale. = TRUE
     )
     
+    abc_reduction$df_sumstats <- as.data.frame(
+      pca_model$x[, 1:ncomp]
+    )
+    
+    target_reduction$onerow <- t(as.matrix(
+      stats::predict(pca_model, newdata = target$onerow)[, 1:ncomp]
+    ))
   }
   
   reduction <- list(
