@@ -10,7 +10,7 @@ func_gamma(reward, params, ...)
 \item{reward}{The feedback received by the agent from the environment at trial(t) 
 following the execution of action(a)}
 
-\item{params}{Parameters used by the model’s internal functions,
+\item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
 
 \item{...}{It currently contains the following information; additional information 

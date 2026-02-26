@@ -15,7 +15,7 @@ vignette: >
 
 ```{r eval=FALSE}
 replay.recovery <- multiRL::rpl_e(
-  result = recovery.ABC,
+  result = recovery.MLE,
 
   data = data,
   behrule = behrule,
@@ -27,9 +27,50 @@ replay.recovery <- multiRL::rpl_e(
   omit = c("data", "funcs")
 )
   
-save(replay.recovery, file = "./replay.recovery.ABC.Rdata")
+save(replay.recovery, file = "./replay.recovery.MLE.Rdata")
 
 plot(x = replay.recovery)
+```
+
+```{r eval=FALSE, include=FALSE}
+p <- plot(x = replay.recovery)
+
+lapply(names(p$param), function(model_name) {
+  
+  model_list <- p$param[[model_name]]
+  
+  lapply(names(model_list), function(param_name) {
+    
+    plot_list <- model_list[[param_name]]
+    
+    file_path <- file.path(
+      ".", paste0(model_name, "_", param_name, ".png")
+    )
+    
+    ggplot2::ggsave(
+      filename = file_path,
+      plot = plot_list,
+      width = 5,
+      height = 5
+    )
+  })
+})
+
+ggplot2::ggsave(
+  filename = "./Confusion_Matrix.png",
+  plot = p$model$Confusion,
+  width = 8,
+  height = 6
+)
+
+ggplot2::ggsave(
+  filename = "./Inversion_Matrix.png",
+  plot = p$model$Inversion,
+  width = 8,
+  height = 6
+)
+
+rm(p)
 ```
 
 

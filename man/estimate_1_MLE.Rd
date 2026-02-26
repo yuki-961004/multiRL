@@ -27,7 +27,7 @@ see \link[multiRL]{data}}
 \item{colnames}{Column names in the data frame,
 see \link[multiRL]{colnames}}
 
-\item{behrule}{The agent’s implicitly formed internal rule,
+\item{behrule}{The agent's implicitly formed internal rule,
 see \link[multiRL]{behrule}}
 
 \item{ids}{The Subject ID of the participant whose data needs to be fitted.}
@@ -60,7 +60,7 @@ An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-This function essentially applies \code{estimate_1_LBI()} to each subject’s 
+This function essentially applies \code{estimate_1_LBI()} to each subject's 
    data, estimating subject-specific optimal parameters based on maximum 
    likelihood. Because the fitting process for each subject is independent, 
    the procedure can be accelerated using parallel computation.

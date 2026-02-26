@@ -8,7 +8,7 @@
 #'    user-specified prior distributions. Based on the current group-level 
 #'    data, the prior distributions are subsequently updated. This procedure 
 #'    is iteratively repeated until the likelihood-based posterior converges. 
-#'    The entire process is referred to as Expectation–Maximization with 
+#'    The entire process is referred to as Expectation-Maximization with 
 #'    Maximum A Posteriori estimation(EM-MAP).
 #'
 #' @param data 
@@ -18,7 +18,7 @@
 #'  Column names in the data frame,
 #'    see \link[multiRL]{colnames}
 #' @param behrule 
-#'  The agent’s implicitly formed internal rule,
+#'  The agent's implicitly formed internal rule,
 #'    see \link[multiRL]{behrule}
 #' @param ids 
 #'  The Subject ID of the participant whose data needs to be fitted.

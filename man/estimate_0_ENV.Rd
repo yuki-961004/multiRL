@@ -21,7 +21,7 @@ see \link[multiRL]{data}}
 \item{colnames}{Column names in the data frame,
 see \link[multiRL]{colnames}}
 
-\item{behrule}{The agent’s implicitly formed internal rule,
+\item{behrule}{The agent's implicitly formed internal rule,
 see \link[multiRL]{behrule}}
 
 \item{funcs}{The functions forming the reinforcement learning model,

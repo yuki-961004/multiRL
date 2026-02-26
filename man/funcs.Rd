@@ -126,7 +126,7 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
  }
 }
 
-\section{Epsilon–First, Greedy, Decreasing (\eqn{\epsilon})}{
+\section{Epsilon-First, Greedy, Decreasing (\eqn{\epsilon})}{
   
 
  \code{expl_func} is the function defined by the parameter (\eqn{\epsilon}) 
@@ -134,7 +134,7 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
    which the agent engages in exploration (i.e., making a random choice) 
    versus exploitation (i.e., making a value-based choice).
 
- \eqn{\epsilon–first}: The agent must choose randomly for a fixed number of 
+ \eqn{\epsilon-first}: The agent must choose randomly for a fixed number of 
    initial trials. Once the number of trials exceeds the threshold, the agent 
    must exclusively choose based on value.
 
@@ -146,7 +146,7 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
  \end{cases}
  }
  
- \eqn{\epsilon–greedy}: The agent performs a random choice with probability 
+ \eqn{\epsilon-greedy}: The agent performs a random choice with probability 
    \eqn{\epsilon} and makes a value-based choice with probability 
    \eqn{1-\epsilon}.
  
@@ -158,7 +158,7 @@ The Markov Decision Process (MDP) underlying Reinforcement Learning can be
  \end{cases}
  }
  
- \eqn{\epsilon–decreasing}: The probability of making a random choice 
+ \eqn{\epsilon-decreasing}: The probability of making a random choice 
    gradually decreases as the number of trials increases throughout the 
    experiment.
  

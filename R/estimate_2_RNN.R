@@ -13,7 +13,7 @@
 #'  Column names in the data frame,
 #'    see \link[multiRL]{colnames}
 #' @param behrule 
-#'  The agent’s implicitly formed internal rule,
+#'  The agent's implicitly formed internal rule,
 #'    see \link[multiRL]{behrule}
 #' @param ids 
 #'  The Subject ID of the participant whose data needs to be fitted.

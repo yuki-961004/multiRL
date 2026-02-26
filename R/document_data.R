@@ -53,7 +53,7 @@
 #' @section Note:  
 #' 
 #'  The package does not perform any real-time random sampling based on the 
-#'    agent’s choices; therefore, Users should pre-define the reward for each 
+#'    agent's choices; therefore, Users should pre-define the reward for each 
 #'    possible action in every trial.
 #'  
 #'  \strong{You should never ever ever use true randomization to generate 

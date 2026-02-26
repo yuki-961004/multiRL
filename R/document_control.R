@@ -58,7 +58,7 @@
 #'    
 #'          The random seed controls the reproducibility of each iteration. 
 #'          Specifically, it determines how the algorithm package generates 
-#'          “random” input parameters when searching for the optimal parameters. 
+#'          "random" input parameters when searching for the optimal parameters. 
 #'          Fixing the seed ensures that the optimal parameters found are the 
 #'          same in every run. The default value is \code{123}.
 #'          
@@ -85,7 +85,7 @@
 #' \itemize{
 #'    \item \code{diff [double]} 
 #'    
-#'          In the Expectation–Maximization with Maximum A Posteriori algorithm 
+#'          In the Expectation-Maximization with Maximum A Posteriori algorithm 
 #'          (EM-MAP), after estimating the optimal parameters for all subjects 
 #'          in each iteration, the posterior distribution of each free 
 #'          parameter is calculated, followed by continuous refinement of the 
@@ -95,10 +95,10 @@
 #'          
 #'    \item \code{patience [int]} 
 #'    
-#'          Given that the Expectation–Maximization with Maximum A Posteriori 
+#'          Given that the Expectation-Maximization with Maximum A Posteriori 
 #'          (EM-MAP) process can be time-consuming and often encounters 
-#'          non-convergence issues—for instance, when the log-posterior 
-#'          oscillates around a certain value—the patience parameter is used to 
+#'          non-convergence issues-for instance, when the log-posterior 
+#'          oscillates around a certain value-the patience parameter is used to 
 #'          manage early termination.Specifically, patience is incremented by 
 #'          1 when the current result is better than the best previous result, 
 #'          and decremented by 1 when it is worse. The iteration is prematurely 

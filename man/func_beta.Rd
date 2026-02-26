@@ -12,7 +12,7 @@ when updated to this trial.}
 
 \item{explor}{Whether the agent made a random choice (exploration) in this trial.}
 
-\item{params}{Parameters used by the model’s internal functions,
+\item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
 
 \item{system}{When the agent makes a decision, is a single system at work, or are multiple 

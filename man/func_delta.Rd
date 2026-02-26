@@ -9,7 +9,7 @@ func_delta(count, params, ...)
 \arguments{
 \item{count}{How many times this action has been executed}
 
-\item{params}{Parameters used by the model’s internal functions,
+\item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
 
 \item{...}{It currently contains the following information; additional information 

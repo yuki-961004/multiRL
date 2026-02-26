@@ -13,7 +13,7 @@ when updated to this trial.}
 \item{reward}{The feedback received by the agent from the environment at trial(t) 
 following the execution of action(a)}
 
-\item{params}{Parameters used by the model’s internal functions,
+\item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
 
 \item{system}{When the agent makes a decision, is a single system at work, or are multiple 

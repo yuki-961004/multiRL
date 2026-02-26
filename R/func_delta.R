@@ -8,7 +8,7 @@
 #' @param count 
 #'  How many times this action has been executed
 #' @param params 
-#'  Parameters used by the model’s internal functions,
+#'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
 #' @param ... 
 #'  It currently contains the following information; additional information 

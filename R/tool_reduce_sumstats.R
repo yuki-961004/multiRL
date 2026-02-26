@@ -37,9 +37,7 @@
     pls_model <- pls::plsr(
       as.matrix(abc$df_params) ~ as.matrix(abc_reduction$df_sumstats),
       ncomp = ncomp,
-      method = "simpls",
-      center = TRUE,
-      scale. = TRUE
+      method = "simpls"
     )
     
     abc_reduction$df_sumstats <- as.data.frame(
@@ -67,11 +65,7 @@
     
     colnames(df_sumstats) <- NULL
     
-    pca_model <- stats::prcomp(
-      df_sumstats,
-      center = TRUE,
-      scale. = TRUE
-    )
+    pca_model <- stats::prcomp(df_sumstats)
     
     abc_reduction$df_sumstats <- as.data.frame(
       pca_model$x[, 1:ncomp]

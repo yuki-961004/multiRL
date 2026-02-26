@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -184,7 +184,7 @@
  $$</p>
     </div>
     <div class="section level2">
-    <h2 id="epsilon-first-greedy-decreasing-epsilon-">Epsilon–First, Greedy, Decreasing (\(\epsilon\))<a class="anchor" aria-label="anchor" href="#epsilon-first-greedy-decreasing-epsilon-"></a></h2>
+    <h2 id="epsilon-first-greedy-decreasing-epsilon-">Epsilon-First, Greedy, Decreasing (\(\epsilon\))<a class="anchor" aria-label="anchor" href="#epsilon-first-greedy-decreasing-epsilon-"></a></h2>
 
 
 
@@ -192,7 +192,7 @@
    and the constant threshold. This function controls the probability with
    which the agent engages in exploration (i.e., making a random choice)
    versus exploitation (i.e., making a value-based choice).</p>
-<p>\(\epsilon–first\): The agent must choose randomly for a fixed number of
+<p>\(\epsilon-first\): The agent must choose randomly for a fixed number of
    initial trials. Once the number of trials exceeds the threshold, the agent
    must exclusively choose based on value.</p>
 <p>$$
@@ -202,7 +202,7 @@
    i &gt; \text{threshold}, &amp; x=0
  \end{cases}
  $$</p>
-<p>\(\epsilon–greedy\): The agent performs a random choice with probability
+<p>\(\epsilon-greedy\): The agent performs a random choice with probability
    \(\epsilon\) and makes a value-based choice with probability
    \(1-\epsilon\).</p>
 <p>$$
@@ -212,7 +212,7 @@
    1-\epsilon, &amp; x=0
  \end{cases}
  $$</p>
-<p>\(\epsilon–decreasing\): The probability of making a random choice
+<p>\(\epsilon-decreasing\): The probability of making a random choice
    gradually decreases as the number of trials increases throughout the
    experiment.</p>
 <p>$$

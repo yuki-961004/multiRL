@@ -31,7 +31,7 @@ see \link[multiRL]{data}}
 \item{colnames}{Column names in the data frame,
 see \link[multiRL]{colnames}}
 
-\item{behrule}{The agent’s implicitly formed internal rule,
+\item{behrule}{The agent's implicitly formed internal rule,
 see \link[multiRL]{behrule}}
 
 \item{id}{The ID of the subject whose experimental structure (e.g., trial order) will 

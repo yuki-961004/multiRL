@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,7 +116,7 @@
 <li><p><code>seed [int]</code></p>
 <p>The random seed controls the reproducibility of each iteration.
          Specifically, it determines how the algorithm package generates
-         “random” input parameters when searching for the optimal parameters.
+         "random" input parameters when searching for the optimal parameters.
          Fixing the seed ensures that the optimal parameters found are the
          same in every run. The default value is <code>123</code>.</p></li>
 <li><p><code>core [int]</code></p>
@@ -139,7 +139,7 @@
 
 
 <ul><li><p><code>diff [double]</code></p>
-<p>In the Expectation–Maximization with Maximum A Posteriori algorithm
+<p>In the Expectation-Maximization with Maximum A Posteriori algorithm
          (EM-MAP), after estimating the optimal parameters for all subjects
          in each iteration, the posterior distribution of each free
          parameter is calculated, followed by continuous refinement of the
@@ -147,10 +147,10 @@
          log-posterior value is less than the <code>diff</code>, which defaults
          to <code>0.001</code>.</p></li>
 <li><p><code>patience [int]</code></p>
-<p>Given that the Expectation–Maximization with Maximum A Posteriori
+<p>Given that the Expectation-Maximization with Maximum A Posteriori
          (EM-MAP) process can be time-consuming and often encounters
-         non-convergence issues—for instance, when the log-posterior
-         oscillates around a certain value—the patience parameter is used to
+         non-convergence issues-for instance, when the log-posterior
+         oscillates around a certain value-the patience parameter is used to
          manage early termination.Specifically, patience is incremented by
          1 when the current result is better than the best previous result,
          and decremented by 1 when it is worse. The iteration is prematurely

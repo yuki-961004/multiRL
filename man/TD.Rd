@@ -7,7 +7,7 @@
 TD(params)
 }
 \arguments{
-\item{params}{Parameters used by the model’s internal functions,
+\item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
 }
 \value{

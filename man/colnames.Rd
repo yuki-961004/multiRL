@@ -39,7 +39,7 @@ Users must categorize and inform the program of the column names within
    \item \code{object [CharacterVector]}  
    
          The column names of objects presented in the task, with individual 
-         elements separated by underscores (“_”). 
+         elements separated by underscores ("_"). 
          
          Column names that are prefixed with "Object_" can be recognized 
          automatically.
@@ -69,7 +69,7 @@ Users must categorize and inform the program of the column names within
 
 \section{Tips}{
   
- Users can use these variables within the model’s functions. see 
+ Users can use these variables within the model's functions. see 
    \href{https://yuki-961004.github.io/multiRL/articles/Step_1_run_m.html}{tutorial}.
 }
 

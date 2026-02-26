@@ -50,7 +50,7 @@
 #'          best-fitting parameters for each individual subject.
 #'    \item Use these best-fitting parameters to estimate the Probability 
 #'          Density Function of the population-level parameter distribution.
-#'          (The Expectation–Maximization with Maximum A Posteriori estimation 
+#'          (The Expectation-Maximization with Maximum A Posteriori estimation 
 #'          (EM-MAP) framework is inspired by the 
 #'          \href{https://github.com/sjgershm/mfit}{\code{sjgershm/mfit}}. 
 #'          However, unlike \code{mfit}, which typically assumes a normal 
@@ -86,7 +86,7 @@
 #' \enumerate{
 #'    \item Generate a large amount of simulated data using randomly sampled 
 #'          input parameters.
-#'    \item Compress the simulated data into summary statistics—for instance, 
+#'    \item Compress the simulated data into summary statistics-for instance, 
 #'          by calculating the proportion of times each action was executed 
 #'          within different blocks.
 #'    \item Establish the mapping between these summary statistics and the 

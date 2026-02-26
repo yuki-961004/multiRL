@@ -27,7 +27,7 @@ see \link[multiRL]{data}}
 \item{colnames}{Column names in the data frame,
 see \link[multiRL]{colnames}}
 
-\item{behrule}{The agent’s implicitly formed internal rule,
+\item{behrule}{The agent's implicitly formed internal rule,
 see \link[multiRL]{behrule}}
 
 \item{ids}{The Subject ID of the participant whose data needs to be fitted.}
@@ -66,6 +66,6 @@ This function first performs a maximum likelihood estimation (MLE) to
    user-specified prior distributions. Based on the current group-level 
    data, the prior distributions are subsequently updated. This procedure 
    is iteratively repeated until the likelihood-based posterior converges. 
-   The entire process is referred to as Expectation–Maximization with 
+   The entire process is referred to as Expectation-Maximization with 
    Maximum A Posteriori estimation(EM-MAP).
 }

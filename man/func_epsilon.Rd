@@ -2,14 +2,14 @@
 % Please edit documentation in R/func_epsilon.R
 \name{func_epsilon}
 \alias{func_epsilon}
-\title{Function: \eqn{\epsilon}–first, Greedy, Decreasing}
+\title{Function: \eqn{\epsilon}-first, Greedy, Decreasing}
 \usage{
 func_epsilon(rownum, params, ...)
 }
 \arguments{
 \item{rownum}{The trial number}
 
-\item{params}{Parameters used by the model’s internal functions,
+\item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
 
 \item{...}{It currently contains the following information; additional information 
@@ -49,7 +49,7 @@ An \code{int}, either 0 or 1, indicating exploration or
    exploitation on the current trial.
 }
 \description{
-\eqn{\epsilon–first}: 
+\eqn{\epsilon-first}: 
  
  \deqn{
  P(x) = 
@@ -59,7 +59,7 @@ An \code{int}, either 0 or 1, indicating exploration or
  \end{cases}
  }
  
- \eqn{\epsilon–greedy}: 
+ \eqn{\epsilon-greedy}: 
  
  \deqn{
  P(x) = 
@@ -69,7 +69,7 @@ An \code{int}, either 0 or 1, indicating exploration or
  \end{cases}
  }
  
- \eqn{\epsilon–decreasing}:
+ \eqn{\epsilon-decreasing}:
  
  \deqn{
  P(x) = 

@@ -1,7 +1,7 @@
-#' @title Function: \eqn{\epsilon}–first, Greedy, Decreasing 
+#' @title Function: \eqn{\epsilon}-first, Greedy, Decreasing 
 #' @description
 #' 
-#'  \eqn{\epsilon–first}: 
+#'  \eqn{\epsilon-first}: 
 #'  
 #'  \deqn{
 #'  P(x) = 
@@ -11,7 +11,7 @@
 #'  \end{cases}
 #'  }
 #'  
-#'  \eqn{\epsilon–greedy}: 
+#'  \eqn{\epsilon-greedy}: 
 #'  
 #'  \deqn{
 #'  P(x) = 
@@ -21,7 +21,7 @@
 #'  \end{cases}
 #'  }
 #'  
-#'  \eqn{\epsilon–decreasing}:
+#'  \eqn{\epsilon-decreasing}:
 #'  
 #'  \deqn{
 #'  P(x) = 
@@ -34,7 +34,7 @@
 #' @param rownum 
 #'  The trial number
 #' @param params 
-#'  Parameters used by the model’s internal functions,
+#'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
 #' @param ... 
 #'  It currently contains the following information; additional information 

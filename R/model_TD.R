@@ -17,7 +17,7 @@
 #'  }
 #'  
 #' @param params 
-#'  Parameters used by the model’s internal functions,
+#'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
 #' 
 #' @return Depending on the \code{mode} and \code{estimate} defined in the 

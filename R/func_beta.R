@@ -24,7 +24,7 @@
 #' @param explor 
 #'  Whether the agent made a random choice (exploration) in this trial.
 #' @param params 
-#'  Parameters used by the model’s internal functions,
+#'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
 #' @param system
 #'  When the agent makes a decision, is a single system at work, or are multiple 

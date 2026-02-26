@@ -7,7 +7,7 @@
 #'  The feedback received by the agent from the environment at trial(t) 
 #'    following the execution of action(a)
 #' @param params 
-#'  Parameters used by the model’s internal functions,
+#'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
 #' @param ... 
 #'  It currently contains the following information; additional information 

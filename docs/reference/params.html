@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@
 
 <p>The parameters are divided into three types: <code>free</code>, <code>fixed</code>,
    and <code>constant.</code> This classification is not mandatory, any parameter
-   can be treated as a free parameter depending on the user’s specification.
+   can be treated as a free parameter depending on the user's specification.
    By default, the learning rate <code>alpha</code> and the inverse-temperature
    <code>beta</code> are the required free parameters.</p>
     </div>
@@ -144,14 +144,14 @@
 <p>This parameter governs the Exploration-Exploitation trade-off and
          can be used to implement three distinct strategies by adjusting
          <code>epsilon</code> and <code>threshold</code>:</p>
-<p>When set to \(\epsilon–greedy\): <code>epsilon</code> represents the
+<p>When set to \(\epsilon-greedy\): <code>epsilon</code> represents the
          probability that the agent will execute a random exploratory action
          throughout the entire experiment, regardless of the estimated value.</p>
-<p>When set to \(\epsilon–decreasing\): The probability of the agent
+<p>When set to \(\epsilon-decreasing\): The probability of the agent
          making a random choice decreases as the number of trials increases.
          The rate of this decay is influenced by <code>epsilon</code>.</p>
 <p>By default, <code>epsilon</code> is set to <code>NA</code>, which corresponds
-         to the \(\epsilon–first\) model. In this model, the agent always
+         to the \(\epsilon-first\) model. In this model, the agent always
          selects randomly before a specified trial (<code>threshold = 1</code>).</p></li>
 <li><p><code>zeta [double]</code></p>
 <p>Collins and Frank, (2012) <a href="https://doi.org/10.1111/j.1460-9568.2011.07980.x" class="external-link">doi:10.1111/j.1460-9568.2011.07980.x</a>

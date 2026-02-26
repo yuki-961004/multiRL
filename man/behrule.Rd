@@ -30,8 +30,8 @@ In most instances of the Multi-Armed Bandit (MAB) task, the cue aligns with
 \itemize{
    \item \code{cue [CharacterVector]}
    
-         A \code{cue} refers to the stimulus—or a component of the 
-         stimulus—presented in the paradigm. It represents the internal 
+         A \code{cue} refers to the stimulus-or a component of the 
+         stimulus-presented in the paradigm. It represents the internal 
          target the agent selects, which may differ from the actual 
          behavioral response. For instance, cue is the color of arrows, 
          rather than the direction. 
@@ -42,7 +42,7 @@ In most instances of the Multi-Armed Bandit (MAB) task, the cue aligns with
          It typically has a mapping relationship with the cue. For example, 
          in the arrow paradigm of Rmus et al. (2024) 
          \doi{10.1371/journal.pcbi.1012119}, 
-         the agent updates the value associated with the arrow’s color, but 
+         the agent updates the value associated with the arrow's color, but 
          the overt response is the direction corresponding to the currently 
          chosen color arrow.
 }

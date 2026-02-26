@@ -100,25 +100,25 @@ save(recovery.MLE, file = "./recovery.MLE.Rdata")
 ```
 
 <p align="center">
-    <img src="./fig/MLE/NLOPT/TD_alpha(MLE).png" alt="TD_alpha" width="30%" style="display: inline;">
-    <img src="./fig/MLE/NLOPT/TD_beta(MLE).png" alt="TD_beta" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/TD_alpha.png" alt="TD_alpha" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/TD_beta.png" alt="TD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/MLE/NLOPT/RSTD_alphaN(MLE).png" alt="RSTD_alphaN" width="30%" style="display: inline;">
-    <img src="./fig/MLE/NLOPT/RSTD_alphaP(MLE).png" alt="RSTD_alphaP" width="30%" style="display: inline;">
-    <img src="./fig/MLE/NLOPT/RSTD_beta(MLE).png" alt="RSTD_beta" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/RSTD_alphaN.png" alt="RSTD_alphaN" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/RSTD_alphaP.png" alt="RSTD_alphaP" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/RSTD_beta.png" alt="RSTD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/MLE/NLOPT/Utility_alpha(MLE).png" alt="Utility_alpha" width="30%" style="display: inline;">
-    <img src="./fig/MLE/NLOPT/Utility_beta(MLE).png" alt="Utility_beta" width="30%" style="display: inline;">
-    <img src="./fig/MLE/NLOPT/Utility_gamma(MLE).png" alt="Utility_gamma" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Utility_alpha.png" alt="Utility_alpha" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Utility_beta.png" alt="Utility_beta" width="30%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Utility_gamma.png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/MLE/NLOPT/Confusion_Matrix(MLE).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
-    <img src="./fig/MLE/NLOPT/Inversion_Matrix(MLE).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Confusion_Matrix.png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Inversion_Matrix.png" alt="Inversion_Matrix" width="40%" style="display: inline;">
 </p>
 
 ### MAP
@@ -163,25 +163,25 @@ save(recovery.MAP, file = "./recovery.MAP.Rdata")
 ```
 
 <p align="center">
-    <img src="./fig/MAP/TD_alpha(MAP).png" alt="TD_alpha" width="30%" style="display: inline;">
-    <img src="./fig/MAP/TD_beta(MAP).png" alt="TD_beta" width="30%" style="display: inline;">
+    <img src="./fig/MAP/TD_alpha.png" alt="TD_alpha" width="30%" style="display: inline;">
+    <img src="./fig/MAP/TD_beta.png" alt="TD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/MAP/RSTD_alphaN(MAP).png" alt="RSTD_alphaN" width="30%" style="display: inline;">
-    <img src="./fig/MAP/RSTD_alphaP(MAP).png" alt="RSTD_alphaP" width="30%" style="display: inline;">
-    <img src="./fig/MAP/RSTD_beta(MAP).png" alt="RSTD_beta" width="30%" style="display: inline;">
+    <img src="./fig/MAP/RSTD_alphaN.png" alt="RSTD_alphaN" width="30%" style="display: inline;">
+    <img src="./fig/MAP/RSTD_alphaP.png" alt="RSTD_alphaP" width="30%" style="display: inline;">
+    <img src="./fig/MAP/RSTD_beta.png" alt="RSTD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/MAP/Utility_alpha(MAP).png" alt="Utility_alpha" width="30%" style="display: inline;">
-    <img src="./fig/MAP/Utility_beta(MAP).png" alt="Utility_beta" width="30%" style="display: inline;">
-    <img src="./fig/MAP/Utility_gamma(MAP).png" alt="Utility_gamma" width="30%" style="display: inline;">
+    <img src="./fig/MAP/Utility_alpha.png" alt="Utility_alpha" width="30%" style="display: inline;">
+    <img src="./fig/MAP/Utility_beta.png" alt="Utility_beta" width="30%" style="display: inline;">
+    <img src="./fig/MAP/Utility_gamma.png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/MAP/Confusion_Matrix(MAP).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
-    <img src="./fig/MAP/Inversion_Matrix(MAP).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/MAP/Confusion_Matrix.png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/MAP/Inversion_Matrix.png" alt="Inversion_Matrix" width="40%" style="display: inline;">
 </p>
 
 ### ABC
@@ -217,7 +217,7 @@ recovery.ABC <- multiRL::rcv_d(
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
     core = 10, sample = 100, train = 1000,
-    tol = 0.1, reduction = "PLS"
+    tol = 0.1, reduction = "PCA"
   )
 )
 
@@ -225,25 +225,25 @@ save(recovery.ABC, file = "./recovery.ABC.Rdata")
 ```
 
 <p align="center">
-    <img src="./fig/ABC/TD_alpha(ABC).png" alt="TD_alpha" width="30%" style="display: inline;">
-    <img src="./fig/ABC/TD_beta(ABC).png" alt="TD_beta" width="30%" style="display: inline;">
+    <img src="./fig/ABC/TD_alpha.png" alt="TD_alpha" width="30%" style="display: inline;">
+    <img src="./fig/ABC/TD_beta.png" alt="TD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/ABC/RSTD_alphaN(ABC).png" alt="RSTD_alphaN" width="30%" style="display: inline;">
-    <img src="./fig/ABC/RSTD_alphaP(ABC).png" alt="RSTD_alphaP" width="30%" style="display: inline;">
-    <img src="./fig/ABC/RSTD_beta(ABC).png" alt="RSTD_beta" width="30%" style="display: inline;">
+    <img src="./fig/ABC/RSTD_alphaN.png" alt="RSTD_alphaN" width="30%" style="display: inline;">
+    <img src="./fig/ABC/RSTD_alphaP.png" alt="RSTD_alphaP" width="30%" style="display: inline;">
+    <img src="./fig/ABC/RSTD_beta.png" alt="RSTD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/ABC/Utility_alpha(ABC).png" alt="Utility_alpha" width="30%" style="display: inline;">
-    <img src="./fig/ABC/Utility_beta(ABC).png" alt="Utility_beta" width="30%" style="display: inline;">
-    <img src="./fig/ABC/Utility_gamma(ABC).png" alt="Utility_gamma" width="30%" style="display: inline;">
+    <img src="./fig/ABC/Utility_alpha.png" alt="Utility_alpha" width="30%" style="display: inline;">
+    <img src="./fig/ABC/Utility_beta.png" alt="Utility_beta" width="30%" style="display: inline;">
+    <img src="./fig/ABC/Utility_gamma.png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/ABC/Confusion_Matrix(ABC).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
-    <img src="./fig/ABC/Inversion_Matrix(ABC).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/ABC/Confusion_Matrix.png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/ABC/Inversion_Matrix.png" alt="Inversion_Matrix" width="40%" style="display: inline;">
 </p>
 
 ### RNN
@@ -299,23 +299,23 @@ save(recovery.RNN, file = "./recovery.RNN.Rdata")
 ```
 
 <p align="center">
-    <img src="./fig/RNN/TD_alpha(RNN).png" alt="TD_alpha" width="30%" style="display: inline;">
-    <img src="./fig/RNN/TD_beta(RNN).png" alt="TD_beta" width="30%" style="display: inline;">
+    <img src="./fig/RNN/TD_alpha.png" alt="TD_alpha" width="30%" style="display: inline;">
+    <img src="./fig/RNN/TD_beta.png" alt="TD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/RNN/RSTD_alphaN(RNN).png" alt="RSTD_alphaN" width="30%" style="display: inline;">
-    <img src="./fig/RNN/RSTD_alphaP(RNN).png" alt="RSTD_alphaP" width="30%" style="display: inline;">
-    <img src="./fig/RNN/RSTD_beta(RNN).png" alt="RSTD_beta" width="30%" style="display: inline;">
+    <img src="./fig/RNN/RSTD_alphaN.png" alt="RSTD_alphaN" width="30%" style="display: inline;">
+    <img src="./fig/RNN/RSTD_alphaP.png" alt="RSTD_alphaP" width="30%" style="display: inline;">
+    <img src="./fig/RNN/RSTD_beta.png" alt="RSTD_beta" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/RNN/Utility_alpha(RNN).png" alt="Utility_alpha" width="30%" style="display: inline;">
-    <img src="./fig/RNN/Utility_beta(RNN).png" alt="Utility_beta" width="30%" style="display: inline;">
-    <img src="./fig/RNN/Utility_gamma(RNN).png" alt="Utility_gamma" width="30%" style="display: inline;">
+    <img src="./fig/RNN/Utility_alpha.png" alt="Utility_alpha" width="30%" style="display: inline;">
+    <img src="./fig/RNN/Utility_beta.png" alt="Utility_beta" width="30%" style="display: inline;">
+    <img src="./fig/RNN/Utility_gamma.png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
 <p align="center">
-    <img src="./fig/RNN/Confusion_Matrix(RNN).png" alt="Confusion_Matrix" width="40%" style="display: inline;">
-    <img src="./fig/RNN/Inversion_Matrix(RNN).png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/RNN/Confusion_Matrix.png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/RNN/Inversion_Matrix.png" alt="Inversion_Matrix" width="40%" style="display: inline;">
 </p>

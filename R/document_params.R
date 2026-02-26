@@ -14,7 +14,7 @@
 #' @section Note: 
 #'  The parameters are divided into three types: \code{free}, \code{fixed}, 
 #'    and \code{constant.} This classification is not mandatory, any parameter 
-#'    can be treated as a free parameter depending on the user’s specification.
+#'    can be treated as a free parameter depending on the user's specification.
 #'    By default, the learning rate \code{alpha} and the inverse-temperature 
 #'    \code{beta} are the required free parameters. 
 #'  
@@ -81,16 +81,16 @@
 #'          can be used to implement three distinct strategies by adjusting 
 #'          \code{epsilon} and \code{threshold}:  
 #'          
-#'          When set to \eqn{\epsilon–greedy}: \code{epsilon} represents the 
+#'          When set to \eqn{\epsilon-greedy}: \code{epsilon} represents the 
 #'          probability that the agent will execute a random exploratory action 
 #'          throughout the entire experiment, regardless of the estimated value.
 #'          
-#'          When set to \eqn{\epsilon–decreasing}: The probability of the agent 
+#'          When set to \eqn{\epsilon-decreasing}: The probability of the agent 
 #'          making a random choice decreases as the number of trials increases. 
 #'          The rate of this decay is influenced by \code{epsilon}.
 #'          
 #'          By default, \code{epsilon} is set to \code{NA}, which corresponds 
-#'          to the \eqn{\epsilon–first} model. In this model, the agent always 
+#'          to the \eqn{\epsilon-first} model. In this model, the agent always 
 #'          selects randomly before a specified trial (\code{threshold = 1}).
 #'          
 #'    \item \code{zeta [double]} 

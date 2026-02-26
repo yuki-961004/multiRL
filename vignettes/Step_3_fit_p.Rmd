@@ -84,7 +84,7 @@ save(fitting.MLE, file = "./fitting.MLE.Rdata")
 ```  
 
 <p align="center">
-    <img src="./fig/MLE/NLOPT/Block_Ratio(MLE).png" alt="Block_Ratio" width="80%" style="display: inline;">
+    <img src="./fig/MLE/NLOPT/Block_Ratio.png" alt="Block_Ratio" width="80%" style="display: inline;">
 </p>
 
 ### MAP
@@ -129,7 +129,7 @@ save(fitting.MAP, file = "./fitting.MAP.Rdata")
 ```  
 
 <p align="center">
-    <img src="./fig/MAP/Block_Ratio(MAP).png" alt="Block_Ratio" width="80%" style="display: inline;">
+    <img src="./fig/MAP/Block_Ratio.png" alt="Block_Ratio" width="80%" style="display: inline;">
 </p>
 
 ### ABC
@@ -173,7 +173,7 @@ save(fitting.ABC, file = "./fitting.ABC.Rdata")
 ```  
 
 <p align="center">
-    <img src="./fig/ABC/Block_Ratio(ABC).png" alt="Block_Ratio" width="80%" style="display: inline;">
+    <img src="./fig/ABC/Block_Ratio.png" alt="Block_Ratio" width="80%" style="display: inline;">
 </p>
 
 ### RNN
@@ -229,7 +229,7 @@ save(fitting.RNN, file = "./fitting.RNN.Rdata")
 ```
 
 <p align="center">
-    <img src="./fig/RNN/Block_Ratio(RNN).png" alt="Block_Ratio" width="80%" style="display: inline;">
+    <img src="./fig/RNN/Block_Ratio.png" alt="Block_Ratio" width="80%" style="display: inline;">
 </p>
 
 ## Comparison

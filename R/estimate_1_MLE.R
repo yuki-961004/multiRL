@@ -2,7 +2,7 @@
 #' Estimation Method: Maximum Likelihood Estimation (MLE)
 #' @name estimate_1_MLE
 #' @description 
-#'  This function essentially applies \code{estimate_1_LBI()} to each subject’s 
+#'  This function essentially applies \code{estimate_1_LBI()} to each subject's 
 #'    data, estimating subject-specific optimal parameters based on maximum 
 #'    likelihood. Because the fitting process for each subject is independent, 
 #'    the procedure can be accelerated using parallel computation.
@@ -14,7 +14,7 @@
 #'  Column names in the data frame,
 #'    see \link[multiRL]{colnames}
 #' @param behrule 
-#'  The agent’s implicitly formed internal rule,
+#'  The agent's implicitly formed internal rule,
 #'    see \link[multiRL]{behrule}
 #' @param ids 
 #'  The Subject ID of the participant whose data needs to be fitted.

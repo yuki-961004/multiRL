@@ -531,6 +531,11 @@ plot(x = replay.recovery)
     <img src="./fig/Utility_gamma.png" alt="Utility_gamma" width="30%" style="display: inline;">
 </p>
 
+<p align="center">
+    <img src="./fig/Confusion_Matrix.png" alt="Confusion_Matrix" width="40%" style="display: inline;">
+    <img src="./fig/Inversion_Matrix.png" alt="Inversion_Matrix" width="40%" style="display: inline;">
+</p>
+
 ```{r eval=FALSE}
 replay.fitting <- multiRL::rpl_e(
   result = fitting.MLE,
