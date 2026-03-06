@@ -43,9 +43,7 @@
     x[slot_name[drop]] <- NULL
   }
   
-  for (i in base::seq_along(x)) {
-    x[[i]] <- .remove_slot(x[[i]], omit = omit)
-  }
+  x[] <- lapply(X = x, FUN = .remove_slot, omit = omit)
   
   return(x)
 }

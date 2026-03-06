@@ -59,7 +59,7 @@
   # 获取被试id所在列
   suppressMessages({dfinfo <- .detect_data(data)})
   subid <- dfinfo$sub_col_name
-  if (is.null(ids)){ids = unique(result$Subject)}
+  if (is.null(ids)){ids = unique(result[[subid]])}
   
   model_info <- list()
   if (is.null(free_params)) {
@@ -98,23 +98,28 @@
     multiRL.models[[i]] <- list()
     names(multiRL.models)[i] <- model_name
     
-    for (j in ids) {
-      env <- estimate_0_ENV(
-        data = data[data[, subid] == j, ],
-        behrule = behrule,
-        colnames = colnames,
-        funcs = funcs[[i]],
-        priors = priors[[i]],
-        settings = settings[[i]]
-      )
-      
-      multiRL.env <- env
-      environment(models[[i]]) <- multiRL.env
-      
-      multiRL.models[[i]][[j]] <- models[[i]](
-        params = as.numeric(list_params[[as.character(j)]])
-      )
-    }
+    # 防止出现空被试序号
+    ids_shown   <- intersect(as.character(ids), names(list_params))
+    
+    multiRL.models[[i]] <- lapply(
+      X = stats::setNames(ids_shown, ids_shown),
+      FUN = function(j) {
+        
+        # 构建当前被试的独立环境
+        env <- multiRL::estimate_0_ENV(
+          data     = data[data[[subid]] == j, ],
+          behrule  = behrule,
+          colnames = colnames,
+          funcs    = funcs[[i]],
+          priors   = priors[[i]],
+          settings = settings[[i]]
+        )
+        
+        # 将环境绑定到模型函数并执行
+        environment(models[[i]]) <- env
+        models[[i]](params = as.numeric(list_params[[j]]))
+      }
+    )
   }
   
   return(multiRL.models)

@@ -43,47 +43,31 @@
   # ---- 辅助函数：将 ratio list 展开成 data.frame ----
   .expand_ratio <- function(ratio_list, rsp) {
     
-    n_subj  <- length(ratio_list)
-    n_block <- length(ratio_list[[1]])
-    n_rows  <- n_subj * n_block
-    
-    # 数值列（按 rsp 动态生成）
-    numeric_cols <- stats::setNames(
-      object = base::replicate(
-        n = length(rsp),
-        expr = numeric(n_rows),
-        simplify = FALSE
-      ),
-      nm = rsp
-    )
-    
-    # 初始化结果表
-    out <- data.frame(
-      Subject = integer(n_rows),
-      Block   = integer(n_rows),
-      numeric_cols
-    )
-    
-    row_id <- 1
-    
-    for (s in seq_len(n_subj)) {
-      for (b in seq_len(n_block)) {
-        
-        vec <- ratio_list[[s]][[b]]  # numeric vector
-        
-        out$Subject[row_id] <- s
-        out$Block[row_id]   <- b
-        
-        # 填入所有 rsp 数值
-        for (l in seq_along(rsp)) {
-          out[[rsp[l]]][row_id] <- vec[l]
+    # 使用 lapply 遍历被试，将每个矩阵转换为 data.frame
+    do.call(
+      what = rbind,
+      args = lapply(
+        X   = seq_along(ratio_list),
+        FUN = function(s) {
+          
+          # 提取当前被试的 [Block x Action] 矩阵
+          res_mat <- ratio_list[[s]]
+          
+          # 直接创建包含 Subject 和 Block 的基础表
+          # 使用 nrow() 确保 Block 数量正确
+          sub_df <- data.frame(
+            Subject = as.integer(s),
+            Block   = seq_len(nrow(res_mat))
+          )
+          
+          # 将矩阵整列赋值给对应的 Action 列名 (rsp)
+          sub_df[, rsp] <- res_mat
+          
+          return(sub_df)
         }
-        
-        row_id <- row_id + 1
-      }
-    }
+      )
+    )
     
-    out
   }
   
 ############################## [robot ratio] ###################################
