@@ -230,6 +230,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // bias function: 每个刺激上的偏见
         bias.row(i) = Rcpp::as<Rcpp::NumericVector>(
             bias_func(
+                Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                 Rcpp::_["count"]  = Rcpp::NumericVector(count.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
@@ -241,6 +242,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // exploration function: 此次是否进行探索
         exploration.row(i) = Rcpp::as<Rcpp::NumericVector>(
             expl_func(
+                Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                 Rcpp::_["rownum"] = i + 1,
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
@@ -264,6 +266,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
         prob.row(i) = Rcpp::as<Rcpp::NumericVector>(
             prob_func(
+                Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                 Rcpp::_["qvalue"] = qvalue,
                 Rcpp::_["explor"] = Rcpp::NumericVector(exploration.row(i)),
                 Rcpp::_["params"] = params,
@@ -354,6 +357,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // utility function: 奖励转换成主观价值
         utility.row(i) = Rcpp::as<Rcpp::NumericVector>(
             util_func(
+                Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                 Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                 Rcpp::_["params"] = params,
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
@@ -400,6 +404,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             sub_value.row(i + 1) =
                 Rcpp::as<Rcpp::NumericVector>(
                     dcay_func(
+                        Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                         Rcpp::_["value0"] = Rcpp::NumericVector(sub_value.row(0)),
                         Rcpp::_["values"] = cur_value,
                         Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
@@ -420,6 +425,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 sub_value(i + 1, col_index) =
                     Rcpp::as<double>(
                         rate_func(
+                            Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                             Rcpp::_["qvalue"] = Qi,
                             Rcpp::_["reward"] = utility(i, 0),
                             Rcpp::_["params"] = params,

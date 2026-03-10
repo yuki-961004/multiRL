@@ -4,9 +4,11 @@
 \alias{func_delta}
 \title{Function: Upper-Confidence-Bound}
 \usage{
-func_delta(count, params, ...)
+func_delta(shown, count, params, ...)
 }
 \arguments{
+\item{shown}{Which options shown in this trial.}
+
 \item{count}{How many times this action has been executed}
 
 \item{params}{Parameters used by the model's internal functions,

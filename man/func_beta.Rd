@@ -4,9 +4,11 @@
 \alias{func_beta}
 \title{Function: Soft-Max}
 \usage{
-func_beta(qvalue, explor, params, system, ...)
+func_beta(shown, qvalue, explor, params, system, ...)
 }
 \arguments{
+\item{shown}{Which options shown in this trial.}
+
 \item{qvalue}{The expected Q values of different behaviors produced by different systems 
 when updated to this trial.}
 

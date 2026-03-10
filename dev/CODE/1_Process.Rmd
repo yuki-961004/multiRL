@@ -7,7 +7,7 @@ output: html_document
 # multiRL
 
 ```{r}
-multiRL.input <- process_1_input(
+multiRL.input <- multiRL::process_1_input(
   data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   colnames = list(
     subid = "Subject", block = "Block", trial = "Trial",
@@ -35,7 +35,7 @@ multiRL.input <- process_1_input(
 ```
 
 ```{r}
-multiRL.behrule <- process_2_behrule(
+multiRL.behrule <- multiRL::process_2_behrule(
   behrule = list(
     cue = c("Red", "Yellow", "Green", "Blue"),
     rsp = c("Up", "Down", "Left", "Right")
@@ -182,7 +182,7 @@ summary(binaryRL.res)
 ```
 
 ```{r}
-multiRL.input <- process_1_input(
+multiRL.input <- multiRL::process_1_input(
   data = multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ],
   colnames = list(
     subid = "Subject", 
@@ -221,7 +221,7 @@ multiRL.input <- process_1_input(
 ```
 
 ```{r}
-multiRL.behrule <- process_2_behrule(
+multiRL.behrule <- multiRL::process_2_behrule(
   behrule = list(
     cue = c("A", "B", "C", "D"),
     rsp = c("A", "B", "C", "D")
@@ -230,7 +230,7 @@ multiRL.behrule <- process_2_behrule(
 ```
 
 ```{r}
-multiRL.record <- process_3_record(
+multiRL.record <- multiRL::process_3_record(
   input = multiRL.input,
   behrule = multiRL.behrule
 )

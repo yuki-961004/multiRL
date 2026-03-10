@@ -3,6 +3,8 @@
 #' 
 #'  \deqn{W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})}
 #'
+#' @param shown
+#'  Which options shown in this trial.
 #' @param value0 
 #'  The initial values for all actions.
 #' @param values 
@@ -87,6 +89,7 @@
 #' }
 #' 
 func_zeta <- function(
+    shown,
     value0, 
     values,
     reward,

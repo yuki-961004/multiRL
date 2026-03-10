@@ -4,9 +4,11 @@
 \alias{func_zeta}
 \title{Function: Decay Rate}
 \usage{
-func_zeta(value0, values, reward, params, system, ...)
+func_zeta(shown, value0, values, reward, params, system, ...)
 }
 \arguments{
+\item{shown}{Which options shown in this trial.}
+
 \item{value0}{The initial values for all actions.}
 
 \item{values}{The current expected values for all actions.}

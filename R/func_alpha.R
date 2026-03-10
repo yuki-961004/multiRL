@@ -3,6 +3,8 @@
 #' 
 #'  \deqn{Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})}
 #'
+#' @param shown
+#'  Which options shown in this trial.
 #' @param qvalue 
 #'  The expected Q values of different behaviors produced by different systems 
 #'    when updated to this trial.
@@ -109,6 +111,7 @@
 #' }
 #' 
 func_alpha <- function(
+    shown,
     qvalue,
     reward,
     params,
