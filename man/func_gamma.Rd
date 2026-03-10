@@ -4,9 +4,11 @@
 \alias{func_gamma}
 \title{Function: Utility Function}
 \usage{
-func_gamma(reward, params, ...)
+func_gamma(shown, reward, params, ...)
 }
 \arguments{
+\item{shown}{Which options shown in this trial.}
+
 \item{reward}{The feedback received by the agent from the environment at trial(t) 
 following the execution of action(a)}
 

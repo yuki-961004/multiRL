@@ -125,6 +125,7 @@ Below, I will implement a new `func_gamma` to ensure compatibility with both Ste
 
 ```{r}
 my_func_gamma <- function(
+    shown,
     reward,
     params,
     ...

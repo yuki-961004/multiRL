@@ -30,7 +30,9 @@
 #'    \frac{\epsilon \cdot i}{1+\epsilon \cdot i}, & x=0 
 #'  \end{cases}
 #'  }
-#' 
+#'
+#' @param shown
+#'  Which options shown in this trial.
 #' @param rownum 
 #'  The trial number
 #' @param params 
@@ -132,6 +134,7 @@
 #' }
 #' 
 func_epsilon <- function(
+    shown,
     rownum,
     params,
     ...

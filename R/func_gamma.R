@@ -3,6 +3,8 @@
 #' 
 #'  \deqn{U(R) = {R}^{\gamma}}
 #'
+#' @param shown
+#'  Which options shown in this trial.
 #' @param reward 
 #'  The feedback received by the agent from the environment at trial(t) 
 #'    following the execution of action(a)
@@ -71,6 +73,7 @@
 #' }
 #' 
 func_gamma <- function(
+    shown,
     reward,
     params,
     ...

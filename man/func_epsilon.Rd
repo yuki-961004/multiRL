@@ -4,9 +4,11 @@
 \alias{func_epsilon}
 \title{Function: \eqn{\epsilon}-first, Greedy, Decreasing}
 \usage{
-func_epsilon(rownum, params, ...)
+func_epsilon(shown, rownum, params, ...)
 }
 \arguments{
+\item{shown}{Which options shown in this trial.}
+
 \item{rownum}{The trial number}
 
 \item{params}{Parameters used by the model's internal functions,

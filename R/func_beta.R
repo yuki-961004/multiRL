@@ -18,6 +18,8 @@
 #'    P_{t}(a) = (1 - lapse \cdot N_{shown}) \cdot P_{t}(a) + lapse
 #'  }
 #'
+#' @param shown
+#'  Which options shown in this trial.
 #' @param qvalue 
 #'  The expected Q values of different behaviors produced by different systems 
 #'    when updated to this trial.
@@ -123,6 +125,7 @@
 #' }
 #' 
 func_beta <- function(
+    shown,
     qvalue, 
     explor,
     params,
@@ -159,6 +162,7 @@ func_beta <- function(
   
   if (explor == 1) {
     prob_mat[index, ] <- 1 / n_shown
+    prob_mat[prob_mat == 0] <- NA
   } else {
     for (s in seq_len(n_system)) {
       sub_qvalue <- qvalue[[s]]

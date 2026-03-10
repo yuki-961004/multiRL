@@ -4,7 +4,9 @@
 #'  \deqn{
 #'    \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
 #'  }
-#'  
+#'
+#' @param shown
+#'  Which options shown in this trial.
 #' @param count 
 #'  How many times this action has been executed
 #' @param params 
@@ -77,6 +79,7 @@
 #' }
 #' 
 func_delta <- function(
+    shown,
     count,
     params,
     ...

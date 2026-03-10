@@ -4,9 +4,11 @@
 \alias{func_alpha}
 \title{Function: Learning Rate}
 \usage{
-func_alpha(qvalue, reward, params, system, ...)
+func_alpha(shown, qvalue, reward, params, system, ...)
 }
 \arguments{
+\item{shown}{Which options shown in this trial.}
+
 \item{qvalue}{The expected Q values of different behaviors produced by different systems 
 when updated to this trial.}
 

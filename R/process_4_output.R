@@ -109,6 +109,7 @@ process_4_output_r <- function(
     )
     # bias function: 每个刺激上的偏见
     bias[i, ] <- bias_func(
+      shown = shown[i, ],
       count = count[i, ], 
       params = params,
       idinfo = idinfo[i, ],
@@ -118,6 +119,7 @@ process_4_output_r <- function(
     )
     # exploration function: 此次是否进行探索
     exploration[i, ] <- expl_func(
+      shown = shown[i, ],
       rownum = i,
       params = params,
       idinfo = idinfo[i, ],
@@ -130,6 +132,7 @@ process_4_output_r <- function(
 
     # probability function: 选择每个选项的概率 
     prob[i, ] <- prob_func(
+      shown = shown[i, ],
       qvalue = qvalue, 
       explor = exploration[i, ],
       params = params,
@@ -176,6 +179,7 @@ process_4_output_r <- function(
     reward[i, ] <- state[i, row_index, dim(state)[3]]
     # utility function: 将实际奖励转化为主管价值
     utility[i, ] <- util_func(
+      shown = shown[i, ],
       reward = as.numeric(reward[i, ]), 
       params = params,
       idinfo = idinfo[i, ],
@@ -209,6 +213,7 @@ process_4_output_r <- function(
       
       # 工作记忆容量有限导致未被选择选项的价值衰减
       sub_value[i + 1, ] <- dcay_func(
+        shown = shown[i, ],
         value0 = sub_value[1, ],
         values = cur_value,
         reward = as.numeric(reward[i, ]),
@@ -228,6 +233,7 @@ process_4_output_r <- function(
       } else {
         # learning rate function: 如果不是第一次选, 则按照学习率方程更新
         sub_value[i + 1, latent[i, ]] <- rate_func(
+          shown = shown[i, ],
           qvalue = Qi,
           reward = as.numeric(utility[i, ]),
           params = params,

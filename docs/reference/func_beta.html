@@ -47,7 +47,7 @@ $$
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.13</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,14 +105,18 @@ $$
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">func_beta</span><span class="op">(</span><span class="va">qvalue</span>, <span class="va">explor</span>, <span class="va">params</span>, <span class="va">system</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">func_beta</span><span class="op">(</span><span class="va">shown</span>, <span class="va">qvalue</span>, <span class="va">explor</span>, <span class="va">params</span>, <span class="va">system</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-qvalue">qvalue<a class="anchor" aria-label="anchor" href="#arg-qvalue"></a></dt>
+<dl><dt id="arg-shown">shown<a class="anchor" aria-label="anchor" href="#arg-shown"></a></dt>
+<dd><p>Which options shown in this trial.</p></dd>
+
+
+<dt id="arg-qvalue">qvalue<a class="anchor" aria-label="anchor" href="#arg-qvalue"></a></dt>
 <dd><p>The expected Q values of different behaviors produced by different systems
 when updated to this trial.</p></dd>
 
