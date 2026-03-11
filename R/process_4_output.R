@@ -217,6 +217,7 @@ process_4_output_r <- function(
         value0 = sub_value[1, ],
         values = cur_value,
         reward = as.numeric(reward[i, ]),
+        utility = as.numeric(utility[i, ]),
         params = params,
         system = sub_system,
         idinfo = idinfo[i, ],
@@ -235,7 +236,8 @@ process_4_output_r <- function(
         sub_value[i + 1, latent[i, ]] <- rate_func(
           shown = shown[i, ],
           qvalue = Qi,
-          reward = as.numeric(utility[i, ]),
+          reward = as.numeric(reward[i, ]),
+          utility = as.numeric(utility[i, ]),
           params = params,
           system = sub_system,
           idinfo = idinfo[i, ],

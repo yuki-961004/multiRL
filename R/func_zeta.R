@@ -12,6 +12,9 @@
 #' @param reward 
 #'  The feedback received by the agent from the environment at trial(t) 
 #'    following the execution of action(a)
+#' @param utility 
+#'  The subjective value (internal representation) assigned by 
+#'   the agent to the objective reward.
 #' @param params 
 #'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
@@ -93,6 +96,7 @@ func_zeta <- function(
     value0, 
     values,
     reward,
+    utility,
     params,
     system,
     ...

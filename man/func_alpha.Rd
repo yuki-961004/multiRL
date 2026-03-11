@@ -4,7 +4,7 @@
 \alias{func_alpha}
 \title{Function: Learning Rate}
 \usage{
-func_alpha(shown, qvalue, reward, params, system, ...)
+func_alpha(shown, qvalue, reward, utility, params, system, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -14,6 +14,9 @@ when updated to this trial.}
 
 \item{reward}{The feedback received by the agent from the environment at trial(t) 
 following the execution of action(a)}
+
+\item{utility}{The subjective value (internal representation) assigned by 
+the agent to the objective reward.}
 
 \item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
