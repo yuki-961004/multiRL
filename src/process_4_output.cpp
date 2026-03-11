@@ -408,6 +408,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                         Rcpp::_["value0"] = Rcpp::NumericVector(sub_value.row(0)),
                         Rcpp::_["values"] = cur_value,
                         Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
+                        Rcpp::_["utility"] = utility(i, 0),
                         Rcpp::_["params"] = params,
                         Rcpp::_["system"] = sub_system,
                         Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
@@ -427,7 +428,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                         rate_func(
                             Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                             Rcpp::_["qvalue"] = Qi,
-                            Rcpp::_["reward"] = utility(i, 0),
+                            Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
+                            Rcpp::_["utility"] = utility(i, 0),
                             Rcpp::_["params"] = params,
                             Rcpp::_["system"] = sub_system,
                             Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),

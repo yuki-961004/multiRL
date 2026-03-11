@@ -4,7 +4,7 @@
 \alias{func_zeta}
 \title{Function: Decay Rate}
 \usage{
-func_zeta(shown, value0, values, reward, params, system, ...)
+func_zeta(shown, value0, values, reward, utility, params, system, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -15,6 +15,9 @@ func_zeta(shown, value0, values, reward, params, system, ...)
 
 \item{reward}{The feedback received by the agent from the environment at trial(t) 
 following the execution of action(a)}
+
+\item{utility}{The subjective value (internal representation) assigned by 
+the agent to the objective reward.}
 
 \item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
