@@ -60,10 +60,13 @@
 #'    
 #' @section Body: 
 #' \preformatted{func_zeta <- function(
+#'     shown,
 #'     value0, 
 #'     values,
 #'     reward,
+#'     utility,
 #'     params,
+#'     system,
 #'     ...
 #' ){
 #' 

@@ -78,6 +78,7 @@ A \code{NumericVector} containing the probability of choosing each
 \section{Body}{
  
 \preformatted{func_beta <- function(
+    shown,
     qvalue, 
     explor,
     params,
@@ -114,6 +115,7 @@ A \code{NumericVector} containing the probability of choosing each
   
   if (explor == 1) {
     prob_mat[index, ] <- 1 / n_shown
+    prob_mat[prob_mat == 0] <- NA
   } else {
     for (s in seq_len(n_system)) {
       sub_qvalue <- qvalue[[s]]

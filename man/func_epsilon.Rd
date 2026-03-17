@@ -84,6 +84,7 @@ An \code{int}, either 0 or 1, indicating exploration or
 \section{Body}{
  
 \preformatted{func_epsilon <- function(
+    shown,
     rownum,
     params,
     ...

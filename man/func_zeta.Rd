@@ -68,10 +68,13 @@ A \code{NumericVector} representing the values of unchosen options
 \section{Body}{
  
 \preformatted{func_zeta <- function(
+    shown,
     value0, 
     values,
     reward,
+    utility,
     params,
+    system,
     ...
 ){
 

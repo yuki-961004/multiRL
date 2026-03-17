@@ -57,6 +57,7 @@ A \code{NumericVector} of length one representing the subjective
 \section{Body}{
  
 \preformatted{func_gamma <- function(
+    shown,
     reward,
     params,
     ...
@@ -74,7 +75,7 @@ A \code{NumericVector} of length one representing the subjective
   gamma     <-  params[["gamma"]]
   
   # Stevens' Power Law
-  utility <- sign(reward) * (abs(reward) ^ gamma)
+  utility <- ((reward >= 0) * 2 - 1) * (abs(reward) ^ gamma)
   
   return(utility)
 }

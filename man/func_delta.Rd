@@ -58,6 +58,7 @@ A \code{NumericVector} containing the bias for each option based on
 \section{Body}{
  
 \preformatted{func_delta <- function(
+    shown,
     count,
     params,
     ...

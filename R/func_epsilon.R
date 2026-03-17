@@ -76,6 +76,7 @@
 #'    
 #' @section Body: 
 #' \preformatted{func_epsilon <- function(
+#'     shown,
 #'     rownum,
 #'     params,
 #'     ...

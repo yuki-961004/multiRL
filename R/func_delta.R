@@ -50,6 +50,7 @@
 #'    
 #' @section Body: 
 #' \preformatted{func_delta <- function(
+#'     shown,
 #'     count,
 #'     params,
 #'     ...

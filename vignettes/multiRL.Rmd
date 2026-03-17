@@ -90,8 +90,10 @@ print(multiRL::func_alpha)
 
 ```{r eval=FALSE}
 func_alpha <- function(
+    shown,
     qvalue,
     reward,
+    utility,
     params,
     system,
     ...
@@ -157,6 +159,7 @@ print(multiRL::func_beta)
 
 ```{r eval=FALSE}
 func_beta <- function(
+    shown,
     qvalue, 
     explor,
     params,
@@ -193,6 +196,7 @@ func_beta <- function(
   
   if (explor == 1) {
     prob_mat[index, ] <- 1 / n_shown
+    prob_mat[prob_mat == 0] <- NA
   } else {
     for (s in seq_len(n_system)) {
       sub_qvalue <- qvalue[[s]]
@@ -224,6 +228,7 @@ print(multiRL::func_gamma)
 
 ```{r eval=FALSE}
 func_gamma <- function(
+    shown,
     reward,
     params,
     ...
@@ -259,6 +264,7 @@ print(multiRL::func_delta)
 
 ```{r eval=FALSE}
 func_delta <- function(
+    shown,
     count,
     params,
     ...
@@ -299,6 +305,7 @@ print(multiRL::func_epsilon)
 
 ```{r eval=FALSE}
 func_epsilon <- function(
+    shown,
     rownum,
     params,
     ...
@@ -367,9 +374,11 @@ print(multiRL::func_zeta)
 
 ```{r eval=FALSE}
 func_zeta <- function(
+    shown,
     value0, 
     values,
     reward,
+    utility,
     params,
     system,
     ...

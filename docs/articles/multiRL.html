@@ -37,7 +37,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -247,8 +247,10 @@ Learning Rate (α)
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_alpha.html">func_alpha</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_alpha</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">qvalue</span>,</span>
 <span>    <span class="va">reward</span>,</span>
+<span>    <span class="va">utility</span>,</span>
 <span>    <span class="va">params</span>,</span>
 <span>    <span class="va">system</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -306,6 +308,7 @@ Soft-Max (β)
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_beta.html">func_beta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_beta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">qvalue</span>, </span>
 <span>    <span class="va">explor</span>,</span>
 <span>    <span class="va">params</span>,</span>
@@ -342,6 +345,7 @@ Soft-Max (β)
 <span>  </span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">explor</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">prob_mat</span><span class="op">[</span><span class="va">index</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">n_shown</span></span>
+<span>    <span class="va">prob_mat</span><span class="op">[</span><span class="va">prob_mat</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">s</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">n_system</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">sub_qvalue</span> <span class="op">&lt;-</span> <span class="va">qvalue</span><span class="op">[[</span><span class="va">s</span><span class="op">]</span><span class="op">]</span></span>
@@ -364,6 +368,7 @@ Utility Function (γ)
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_gamma.html">func_gamma</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_gamma</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">reward</span>,</span>
 <span>    <span class="va">params</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -391,6 +396,7 @@ Upper-Confidence-Bound (δ)
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_delta.html">func_delta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_delta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">count</span>,</span>
 <span>    <span class="va">params</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -423,6 +429,7 @@ Epsilon Related (ε)
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_epsilon.html">func_epsilon</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_epsilon</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">rownum</span>,</span>
 <span>    <span class="va">params</span>,</span>
 <span>    <span class="va">...</span></span>
@@ -484,9 +491,11 @@ Working Memory (ζ)
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_zeta.html">func_zeta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_zeta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">value0</span>, </span>
 <span>    <span class="va">values</span>,</span>
 <span>    <span class="va">reward</span>,</span>
+<span>    <span class="va">utility</span>,</span>
 <span>    <span class="va">params</span>,</span>
 <span>    <span class="va">system</span>,</span>
 <span>    <span class="va">...</span></span>

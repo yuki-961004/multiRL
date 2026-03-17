@@ -67,9 +67,12 @@ A \code{NumericVector} containing the updated values computed based
 \section{Body}{
  
 \preformatted{func_alpha <- function(
+    shown,
     qvalue,
     reward,
+    utility,
     params,
+    system,
     ...
 ){
 

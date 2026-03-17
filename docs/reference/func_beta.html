@@ -47,7 +47,7 @@ $$
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -172,6 +172,7 @@ systems involved?
 
 
 <div class="sourceCode"><pre><code><span><span class="va">func_beta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">qvalue</span>,</span>
 <span>    <span class="va">explor</span>,</span>
 <span>    <span class="va">params</span>,</span>
@@ -208,6 +209,7 @@ systems involved?
 <span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">explor</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">prob_mat</span><span class="op">[</span><span class="va">index</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">n_shown</span></span>
+<span>    <span class="va">prob_mat</span><span class="op">[</span><span class="va">prob_mat</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">s</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">n_system</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">sub_qvalue</span> <span class="op">&lt;-</span> <span class="va">qvalue</span><span class="op">[[</span><span class="va">s</span><span class="op">]</span><span class="op">]</span></span>
