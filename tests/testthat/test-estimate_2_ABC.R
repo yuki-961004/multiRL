@@ -39,7 +39,7 @@ testthat::test_that("ABC", {
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
     control = list(
       core = 4, sample = 100, train = 100,
-      tol = 0.1, reduction = "NONE"
+      tol = 0.5, reduction = "NONE"
     )
   )
 
@@ -87,7 +87,7 @@ testthat::test_that("ABC", {
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
     control = list(
       core = 4, sample = 100, train = 100,
-      tol = 0.1, reduction = "PLS"
+      tol = 0.5, reduction = "PLS"
     )
   )
   
@@ -135,7 +135,7 @@ testthat::test_that("ABC", {
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
     control = list(
       core = 4, sample = 100, train = 100,
-      tol = 0.1, reduction = "PCA"
+      tol = 0.5, reduction = "PCA"
     )
   )
   

@@ -35,15 +35,15 @@ colnames = list(
 ```{r}
 multiRL.model <- multiRL::run_m(
   #engine = "R",
-  data = data[data[, "Subject"] == 2, ],
+  data = data[data[, "Subject"] == 1, ],
   behrule = behrule,
   colnames = colnames,
   params = list(
     free = list(
       alpha = 0.5,
       beta = 0.01,
-      delta = 0,
-      sticky = 40,
+      delta = 0.1,
+      sticky = 0,
       reset = NA_real_
     )
   ),
