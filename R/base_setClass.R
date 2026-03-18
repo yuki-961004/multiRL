@@ -101,7 +101,8 @@ methods::setClass(
     latent = "matrix",
     reward = "matrix",
     utility = "matrix",
-    simulation = "matrix"
+    simulation = "matrix",
+    position = "matrix"
   )
 )
 

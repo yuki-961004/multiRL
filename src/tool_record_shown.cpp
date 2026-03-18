@@ -9,9 +9,12 @@ Rcpp::NumericVector record_shown(
     Rcpp::NumericVector out(cue.size());
 
     for (int i = 0; i < cue.size(); ++i) {
-        out[i] = (
-            std::find(state.begin(), state.end(), cue[i]) != state.end()
-        ) ? 1.0 : NA_REAL;
+        // 使用 it 接收查找结果，避免重复查找
+        auto it = std::find(state.begin(), state.end(), cue[i]);
+
+        // 若找到则通过 std::distance 计算索引并 +1，否则返回 NA
+        out[i] = (it != state.end()) ? 
+            (std::distance(state.begin(), it) + 1.0) : NA_REAL;
     }
 
     return out;

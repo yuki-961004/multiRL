@@ -196,9 +196,11 @@ multiRL.input <- multiRL::process_1_input(
   ),
   params = list(
     free = list(
-      alphaN = 0.3,
-      alphaP = 0.7,
-      beta = 0.5
+      alpha = 0.5,
+      beta = 0.01,
+      delta = 0,
+      sticky = 100,
+      reset = 999
     ),
     constant = list(
       weight = c(1, 0)
@@ -237,7 +239,7 @@ multiRL.record <- multiRL::process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output_cpp(
+multiRL.output <- process_4_output_r(
   record = multiRL.record,
   extra = multiRL.record@extra
 )

@@ -69,6 +69,7 @@ process_4_output_r <- function(
   latent      <- record@result@latent
   reward      <- record@result@reward
   simulation  <- record@result@simulation
+  position    <- record@result@position
   
   n_rows      <- record@input@n_rows
   
@@ -88,9 +89,9 @@ process_4_output_r <- function(
   count[1, ]  <- 0
   count       <- rbind(count, rep(NA_real_, ncol(count)))
 
-  behave <- cbind(action, latent, simulation)
+  behave <- cbind(action, latent, simulation, position)
   behave <- rbind(behave, rep(NA_character_, ncol(behave)))
-  colnames(behave) <- c("action", "latent", "simulation")
+  colnames(behave) <- c("action", "latent", "simulation", "position")
   
 ############################# [action select] ##################################
   
@@ -100,10 +101,9 @@ process_4_output_r <- function(
     
     # 记录每个刺激是否出现
     shown[i, ] <- stats::setNames(
-      object = ifelse(
-        test = cue %in% state[i, , ],
-        yes = 1,
-        no = NA
+      object = base::match(
+        x = cue, 
+        table = state[i, , ]
       ),
       nm = cue
     )
@@ -166,12 +166,15 @@ process_4_output_r <- function(
       }
     )
 
+    position[i, ] <- as.character(row_index)
     # 记录当前行为到当前试次, 会覆盖上一次的行为
     behave[i, 2] <- latent[i, ]
     behave[i, 3] <- simulation[i, ]
+    behave[i, 4] <- position[i, ]
     # 记录当前行为到下一个试次, 用于action select三函数读取
     behave[i + 1, 2] <- latent[i, ]
     behave[i + 1, 3] <- simulation[i, ]
+    behave[i + 1, 4] <- position[i, ]
     
 ############################## [value update] ##################################
     
@@ -278,8 +281,8 @@ process_4_output_r <- function(
   record@result@reward      <- reward
   record@result@utility     <- utility
   record@result@simulation  <- simulation
+  record@result@position    <- position
 
-  
   output <- methods::new(
     Class = "multiRL.output",
     input = record@input,

@@ -39,6 +39,8 @@
 #'          the object updated by the agent in the given trial.
 #'        \item simulation: 
 #'          the actual behavior performed by the agent.
+#'        \item position:
+#'          the position of the stimulus on the screen.
 #'      }
 #'    \item cue and rsp:
 #'      Cues and responses within latent learning rules, 
@@ -94,16 +96,32 @@ func_delta <- function(
   # Trial  <- idinfo[3]
   # Frame  <- exinfo[1]
   # Action <- behave[1]
+  
   latent <- behave[2]
-  position <- as.numeric(cue %in% latent)
+  if (is.na(latent)) {
+    last_latent <- rep(x = 0, times = length(shown))
+  } else {
+    last_latent <- shown * as.numeric(cue %in% latent)
+  }
+  
+  position <- behave[4]
+  if (is.na(position)) {
+    last_position <- rep(x = 0, times = length(shown))
+  } else {
+    last_position <- as.numeric(shown == as.numeric(position))
+  }
   
   delta     <- params[["delta"]]
   sticky    <- params[["sticky"]]
   
   # Upper-Confidence-Bound
   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) + 
-    # Sticky to the same response
-    sticky * position
-  
+    # Sticky to the same latent
+    sticky * last_latent + 
+    # Sticky to the same action
+    #sticky * last_simulation + 
+    # Sticky to the same position
+    sticky * last_position
+    
   return(bias)
 }

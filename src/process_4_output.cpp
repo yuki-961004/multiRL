@@ -153,18 +153,22 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     Rcpp::CharacterMatrix simulation = Rcpp::clone(Rcpp::as<Rcpp::CharacterMatrix>(
         result.slot("simulation")
     ));  
+    Rcpp::CharacterMatrix position = Rcpp::clone(Rcpp::as<Rcpp::CharacterMatrix>(
+        result.slot("position")
+    )); 
 
     // behave
     Rcpp::CharacterMatrix behave_raw = Rcpp::cbind(
         Rcpp::as<Rcpp::CharacterMatrix>(features.slot("action")),
         Rcpp::as<Rcpp::CharacterMatrix>(result.slot("latent")),
-        Rcpp::as<Rcpp::CharacterMatrix>(result.slot("simulation"))
+        Rcpp::as<Rcpp::CharacterMatrix>(result.slot("simulation")),
+        Rcpp::as<Rcpp::CharacterMatrix>(result.slot("position"))
     );
 
     // 给behave赋予第0行
-    Rcpp::CharacterMatrix behave(n_rows + 1, 3);
+    Rcpp::CharacterMatrix behave(n_rows + 1, 4);
     behave.row(0) = Rcpp::CharacterVector::create(
-        NA_STRING, NA_STRING, NA_STRING
+        NA_STRING, NA_STRING, NA_STRING, NA_STRING
     );
     // 将原矩阵数据拷贝到新矩阵
     for (int i = 0; i < n_rows; i++) {
@@ -172,7 +176,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     }
 
     Rcpp::colnames(behave) = Rcpp::CharacterVector::create(
-        "action", "latent", "simulation"
+        "action", "latent", "simulation", "position"
     );
 
 /******************************* [load others] ********************************/
@@ -336,12 +340,15 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             }
         }
 
+        position(i, 0) = std::to_string(row_index + 1);
         // 记录当前行为到当前试次, 会覆盖上一次的行为
         behave(i, 1) = latent(i, 0);
         behave(i, 2) = simulation(i, 0);
+        behave(i, 3) = position(i, 0);
         // 记录当前行为到下一个试次, 用于action select三函数读取
         behave(i + 1, 1) = latent(i, 0);
         behave(i + 1, 2) = simulation(i, 0);
+        behave(i + 1, 3) = position(i, 0);
 
         // 最后一列是奖励数值
         int col_reward = state_i.ncol()-1;   
@@ -481,6 +488,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
     result.slot("reward")       = reward;
     result.slot("utility")      = utility;
     result.slot("simulation")   = simulation;
+    result.slot("position")     = position;
 
 /********************************* [save output] ******************************/
 

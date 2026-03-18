@@ -35,16 +35,16 @@ colnames = list(
 ```{r}
 multiRL.model <- multiRL::run_m(
   #engine = "R",
-  data = data[data[, "Subject"] == 1, ],
+  data = data[data[, "Subject"] == 2, ],
   behrule = behrule,
   colnames = colnames,
   params = list(
     free = list(
       alpha = 0.5,
-      beta = 0.5,
+      beta = 0.01,
       delta = 0,
-      sticky = 100,
-      reset = 999
+      sticky = 40,
+      reset = NA_real_
     )
   ),
   priors = list(

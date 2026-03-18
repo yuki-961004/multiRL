@@ -49,6 +49,8 @@
 #'          the object updated by the agent in the given trial.
 #'        \item simulation: 
 #'          the actual behavior performed by the agent.
+#'        \item position:
+#'          the position of the stimulus on the screen.
 #'      }
 #'    \item cue and rsp:
 #'      Cues and responses within latent learning rules, 

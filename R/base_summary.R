@@ -38,7 +38,8 @@ methods::setMethod(
       Latent      = object@result@latent,
       Reward      = object@result@reward,
       Utility     = object@result@utility,
-      Simulation  = object@result@simulation
+      Simulation  = object@result@simulation,
+      Position    = object@result@position
     )
     
     data <- cbind(raw, bias, shown, prob, count, behavior)

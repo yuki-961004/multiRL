@@ -71,6 +71,7 @@ process_3_record <- function(
   reward      <- matrix(as.numeric(singledf), nrow = nrow(singledf), ncol = 1)
   utility     <- matrix(as.numeric(singledf), nrow = nrow(singledf), ncol = 1)
   simulation  <- matrix(as.character(singledf), nrow = nrow(singledf), ncol = 1)
+  position    <- matrix(as.character(singledf), nrow = nrow(singledf), ncol = 1)
   
   result <- methods::new(
     Class = "multiRL.result",
@@ -84,7 +85,8 @@ process_3_record <- function(
     latent = latent,
     reward = reward,
     utility = utility,
-    simulation = simulation
+    simulation = simulation,
+    position = position
   )
   
 ################################## [record] ####################################
