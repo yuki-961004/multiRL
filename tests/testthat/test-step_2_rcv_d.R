@@ -83,7 +83,7 @@ testthat::test_that("ABC", {
     
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
-    control = list(tol = 0.5, core = 1, sample = 5, train = 100)
+    control = list(core = 1, sample = 5, train = 100, tol = 1)
   )
   
   testthat::expect_s3_class(recovery.ABC, "multiRL.recovery")
