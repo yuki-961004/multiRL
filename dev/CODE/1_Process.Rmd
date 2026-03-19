@@ -44,14 +44,19 @@ multiRL.behrule <- multiRL::process_2_behrule(
 ```
 
 ```{r}
-multiRL.record <- process_3_record(
+multiRL.record <- multiRL::process_3_record(
   input = multiRL.input,
   behrule = multiRL.behrule
 )
 ```
 
 ```{r}
-multiRL.output <- process_4_output_r(
+multiRL.output <- multiRL::process_4_output_r(
+  record = multiRL.record,
+  extra = multiRL.record@extra
+)
+
+multiRL.output <- multiRL::process_4_output_cpp(
   record = multiRL.record,
   extra = multiRL.record@extra
 )
@@ -86,7 +91,9 @@ multiRL.model <- multiRL::run_m(
     free = list(
       alphaN = 0.3,
       alphaP = 0.7,
-      beta = 0.5
+      beta = 0.5,
+      delta = 0,
+      sticky = 100
     )
   ),
   settings = list(
@@ -106,6 +113,8 @@ multiRL.summary <- multiRL::summary(multiRL.model)
 
 ```{r}
 multiRL.model <- multiRL::run_m(
+  engine = "Cpp",
+  #engine = "R",
   data = binaryRL::Mason_2024_G2[binaryRL::Mason_2024_G2[, "Subject"] == 1, ],
   behrule = list(
     cue = c("A", "B", "C", "D"),
@@ -120,9 +129,11 @@ multiRL.model <- multiRL::run_m(
   ),
   params = list(
     free = list(
-      alphaN = 0.3,
-      alphaP = 0.7,
-      beta = 0.5
+      alpha = 0.5,
+      beta = 0.01,
+      delta = 0,
+      sticky = 100,
+      reset = 999
     ),
     constant = list(
       Q0 = 100,
@@ -138,12 +149,10 @@ multiRL.model <- multiRL::run_m(
     name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
-    policy = "off",
+    policy = "on",
     system = c("RL", "WM")
     #system = "RL"
   ),
-  engine = "Cpp",
-  #engine = "R",
   anythingelse = c(1, 2, 3)
 )
 
@@ -239,7 +248,7 @@ multiRL.record <- multiRL::process_3_record(
 ```
 
 ```{r}
-multiRL.output <- process_4_output_r(
+multiRL.output <- multiRL::process_4_output_r(
   record = multiRL.record,
   extra = multiRL.record@extra
 )

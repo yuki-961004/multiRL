@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,6 +114,9 @@ see <a href="params.html">params</a></p></dd>
 <li><p>cue and rsp:
      Cues and responses within latent learning rules,
        see <a href="behrule.html">behrule</a></p></li>
+<li><p>state:
+     The state stores the stimuli shown in the current trial—split into
+     components by underscores—and the rewards associated with them.</p></li>
 </ul></dd>
 
 </dl></div>
@@ -141,16 +144,42 @@ see <a href="params.html">params</a></p></dd>
   # Trial  &lt;- idinfo[3]
   # Frame  &lt;- exinfo[1]
   # Action &lt;- behave[1]
+
+  # Sticky to the same latent
   latent &lt;- behave[2]
-  position &lt;- as.numeric(cue <!-- %in% latent) -->
+  if (is.na(latent)) {
+    last_latent &lt;- shown * 0
+  } else {
+    last_latent &lt;- as.numeric(!is.na(shown)) * as.numeric(cue <!-- %in% latent) -->
+  }
+  # Sticky to the same action(simulation)
+  simulation &lt;- behave[3]
+  if (is.na(simulation)) {
+    last_simulation &lt;- shown * 0
+  } else {
+    last_simulation &lt;- as.numeric(
+      rowSums(state[shown, , drop = FALSE] == simulation) &gt; 0
+    )
+  }
+  # Sticky to the same position
+  position &lt;- behave[4]
+  if (is.na(position)) {
+    last_position &lt;- shown * 0
+  } else {
+    last_position &lt;- as.numeric(shown == as.numeric(position))
+  }
 
   delta     &lt;- params[["delta"]]
   sticky    &lt;- params[["sticky"]]
 
   # Upper-Confidence-Bound
   bias &lt;- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) +
-   # Sticky to the same response
-   sticky * position
+    # Sticky to the same latent
+    sticky * last_latent +
+    # Sticky to the same action(simulation)
+    sticky * last_simulation +
+    # Sticky to the same position
+    sticky * last_position
 
   return(bias)
 }

@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,15 +110,15 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
 <span>  <span class="co">#engine = "R",</span></span>
-<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">2</span>, <span class="op">]</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
 <span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
 <span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>      beta <span class="op">=</span> <span class="fl">0.01</span>,</span>
-<span>      delta <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>      sticky <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>      delta <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>      sticky <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>      reset <span class="op">=</span> <span class="cn">NA_real_</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
@@ -134,12 +134,12 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.summary</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">multiRL.model</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Model Fit:</span></span>
-<span><span class="co">##   Accuracy: 53.06%</span></span>
-<span><span class="co">##   Log-Likelihood: -245.27</span></span>
+<span><span class="co">##   Accuracy: 51.94%</span></span>
+<span><span class="co">##   Log-Likelihood: -239.84</span></span>
 <span><span class="co">##   Log-Prior Probability: NA</span></span>
 <span><span class="co">##   Log-Posterior Probability: NA</span></span>
-<span><span class="co">##   AIC: 500.54</span></span>
-<span><span class="co">##   BIC: 519.97</span></span></code></pre>
+<span><span class="co">##   AIC: 489.67</span></span>
+<span><span class="co">##   BIC: 509.1</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="rstd">RSTD<a class="anchor" aria-label="anchor" href="#rstd"></a>

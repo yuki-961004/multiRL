@@ -71,6 +71,9 @@
 #'    \item cue and rsp:
 #'      Cues and responses within latent learning rules, 
 #'        see \link[multiRL]{behrule} 
+#'    \item state:
+#'      The state stores the stimuli shown in the current trial—split into 
+#'      components by underscores—and the rewards associated with them.
 #' }
 #'    
 #' @return An \code{int}, either 0 or 1, indicating exploration or 

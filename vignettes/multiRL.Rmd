@@ -278,17 +278,43 @@ func_delta <- function(
   # Trial  <- idinfo[3]
   # Frame  <- exinfo[1]
   # Action <- behave[1]
+  
+  # Sticky to the same latent
   latent <- behave[2]
-  position <- as.numeric(cue %in% latent)
+  if (is.na(latent)) {
+    last_latent <- shown * 0
+  } else {
+    last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue %in% latent)
+  }
+  # Sticky to the same action(simulation)
+  simulation <- behave[3]
+  if (is.na(simulation)) {
+    last_simulation <- shown * 0
+  } else {
+    last_simulation <- as.numeric(
+      rowSums(state[shown, , drop = FALSE] == simulation) > 0
+    )
+  }
+  # Sticky to the same position
+  position <- behave[4]
+  if (is.na(position)) {
+    last_position <- shown * 0
+  } else {
+    last_position <- as.numeric(shown == as.numeric(position))
+  }
   
   delta     <- params[["delta"]]
   sticky    <- params[["sticky"]]
   
   # Upper-Confidence-Bound
   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) + 
-    # Sticky to the same response
-    sticky * position
-  
+    # Sticky to the same latent
+    sticky * last_latent +
+    # Sticky to the same action(simulation)
+    sticky * last_simulation +
+    # Sticky to the same position
+    sticky * last_position 
+    
   return(bias)
 }
 ```

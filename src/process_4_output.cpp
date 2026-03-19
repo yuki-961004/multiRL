@@ -240,7 +240,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
                 Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i)),
-                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp
+                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp, 
+                Rcpp::_["state"] = state[i]
             )
         );
         // exploration function: 此次是否进行探索
@@ -252,7 +253,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
                 Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i)),
-                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp
+                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp, 
+                Rcpp::_["state"] = state[i]
             )
         );   
         // probability function: 选择每个选项的概率 
@@ -278,7 +280,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
                 Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i)),
-                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp
+                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp, 
+                Rcpp::_["state"] = state[i]
             )
         );
 
@@ -370,7 +373,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                 Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                 Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
                 Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i)),
-                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp
+                Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp, 
+                Rcpp::_["state"] = state[i]
             )
         ); 
 
@@ -421,7 +425,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                         Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                         Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
                         Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i)),
-                        Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp
+                        Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp, 
+                        Rcpp::_["state"] = state[i]
                     )
                 );
 
@@ -442,7 +447,8 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
                             Rcpp::_["idinfo"] = Rcpp::CharacterVector(idinfo.row(i)),
                             Rcpp::_["exinfo"] = Rcpp::CharacterVector(exinfo.row(i)),
                             Rcpp::_["behave"] = Rcpp::CharacterVector(behave.row(i)),
-                            Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp
+                            Rcpp::_["cue"] = cue, Rcpp::_["rsp"] = rsp, 
+                            Rcpp::_["state"] = state[i]
                         )
                     );
             }

@@ -115,7 +115,8 @@ process_4_output_r <- function(
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
       behave = behave[i, ],
-      cue = cue, rsp = rsp
+      cue = cue, rsp = rsp,
+      state = state[i, , ]
     )
     # exploration function: 此次是否进行探索
     exploration[i, ] <- expl_func(
@@ -125,7 +126,8 @@ process_4_output_r <- function(
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
       behave = behave[i, ],
-      cue = cue, rsp = rsp
+      cue = cue, rsp = rsp,
+      state = state[i, , ]
     )
 
     qvalue <- lapply(value, function(x) (x[i, ] + bias[i, ]) * shown[i, ])
@@ -140,7 +142,8 @@ process_4_output_r <- function(
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
       behave = behave[i, ],
-      cue = cue, rsp = rsp
+      cue = cue, rsp = rsp,
+      state = state[i, , ]
     )
     
     switch(
@@ -188,7 +191,8 @@ process_4_output_r <- function(
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
       behave = behave[i, ],
-      cue = cue, rsp = rsp
+      cue = cue, rsp = rsp,
+      state = state[i, , ]
     )
     
     # 判断是否需要重置：Block是否发生变化
@@ -226,7 +230,8 @@ process_4_output_r <- function(
         idinfo = idinfo[i, ],
         exinfo = exinfo[i, ],
         behave = behave[i, ],
-        cue = cue, rsp = rsp
+        cue = cue, rsp = rsp,
+        state = state[i, , ]
       )
 
       if (is.na(Q0) && is.fp) {
@@ -246,7 +251,8 @@ process_4_output_r <- function(
           idinfo = idinfo[i, ],
           exinfo = exinfo[i, ],
           behave = behave[i, ],
-          cue = cue, rsp = rsp
+          cue = cue, rsp = rsp,
+          state = state[i, , ]
         )
       }
       

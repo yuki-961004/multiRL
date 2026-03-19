@@ -65,6 +65,9 @@
 #'    \item cue and rsp:
 #'      Cues and responses within latent learning rules, 
 #'        see \link[multiRL]{behrule} 
+#'    \item state:
+#'      The state stores the stimuli shown in the current trial—split into 
+#'      components by underscores—and the rewards associated with them.
 #' }
 #'    
 #' @return A \code{NumericVector} containing the probability of choosing each 

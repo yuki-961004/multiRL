@@ -45,6 +45,9 @@
 #'    \item cue and rsp:
 #'      Cues and responses within latent learning rules, 
 #'        see \link[multiRL]{behrule} 
+#'    \item state:
+#'      The state stores the stimuli shown in the current trial—split into 
+#'      components by underscores—and the rewards associated with them.
 #' }
 #'    
 #' @return A \code{NumericVector} containing the bias for each option based on 
@@ -66,16 +69,42 @@
 #'   # Trial  <- idinfo[3]
 #'   # Frame  <- exinfo[1]
 #'   # Action <- behave[1]
+#'   
+#'   # Sticky to the same latent
 #'   latent <- behave[2]
-#'   position <- as.numeric(cue %in% latent)
+#'   if (is.na(latent)) {
+#'     last_latent <- shown * 0
+#'   } else {
+#'     last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue %in% latent)
+#'   }
+#'   # Sticky to the same action(simulation)
+#'   simulation <- behave[3]
+#'   if (is.na(simulation)) {
+#'     last_simulation <- shown * 0
+#'   } else {
+#'     last_simulation <- as.numeric(
+#'       rowSums(state[shown, , drop = FALSE] == simulation) > 0
+#'     )
+#'   }
+#'   # Sticky to the same position
+#'   position <- behave[4]
+#'   if (is.na(position)) {
+#'     last_position <- shown * 0
+#'   } else {
+#'     last_position <- as.numeric(shown == as.numeric(position))
+#'   }
 #'   
 #'   delta     <- params[["delta"]]
 #'   sticky    <- params[["sticky"]]
 #'   
 #'   # Upper-Confidence-Bound
-#'   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) +
-#'    # Sticky to the same response
-#'    sticky * position
+#'   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) + 
+#'     # Sticky to the same latent
+#'     sticky * last_latent +
+#'     # Sticky to the same action(simulation)
+#'     sticky * last_simulation +
+#'     # Sticky to the same position
+#'     sticky * last_position 
 #'    
 #'   return(bias)
 #' }
@@ -97,16 +126,26 @@ func_delta <- function(
   # Frame  <- exinfo[1]
   # Action <- behave[1]
   
+  # Sticky to the same latent
   latent <- behave[2]
   if (is.na(latent)) {
-    last_latent <- rep(x = 0, times = length(shown))
+    last_latent <- shown * 0
   } else {
-    last_latent <- shown * as.numeric(cue %in% latent)
+    last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue %in% latent)
   }
-  
+  # Sticky to the same action(simulation)
+  simulation <- behave[3]
+  if (is.na(simulation)) {
+    last_simulation <- shown * 0
+  } else {
+    last_simulation <- as.numeric(
+      rowSums(state[shown, , drop = FALSE] == simulation) > 0
+    )
+  }
+  # Sticky to the same position
   position <- behave[4]
   if (is.na(position)) {
-    last_position <- rep(x = 0, times = length(shown))
+    last_position <- shown * 0
   } else {
     last_position <- as.numeric(shown == as.numeric(position))
   }
@@ -117,11 +156,11 @@ func_delta <- function(
   # Upper-Confidence-Bound
   bias <- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) + 
     # Sticky to the same latent
-    sticky * last_latent + 
-    # Sticky to the same action
-    #sticky * last_simulation + 
+    sticky * last_latent +
+    # Sticky to the same action(simulation)
+    sticky * last_simulation +
     # Sticky to the same position
-    sticky * last_position
+    sticky * last_position 
     
   return(bias)
 }

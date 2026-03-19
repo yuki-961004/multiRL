@@ -199,6 +199,11 @@ multiRL_cpp <- function(x) {
 ```{r}
 profvis::profvis({
   for (i in 1:50) {
+    multiRL_r()
+  }
+})
+profvis::profvis({
+  for (i in 1:50) {
     multiRL_cpp()
   }
 })
@@ -206,9 +211,9 @@ profvis::profvis({
 
 
 ```{r}
-mb <- microbenchmark::microbenchmark(
-  binaryRL_r = binaryRL_r(),
-  binaryRL_cpp = binaryRL_cpp(),
+microbenchmark::microbenchmark(
+  #binaryRL_r = binaryRL_r(),
+  #binaryRL_cpp = binaryRL_cpp(),
   multiRL_r = multiRL_r(),
   multiRL_cpp = multiRL_cpp(),
   times = 100
