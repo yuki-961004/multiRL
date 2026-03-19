@@ -60,7 +60,7 @@
 #'     params,
 #'     ...
 #' ){
-#' 
+#'   
 #'   list2env(list(...), envir = environment())
 #'   
 #'   # If you need extra information(...)
@@ -75,7 +75,7 @@
 #'   if (is.na(latent)) {
 #'     last_latent <- shown * 0
 #'   } else {
-#'     last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue %in% latent)
+#'     last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue \%in\% latent)
 #'   }
 #'   # Sticky to the same action(simulation)
 #'   simulation <- behave[3]
@@ -105,7 +105,7 @@
 #'     sticky * last_simulation +
 #'     # Sticky to the same position
 #'     sticky * last_position 
-#'    
+#'   
 #'   return(bias)
 #' }
 #' }

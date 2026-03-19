@@ -129,61 +129,60 @@ see <a href="params.html">params</a></p></dd>
     <h2 id="body">Body<a class="anchor" aria-label="anchor" href="#body"></a></h2>
 
 
-<div class="sourceCode"><pre><code>func_delta &lt;- function(
-    shown,
-    count,
-    params,
-    ...
-){
-
-  list2env(list(...), envir = environment())
-
-  # If you need extra information(...)
-  # Column names may be lost(C++), indexes are recommended
-  # e.g.
-  # Trial  &lt;- idinfo[3]
-  # Frame  &lt;- exinfo[1]
-  # Action &lt;- behave[1]
-
-  # Sticky to the same latent
-  latent &lt;- behave[2]
-  if (is.na(latent)) {
-    last_latent &lt;- shown * 0
-  } else {
-    last_latent &lt;- as.numeric(!is.na(shown)) * as.numeric(cue <!-- %in% latent) -->
-  }
-  # Sticky to the same action(simulation)
-  simulation &lt;- behave[3]
-  if (is.na(simulation)) {
-    last_simulation &lt;- shown * 0
-  } else {
-    last_simulation &lt;- as.numeric(
-      rowSums(state[shown, , drop = FALSE] == simulation) &gt; 0
-    )
-  }
-  # Sticky to the same position
-  position &lt;- behave[4]
-  if (is.na(position)) {
-    last_position &lt;- shown * 0
-  } else {
-    last_position &lt;- as.numeric(shown == as.numeric(position))
-  }
-
-  delta     &lt;- params[["delta"]]
-  sticky    &lt;- params[["sticky"]]
-
-  # Upper-Confidence-Bound
-  bias &lt;- delta * sqrt(log(count + exp(1)) / (count + 1e-10)) +
-    # Sticky to the same latent
-    sticky * last_latent +
-    # Sticky to the same action(simulation)
-    sticky * last_simulation +
-    # Sticky to the same position
-    sticky * last_position
-
-  return(bias)
-}
-</code></pre></div>
+<div class="sourceCode"><pre><code><span><span class="va">func_delta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<span>    <span class="va">shown</span>,</span>
+<span>    <span class="va">count</span>,</span>
+<span>    <span class="va">params</span>,</span>
+<span>    <span class="va">...</span></span>
+<span><span class="op">)</span><span class="op">{</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># If you need extra information(...)</span></span>
+<span>  <span class="co"># Column names may be lost(C++), indexes are recommended</span></span>
+<span>  <span class="co"># e.g.</span></span>
+<span>  <span class="co"># Trial  &lt;- idinfo[3]</span></span>
+<span>  <span class="co"># Frame  &lt;- exinfo[1]</span></span>
+<span>  <span class="co"># Action &lt;- behave[1]</span></span>
+<span></span>
+<span>  <span class="co"># Sticky to the same latent</span></span>
+<span>  <span class="va">latent</span> <span class="op">&lt;-</span> <span class="va">behave</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">latent</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">last_latent</span> <span class="op">&lt;-</span> <span class="va">shown</span> <span class="op">*</span> <span class="fl">0</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">last_latent</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">shown</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">cue</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">latent</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="co"># Sticky to the same action(simulation)</span></span>
+<span>  <span class="va">simulation</span> <span class="op">&lt;-</span> <span class="va">behave</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">simulation</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">last_simulation</span> <span class="op">&lt;-</span> <span class="va">shown</span> <span class="op">*</span> <span class="fl">0</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">last_simulation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">state</span><span class="op">[</span><span class="va">shown</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op">==</span> <span class="va">simulation</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="co"># Sticky to the same position</span></span>
+<span>  <span class="va">position</span> <span class="op">&lt;-</span> <span class="va">behave</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">position</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">last_position</span> <span class="op">&lt;-</span> <span class="va">shown</span> <span class="op">*</span> <span class="fl">0</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">last_position</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">shown</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">position</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="va">delta</span>     <span class="op">&lt;-</span> <span class="va">params</span><span class="op">[[</span><span class="st">"delta"</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">sticky</span>    <span class="op">&lt;-</span> <span class="va">params</span><span class="op">[[</span><span class="st">"sticky"</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span>  <span class="co"># Upper-Confidence-Bound</span></span>
+<span>  <span class="va">bias</span> <span class="op">&lt;-</span> <span class="va">delta</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">count</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">count</span> <span class="op">+</span> <span class="fl">1e-10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="co"># Sticky to the same latent</span></span>
+<span>    <span class="va">sticky</span> <span class="op">*</span> <span class="va">last_latent</span> <span class="op">+</span></span>
+<span>    <span class="co"># Sticky to the same action(simulation)</span></span>
+<span>    <span class="va">sticky</span> <span class="op">*</span> <span class="va">last_simulation</span> <span class="op">+</span></span>
+<span>    <span class="co"># Sticky to the same position</span></span>
+<span>    <span class="va">sticky</span> <span class="op">*</span> <span class="va">last_position</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">bias</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 
     </div>
 

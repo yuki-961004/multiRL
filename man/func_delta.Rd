@@ -68,7 +68,7 @@ A \code{NumericVector} containing the bias for each option based on
     params,
     ...
 ){
-
+  
   list2env(list(...), envir = environment())
   
   # If you need extra information(...)
@@ -83,7 +83,7 @@ A \code{NumericVector} containing the bias for each option based on
   if (is.na(latent)) {
     last_latent <- shown * 0
   } else {
-    last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue %in% latent)
+    last_latent <- as.numeric(!is.na(shown)) * as.numeric(cue \%in\% latent)
   }
   # Sticky to the same action(simulation)
   simulation <- behave[3]
@@ -113,7 +113,7 @@ A \code{NumericVector} containing the bias for each option based on
     sticky * last_simulation +
     # Sticky to the same position
     sticky * last_position 
-   
+  
   return(bias)
 }
 }
