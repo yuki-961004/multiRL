@@ -109,10 +109,51 @@ engine_RNN <- function(
   
 ############################## [tensorflow] ####################################
 
+  set.seed(seed)
+  tensorflow::tf$random$set_seed(seed)
   tensorflow::tf$get_logger()$setLevel('ERROR')
   
-  set.seed(seed)
-  
+  if (loss == "NLL") {
+    units_out <- n_params * 2
+    # 拟合均值和对数方差 (Gaussian Negative Log-Likelihood)
+    loss_func <- function(y_true, y_pred) {
+      # 前 n_params 个节点预测均值
+      mu <- y_pred[, 1:n_params, drop = FALSE]
+      # 后 n_params 个节点预测对数方差
+      log_var <- y_pred[, (n_params + 1):(2 * n_params), drop = FALSE]
+      
+      # 计算精度, 确保方差为正
+      precision <- keras::k_exp(-log_var)
+      # 负对数似然核心公式
+      loss_val <- precision * keras::k_square(y_true - mu) + log_var
+      
+      return(keras::k_mean(keras::k_sum(loss_val, axis = -1L)))
+    }
+  } else if (loss == "QRL") {
+    # 预测3个分位数：5%, 50%, 95% 
+    units_out <- n_params * 3
+    
+    # 分位数损失 (Pinball Loss)
+    loss_func <- function(y_true, y_pred) {
+      q_values <- c(0.05, 0.50, 0.95)
+      total_loss <- 0
+      for (i in 1:3) {
+        # 获取对应分位数的预测节点
+        pred <- y_pred[, ((i - 1) * n_params + 1):(i * n_params), drop = FALSE]
+        err <- y_true - pred
+        # Pinball公式核心: max(q * err, (q - 1) * err)
+        total_loss <- total_loss + keras::k_mean(
+          keras::k_maximum(q_values[i] * err, (q_values[i] - 1.0) * err), 
+          axis = -1L
+        )
+      }
+      return(total_loss)
+    }
+  } else {
+    units_out <- n_params
+    loss_func <- "mean_squared_error"
+  }  
+
   # Initialize Model (sequential decision making)
   RNN <- keras::keras_model_sequential()
 
@@ -143,16 +184,37 @@ engine_RNN <- function(
     ) |>
     # Output Layer
     keras::layer_dense(
-      units = n_params, 
+      units = units_out, 
       activation = "linear"
-    ) |>
-    # Loss Function
-    keras::compile(
-      loss = "mean_squared_error",
-      optimizer = "adam",
-      metrics = c("mean_absolute_error")
-    )
-  
+    ) 
+
+  # Loss Function
+  switch(
+    EXPR = loss, 
+    "MSE" = {
+      RNN |> 
+        keras::compile(
+          loss = loss_func,
+          optimizer = "adam",
+          metrics = c(loss_func)
+        )
+    },
+    "NLL" = {
+      RNN |> 
+        keras::compile(
+          loss = loss_func,
+          optimizer = "adam"
+        )
+    },
+    "QRL" = {
+      RNN |> 
+        keras::compile(
+          loss = loss_func,
+          optimizer = "adam"
+        )
+    }
+  ) 
+
   # Training RNN Model
   history <- RNN |>
     keras::fit(

@@ -181,49 +181,68 @@ result.ABC <- multiRL::estimate_2_ABC(
 ## RNN
 
 ```{r}
+estimate = "RNN"
+
+data <- multiRL::TAB
+behrule = list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
+)
+colnames = list(
+  subid = "Subject", block = "Block", trial = "Trial",
+  object = c("L_choice", "R_choice"), 
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose",
+  exinfo = c("Frame", "NetWorth", "RT")
+)
+
+models = list(multiRL::TD)
+priors = list(
+  list(
+    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    beta = function(x) {stats::rexp(n = 1, rate = 1)}
+  )
+)
+settings = list(name = c("TD"))
+
+lowers = list(c(0, 0))
+uppers = list(c(1, 10))
+control = list(
+  core = 10, sample = 100, 
+  # LBI
+  iter = 100,
+  # SBI
+  train = 1000
+)
+```
+
+```{r}
 reticulate::use_condaenv(condaenv = "tf-gpu", required = TRUE)
 ```
 
 ```{r}
-result.RNN <- multiRL::estimate_2_RNN(
-  data = multiRL::TAB,
-  ids = 1:10,
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  
-  colnames = list(
-    object = c("L_choice", "R_choice"), 
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-  
+recovery.RNN <- multiRL::rcv_d(
+  estimate = "RNN",
+
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+
+  models = list(multiRL::TD),
   priors = list(
     list(
       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
       beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)}
-    ),
-    list(
-      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-      beta = function(x) {stats::rexp(n = 1, rate = 1)},
-      gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
     )
   ),
-  settings = list(list(name = "TD"), list(name = "RSTD"), list(name = "Utility")),
+  settings = list(name = c("TD")),
   
+  lowers = list(c(0, 0)),
+  uppers = list(c(1, 10)),
   control = list(
-    layer = "GRU",
-    units = 128,
-    sample = 100,
-    batch_size = 10,
-    epochs = 10
+    core = 10, sample = 100, train = 100,
+    #tol = 0.5, reduction = "PCA", 
+    loss = "QRL", check = FALSE
   )
 )
 ```

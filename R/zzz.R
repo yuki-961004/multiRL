@@ -11,5 +11,6 @@ utils::globalVariables(c(
   # ABC
   "tol", "reduction", "ncomp",
   # RNN,
-  "sample", "train", "scope", "info", "layer", "units", "batch_size", "epochs"
+  "sample", "train", "scope", "info", "layer", "loss", 
+  "units", "batch_size", "epochs", "check"
 ))

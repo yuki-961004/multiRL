@@ -109,15 +109,21 @@ estimate_2_RNN <- function(
     train = 1000,
     scope = "individual",
     layer = "GRU",
+    loss = "MSE",
     info = c(colnames$object, colnames$action),
     units = 128,
     batch_size = 10,
-    epochs = 100
+    epochs = 100,
+    check = TRUE
   )
   control <- utils::modifyList(x = default, val = control)
   # 解放control中的设定, 变成全局变量
   list2env(control, envir = environment())
+
+################################# [check] ######################################
   
+  if (check == TRUE) {.check_tensorflow()}
+
 ############################ [aotu-detect data] ################################
   
   # 自动探测数据
@@ -180,7 +186,9 @@ estimate_2_RNN <- function(
             X_sub <- array(NA, dim = c(1, n_trials, n_info))
             X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
             X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
-            names(X_pred) <- names(priors)
+            X_pred <- .name_rnnouts(
+              X_pred = X_pred, loss = loss, param_names = names(priors[[i]])
+            )
             opt_params[[j]] <- X_pred
             p()
           }
@@ -210,7 +218,9 @@ estimate_2_RNN <- function(
             X_sub <- array(NA, dim = c(1, n_trials, n_info))
             X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
             X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
-            names(X_pred) <- names(priors)
+            X_pred <- .name_rnnouts(
+              X_pred = X_pred, loss = loss, param_names = names(priors[[i]])
+            )
             opt_params[[j]] <- X_pred
             p()
           }
@@ -225,7 +235,6 @@ estimate_2_RNN <- function(
   for (i in 1:length(models)) {
     
     result.RNN[[i]] <- as.data.frame(result.RNN[[i]]) 
-    colnames(result.RNN[[i]]) <- names(priors[[i]])
     # 新增两列作为序号
     result.RNN[[i]][["fit_model"]] <- settings[[i]]$name
     result.RNN[[i]][["Subject"]] <- ids

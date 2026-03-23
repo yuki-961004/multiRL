@@ -1,5 +1,5 @@
 Package: multiRL
-Version: 0.3.1
+Version: 0.3.2
 Title: Reinforcement Learning Tools for Multi-Armed Bandit
 Description: 
   A flexible general-purpose toolbox for implementing Rescorla-Wagner models 
