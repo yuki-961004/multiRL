@@ -177,6 +177,32 @@ result.ABC <- multiRL::estimate_2_ABC(
 )
 ```
 
+```{r}
+recovery.ABC <- multiRL::rcv_d(
+  estimate = "ABC",
+
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+
+  models = list(multiRL::TD),
+  priors = list(
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    )
+  ),
+  settings = list(name = c("TD")),
+  
+  lowers = list(c(0, 0)),
+  uppers = list(c(1, 10)),
+  control = list(
+    core = 10, sample = 100, train = 1000,
+    tol = 0.2, reduction = "PCA"
+    #loss = "NLL", check = FALSE
+  )
+)
+```
 
 ## RNN
 

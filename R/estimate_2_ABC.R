@@ -116,7 +116,8 @@ estimate_2_ABC <- function(
     scope = "individual",
     tol = 0.1,
     reduction = "NONE",
-    ncomp = NULL
+    ncomp = NULL,
+    metric = "mode"
   )
   control <- utils::modifyList(x = default, val = control)
   # 解放control中的设定, 变成全局变量
@@ -211,7 +212,7 @@ estimate_2_ABC <- function(
             
             utils::capture.output(
               suppressWarnings({
-                opt_params_j <- summary(abc::abc(
+                abc_sum <- summary(abc::abc(
                   target = reduced_sumstats$target$onerow, 
                   param = reduced_sumstats$abc$df_params, 
                   sumstat = reduced_sumstats$abc$df_sumstats, 
@@ -219,11 +220,13 @@ estimate_2_ABC <- function(
                   method = "neuralnet", 
                   transf = rep("logit", n_params),
                   logit.bounds = cbind(lowers[[i]], uppers[[i]])
-                ))[5, ]
+                ))
               })
             )
             
-            names(opt_params_j) <- names(priors)
+            opt_params_j <- .name_abcouts(
+              summary = abc_sum, metric = metric, param_names = names(priors[[i]])
+            )
             p()
             return(opt_params_j)
           }       
@@ -257,7 +260,7 @@ estimate_2_ABC <- function(
             
             utils::capture.output(
               suppressWarnings({
-                opt_params_j <- summary(abc::abc(
+                abc_sum <- summary(abc::abc(
                   target = reduced_sumstats$target$onerow, 
                   param = reduced_sumstats$abc$df_params, 
                   sumstat = reduced_sumstats$abc$df_sumstats, 
@@ -265,11 +268,13 @@ estimate_2_ABC <- function(
                   method = "neuralnet", 
                   transf = rep("logit", n_params),
                   logit.bounds = cbind(lowers[[i]], uppers[[i]])
-                ))[5, ]
+                ))
               })
             )
             
-            names(opt_params_j) <- names(priors)
+            opt_params_j <- .name_abcouts(
+              summary = abc_sum, metric = metric, param_names = names(priors[[i]])
+            )
             p()
             return(opt_params_j)
           }
@@ -287,7 +292,6 @@ estimate_2_ABC <- function(
   for (i in 1:length(models)) {
     
     result.ABC[[i]] <- as.data.frame(result.ABC[[i]]) 
-    colnames(result.ABC[[i]]) <- names(priors[[i]])
     # 新增两列作为序号
     result.ABC[[i]][["fit_model"]] <- settings[[i]]$name
     result.ABC[[i]][["Subject"]] <- ids
