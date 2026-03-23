@@ -118,21 +118,11 @@
 #'     try <- 0
 #'     # Epsilon-Greedy:
 #'   } else if (rownum > threshold && model == "greedy"){
-#'     try <- sample(
-#'       c(1, 0),
-#'       prob = c(epsilon, 1 - epsilon),
-#'       size = 1
-#'     )
+#'     try <- as.integer(stats::runif(1) < epsilon)
 #'     # Epsilon-Decreasing: 
 #'   } else if (rownum > threshold && model == "decreasing") {
-#'     try <- sample(
-#'       c(1, 0),
-#'       prob = c(
-#'         1 / (1 + epsilon * rownum),
-#'         epsilon * rownum / (1 + epsilon * rownum)
-#'       ),
-#'       size = 1
-#'     )
+#'     prob_explore <- 1 / (1 + epsilon * rownum)
+#'     try <- as.integer(stats::runif(1) < prob_explore)
 #'   }
 #'   
 #'   return(try)
@@ -177,21 +167,11 @@ func_epsilon <- function(
     try <- 0
   # Epsilon-Greedy:
   } else if (rownum > threshold && model == "greedy"){
-    try <- sample(
-      c(1, 0),
-      prob = c(epsilon, 1 - epsilon),
-      size = 1
-    )
+    try <- as.integer(stats::runif(1) < epsilon)
   # Epsilon-Decreasing: 
   } else if (rownum > threshold && model == "decreasing") {
-    try <- sample(
-      c(1, 0),
-      prob = c(
-        1 / (1 + epsilon * rownum),
-        epsilon * rownum / (1 + epsilon * rownum)
-      ),
-      size = 1
-    )
+    prob_explore <- 1 / (1 + epsilon * rownum)
+    try <- as.integer(stats::runif(1) < prob_explore)
   }
   
   return(try)

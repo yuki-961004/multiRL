@@ -14,7 +14,9 @@ binaryRL.res <- binaryRL::run_m(
   pi = 0.1,
   eta = c(0.3, 0.7),
   tau = c(0.5), 
+  threshold = 20,
   priors = list(
+    eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
@@ -24,6 +26,7 @@ binaryRL.res <- binaryRL::run_m(
 summary(binaryRL.res)
 
 multiRL.model <- multiRL::run_m(
+  #engine = "R",
   data = binaryRL::Mason_2024_G2[binaryRL::Mason_2024_G2[, "Subject"] == 1, ],
   behrule = list(
     cue = c("A", "B", "C", "D"),
@@ -39,7 +42,8 @@ multiRL.model <- multiRL::run_m(
       alphaN = 0.3,
       alphaP = 0.7,
       beta = 0.5
-    )
+    ),
+    fixed = list(threshold = 20)
   ),
   priors = list(
     alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
@@ -127,6 +131,9 @@ multiRL_r <- function(x) {
         alphaP = 0.7,
         beta = 0.5
       ),
+      fixed = list(
+        threshold = 20
+      ),
       constant = list(
         Q0 = 100, 
         lapse = 0.01,
@@ -171,6 +178,9 @@ multiRL_cpp <- function(x) {
         alphaN = 0.3,
         alphaP = 0.7,
         beta = 0.5
+      ),
+      fixed = list(
+        threshold = 20
       ),
       constant = list(
         Q0 = 100, 

@@ -240,9 +240,9 @@ recovery.RNN <- multiRL::rcv_d(
   lowers = list(c(0, 0)),
   uppers = list(c(1, 10)),
   control = list(
-    core = 10, sample = 100, train = 100,
+    core = 10, sample = 100, train = 2000,
     #tol = 0.5, reduction = "PCA", 
-    loss = "QRL", check = FALSE
+    loss = "NLL", check = FALSE
   )
 )
 ```

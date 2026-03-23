@@ -130,7 +130,11 @@ process_4_output_r <- function(
       state = state[i, , ]
     )
 
-    qvalue <- lapply(value, function(x) (x[i, ] + bias[i, ]) * shown[i, ])
+    qvalue <- lapply(value, function(x) {
+      v <- x[i, ] + bias[i, ]
+      v[is.na(shown[i, ])] <- NA
+      return(v)
+    })
 
     # probability function: 选择每个选项的概率 
     prob[i, ] <- prob_func(

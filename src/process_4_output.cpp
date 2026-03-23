@@ -264,8 +264,11 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             Rcpp::NumericMatrix sub_value = value[s];
             Rcpp::NumericVector sub_qvalue(n_cues);
             for (int j = 0; j < n_cues; j++) {
-                sub_qvalue[j] =
-                    ( sub_value(i, j) + bias(i, j) ) * shown(i, j);
+                if (Rcpp::NumericVector::is_na(shown(i, j))) {
+                    sub_qvalue[j] = NA_REAL;
+                } else {
+                    sub_qvalue[j] = sub_value(i, j) + bias(i, j);
+                }
             }
             qvalue[s] = sub_qvalue;
         }
