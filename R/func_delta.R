@@ -1,4 +1,4 @@
-#' @title Function: Upper-Confidence-Bound
+#' @title Function: Bias Function
 #' @description
 #' 
 #'  \deqn{

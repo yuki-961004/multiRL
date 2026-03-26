@@ -4,13 +4,16 @@ utils::globalVariables(c(
   "idinfo", "exinfo", "behave", "cue", "rsp", "state",
   # model
   "data", "behrule", "colnames", "funcs", "priors", "settings",
+  # LBI
+  "seed", "core", 
   # MLE
-  "iter", "pars", "size", "seed", "core", "dash",
+  "iter", "pars", "size", "dash",
   # MAP
   "diff", "patience", 
+  # SBI
+  "sample", "train", "scope", 
   # ABC
   "tol", "reduction", "ncomp", "metric",
   # RNN,
-  "sample", "train", "scope", "info", "layer", "loss", 
-  "units", "batch_size", "epochs", "check"
+  "info", "layer", "loss", "units", "batch_size", "epochs", "check"
 ))

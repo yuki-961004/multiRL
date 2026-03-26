@@ -28,6 +28,8 @@ reference:
       - system
       - estimate
       - algorithm
+      - reduction
+      - layer
       - control
       
   - title: "Models"
@@ -66,7 +68,6 @@ reference:
       - estimate_2_RNN
       - engine_ABC
       - engine_RNN
-      
       
   - title: "Datasets"
     contents:

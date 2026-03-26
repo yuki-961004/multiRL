@@ -35,7 +35,7 @@
 
     <a class="navbar-brand me-2" href="index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,14 +138,16 @@
 <h3 id="multiple-modules">Multiple Modules<a class="anchor" aria-label="anchor" href="#multiple-modules"></a>
 </h3>
 <p align="center">
-<img src="./fig/clock.png" alt="RL Intro" width="50%" style="display: inline;"></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># learning-rate </span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_eta              <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_alpha</span></code></pre></div>
+<img src="./fig/circle.png" alt="RL Intro" width="50%" style="display: inline;"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># learning-rate function</span></span>
+<span><span class="va">rate_func</span> <span class="op">=</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_alpha.html">func_alpha</a></span></span></code></pre></div>
 <p><span class="math display">\[
   Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})
 \]</span></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># soft-max  </span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_tau              <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_beta</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># soft-max function  </span></span>
+<span><span class="va">prob_func</span> <span class="op">=</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_beta.html">func_beta</a></span></span></code></pre></div>
 <p><span class="math display">\[
   P_{t}(a) =
     \frac{
@@ -156,18 +158,21 @@
       )
     }
 \]</span></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># utility function</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_gamma            <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_gamma</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># utility function</span></span>
+<span><span class="va">util_func</span> <span class="op">=</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_gamma.html">func_gamma</a></span></span></code></pre></div>
 <p><span class="math display">\[
   U(R) = {R}^{\gamma}
 \]</span></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># upper-confidence-bound</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_pi               <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_delta</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># bias function (upper-confidence-bound, sticky, ...)</span></span>
+<span><span class="va">bias_func</span> <span class="op">=</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_delta.html">func_delta</a></span></span></code></pre></div>
 <p><span class="math display">\[
   \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
 \]</span></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># ε-(first, greedy, decrasing)  </span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>binaryRL<span class="sc">::</span>func_epsilon          <span class="sc">-</span><span class="ot">-&gt;</span>             multiRL<span class="sc">::</span>func_epsilon</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># exploration function (ε-first, ε-greedy, ε-decrasing)  </span></span>
+<span><span class="va">expl_func</span> <span class="op">=</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_epsilon.html">func_epsilon</a></span></span></code></pre></div>
 <p><span class="math display">\[
   P(x) =
     \begin{cases}
@@ -175,8 +180,9 @@
       1-\epsilon, &amp; x=0
     \end{cases}
 \]</span></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># working memory system</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>                                [<span class="sc">+</span>]             multiRL<span class="sc">::</span>func_zeta</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># decay function (working memory)</span></span>
+<span><span class="va">dcay_func</span> <span class="op">=</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="reference/func_zeta.html">func_zeta</a></span></span></code></pre></div>
 <p><span class="math display">\[
   W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
 \]</span></p>

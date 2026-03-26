@@ -34,7 +34,7 @@ see \link[multiRL]{funcs}}
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}
 
-\item{settings}{Other model settings, 
+\item{settings}{Other model settings,
 see \link[multiRL]{settings}}
 
 \item{control}{Settings manage various aspects of the iterative process,
@@ -44,13 +44,13 @@ see \link[multiRL]{control}}
 }
 \value{
 A specialized TensorFlow-trained Recurrent Neural Network (RNN) object.
- The model can be used with the \code{predict()} function to make predictions 
- on a new data frame, estimating the input parameters that are most likely 
+ The model can be used with the \code{predict()} function to make predictions
+ on a new data frame, estimating the input parameters that are most likely
  to have generated the given dataset.
 }
 \description{
-Because TensorFlow requires numeric arrays and input parameters to learn 
-   the mapping between them when building a Recurrent Neural Network (RNN) 
-   model, this function transforms simulated data into a standardized 
+Because TensorFlow requires numeric arrays and input parameters to learn
+   the mapping between them when building a Recurrent Neural Network (RNN)
+   model, this function transforms simulated data into a standardized
    dataset and invokes TensorFlow to train the model.
 }

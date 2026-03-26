@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,6 +96,8 @@
     Define the prior distributions for each free parameter.</p></li>
 <li><p><code><a href="settings.html">settings</a></code>:
     The general configuration and settings for your models.</p></li>
+<li><p><code><a href="system.html">system</a></code>:
+    Multiple systems may operate jointly to influence human decisions.</p></li>
 <li><p><code><a href="policy.html">policy</a></code>:
     Decide if the agent chooses for itself (on-policy) or
     simply copies human behavior (off-policy).</p></li>
@@ -103,6 +105,10 @@
     Pick an estimation method (MLE, MAP, ABC, or RNN).</p></li>
 <li><p><code><a href="algorithm.html">algorithm</a></code>:
     The optimization algorithms used for likelihood-based inference.</p></li>
+<li><p><code><a href="reduction.html">reduction</a></code>:
+    How to compress information when summary statistics are excessive.</p></li>
+<li><p><code><a href="layer.html">layer</a></code>:
+    Recurrent layers and loss functions in RNNs.</p></li>
 <li><p><code><a href="control.html">control</a></code>:
     Fine-tune how the estimation methods and algorithms behave.</p></li>
 </ul></div>
@@ -119,11 +125,11 @@
 
 
 <ul><li><p><code><a href="func_alpha.html">func_alpha</a></code>: Learning Rate</p></li>
-<li><p><code><a href="func_beta.html">func_beta</a></code>: Inverse Temperature</p></li>
+<li><p><code><a href="func_beta.html">func_beta</a></code>: Soft-Max</p></li>
 <li><p><code><a href="func_gamma.html">func_gamma</a></code>: Utility Function</p></li>
-<li><p><code><a href="func_delta.html">func_delta</a></code>: Upper-Confidence-Bound</p></li>
+<li><p><code><a href="func_delta.html">func_delta</a></code>: Bias Function</p></li>
 <li><p><code><a href="func_epsilon.html">func_epsilon</a></code>: Exploration Functions</p></li>
-<li><p><code><a href="func_zeta.html">func_zeta</a></code>: Working Memory System</p></li>
+<li><p><code><a href="func_zeta.html">func_zeta</a></code>: Decay Rate</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="processes">Processes<a class="anchor" aria-label="anchor" href="#processes"></a></h2>

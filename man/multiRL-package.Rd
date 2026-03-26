@@ -39,6 +39,8 @@ A flexible general-purpose toolbox for implementing Rescorla-Wagner models in mu
     Define the prior distributions for each free parameter.
   \item \code{\link[multiRL]{settings}}: 
     The general configuration and settings for your models.
+  \item \code{\link[multiRL]{system}}: 
+    Multiple systems may operate jointly to influence human decisions.
   \item \code{\link[multiRL]{policy}}: 
     Decide if the agent chooses for itself (on-policy) or 
     simply copies human behavior (off-policy).
@@ -46,6 +48,10 @@ A flexible general-purpose toolbox for implementing Rescorla-Wagner models in mu
     Pick an estimation method (MLE, MAP, ABC, or RNN).
   \item \code{\link[multiRL]{algorithm}}: 
     The optimization algorithms used for likelihood-based inference.
+  \item \code{\link[multiRL]{reduction}}: 
+    How to compress information when summary statistics are excessive.
+  \item \code{\link[multiRL]{layer}}: 
+    Recurrent layers and loss functions in RNNs.
   \item \code{\link[multiRL]{control}}: 
     Fine-tune how the estimation methods and algorithms behave.
 }
@@ -64,11 +70,11 @@ A flexible general-purpose toolbox for implementing Rescorla-Wagner models in mu
 
 \itemize{
   \item \code{\link[multiRL]{func_alpha}}: Learning Rate
-  \item \code{\link[multiRL]{func_beta}}: Inverse Temperature
+  \item \code{\link[multiRL]{func_beta}}: Soft-Max
   \item \code{\link[multiRL]{func_gamma}}: Utility Function
-  \item \code{\link[multiRL]{func_delta}}: Upper-Confidence-Bound
+  \item \code{\link[multiRL]{func_delta}}: Bias Function
   \item \code{\link[multiRL]{func_epsilon}}: Exploration Functions
-  \item \code{\link[multiRL]{func_zeta}}: Working Memory System
+  \item \code{\link[multiRL]{func_zeta}}: Decay Rate
 }
 }
 

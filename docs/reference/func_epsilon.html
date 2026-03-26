@@ -65,7 +65,7 @@ $$
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,21 +230,11 @@ see <a href="params.html">params</a></p></dd>
 <span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span>    <span class="co"># Epsilon-Greedy:</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">rownum</span> <span class="op">&gt;</span> <span class="va">threshold</span> <span class="op">&amp;&amp;</span> <span class="va">model</span> <span class="op">==</span> <span class="st">"greedy"</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">epsilon</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span><span class="op">)</span>,</span>
-<span>      size <span class="op">=</span> <span class="fl">1</span></span>
-<span>    <span class="op">)</span></span>
+<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">epsilon</span><span class="op">)</span></span>
 <span>    <span class="co"># Epsilon-Decreasing:</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">rownum</span> <span class="op">&gt;</span> <span class="va">threshold</span> <span class="op">&amp;&amp;</span> <span class="va">model</span> <span class="op">==</span> <span class="st">"decreasing"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span><span class="op">)</span>,</span>
-<span>        <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span><span class="op">)</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      size <span class="op">=</span> <span class="fl">1</span></span>
-<span>    <span class="op">)</span></span>
+<span>    <span class="va">prob_explore</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span><span class="op">)</span></span>
+<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">prob_explore</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">try</span><span class="op">)</span></span>

@@ -64,19 +64,19 @@ system = c("RL", "WM", "...")
 ### Multiple Modules  
 
 <p align="center">
-    <img src="./fig/clock.png" alt="RL Intro" width="50%" style="display: inline;">
+    <img src="./fig/circle.png" alt="RL Intro" width="50%" style="display: inline;">
 </p>
 
 ```r
-# learning-rate 
-binaryRL::func_eta              -->             multiRL::func_alpha
+# learning-rate function
+rate_func = multiRL::func_alpha
 ```
 $$
   Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})  
 $$
 ```r
-# soft-max  
-binaryRL::func_tau              -->             multiRL::func_beta
+# soft-max function  
+prob_func = multiRL::func_beta
 ```
 $$
   P_{t}(a) = 
@@ -90,21 +90,21 @@ $$
 $$
 ```r
 # utility function
-binaryRL::func_gamma            -->             multiRL::func_gamma
+util_func = multiRL::func_gamma
 ```
 $$
   U(R) = {R}^{\gamma}
 $$
 ```r
-# upper-confidence-bound
-binaryRL::func_pi               -->             multiRL::func_delta
+# bias function (upper-confidence-bound, sticky, ...)
+bias_func = multiRL::func_delta
 ```
 $$
   \text{Bias} = \delta \cdot \sqrt{\frac{\log(N + e)}{N + 10^{-10}}}
 $$
 ```r
-# ε-(first, greedy, decrasing)  
-binaryRL::func_epsilon          -->             multiRL::func_epsilon
+# exploration function (ε-first, ε-greedy, ε-decrasing)  
+expl_func = multiRL::func_epsilon
 ```
 $$
   P(x) = 
@@ -114,8 +114,8 @@ $$
     \end{cases}
 $$
 ```r
-# working memory system
-                                [+]             multiRL::func_zeta
+# decay function (working memory)
+dcay_func = multiRL::func_zeta
 ```
 $$
   W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})

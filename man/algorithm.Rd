@@ -2,7 +2,7 @@
 % Please edit documentation in R/document_algorithm.R
 \name{algorithm}
 \alias{algorithm}
-\title{Algorithm Packages}
+\title{Algorithm Packages (MLE, MAP)}
 \description{
 The package supports the following eight optimization packages for finding 
    the optimal values of the model's free parameters. Note that if you use 

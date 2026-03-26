@@ -5,81 +5,81 @@
 \title{Control Algorithm Behavior}
 \description{
 The \code{control} argument is a mandatory list used to customize and manage
-   various aspects of the iterative process, covering everything from 
+   various aspects of the iterative process, covering everything from
    optimization settings to model configuration.
 }
 \section{Class}{
- 
+
 \code{control [List]}
 }
 
 \section{Note}{
- 
- Different estimation methods require different slots. However, there is no 
-   need to worry if you set unnecessary slots, as this will not affect the 
+
+ Different estimation methods require different slots. However, there is no
+   need to worry if you set unnecessary slots, as this will not affect the
    execution.
 }
 
 \section{1. Likelihood Based Inference (LBI)}{
- 
+
 \itemize{
-   \item \code{sample [int]} 
-   
-         This parameter denotes the quantity of simulated data generated 
+   \item \code{sample [int]}
+
+         This parameter denotes the quantity of simulated data generated
          during the parameter recovery process.
-         
-   \item \code{iter [int]} 
-   
-         This parameter defines the maximum number of iterations. The 
-         iterative process will stop when this value is reached. The default 
-         value is \code{10}. It is recommended that you set this value to at 
+
+   \item \code{iter [int]}
+
+         This parameter defines the maximum number of iterations. The
+         iterative process will stop when this value is reached. The default
+         value is \code{10}. It is recommended that you set this value to at
          least \code{100} for formal fitting procedures.
-         
-   \item \code{pars [NumericVector]} 
-   
-         Some algorithms require the specification of initial iteration 
-         values. If this value is left as the default NA, the iteration will 
-         commence with an initial value set to the lower bound of the 
+
+   \item \code{pars [NumericVector]}
+
+         Some algorithms require the specification of initial iteration
+         values. If this value is left as the default NA, the iteration will
+         commence with an initial value set to the lower bound of the
          estimate plus \code{0.01}.
-         
-   \item \code{dash [Numeric]} 
-   
-         To prevent the optimal parameter estimates from converging to 
-         boundary values when the number of iterations is insufficient, a 
-         small value is added to the lower bound and subtracted from the 
-         upper bound. 
-         
-         For instance, if the input parameter bounds are \code{(0, 1)}, 
-         the actual bounds used for fitting will be \code{[0.00001, 0.99999]}. 
+
+   \item \code{dash [Numeric]}
+
+         To prevent the optimal parameter estimates from converging to
+         boundary values when the number of iterations is insufficient, a
+         small value is added to the lower bound and subtracted from the
+         upper bound.
+
+         For instance, if the input parameter bounds are \code{(0, 1)},
+         the actual bounds used for fitting will be \code{[0.00001, 0.99999]}.
          This design prevents the occurrence of Infinite values.
-         
-   \item \code{size [int]} 
-   
-         Some algorithms, such as Genetic Algorithms (\code{GA}), require the 
-         specification of initial population values. For the definition of 
-         the population, users may refer to the relevant documentation on 
-         evolutionary algorithms. The default value is consistent with the 
+
+   \item \code{size [int]}
+
+         Some algorithms, such as Genetic Algorithms (\code{GA}), require the
+         specification of initial population values. For the definition of
+         the population, users may refer to the relevant documentation on
+         evolutionary algorithms. The default value is consistent with the
          standard default in \code{GA}, which is \code{50}.
-         
-   \item \code{seed [int]} 
-   
-         The random seed controls the reproducibility of each iteration. 
-         Specifically, it determines how the algorithm package generates 
-         "random" input parameters when searching for the optimal parameters. 
-         Fixing the seed ensures that the optimal parameters found are the 
+
+   \item \code{seed [int]}
+
+         The random seed controls the reproducibility of each iteration.
+         Specifically, it determines how the algorithm package generates
+         "random" input parameters when searching for the optimal parameters.
+         Fixing the seed ensures that the optimal parameters found are the
          same in every run. The default value is \code{123}.
-         
-   \item \code{core [int]} 
-   
-         Since the parameter fitting process for individual subjects is 
-         independent, this procedure can be accelerated using CPU 
-         parallelism. This argument specifies the number of subjects to 
-         be fitted simultaneously (the number of parallel threads), 
-         with the default set to \code{1}. If the user wishes to speed up the 
-         fitting, they can increase the number of cores appropriately based 
+
+   \item \code{core [int]}
+
+         Since the parameter fitting process for individual subjects is
+         independent, this procedure can be accelerated using CPU
+         parallelism. This argument specifies the number of subjects to
+         be fitted simultaneously (the number of parallel threads),
+         with the default set to \code{1}. If the user wishes to speed up the
+         fitting, they can increase the number of cores appropriately based
          on their system specifications.
 }
-   
+
 \subsection{1.1 Maximum Likelihood Estimation (MLE)}{
 
 \itemize{
@@ -90,226 +90,268 @@ The \code{control} argument is a mandatory list used to customize and manage
 \subsection{1.2 Maximum A Posteriori (MAP)}{
 
 \itemize{
-   \item \code{diff [double]} 
-   
-         In the Expectation-Maximization with Maximum A Posteriori algorithm 
-         (EM-MAP), after estimating the optimal parameters for all subjects 
-         in each iteration, the posterior distribution of each free 
-         parameter is calculated, followed by continuous refinement of the 
-         prior distribution. The process stops when the change in the 
-         log-posterior value is less than the \code{diff}, which defaults 
+   \item \code{diff [double]}
+
+         In the Expectation-Maximization with Maximum A Posteriori algorithm
+         (EM-MAP), after estimating the optimal parameters for all subjects
+         in each iteration, the posterior distribution of each free
+         parameter is calculated, followed by continuous refinement of the
+         prior distribution. The process stops when the change in the
+         log-posterior value is less than the \code{diff}, which defaults
          to \code{0.001}.
-         
-   \item \code{patience [int]} 
-   
-         Given that the Expectation-Maximization with Maximum A Posteriori 
-         (EM-MAP) process can be time-consuming and often encounters 
-         non-convergence issues-for instance, when the log-posterior 
-         oscillates around a certain value-the patience parameter is used to 
-         manage early termination.Specifically, patience is incremented by 
-         1 when the current result is better than the best previous result, 
-         and decremented by 1 when it is worse. The iteration is prematurely 
+
+   \item \code{patience [int]}
+
+         Given that the Expectation-Maximization with Maximum A Posteriori
+         (EM-MAP) process can be time-consuming and often encounters
+         non-convergence issues-for instance, when the log-posterior
+         oscillates around a certain value-the patience parameter is used to
+         manage early termination.Specifically, patience is incremented by
+         1 when the current result is better than the best previous result,
+         and decremented by 1 when it is worse. The iteration is prematurely
          terminated when the patience count reaches zero.
-         
+
 }
 }
 }
 
 \section{2. Simulation Based Inference (SBI)}{
- 
+
 \itemize{
-   \item \code{sample [int]} 
-   
-         This parameter denotes the quantity of simulated data generated 
+   \item \code{sample [int]}
+
+         This parameter denotes the quantity of simulated data generated
          during the parameter recovery process.
-         
-   \item \code{train [int]} 
-   
-         This parameter is used to specify the quantity of simulated data 
-         utilized when training the Approximate Bayesian Computation (ABC) or 
+
+   \item \code{train [int]}
+
+         This parameter is used to specify the quantity of simulated data
+         utilized when training the Approximate Bayesian Computation (ABC) or
          Recurrent Neural Network (RNN) models.
-         
-   \item \code{scope [Character]} 
-   
-         This parameter can be defined as \code{individual} or \code{shared}. 
-         The former indicates that a separate Approximate Bayesian 
-         Computation (ABC) or Recurrent Neural Network (RNN) model is 
-         trained for each dataset, while the latter means that only one 
-         Approximate Bayesian Computation (ABC) or Recurrent Neural Network 
-         (RNN) model is trained and shared across all datasets. In the 
-         context of the \code{rcv_d} function, the default setting is 
-         \code{"shared"}, whereas in \code{fit_p}, the default is 
-         \code{"individual"}. 
-         
-   \item \code{seed [int]} 
-   
-         When performing parameter recovery using Simulation-Based Inference 
-         (SBI) estimation methods, two sets of simulated data are involved: 
-         one used to generate the data for recovery, and another used to 
-         train the Approximate Bayesian Computation (ABC) or Recurrent 
-         Neural Network (RNN) models. To guarantee the independence of these 
-         two datasets, the seed for generating the training data is 
+
+   \item \code{scope [Character]}
+
+         This parameter can be defined as \code{individual} or \code{shared}.
+         The former indicates that a separate Approximate Bayesian
+         Computation (ABC) or Recurrent Neural Network (RNN) model is
+         trained for each dataset, while the latter means that only one
+         Approximate Bayesian Computation (ABC) or Recurrent Neural Network
+         (RNN) model is trained and shared across all datasets. In the
+         context of the \code{rcv_d} function, the default setting is
+         \code{"shared"}, whereas in \code{fit_p}, the default is
+         \code{"individual"}.
+
+   \item \code{seed [int]}
+
+         When performing parameter recovery using Simulation-Based Inference
+         (SBI) estimation methods, two sets of simulated data are involved:
+         one used to generate the data for recovery, and another used to
+         train the Approximate Bayesian Computation (ABC) or Recurrent
+         Neural Network (RNN) models. To guarantee the independence of these
+         two datasets, the seed for generating the training data is
          automatically multiplied by 2.
-         
-   \item \code{core [int]} 
-   
-         Since the parameter fitting process for individual subjects is 
-         independent, this procedure can be accelerated using CPU 
-         parallelism. This argument specifies the number of subjects to 
-         be fitted simultaneously (the number of parallel threads), 
-         with the default set to \code{1}. If the user wishes to speed up the 
-         fitting, they can increase the number of cores appropriately based 
-         on their system specifications. When \code{estimate = "RNN"}, since 
-         model training is typically handled by the GPU, setting 
-         \code{core > 1} will only accelerate the generation of simulated 
+
+   \item \code{core [int]}
+
+         Since the parameter fitting process for individual subjects is
+         independent, this procedure can be accelerated using CPU
+         parallelism. This argument specifies the number of subjects to
+         be fitted simultaneously (the number of parallel threads),
+         with the default set to \code{1}. If the user wishes to speed up the
+         fitting, they can increase the number of cores appropriately based
+         on their system specifications. When \code{estimate = "RNN"}, since
+         model training is typically handled by the GPU, setting
+         \code{core > 1} will only accelerate the generation of simulated
          data.
 }
 
 \subsection{2.1 Approximate Bayesian Computation (ABC)}{
 
 \itemize{
-         
-   \item \code{tol [double]} 
-   
-         This parameter, aka tolerance, controls how strict the Approximate 
-         Bayesian Computation (ABC) algorithm is when selecting good 
-         simulated data. It sets the acceptance rate. For example, setting 
-         \code{tol = 0.1} (the default) means only the 10 percent of 
-         simulated data that is closest to your actual data is used. 
-         
-   \item \code{reduction [Character]} 
-   
-         Specifies the dimension reduction method for summary statistics. 
-         In ABC, high-dimensional summary statistics often lead to the 
-         "curse of dimensionality," where the algorithm struggles to find a 
-         solution or suffers from extremely slow convergence. Reducing the 
-         dimensions (compressing the data) helps retain the "fingerprint" 
-         of the original data while removing noise, ensuring the program 
+
+   \item \code{tol [double]}
+
+         This parameter, aka tolerance, controls how strict the Approximate
+         Bayesian Computation (ABC) algorithm is when selecting good
+         simulated data. It sets the acceptance rate. For example, setting
+         \code{tol = 0.1} (the default) means only the 10 percent of
+         simulated data that is closest to your actual data is used.
+
+   \item \code{reduction [Character]}
+
+         Specifies the dimension reduction method for summary statistics.
+         In ABC, high-dimensional summary statistics often lead to the
+         "curse of dimensionality," where the algorithm struggles to find a
+         solution or suffers from extremely slow convergence. Reducing the
+         dimensions (compressing the data) helps retain the "fingerprint"
+         of the original data while removing noise, ensuring the program
          can efficiently identify the underlying parameters.
-         
+
          \itemize{
-             \code{"NONE"}: 
-                 No compression is applied. This is suitable for 
-                 smaller datasets where the total number of features 
-                 (e.g., blocks * responses) is relatively low 
+             \code{"NONE"}:
+                 No compression is applied. This is suitable for
+                 smaller datasets where the total number of features
+                 (e.g., blocks * responses) is relatively low
                  (typically less than 200).
          }
          \itemize{
-             \code{"PLS"} (Partial Least Squares): 
-                 A supervised reduction method that compresses the summary 
-                 statistics into a space with dimensions equal to the number 
-                 users set (as default, it is equal to the number of blocks). 
-                 It identifies the linear combinations of statistics that 
-                 have the maximum covariance with the input parameters, 
-                 effectively "guiding" the compression to prioritize 
-                 information most relevant to parameter estimation.
+             \code{"PLS"} (Partial Least Squares):
+                 A supervised reduction method that compresses the summary
+                 statistics into a space with dimensions equal to the number
+                 users set (as default, it is equal to the number of blocks).
          }
          \itemize{
-             \code{"PCA"} (Principal Component Analysis): 
-                 An unsupervised reduction method that compresses the 
-                 information into a space with dimensions equal to users set 
-                 (as default, it is equal to the number of blocks). It 
-                 identifies the directions (principal components) that 
-                 capture the maximum variance within the summary statistics 
-                 themselves, preserving the most characteristic features of 
-                 the data without considering the underlying parameters.
+             \code{"PCA"} (Principal Component Analysis):
+                 An unsupervised reduction method that compresses the
+                 information into a space with dimensions equal to users set
+                 (as default, it is equal to the number of blocks). 
          }
-         
-   \item \code{ncomp [int]} 
-         
-         The number of components represents the quantity of information 
-         after compression. By default, this value is equal to the number 
-         of blocks. Since the summary statistics consist of the selection 
-         ratios for each action within each block, an excessive number of 
-         blocks or available actions can lead to high-dimensional 
-         information, making it difficult for the ABC to converge on a 
-         solution. In such cases, PLS or PCA can be selected for 
+
+   \item \code{ncomp [int]}
+
+         The number of components represents the quantity of information
+         after compression. By default, this value is equal to the number
+         of blocks. Since the summary statistics consist of the selection
+         ratios for each action within each block, an excessive number of
+         blocks or available actions can lead to high-dimensional
+         information, making it difficult for the ABC to converge on a
+         solution. In such cases, PLS or PCA can be selected for
          dimensionality reduction.
-         
+
+   \item \code{metric [Character]}
+
+         Specifies the statistical metric used to determine the best
+         estimated parameter from the posterior distribution. By default,
+         this is set to \code{"mode"}, which uses the mode of the accepted
+         simulated parameters as the best estimate. Users can also change
+         this to \code{"mean"} or \code{"median"} to use the average or
+         the median value, respectively.
 }
 }
 
 \subsection{2.2 Recurrent Neural Network (RNN)}{
 
 \itemize{
-   \item \code{info [CharacterVector]} 
-   
-         The Recurrent Neural Network (RNN) needs to find the mapping 
-         relationship between the dataset and the free parameters. To 
-         minimize the time required for this process, we should only include 
-         useful information in the input dataset. The \code{info} parameter 
-         accepts a character vector which represents the amount of 
-         information (i.e., the specific columns) you deem necessary for 
-         training the Recurrent Neural Network (RNN) model. By default, only 
-         the \code{colnames$object} and \code{colnames$action} columns are 
+   \item \code{info [CharacterVector]}
+
+         The Recurrent Neural Network (RNN) needs to find the mapping
+         relationship between the dataset and the free parameters. To
+         minimize the time required for this process, we should only include
+         useful information in the input dataset. The \code{info} parameter
+         accepts a character vector which represents the amount of
+         information (i.e., the specific columns) you deem necessary for
+         training the Recurrent Neural Network (RNN) model. By default, only
+         the \code{colnames$object} and \code{colnames$action} columns are
          included as input.
-         
-   \item \code{layer [Character]} 
-   
-         Recurrent Neural Networks (RNNs) are neural networks where the 
-         sequence order is meaningful. Currently, the package supports two 
-         types of recurrent layers: Gated Recurrent Unit (GRU) and Long 
-         Short-Term Memory (LSTM). You can specify either of these as the 
+
+   \item \code{layer [Character]}
+
+         Recurrent Neural Networks (RNNs) are neural networks where the
+         sequence order is meaningful. Currently, the package supports two
+         types of recurrent layers: Gated Recurrent Unit (GRU) and Long
+         Short-Term Memory (LSTM). You can specify either of these as the
          recurrent layer in your model.
-         
-   \item \code{units [int]} 
+
+   \item \code{loss [Character]}
    
-         The number of neurons (or units) in the Recurrent Layer 
-         (GRU or LSTM). Conceptually, this parameter represents the memory 
-         capacity and complexity of the network; it dictates how much 
-         information about the sequential trials the model can store and 
+         Specifies the loss function used to train the Recurrent Neural
+         Network (RNN). The choice of loss function depends on the nature of
+         the prediction task and the desired properties of the estimated
+         parameters.
+
+         \itemize{
+             \code{"MSE"} (Mean Squared Error):
+                 A common loss function that measures the average squared
+                 difference between predicted and actual values. It is
+                 sensitive to outliers.
+             \code{"MAE"} (Mean Absolute Error):
+                 Measures the average absolute difference between predicted
+                 and actual values. It is more robust to outliers than MSE.
+             \code{"HBR"} (Huber Loss):
+                 A combination of MSE and MAE, acting as MSE for small
+                 errors and MAE for large errors. It is less sensitive to
+                 outliers than MSE while being smoother than MAE.
+             \code{"NLL"} (Negative Log-Likelihood):
+                 Used for probabilistic predictions where the model outputs
+                 both the mean and variance of a Gaussian distribution,
+                 aiming to maximize the likelihood of the observed data.
+             \code{"QRL"} (Quantile Regression Loss):
+                 Allows the model to predict specific quantiles
+                 (e.g., 0.05, 0.50, 0.95) of the target distribution,
+                 rather than just the mean.
+             \code{"MDN"} (Mixture Density Network):
+                 Enables the model to predict a mixture of probability
+                 distributions, useful for capturing complex, multimodal,
+                 or uncertain posterior distributions of parameters.
+         }
+
+   \item \code{units [int]}
+
+         The number of neurons (or units) in the Recurrent Layer
+         (GRU or LSTM). Conceptually, this parameter represents the memory
+         capacity and complexity of the network; it dictates how much
+         information about the sequential trials the model can store and
          process.
-         
-   \item \code{batch_size [int]} 
-   
-         The number of samples processed before the model's parameters are 
-         updated. Think of this as the size of a study group; the model 
-         reviews this batch of data before adjusting its internal weights. 
-         A larger batch size speeds up calculation but may lead to less 
+
+   \item \code{batch_size [int]}
+
+         The number of samples processed before the model's parameters are
+         updated. Think of this as the size of a study group; the model
+         reviews this batch of data before adjusting its internal weights.
+         A larger batch size speeds up calculation but may lead to less
          optimal convergence.
-         
-   \item \code{epochs [int]} 
-   
-         The number of times the learning algorithm will work through the 
-         entire training dataset. This is equivalent to running through the 
-         "textbook" multiple times. Each epoch means the model has seen 
-         every training sample once. More epochs allow for more training but 
+
+   \item \code{epochs [int]}
+
+         The number of times the learning algorithm will work through the
+         entire training dataset. This is equivalent to running through the
+         "textbook" multiple times. Each epoch means the model has seen
+         every training sample once. More epochs allow for more training but
          increase the risk of overfitting.
-         
+
+   \item \code{check [logical]}
+
+         A logical value indicating whether to perform environment
+         verification. The default is \code{TRUE}. If set to \code{FALSE},
+         the function will skip the interactive check regarding whether the
+         user has properly loaded the \code{tensorflow} environment.
+
 }
 }
 }
 
 \section{Example}{
- 
+
 \preformatted{ # default values
  control = list(
    # LBI
+   seed = 123,
+   core = 1,
+   # MLE
    pars = NA,
    dash = 1e-5,
    iter = 10,
    size = 50,
-   seed = 123,
-   core = 1,
-   # MLE
-   ...,
    # MAP
    diff = 0.001,
    patience = 10,
    # SBI
-   sample = 100, 
-   train = 1000, 
-   scope = "individual", 
+   sample = 100,
+   train = 1000,
+   scope = "individual",
    # ABC
    tol = 0.1,
    reduction = "PCA",
    ncomp = NULL,
-   # 
-   info = c(colnames$object, colnames$action), 
-   layer = "GRU", 
-   units = 128, 
-   batch_size = 10, 
-   epochs = 100
+   metric = "mode",
+   # RNN
+   info = c(colnames$object, colnames$action),
+   layer = "GRU",
+   loss = "MSE",
+   units = 128,
+   batch_size = 10,
+   epochs = 100,
+   check = TRUE
  )
 }
 }

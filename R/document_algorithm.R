@@ -1,4 +1,4 @@
-#' @title Algorithm Packages
+#' @title Algorithm Packages (MLE, MAP)
 #' @name algorithm
 #' @description 
 #'  

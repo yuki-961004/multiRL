@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_delta.R
 \name{func_delta}
 \alias{func_delta}
-\title{Function: Upper-Confidence-Bound}
+\title{Function: Bias Function}
 \usage{
 func_delta(shown, count, params, ...)
 }

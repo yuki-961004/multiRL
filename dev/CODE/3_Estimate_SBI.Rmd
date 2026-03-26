@@ -266,9 +266,9 @@ recovery.RNN <- multiRL::rcv_d(
   lowers = list(c(0, 0)),
   uppers = list(c(1, 10)),
   control = list(
-    core = 10, sample = 100, train = 2000,
+    core = 10, sample = 100, train = 100,
     #tol = 0.5, reduction = "PCA", 
-    loss = "NLL", check = FALSE
+    loss = "MDN", check = FALSE
   )
 )
 ```
