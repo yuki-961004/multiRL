@@ -1,4 +1,4 @@
-#' @title Function: \eqn{\epsilon}-first, Greedy, Decreasing 
+#' @title Function: Exploration or Exploitation
 #' @description
 #' 
 #'  \eqn{\epsilon-first}: 

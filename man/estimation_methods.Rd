@@ -14,7 +14,6 @@ estimation_methods(
   funcs = NULL,
   priors = NULL,
   settings = NULL,
-  algorithm,
   lowers,
   uppers,
   control,
@@ -22,7 +21,7 @@ estimation_methods(
 )
 }
 \arguments{
-\item{estimate}{Estimate method that you want to use, 
+\item{estimate}{Estimate method that you want to use,
 see \link[multiRL]{estimate}}
 
 \item{data}{A data frame in which each row represents a single trial,
@@ -44,11 +43,8 @@ see \link[multiRL]{funcs}}
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}
 
-\item{settings}{Other model settings, 
+\item{settings}{Other model settings,
 see \link[multiRL]{settings}}
-
-\item{algorithm}{Algorithm packages that multiRL supports, 
-see \link[multiRL]{algorithm}}
 
 \item{lowers}{Lower bound of free parameters in each model.}
 
@@ -60,13 +56,13 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-An S3 object of class \code{DataFrame} containing, for each model, 
+An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-This function provides a unified interface for four estimation methods: 
-   Maximum Likelihood Estimation (MLE), Maximum A Posteriori (MAP), 
-   Approximate Bayesian Computation (ABC), and Recurrent Neural Network 
-   (RNN), allowing users to execute different methods simply by setting 
+This function provides a unified interface for four estimation methods:
+   Maximum Likelihood Estimation (MLE), Maximum A Posteriori (MAP),
+   Approximate Bayesian Computation (ABC), and Recurrent Neural Network
+   (RNN), allowing users to execute different methods simply by setting
    \code{estimate = "???"}.
 }

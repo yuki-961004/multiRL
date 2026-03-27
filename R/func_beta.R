@@ -1,4 +1,4 @@
-#' @title Function: Soft-Max
+#' @title Function: Probability
 #' @description
 #' 
 #'  \deqn{

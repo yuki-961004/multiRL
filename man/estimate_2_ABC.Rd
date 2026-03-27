@@ -39,7 +39,7 @@ see \link[multiRL]{funcs}}
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}
 
-\item{settings}{Other model settings, 
+\item{settings}{Other model settings,
 see \link[multiRL]{settings}}
 
 \item{lowers}{Lower bound of free parameters in each model.}
@@ -52,11 +52,11 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-An S3 object of class \code{DataFrame} containing, for each model, 
+An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-This function takes a large set of simulated data to train an Approximate 
-   Bayesian Computation (ABC) model and then uses the trained model to 
+This function takes a large set of simulated data to train an Approximate
+   Bayesian Computation (ABC) model and then uses the trained model to
    estimate optimal parameters for the target data.
 }

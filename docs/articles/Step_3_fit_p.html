@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,7 +110,7 @@ above example.</p>
 <span><span class="va">fitting.MAP</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
 <span>  estimate <span class="op">=</span> <span class="st">"MAP"</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    core <span class="op">=</span> <span class="fl">10</span>, sample <span class="op">=</span> <span class="fl">100</span>, iter <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    core <span class="op">=</span> <span class="fl">10</span>, sample <span class="op">=</span> <span class="fl">100</span>, iter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>    diff <span class="op">=</span> <span class="fl">0.001</span>, patience <span class="op">=</span> <span class="fl">10</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -120,7 +120,7 @@ above example.</p>
 <span>  estimate <span class="op">=</span> <span class="st">"ABC"</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    core <span class="op">=</span> <span class="fl">10</span>, sample <span class="op">=</span> <span class="fl">100</span>, train <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>    tol <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>    tol <span class="op">=</span> <span class="fl">0.1</span>, reduction <span class="op">=</span> <span class="cn">NULL</span>, ncomp <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -132,7 +132,7 @@ above example.</p>
 <span>  estimate <span class="op">=</span> <span class="st">"RNN"</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    core <span class="op">=</span> <span class="fl">1</span>, sample <span class="op">=</span> <span class="fl">100</span>, train <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>    layer <span class="op">=</span> <span class="st">"GRU"</span>, units <span class="op">=</span> <span class="fl">128</span>, batch_size <span class="op">=</span> <span class="fl">10</span>, epochs <span class="op">=</span> <span class="fl">100</span></span>
+<span>    layer <span class="op">=</span> <span class="st">"GRU"</span>, loss <span class="op">=</span> <span class="st">"MSE"</span>, units <span class="op">=</span> <span class="fl">128</span>, batch_size <span class="op">=</span> <span class="fl">10</span>, epochs <span class="op">=</span> <span class="fl">100</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -157,7 +157,6 @@ All of the following figures were generated using
 <span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
 <span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  </span>
-<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
 <span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>core <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -197,7 +196,6 @@ All of the following figures were generated using
 <span>  <span class="op">)</span>,</span>
 <span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  </span>
-<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
 <span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -244,7 +242,7 @@ All of the following figures were generated using
 <span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    core <span class="op">=</span> <span class="fl">10</span>, train <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>    tol <span class="op">=</span> <span class="fl">0.1</span></span>
+<span>    tol <span class="op">=</span> <span class="fl">0.1</span>, reduction <span class="op">=</span> <span class="cn">NULL</span>, ncomp <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -298,7 +296,7 @@ All of the following figures were generated using
 <span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    core <span class="op">=</span> <span class="fl">1</span>, train <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>    layer <span class="op">=</span> <span class="st">"GRU"</span>, units <span class="op">=</span> <span class="fl">128</span>, batch_size <span class="op">=</span> <span class="fl">10</span>, epochs <span class="op">=</span> <span class="fl">100</span></span>
+<span>    layer <span class="op">=</span> <span class="st">"GRU"</span>, loss <span class="op">=</span> <span class="st">"MSE"</span>, units <span class="op">=</span> <span class="fl">128</span>, batch_size <span class="op">=</span> <span class="fl">10</span>, epochs <span class="op">=</span> <span class="fl">100</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>

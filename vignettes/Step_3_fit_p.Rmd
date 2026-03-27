@@ -28,7 +28,7 @@ fitting.MLE <- multiRL::fit_p(
 fitting.MAP <- multiRL::fit_p(
   estimate = "MAP",
   control = list(
-    core = 10, sample = 100, iter = 100,
+    core = 10, sample = 100, iter = c(100, 10),
     diff = 0.001, patience = 10
   ),
   ...
@@ -38,7 +38,7 @@ fitting.ABC <- multiRL::fit_p(
   estimate = "ABC",
   control = list(
     core = 10, sample = 100, train = 1000,
-    tol = 0.1
+    tol = 0.1, reduction = NULL, ncomp = NULL
   ),
   ...
 )
@@ -50,7 +50,7 @@ fitting.RNN <- multiRL::fit_p(
   estimate = "RNN",
   control = list(
     core = 1, sample = 100, train = 1000,
-    layer = "GRU", units = 128, batch_size = 10, epochs = 100
+    layer = "GRU", loss = "MSE", units = 128, batch_size = 10, epochs = 100
   ),
   ...
 )
@@ -74,7 +74,6 @@ fitting.MLE <- multiRL::fit_p(
   models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
   settings = list(name = c("TD", "RSTD", "Utility")),
   
-  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(core = 10, iter = 100)
@@ -116,7 +115,6 @@ fitting.MAP <- multiRL::fit_p(
   ),
   settings = list(name = c("TD", "RSTD", "Utility")),
   
-  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
@@ -165,7 +163,7 @@ fitting.ABC <- multiRL::fit_p(
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
     core = 10, train = 1000,
-    tol = 0.1
+    tol = 0.1, reduction = NULL, ncomp = NULL
   )
 )
 
@@ -221,7 +219,7 @@ fitting.RNN <- multiRL::fit_p(
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(
     core = 1, train = 1000,
-    layer = "GRU", units = 128, batch_size = 10, epochs = 100
+    layer = "GRU", loss = "MSE", units = 128, batch_size = 10, epochs = 100
   )
 )
 

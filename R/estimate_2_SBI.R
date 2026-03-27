@@ -42,11 +42,15 @@ estimate_2_SBI <- function(
   environment(model) <- multiRL.env
   
   default = list(
-    core = 1,
+    # General
     seed = 123,
-    sample = 100
+    core = 1,
+    sample = 100,
+    # SBI
+    train = 1000
+    #scope = "individual"
   )
-  control <- utils::modifyList(x = default, val = control)
+  control <- utils::modifyList(x = default, val = control, keep.null = TRUE)
   
   list2env(control, envir = environment())
   

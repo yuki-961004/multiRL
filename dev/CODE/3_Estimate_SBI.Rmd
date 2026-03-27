@@ -207,8 +207,6 @@ recovery.ABC <- multiRL::rcv_d(
 ## RNN
 
 ```{r}
-estimate = "RNN"
-
 data <- multiRL::TAB
 behrule = list(
   cue = c("A", "B", "C", "D"),
@@ -220,25 +218,6 @@ colnames = list(
   reward = c("L_reward", "R_reward"),
   action = "Sub_Choose",
   exinfo = c("Frame", "NetWorth", "RT")
-)
-
-models = list(multiRL::TD)
-priors = list(
-  list(
-    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-    beta = function(x) {stats::rexp(n = 1, rate = 1)}
-  )
-)
-settings = list(name = c("TD"))
-
-lowers = list(c(0, 0))
-uppers = list(c(1, 10))
-control = list(
-  core = 10, sample = 100, 
-  # LBI
-  iter = 100,
-  # SBI
-  train = 1000
 )
 ```
 
@@ -268,7 +247,7 @@ recovery.RNN <- multiRL::rcv_d(
   control = list(
     core = 10, sample = 100, train = 100,
     #tol = 0.5, reduction = "PCA", 
-    loss = "MDN", check = FALSE
+    layer = "BiLSTM", loss = "MDN", check = FALSE
   )
 )
 ```

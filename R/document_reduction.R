@@ -10,20 +10,20 @@
 #'
 #' @section Methods:
 #' \itemize{
-#'    \item \code{"NONE"}:
-#'          No compression is applied. This is suitable for smaller datasets
+#'    \item \code{NULL}:
+#'        No compression is applied. This is suitable for smaller datasets
 #'          where the number of features (e.g., blocks * responses) is low
 #'          (typically < 200). The \code{ncomp} parameter is ignored.
 #'
 #'    \item \code{"PLS"} (Partial Least Squares):
-#'          A supervised method that compresses summary statistics into a
+#'        A supervised method that compresses summary statistics into a
 #'          lower-dimensional space defined by \code{ncomp}. It finds linear
 #'          combinations of statistics that maximize covariance with the
 #'          parameters, "guiding" the compression to prioritize information
 #'          most relevant to parameter estimation.
 #'
 #'    \item \code{"PCA"} (Principal Component Analysis):
-#'          An unsupervised method that compresses information into a
+#'        An unsupervised method that compresses information into a
 #'          lower-dimensional space defined by \code{ncomp}. It identifies
 #'          orthogonal directions (principal components) that capture the
 #'          maximum variance within the summary statistics themselves,
@@ -34,11 +34,19 @@
 #' @section Related Parameters:
 #' \itemize{
 #'    \item \code{ncomp [int]}
-#'          The number of components to retain after compression. By default,
+#'        The number of components to retain after compression. By default,
 #'          this is the number of blocks in the experiment. An excessive
 #'          number of blocks or actions can create a high-dimensional summary
 #'          space, making it hard for ABC to converge. Specifying an
 #'          appropriate \code{ncomp} is crucial when using "PLS" or "PCA".
+#' }
+#'
+#' @section Example:
+#' \preformatted{ # supported reduction methods
+#'  control = list(
+#'    reduction = c(NULL, "PCA", "PLS"),
+#'    ncomp = NULL
+#'  )
 #' }
 #'
 NULL

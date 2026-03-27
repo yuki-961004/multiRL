@@ -5,7 +5,7 @@ utils::globalVariables(c(
   # model
   "data", "behrule", "colnames", "funcs", "priors", "settings",
   # LBI
-  "seed", "core", 
+  "seed", "core", "algorithm",
   # MLE
   "iter", "pars", "size", "dash",
   # MAP

@@ -37,7 +37,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -303,7 +303,7 @@ Learning Rate (α)
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">update</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
-Soft-Max (β)
+Probability Function (β)
 </summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_beta.html">func_beta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -386,12 +386,12 @@ Utility Function (γ)
 <span>  <span class="va">gamma</span>     <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"gamma"</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
 <span>  <span class="co"># Stevens' Power Law</span></span>
-<span>  <span class="va">utility</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">^</span> <span class="va">gamma</span><span class="op">)</span></span>
+<span>  <span class="va">utility</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="va">reward</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">^</span> <span class="va">gamma</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">utility</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
-Upper-Confidence-Bound (δ)
+Bias Function (δ)
 </summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_delta.html">func_delta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -450,7 +450,7 @@ Upper-Confidence-Bound (δ)
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">bias</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
-Epsilon Related (ε)
+Exploration Function (ε)
 </summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_epsilon.html">func_epsilon</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -492,27 +492,17 @@ Epsilon Related (ε)
 <span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span>  <span class="co"># Epsilon-Greedy:</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">rownum</span> <span class="op">&gt;</span> <span class="va">threshold</span> <span class="op">&amp;&amp;</span> <span class="va">model</span> <span class="op">==</span> <span class="st">"greedy"</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">epsilon</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span><span class="op">)</span>,</span>
-<span>      size <span class="op">=</span> <span class="fl">1</span></span>
-<span>    <span class="op">)</span></span>
+<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">epsilon</span><span class="op">)</span></span>
 <span>  <span class="co"># Epsilon-Decreasing: </span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">rownum</span> <span class="op">&gt;</span> <span class="va">threshold</span> <span class="op">&amp;&amp;</span> <span class="va">model</span> <span class="op">==</span> <span class="st">"decreasing"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>      prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span><span class="op">)</span>,</span>
-<span>        <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span><span class="op">)</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      size <span class="op">=</span> <span class="fl">1</span></span>
-<span>    <span class="op">)</span></span>
+<span>    <span class="va">prob_explore</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">epsilon</span> <span class="op">*</span> <span class="va">rownum</span><span class="op">)</span></span>
+<span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">prob_explore</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span>  </span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">try</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
-Working Memory (ζ)
+Decay Rate (ζ)
 </summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/func_zeta.html">func_zeta</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -607,7 +597,6 @@ model comparison.</p>
 <span>  <span class="op">)</span>,</span>
 <span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  </span>
-<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
 <span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>core <span class="op">=</span> <span class="fl">10</span>, sample <span class="op">=</span> <span class="fl">100</span>, iter <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -632,6 +621,11 @@ Step 2 indicates that it is distinguishable from other models.</p>
 should be used to fit real data. The optimal model is then determined
 based on how similar the experimental effects reproduced by the model
 are to those observed in human participants.</p>
+<p><strong>Note</strong></p>
+<p>It is crucial to identify an experimental effect plot with
+distinctive characteristics. The default plots, which display action
+ratios for each block, may fail to capture the subtle differences
+between models.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fitting.MLE</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_p.html">fit_p</a></span><span class="op">(</span></span>
 <span>  estimate <span class="op">=</span> <span class="st">"MLE"</span>,</span>
@@ -643,7 +637,6 @@ are to those observed in human participants.</p>
 <span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
 <span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  </span>
-<span>  algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
 <span>  lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>core <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -661,6 +654,10 @@ Fitting TD
 fitting(<code>fit_p</code>) can be passed to the <code>rpl_e</code>
 function to reproduce the behavioral patterns generated by
 re-incorporating these parameters into the model.</p>
+<p><strong>Note</strong></p>
+<p>Since log-likelihood is basically a way of compressing data, you
+might want to try other estimation methods if it doesn’t give you
+acceptable parameter or model recovery.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">replay.recovery</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/rpl_e.html">rpl_e</a></span><span class="op">(</span></span>
 <span>  result <span class="op">=</span> <span class="va">recovery.MLE</span>,</span>

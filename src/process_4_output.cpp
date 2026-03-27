@@ -89,7 +89,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
 
     // R: record@input@funcs
     const Rcpp::S4 funcs = input.slot("funcs");
-    const Rcpp::Function rate_func(funcs.slot("rate_func"));
+    const Rcpp::Function lrng_func(funcs.slot("lrng_func"));
     const Rcpp::Function prob_func(funcs.slot("prob_func"));
     const Rcpp::Function util_func(funcs.slot("util_func"));
     const Rcpp::Function bias_func(funcs.slot("bias_func"));
@@ -440,7 +440,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             } else {
                 sub_value(i + 1, col_index) =
                     Rcpp::as<double>(
-                        rate_func(
+                        lrng_func(
                             Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
                             Rcpp::_["qvalue"] = Qi,
                             Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),

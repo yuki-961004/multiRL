@@ -48,7 +48,7 @@ process_4_output_r <- function(
   
   params      <- record@input@params
   
-  rate_func   <- record@input@funcs@rate_func
+  lrng_func   <- record@input@funcs@lrng_func
   prob_func   <- record@input@funcs@prob_func
   util_func   <- record@input@funcs@util_func
   bias_func   <- record@input@funcs@bias_func
@@ -245,7 +245,7 @@ process_4_output_r <- function(
         sub_value[1, latent[i, ]]     <- utility[i, ]
       } else {
         # learning rate function: 如果不是第一次选, 则按照学习率方程更新
-        sub_value[i + 1, latent[i, ]] <- rate_func(
+        sub_value[i + 1, latent[i, ]] <- lrng_func(
           shown = shown[i, ],
           qvalue = Qi,
           reward = as.numeric(reward[i, ]),

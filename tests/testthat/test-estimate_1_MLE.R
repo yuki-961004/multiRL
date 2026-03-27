@@ -34,7 +34,6 @@ testthat::test_that("MLE", {
     ),
     settings = list(name = c("TD", "RSTD", "Utility"), policy = "off"),
     # 算法
-    algorithm = "NLOPT_GN_MLSL",
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
     control = list(core = 4, iter = 5)

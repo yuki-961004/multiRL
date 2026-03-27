@@ -1,4 +1,4 @@
-#' @title Control Algorithm Behavior
+#' @title Controls of Estimation Methods
 #' @name control
 #' @description
 #'
@@ -14,45 +14,8 @@
 #'    need to worry if you set unnecessary slots, as this will not affect the
 #'    execution.
 #'
-#' @section 1. Likelihood Based Inference (LBI):
+#' @section 0. General:
 #' \itemize{
-#'    \item \code{sample [int]}
-#'
-#'          This parameter denotes the quantity of simulated data generated
-#'          during the parameter recovery process.
-#'
-#'    \item \code{iter [int]}
-#'
-#'          This parameter defines the maximum number of iterations. The
-#'          iterative process will stop when this value is reached. The default
-#'          value is \code{10}. It is recommended that you set this value to at
-#'          least \code{100} for formal fitting procedures.
-#'
-#'    \item \code{pars [NumericVector]}
-#'
-#'          Some algorithms require the specification of initial iteration
-#'          values. If this value is left as the default NA, the iteration will
-#'          commence with an initial value set to the lower bound of the
-#'          estimate plus \code{0.01}.
-#'
-#'    \item \code{dash [Numeric]}
-#'
-#'          To prevent the optimal parameter estimates from converging to
-#'          boundary values when the number of iterations is insufficient, a
-#'          small value is added to the lower bound and subtracted from the
-#'          upper bound.
-#'
-#'          For instance, if the input parameter bounds are \code{(0, 1)},
-#'          the actual bounds used for fitting will be \code{[0.00001, 0.99999]}.
-#'          This design prevents the occurrence of Infinite values.
-#'
-#'    \item \code{size [int]}
-#'
-#'          Some algorithms, such as Genetic Algorithms (\code{GA}), require the
-#'          specification of initial population values. For the definition of
-#'          the population, users may refer to the relevant documentation on
-#'          evolutionary algorithms. The default value is consistent with the
-#'          standard default in \code{GA}, which is \code{50}.
 #'
 #'    \item \code{seed [int]}
 #'
@@ -71,18 +34,87 @@
 #'          with the default set to \code{1}. If the user wishes to speed up the
 #'          fitting, they can increase the number of cores appropriately based
 #'          on their system specifications.
+#'
+#'    \item \code{sample [int]}
+#'
+#'          This parameter denotes the quantity of simulated data generated
+#'          during the parameter recovery process.
+#'
+#' }
+#'
+#' @section 1. Likelihood Based Inference (LBI):
+#' \itemize{
+#'
+#'    \item \code{algorithm [Character]}
+#'
+#'          The package supports the following eight optimization packages for
+#'          finding the optimal values of the model's free parameters.
+#'          \enumerate{
+#'             \item L-BFGS-B (from \code{stats::optim})
+#'             \item Simulated Annealing (\code{GenSA::GenSA})
+#'             \item Genetic Algorithm (\code{GA::ga})
+#'             \item Differential Evolution (\code{DEoptim::DEoptim})
+#'             \item Bayesian Optimization (\code{mlrMBO::mbo})
+#'             \item Particle Swarm Optimization (\code{pso::psoptim})
+#'             \item Covariance Matrix Adapting Evolutionary Strategy (\code{cmaes::cma_es})
+#'             \item Nonlinear Optimization (\code{nloptr::nloptr})
+#'          }
+#'
+#'    \item \code{pars [NumericVector]}
+#'
+#'          Some algorithms require the specification of initial iteration
+#'          values. If this value is left as the default NA, the iteration will
+#'          commence with an initial value set to the lower bound of the
+#'          estimate plus \code{0.01}.
+#'
+#'    \item \code{size [int]}
+#'
+#'          Some algorithms, such as Genetic Algorithms (\code{GA}), require the
+#'          specification of initial population values. For the definition of
+#'          the population, users may refer to the relevant documentation on
+#'          evolutionary algorithms. The default value is consistent with the
+#'          standard default in \code{GA}, which is \code{50}.
+#'
+#'    \item \code{dash [Numeric]}
+#'
+#'          To prevent the optimal parameter estimates from converging to
+#'          boundary values when the number of iterations is insufficient, a
+#'          small value is added to the lower bound and subtracted from the
+#'          upper bound.
+#'
+#'          For instance, if the input parameter bounds are \code{(0, 1)},
+#'          the actual bounds used for fitting will be \code{[0.00001, 0.99999]}.
+#'          This design prevents the occurrence of Infinite values.
+#'
 #' }
 #'
 #' \subsection{1.1 Maximum Likelihood Estimation (MLE)}{
 #'
 #' \itemize{
-#'    \item Nothing special
+#'
+#'    \item \code{iter [int]}
+#'
+#'          This parameter defines the maximum number of iterations. The
+#'          iterative process will stop when this value is reached. The default
+#'          value is \code{10}. It is recommended that you set this value to at
+#'          least \code{100} for formal fitting procedures.
+#'
 #' }
 #' }
 #'
 #' \subsection{1.2 Maximum A Posteriori (MAP)}{
 #'
 #' \itemize{
+#'
+#'    \item \code{iter [int]}
+#'
+#'          You can input a numeric vector of length 2. The first element
+#'          specifies the number of iterations per algorithm call. The second
+#'          element determines the total number of EM-MAP executions across all
+#'          participants. In other words, if the first element matches your
+#'          MLE settings, the second element represents the computational
+#'          fold-change of MAP relative to MLE.
+#'
 #'    \item \code{diff [double]}
 #'
 #'          In the Expectation-Maximization with Maximum A Posteriori algorithm
@@ -109,10 +141,6 @@
 #'
 #' @section 2. Simulation Based Inference (SBI):
 #' \itemize{
-#'    \item \code{sample [int]}
-#'
-#'          This parameter denotes the quantity of simulated data generated
-#'          during the parameter recovery process.
 #'
 #'    \item \code{train [int]}
 #'
@@ -132,28 +160,6 @@
 #'          \code{"shared"}, whereas in \code{fit_p}, the default is
 #'          \code{"individual"}.
 #'
-#'    \item \code{seed [int]}
-#'
-#'          When performing parameter recovery using Simulation-Based Inference
-#'          (SBI) estimation methods, two sets of simulated data are involved:
-#'          one used to generate the data for recovery, and another used to
-#'          train the Approximate Bayesian Computation (ABC) or Recurrent
-#'          Neural Network (RNN) models. To guarantee the independence of these
-#'          two datasets, the seed for generating the training data is
-#'          automatically multiplied by 2.
-#'
-#'    \item \code{core [int]}
-#'
-#'          Since the parameter fitting process for individual subjects is
-#'          independent, this procedure can be accelerated using CPU
-#'          parallelism. This argument specifies the number of subjects to
-#'          be fitted simultaneously (the number of parallel threads),
-#'          with the default set to \code{1}. If the user wishes to speed up the
-#'          fitting, they can increase the number of cores appropriately based
-#'          on their system specifications. When \code{estimate = "RNN"}, since
-#'          model training is typically handled by the GPU, setting
-#'          \code{core > 1} will only accelerate the generation of simulated
-#'          data.
 #' }
 #'
 #' \subsection{2.1 Approximate Bayesian Computation (ABC)}{
@@ -179,7 +185,7 @@
 #'          can efficiently identify the underlying parameters.
 #'
 #'          \itemize{
-#'              \code{"NONE"}:
+#'              \code{NULL}:
 #'                  No compression is applied. This is suitable for
 #'                  smaller datasets where the total number of features
 #'                  (e.g., blocks * responses) is relatively low
@@ -195,7 +201,7 @@
 #'              \code{"PCA"} (Principal Component Analysis):
 #'                  An unsupervised reduction method that compresses the
 #'                  information into a space with dimensions equal to users set
-#'                  (as default, it is equal to the number of blocks). 
+#'                  (as default, it is equal to the number of blocks).
 #'          }
 #'
 #'    \item \code{ncomp [int]}
@@ -223,6 +229,63 @@
 #' \subsection{2.2 Recurrent Neural Network (RNN)}{
 #'
 #' \itemize{
+#'
+#'    \item \code{layer [Character]}
+#'
+#'          Recurrent Neural Networks (RNNs) are neural networks where the
+#'          sequence order is meaningful. Currently, the package supports the
+#'          following types of recurrent layers:
+#'          \itemize{
+#'              \item \code{"RNN"} (Simple Recurrent Neural Network):
+#'              \itemize{
+#'                  \item \code{"RNN"} (Simple Recurrent Neural Network):
+#'                  \item \code{"BiRNN"} (Bidirectional SimpleRNN):
+#'              }
+#'              \item Gated Recurrent Unit (GRU) and Bidirectional GRU (BiGRU):
+#'              \itemize{
+#'                  \item \code{"GRU"} (Gated Recurrent Unit):
+#'                  \item \code{"BiGRU"} (Bidirectional GRU):
+#'              }
+#'              \item Long Short-Term Memory (LSTM) and Bidirectional LSTM (BiLSTM):
+#'              \itemize{
+#'                  \item \code{"LSTM"} (Long Short-Term Memory):
+#'                  \item \code{"BiLSTM"} (Bidirectional LSTM):
+#'              }
+#'          }
+#'
+#'    \item \code{loss [Character]}
+#'
+#'          Specifies the loss function used to train the Recurrent Neural
+#'          Network (RNN). The choice of loss function depends on the nature of
+#'          the prediction task and the desired properties of the estimated
+#'          parameters.
+#'
+#'          \itemize{
+#'              \item \code{"MSE"} (Mean Squared Error):
+#'                  A common loss function that measures the average squared
+#'                  difference between predicted and actual values. It is
+#'                  sensitive to outliers.
+#'              \item \code{"MAE"} (Mean Absolute Error):
+#'                  Measures the average absolute difference between predicted
+#'                  and actual values. It is more robust to outliers than MSE.
+#'              \item \code{"HBR"} (Huber Loss):
+#'                  A combination of MSE and MAE, acting as MSE for small
+#'                  errors and MAE for large errors. It is less sensitive to
+#'                  outliers than MSE while being smoother than MAE.
+#'              \item \code{"NLL"} (Negative Log-Likelihood):
+#'                  Used for probabilistic predictions where the model outputs
+#'                  both the mean and variance of a Gaussian distribution,
+#'                  aiming to maximize the likelihood of the observed data.
+#'              \item \code{"QRL"} (Quantile Regression Loss):
+#'                  Allows the model to predict specific quantiles
+#'                  (e.g., 0.05, 0.50, 0.95) of the target distribution,
+#'                  rather than just the mean.
+#'              \item \code{"MDN"} (Mixture Density Network):
+#'                  Enables the model to predict a mixture of probability
+#'                  distributions, useful for capturing complex, multimodal,
+#'                  or uncertain posterior distributions of parameters.
+#'          }
+#'
 #'    \item \code{info [CharacterVector]}
 #'
 #'          The Recurrent Neural Network (RNN) needs to find the mapping
@@ -234,47 +297,6 @@
 #'          training the Recurrent Neural Network (RNN) model. By default, only
 #'          the \code{colnames$object} and \code{colnames$action} columns are
 #'          included as input.
-#'
-#'    \item \code{layer [Character]}
-#'
-#'          Recurrent Neural Networks (RNNs) are neural networks where the
-#'          sequence order is meaningful. Currently, the package supports two
-#'          types of recurrent layers: Gated Recurrent Unit (GRU) and Long
-#'          Short-Term Memory (LSTM). You can specify either of these as the
-#'          recurrent layer in your model.
-#'
-#'    \item \code{loss [Character]}
-#'    
-#'          Specifies the loss function used to train the Recurrent Neural
-#'          Network (RNN). The choice of loss function depends on the nature of
-#'          the prediction task and the desired properties of the estimated
-#'          parameters.
-#'
-#'          \itemize{
-#'              \code{"MSE"} (Mean Squared Error):
-#'                  A common loss function that measures the average squared
-#'                  difference between predicted and actual values. It is
-#'                  sensitive to outliers.
-#'              \code{"MAE"} (Mean Absolute Error):
-#'                  Measures the average absolute difference between predicted
-#'                  and actual values. It is more robust to outliers than MSE.
-#'              \code{"HBR"} (Huber Loss):
-#'                  A combination of MSE and MAE, acting as MSE for small
-#'                  errors and MAE for large errors. It is less sensitive to
-#'                  outliers than MSE while being smoother than MAE.
-#'              \code{"NLL"} (Negative Log-Likelihood):
-#'                  Used for probabilistic predictions where the model outputs
-#'                  both the mean and variance of a Gaussian distribution,
-#'                  aiming to maximize the likelihood of the observed data.
-#'              \code{"QRL"} (Quantile Regression Loss):
-#'                  Allows the model to predict specific quantiles
-#'                  (e.g., 0.05, 0.50, 0.95) of the target distribution,
-#'                  rather than just the mean.
-#'              \code{"MDN"} (Mixture Density Network):
-#'                  Enables the model to predict a mixture of probability
-#'                  distributions, useful for capturing complex, multimodal,
-#'                  or uncertain posterior distributions of parameters.
-#'          }
 #'
 #'    \item \code{units [int]}
 #'
@@ -313,14 +335,17 @@
 #' @section Example:
 #' \preformatted{ # default values
 #'  control = list(
-#'    # LBI
+#'    # General
 #'    seed = 123,
 #'    core = 1,
-#'    # MLE
+#'    sample = 100,
+#'    # LBI
+#'    algorithm = "NLOPT_GN_MLSL",
 #'    pars = NA,
-#'    dash = 1e-5,
-#'    iter = 10,
 #'    size = 50,
+#'    dash = 1e-5,
+#'    # MLE
+#'    iter = 10,
 #'    # MAP
 #'    diff = 0.001,
 #'    patience = 10,
@@ -334,9 +359,9 @@
 #'    ncomp = NULL,
 #'    metric = "mode",
 #'    # RNN
-#'    info = c(colnames$object, colnames$action),
 #'    layer = "GRU",
 #'    loss = "MSE",
+#'    info = c(colnames$object, colnames$action),
 #'    units = 128,
 #'    batch_size = 10,
 #'    epochs = 100,

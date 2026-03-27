@@ -14,7 +14,6 @@ rcv_d(
   funcs = NULL,
   priors = NULL,
   settings = NULL,
-  algorithm,
   lowers,
   uppers,
   control,
@@ -22,7 +21,7 @@ rcv_d(
 )
 }
 \arguments{
-\item{estimate}{Estimate method that you want to use, 
+\item{estimate}{Estimate method that you want to use,
 see \link[multiRL]{estimate}}
 
 \item{data}{A data frame in which each row represents a single trial,
@@ -34,8 +33,8 @@ see \link[multiRL]{colnames}}
 \item{behrule}{The agent's implicitly formed internal rule,
 see \link[multiRL]{behrule}}
 
-\item{id}{The ID of the subject whose experimental structure (e.g., trial order) will 
-be used as the template for generating all simulated data. 
+\item{id}{The ID of the subject whose experimental structure (e.g., trial order) will
+be used as the template for generating all simulated data.
 Defaults to the first subject found in the input data.}
 
 \item{models}{Reinforcement Learning Models}
@@ -46,11 +45,8 @@ see \link[multiRL]{funcs}}
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}
 
-\item{settings}{Other model settings, 
+\item{settings}{Other model settings,
 see \link[multiRL]{settings}}
-
-\item{algorithm}{Algorithm packages that multiRL supports, 
-see \link[multiRL]{algorithm}}
 
 \item{lowers}{Lower bound of free parameters in each model.}
 
@@ -66,11 +62,11 @@ An S3 object of class \code{multiRL.recovery}.
 
   \describe{
     \item{\code{simulate}}{
-      A \code{List} containing, for each model, the parameters used to 
+      A \code{List} containing, for each model, the parameters used to
       simulate the data.
     }
     \item{\code{recovery}}{
-      A \code{List} containing, for each model,  the parameters estimated 
+      A \code{List} containing, for each model,  the parameters estimated
       as optimal by the algorithm.
     }
   }
@@ -79,14 +75,14 @@ An S3 object of class \code{multiRL.recovery}.
 Step 2: Generating fake data for parameter and model recovery
 }
 \section{Example}{
- 
+
 \preformatted{ # recovery
  recovery.MLE <- multiRL::rcv_d(
    estimate = "MLE",
-   
+
    data = multiRL::TAB,
    colnames = list(
-     object = c("L_choice", "R_choice"), 
+     object = c("L_choice", "R_choice"),
      reward = c("L_reward", "R_reward"),
      action = "Sub_Choose"
    ),
@@ -99,23 +95,22 @@ Step 2: Generating fake data for parameter and model recovery
    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
    priors = list(
      list(
-       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)},
        beta = function(x) {stats::rexp(n = 1, rate = 1)}
      ),
      list(
-       alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
-       alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       alphaN = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)},
+       alphaP = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)},
        beta = function(x) {stats::rexp(n = 1, rate = 1)}
      ),
      list(
-       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+       alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)},
        beta = function(x) {stats::rexp(n = 1, rate = 1)},
        gamma = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}
      )
    ),
    settings = list(name = c("TD", "RSTD", "Utility")),
 
-   algorithm = "NLOPT_GN_MLSL",
    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
    uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
    control = list(core = 10, sample = 100, iter = 100)

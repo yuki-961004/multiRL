@@ -1,4 +1,4 @@
-#' @title Function: Bias Function
+#' @title Function: Bias
 #' @description
 #' 
 #'  \deqn{

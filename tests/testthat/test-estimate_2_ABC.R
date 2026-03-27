@@ -39,7 +39,7 @@ testthat::test_that("ABC", {
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
     control = list(
       core = 4, sample = 100, train = 100,
-      tol = 0.1, reduction = "NONE"
+      tol = 0.1, reduction = NULL
     )
   )
 

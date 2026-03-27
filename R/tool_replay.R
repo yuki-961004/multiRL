@@ -30,7 +30,7 @@
   if (is.null(funcs)) {funcs <- rep(list(list()), length(models))}
   for (i in 1:length(funcs)) {
     default <- list(
-      rate_func = multiRL::func_alpha,
+      lrng_func = multiRL::func_alpha,
       prob_func = multiRL::func_beta,
       util_func = multiRL::func_gamma,
       bias_func = multiRL::func_delta,

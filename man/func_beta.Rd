@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_beta.R
 \name{func_beta}
 \alias{func_beta}
-\title{Function: Soft-Max}
+\title{Function: Probability}
 \usage{
 func_beta(shown, qvalue, explor, params, system, ...)
 }

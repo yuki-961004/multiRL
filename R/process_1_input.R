@@ -122,7 +122,7 @@ process_1_input <- function(
   
   # 默认函数
   default <- list(
-    rate_func = multiRL::func_alpha,
+    lrng_func = multiRL::func_alpha,
     prob_func = multiRL::func_beta,
     util_func = multiRL::func_gamma,
     bias_func = multiRL::func_delta,
@@ -208,7 +208,7 @@ process_1_input <- function(
   
   funcs <- methods::new(
     Class = "multiRL.funcs",
-    rate_func = funcs$rate_func, 
+    lrng_func = funcs$lrng_func, 
     prob_func = funcs$prob_func,
     util_func = funcs$util_func,
     bias_func = funcs$bias_func,

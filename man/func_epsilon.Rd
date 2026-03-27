@@ -2,7 +2,7 @@
 % Please edit documentation in R/func_epsilon.R
 \name{func_epsilon}
 \alias{func_epsilon}
-\title{Function: \eqn{\epsilon}-first, Greedy, Decreasing}
+\title{Function: Exploration or Exploitation}
 \usage{
 func_epsilon(shown, rownum, params, ...)
 }

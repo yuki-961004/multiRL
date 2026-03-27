@@ -4,7 +4,6 @@ testthat::test_that("MLE", {
   recovery.MLE <- multiRL::rcv_d(
     estimate = "MLE",
     data = multiRL::TAB,
-    id = 1,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -34,7 +33,6 @@ testthat::test_that("MLE", {
       )
     ),
     
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
     control = list(core = 1, sample = 5, iter = 5)
@@ -51,7 +49,6 @@ testthat::test_that("ABC", {
   recovery.ABC <- multiRL::rcv_d(
     estimate = "ABC",
     data = multiRL::TAB,
-    id = 1,
     behrule = list(
       cue = c("A", "B", "C", "D"),
       rsp = c("A", "B", "C", "D")
@@ -83,7 +80,7 @@ testthat::test_that("ABC", {
     
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 5), c(1, 1, 5), c(1, 1, 5)),
-    control = list(core = 1, sample = 5, train = 100, tol = 0.1)
+    control = list(core = 1, sample = 5, train = 100)
   )
   
   testthat::expect_s3_class(recovery.ABC, "multiRL.recovery")

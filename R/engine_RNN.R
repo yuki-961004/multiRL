@@ -211,6 +211,14 @@ engine_RNN <- function(
   # Recurrent Layer
   switch(
     EXPR = layer,
+    "RNN" = {
+      RNN <- keras::layer_simple_rnn(
+        object = RNN,
+        units = units,
+        input_shape = c(n_trials, n_info),
+        return_sequences = FALSE
+      )
+    },
     "GRU" = {
       RNN <- keras::layer_gru(
         object = RNN,
@@ -225,6 +233,30 @@ engine_RNN <- function(
         units = units,
         input_shape = c(n_trials, n_info),
         return_sequences = FALSE,
+      )
+    },
+    "BiRNN" = {
+      RNN <- keras::bidirectional(
+        object = RNN,
+        layer = keras::layer_simple_rnn(
+          units = units,
+          return_sequences = FALSE
+        ),
+        input_shape = c(n_trials, n_info)
+      )
+    },
+    "BiGRU" = {
+      RNN <- keras::bidirectional(
+        object = RNN,
+        layer = keras::layer_gru(units = units, return_sequences = FALSE),
+        input_shape = c(n_trials, n_info)
+      )
+    },
+    "BiLSTM" = {
+      RNN <- keras::bidirectional(
+        object = RNN,
+        layer = keras::layer_lstm(units = units, return_sequences = FALSE),
+        input_shape = c(n_trials, n_info)
       )
     },
   ) |>

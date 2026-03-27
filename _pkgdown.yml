@@ -27,10 +27,10 @@ reference:
       - policy
       - system
       - estimate
+      - control
       - algorithm
       - reduction
       - layer
-      - control
       
   - title: "Models"
     contents:

@@ -166,3 +166,4 @@ testthat::test_that("Epsilon-Decreasing, priors, off-policy", {
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
   testthat::expect_s4_class(multiRL.summary, "multiRL.summary")
 })
+

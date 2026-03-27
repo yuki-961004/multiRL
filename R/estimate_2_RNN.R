@@ -69,7 +69,7 @@ estimate_2_RNN <- function(
   if (is.null(funcs)) {funcs <- rep(list(list()), length(models))}
   for (i in 1:length(funcs)) {
     default <- list(
-      rate_func = multiRL::func_alpha,
+      lrng_func = multiRL::func_alpha,
       prob_func = multiRL::func_beta,
       util_func = multiRL::func_gamma,
       bias_func = multiRL::func_delta,
@@ -101,13 +101,14 @@ estimate_2_RNN <- function(
   
   # 默认控制
   default = list(
-    # simulate
+    # General
     seed = 123,
     core = 1,
-    # tensorflow
     sample = 100,
+    # SBI
     train = 1000,
     scope = "individual",
+    # RNN
     layer = "GRU",
     loss = "MSE",
     info = c(colnames$object, colnames$action),
@@ -116,7 +117,7 @@ estimate_2_RNN <- function(
     epochs = 100,
     check = TRUE
   )
-  control <- utils::modifyList(x = default, val = control)
+  control <- utils::modifyList(x = default, val = control, keep.null = TRUE)
   # 解放control中的设定, 变成全局变量
   list2env(control, envir = environment())
 

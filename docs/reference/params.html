@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +128,15 @@
          originates in psychophysics, specifically Stevens' Power Law.</p>
 <p>Note: The default utility function is defined as
          \(y = x^{\gamma}\) and \(\gamma = 1\), which assumed that the
-         physical quantity is equivalent to the psychological quantity.</p></li>
+         physical quantity is equivalent to the psychological quantity.</p>
+<p>Since any number raised to the power of zero is one, fixing
+         <code>gamma</code> at 0 holds a unique theoretical significance: it
+         represents the 'H agent' as proposed by Collins, 2025
+         <a href="https://doi.org/10.1038/s41562-025-02340-0" class="external-link">doi:10.1038/s41562-025-02340-0</a>
+.
+         In this state, the agent treats every feedback as a reward,
+         effectively transforming repeated choices into a manifestation of
+         pure habit.</p></li>
 <li><p><code>delta [double]</code></p>
 <p>This parameter represents the weight given to the number of times
          an option has been selected. Following the Upper Confidence Bound
@@ -163,7 +171,10 @@
          decay.</p>
 <p>Note: A larger value signifies a faster decay from the learned
          value back to the initial value. The default value is set to 0,
-         which assumes that no such working memory system exists.</p></li>
+         which assumes that no such working memory system exists.</p>
+<p>When assuming the existence of a working memory system, it is
+         advisable to select a meaningful <code>Q0</code> toward which the
+         Q-values can decay.</p></li>
 </ul></div>
 
 <div class="section">
@@ -201,7 +212,7 @@
          applied. For example, setting <code>reset = 0</code> means that upon
          entering a new block, the values of all options are reset to 0. In
          addition, if <code>Q0</code> is also set to 0, this implies that the
-         learning rate on the first trial of each block will be 100<!-- %.  --></p></li>
+         learning rate on the first trial of each block will be 100<!-- %. --></p></li>
 <li><p><code>lapse [double]</code></p>
 <p>Wilson and Collins, (2019) <a href="https://doi.org/10.7554/eLife.49547" class="external-link">doi:10.7554/eLife.49547</a>
 
@@ -233,7 +244,13 @@
          to as a reward bonus, also influences the value update of the
          unchosen options.</p>
 <p>Note: The default value for this <code>bonus</code> is 0, which assumes
-         that no such bonus value change exists.</p></li>
+         that no such bonus value change exists.</p>
+<p>The concept of a bonus often does not require an additional
+         parameter; instead, it can be implemented through specific
+         <code>if-else</code> logic. For instance, in tasks with a single correct
+         answer, once the agent identifies the correct choice, it can infer
+         with certainty that the Q-values of all other actions should
+         be updated to zero.</p></li>
 <li><p><code>weight [NumericVector]</code></p>
 <p>The <code>weight</code> parameter governs the policy integration stage.
          After each cognitive system (e.g., reinforcement learning (RL) and
@@ -242,8 +259,7 @@
          these suggestions into a single choice probability.</p>
 <p>The default is <code>1</code>, which is equivalent to
          <code>weight = c(1, 0)</code>. This represents exclusive reliance on
-         the first system (typically the incremental Reinforcement Learning
-         system).</p>
+         the first system (typically the Reinforcement Learning system).</p>
 <p>In a dual-system model (e.g., RL + WM), setting <code>weight = 0.5</code>
          implies that the agent places equal trust in both the long-term RL
          rewards and the immediate WM memory.</p></li>
@@ -262,22 +278,35 @@
 <p>The <code>sticky</code> parameter (represented as \(kappa\) in
          Collins, 2025 <a href="https://doi.org/10.1038/s41562-025-02340-0" class="external-link">doi:10.1038/s41562-025-02340-0</a>
 ) quantifies the
-         extent to which an agent tends to repeat the physical action
-         performed in the previous trial. It captures a form of motor
-         inertia that is fundamentally stimulus-independent.</p>
-<p>Example: Consider a paradigm with four keys (e.g., Up, Down, Left,
-         Right). If an agent pressed "Up" in the previous trial, they might
-         press "Up" again in the current trial, simply due to a reluctance
-         to switch their physical response (i.e., motor stickiness).</p>
-<p>It is imperative that the definition of sticky aligns with the
-         participant's actual physical execution. If a task involves choosing
-         between four bandits (A, B, C, D) displayed on the left or right of
-         a screen, sticky should track the repetition of the physical
-         position (Left or Right) rather than the bandit's identity
-         (A/B/C/D). If your experimental paradigm dissociates the
-         value-updating entities (e.g., bandit IDs) from the physical
-         response dimensions (e.g., spatial locations), you must define the
-         sticky term based on the actual motor response.</p></li>
+         tendency for an agent to repeat a previous choice, a phenomenon
+         known as perseveration. This is fundamentally distinct from
+         value-based decision-making and captures a form of choice inertia.
+         In my opinion, the implementation of stickiness can vary depending
+         on the specifics of the experimental task. Here are three common
+         forms:</p>
+<p></p><ul><li><p>Stick to the Same Stimulus:
+                 The agent tends to choose the same stimulus that was chosen
+                 in the previous trial. For example, if red and blue squares
+                 are presented and the agent chose the red square on the
+                 last trial, they are more likely to choose the red square
+                 again on the current trial, regardless of its position.</p></li>
+<li><p>Stick to the Same Position:
+                 The agent tends to choose the stimulus at the same physical
+                 location as the previously chosen one. For instance, if two
+                 stimuli are presented on the left and right sides of the
+                 screen and the agent chose the left stimulus on the last
+                 trial, they are more likely to choose the left stimulus on
+                 the current trial, regardless of what stimulus is presented
+                 there.</p></li>
+<li><p>Stick to the Same Latent:
+                 The agent tends to repeat the same physical motor action.
+                 This is particularly relevant in latent learning paradigms
+                 where stimuli and responses are dissociated. For example,
+                 if the task requires pressing Up, Down, Left, or Right keys
+                 in response to colored arrows, an agent who pressed 'Up'
+                 on the previous trial might be more inclined to press 'Up'
+                 again, irrespective of the arrow stimuli.</p></li>
+</ul></li>
 </ul></div>
 
     </div>
@@ -298,7 +327,9 @@
 <span>     zeta <span class="op">=</span> <span class="fl">0</span></span>
 <span>   <span class="op">)</span>,</span>
 <span>   constant <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>     seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>     Q0 <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>     reset <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>     lapse <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>     threshold <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>     bonus <span class="op">=</span> <span class="fl">0</span>,</span>

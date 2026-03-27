@@ -6,14 +6,10 @@
     }
   };
 </script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Algorithm Packages (MLE, MAP) — algorithm"><meta name="description" content="The package supports the following eight optimization packages for finding
-   the optimal values of the model's free parameters. Note that if you use
-   &quot;NLOPT&quot;, you must consult its official documentation to input a specific
-   algorithm name. If no local search algorithm is specified, the default
-   local search method used will be &quot;NLOPT_LN_BOBYQA&quot;."><meta property="og:description" content="The package supports the following eight optimization packages for finding
-   the optimal values of the model's free parameters. Note that if you use
-   &quot;NLOPT&quot;, you must consult its official documentation to input a specific
-   algorithm name. If no local search algorithm is specified, the default
-   local search method used will be &quot;NLOPT_LN_BOBYQA&quot;."><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-BNYYX0HD3L"></script><script>
+   the optimal values of the model's free parameters
+   (default: global = &quot;NLOPT_GN_MLSL&quot;, local = &quot;NLOPT_LN_BOBYQA&quot;)."><meta property="og:description" content="The package supports the following eight optimization packages for finding
+   the optimal values of the model's free parameters
+   (default: global = &quot;NLOPT_GN_MLSL&quot;, local = &quot;NLOPT_LN_BOBYQA&quot;)."><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-BNYYX0HD3L"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -27,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,10 +63,8 @@
 
     <div class="ref-description section level2">
     <p>The package supports the following eight optimization packages for finding
-   the optimal values of the model's free parameters. Note that if you use
-   "NLOPT", you must consult its official documentation to input a specific
-   algorithm name. If no local search algorithm is specified, the default
-   local search method used will be "NLOPT_LN_BOBYQA".</p>
+   the optimal values of the model's free parameters
+   (default: global = "NLOPT_GN_MLSL", local = "NLOPT_LN_BOBYQA").</p>
     </div>
 
 
@@ -98,14 +92,12 @@
 
 
 <div class="sourceCode"><pre><code><span> <span class="co"># supported algorithms</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"L-BFGS-B"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"GenSA"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"GA"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"DEoptim"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"Bayesian"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"PSO"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"CMA-ES"</span></span>
-<span> <span class="va">algorithm</span> <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span></span></code></pre></div>
+<span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span> algorithm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>   <span class="st">"L-BFGS-B"</span>, <span class="st">"GenSA"</span>, <span class="st">"GA"</span>, <span class="st">"DEoptim"</span>,</span>
+<span>   <span class="st">"Bayesian"</span>, <span class="st">"PSO"</span>, <span class="st">"CMA-ES"</span>, <span class="st">"NLOPT_GN_MLSL"</span></span>
+<span> <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 
     </div>
 

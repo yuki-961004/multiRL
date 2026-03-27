@@ -4,15 +4,12 @@
 \alias{estimate_1_LBI}
 \title{Likelihood-Based Inference (LBI)}
 \usage{
-estimate_1_LBI(model, env, algorithm, lower, upper, control = list(), ...)
+estimate_1_LBI(model, env, lower, upper, control = list(), ...)
 }
 \arguments{
 \item{model}{Reinforcement Learning Model}
 
 \item{env}{multiRL.env}
-
-\item{algorithm}{Algorithm packages that multiRL supports, 
-see \link[multiRL]{algorithm}}
 
 \item{lower}{Lower bound of free parameters}
 
@@ -24,16 +21,16 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-An S4 object of class \code{multiRL.model} 
+An S4 object of class \code{multiRL.model}
  generated using the estimated optimal parameters.
 }
 \description{
-This function provides a unified interface to multiple algorithm packages, 
-   allowing different optimization algorithms to be selected for estimating 
-   optimal model parameters. The entire optimization framework is based on 
-   the log-likelihood returned by the model (or object function), making 
-   this function a collection of likelihood-based inference (LBI) methods. 
-   By abstracting over algorithm-specific implementations, the function 
-   enables flexible and consistent parameter estimation across different 
+This function provides a unified interface to multiple algorithm packages,
+   allowing different optimization algorithms to be selected for estimating
+   optimal model parameters. The entire optimization framework is based on
+   the log-likelihood returned by the model (or object function), making
+   this function a collection of likelihood-based inference (LBI) methods.
+   By abstracting over algorithm-specific implementations, the function
+   enables flexible and consistent parameter estimation across different
    optimization backends.
 }

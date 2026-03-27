@@ -27,10 +27,9 @@ testthat::test_that("TD", {
   multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::TD,
     env = multiRL.env,
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0),
     upper = c(1, 1),
-    iteration = 5,
+    control = list(iter = 5)
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -58,7 +57,7 @@ testthat::test_that("RSTD", {
     settings = list(
       name = "TD",
       mode = "fitting",
-      estimate = "MAP",
+      estimate = "MLE",
       policy = "on"
     ),
   )
@@ -66,10 +65,9 @@ testthat::test_that("RSTD", {
   multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::RSTD,
     env = multiRL.env,
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0, 0),
     upper = c(1, 1, 1),
-    iteration = 5,
+    control = list(iter = 5)
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")
@@ -97,7 +95,7 @@ testthat::test_that("Utility", {
     settings = list(
       name = "Utility",
       mode = "fitting",
-      estimate = "MAP",
+      estimate = "MLE",
       policy = "on"
     ),
   )
@@ -105,10 +103,9 @@ testthat::test_that("Utility", {
   multiRL.model <- multiRL::estimate_1_LBI(
     model = multiRL::Utility,
     env = multiRL.env,
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lower = c(0, 0, 0),
     upper = c(1, 1, 1),
-    iteration = 5,
+    control = list(iter = 5)
   )
   
   testthat::expect_s4_class(multiRL.model, "multiRL.model")

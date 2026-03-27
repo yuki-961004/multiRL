@@ -33,7 +33,6 @@ testthat::test_that("MLE", {
       )
     ),
     
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
     control = list(core = 1, iter = 5)
@@ -77,10 +76,9 @@ testthat::test_that("MAP", {
       )
     ),
     
-    algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"),
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 1, iter = c(5, 3))
+    control = list(core = 1, iter = c(5, 1))
   )
   
   testthat::expect_s3_class(fitting.MAP, "multiRL.fitting")

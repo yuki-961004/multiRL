@@ -14,7 +14,6 @@ fit_p(
   priors = NULL,
   settings = NULL,
   models,
-  algorithm,
   lowers,
   uppers,
   control,
@@ -22,7 +21,7 @@ fit_p(
 )
 }
 \arguments{
-\item{estimate}{Estimate method that you want to use, 
+\item{estimate}{Estimate method that you want to use,
 see \link[multiRL]{estimate}}
 
 \item{data}{A data frame in which each row represents a single trial,
@@ -42,13 +41,10 @@ see \link[multiRL]{funcs}}
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}
 
-\item{settings}{Other model settings, 
+\item{settings}{Other model settings,
 see \link[multiRL]{settings}}
 
 \item{models}{Reinforcement Learning Models}
-
-\item{algorithm}{Algorithm packages that multiRL supports, 
-see \link[multiRL]{algorithm}}
 
 \item{lowers}{Lower bound of free parameters in each model.}
 
@@ -68,14 +64,14 @@ An S3 object of class \code{multiRL.fitting}.
 Step 3: Optimizing parameters to fit real data
 }
 \section{Example}{
- 
+
 \preformatted{ # fitting
  fitting.MLE <- multiRL::fit_p(
    estimate = "MLE",
-  
+
    data = multiRL::TAB,
    colnames = list(
-     object = c("L_choice", "R_choice"), 
+     object = c("L_choice", "R_choice"),
      reward = c("L_reward", "R_reward"),
      action = "Sub_Choose"
    ),
@@ -83,11 +79,10 @@ Step 3: Optimizing parameters to fit real data
      cue = c("A", "B", "C", "D"),
      rsp = c("A", "B", "C", "D")
    ),
-  
+
    models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
    settings = list(name = c("TD", "RSTD", "Utility")),
-  
-   algorithm = "NLOPT_GN_MLSL",
+
    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
    uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
    control = list(core = 10, iter = 100)

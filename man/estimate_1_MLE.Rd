@@ -13,7 +13,6 @@ estimate_1_MLE(
   funcs = NULL,
   priors,
   settings = NULL,
-  algorithm,
   lowers,
   uppers,
   control,
@@ -40,11 +39,8 @@ see \link[multiRL]{funcs}}
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}
 
-\item{settings}{Other model settings, 
+\item{settings}{Other model settings,
 see \link[multiRL]{settings}}
-
-\item{algorithm}{Algorithm packages that multiRL supports, 
-see \link[multiRL]{algorithm}}
 
 \item{lowers}{Lower bound of free parameters in each model.}
 
@@ -56,12 +52,12 @@ see \link[multiRL]{control}}
 \item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-An S3 object of class \code{DataFrame} containing, for each model, 
+An S3 object of class \code{DataFrame} containing, for each model,
  the estimated optimal parameters and associated model fit metrics.
 }
 \description{
-This function essentially applies \code{estimate_1_LBI()} to each subject's 
-   data, estimating subject-specific optimal parameters based on maximum 
-   likelihood. Because the fitting process for each subject is independent, 
+This function essentially applies \code{estimate_1_LBI()} to each subject's
+   data, estimating subject-specific optimal parameters based on maximum
+   likelihood. Because the fitting process for each subject is independent,
    the procedure can be accelerated using parallel computation.
 }

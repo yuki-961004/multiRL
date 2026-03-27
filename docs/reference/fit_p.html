@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,6 @@
 <span>  priors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  settings <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">models</span>,</span>
-<span>  <span class="va">algorithm</span>,</span>
 <span>  <span class="va">lowers</span>,</span>
 <span>  <span class="va">uppers</span>,</span>
 <span>  <span class="va">control</span>,</span>
@@ -128,11 +127,6 @@ see <a href="settings.html">settings</a></p></dd>
 <dd><p>Reinforcement Learning Models</p></dd>
 
 
-<dt id="arg-algorithm">algorithm<a class="anchor" aria-label="anchor" href="#arg-algorithm"></a></dt>
-<dd><p>Algorithm packages that multiRL supports,
-see <a href="algorithm.html">algorithm</a></p></dd>
-
-
 <dt id="arg-lowers">lowers<a class="anchor" aria-label="anchor" href="#arg-lowers"></a></dt>
 <dd><p>Lower bound of free parameters in each model.</p></dd>
 
@@ -178,7 +172,6 @@ see <a href="control.html">control</a></p></dd>
 <span>   models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/TD.html">TD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/RSTD.html">RSTD</a></span>, <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/Utility.html">Utility</a></span><span class="op">)</span>,</span>
 <span>   settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TD"</span>, <span class="st">"RSTD"</span>, <span class="st">"Utility"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span></span>
-<span>   algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
 <span>   lowers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>   uppers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>   control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>core <span class="op">=</span> <span class="fl">10</span>, iter <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>

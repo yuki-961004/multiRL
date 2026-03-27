@@ -1,4 +1,4 @@
-#' @title Function: Utility Function
+#' @title Function: Utility
 #' @description
 #' 
 #'  \deqn{U(R) = {R}^{\gamma}}

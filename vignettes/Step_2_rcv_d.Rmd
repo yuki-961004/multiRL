@@ -20,7 +20,8 @@ With minimal configuration, users can estimate optimal parameters using four dis
 recovery.MLE <- multiRL::rcv_d(
   estimate = "MLE",
   control = list(
-    core = 10, sample = 100, iter = 100
+    core = 10, sample = 100, iter = 100,
+    algorithm = "NLOPT_GN_MLSL"
   ),
   ...
 )
@@ -28,8 +29,8 @@ recovery.MLE <- multiRL::rcv_d(
 recovery.MAP <- multiRL::rcv_d(
   estimate = "MAP",
   control = list(
-    core = 10, sample = 100, iter = 100,
-    diff = 0.001, patience = 10
+    core = 10, sample = 100, iter = c(100, 10),
+    algorithm = "NLOPT_GN_MLSL", diff = 0.001, patience = 10
   ),
   ...
 )
@@ -38,7 +39,7 @@ recovery.ABC <- multiRL::rcv_d(
   estimate = "ABC",
   control = list(
     core = 10, sample = 100, train = 1000,
-    tol = 0.1
+    tol = 0.1, reduction = NULL, ncomp = NULL
   ),
   ...
 )
@@ -50,7 +51,7 @@ recovery.RNN <- multiRL::rcv_d(
   estimate = "RNN",
   control = list(
     core = 1, sample = 100, train = 1000,
-    layer = "GRU", units = 128, batch_size = 10, epochs = 100
+    layer = "GRU", loss = "MSE", units = 128, batch_size = 10, epochs = 100
   ),
   ...
 )
@@ -90,7 +91,6 @@ recovery.MLE <- multiRL::rcv_d(
   ),
   settings = list(name = c("TD", "RSTD", "Utility")),
   
-  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
   control = list(core = 10, sample = 100, iter = 100)
@@ -150,13 +150,9 @@ recovery.MAP <- multiRL::rcv_d(
   ),
   settings = list(name = c("TD", "RSTD", "Utility")),
   
-  algorithm = "NLOPT_GN_MLSL",
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
-  control = list(
-    core = 10, sample = 100, iter = c(100, 1),
-    diff = 0.1, patience = 10
-  )
+  control = list(core = 10, sample = 100, iter = c(100, 1))
 )
 
 save(recovery.MAP, file = "./recovery.MAP.Rdata")
@@ -215,10 +211,7 @@ recovery.ABC <- multiRL::rcv_d(
   
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
-  control = list(
-    core = 10, sample = 100, train = 1000,
-    tol = 0.5, reduction = "PCA"
-  )
+  control = list(core = 10, sample = 100, train = 1000)
 )
 
 save(recovery.ABC, file = "./recovery.ABC.Rdata")
@@ -289,10 +282,7 @@ recovery.RNN <- multiRL::rcv_d(
   
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 10), c(1, 1, 10), c(1, 10, 1)),
-  control = list(
-    core = 1, sample = 100, train = 1000,
-    layer = "GRU", units = 128, batch_size = 10, epochs = 100
-  ),
+  control = list(core = 1, sample = 100, train = 1000),
 )
 
 save(recovery.RNN, file = "./recovery.RNN.Rdata")

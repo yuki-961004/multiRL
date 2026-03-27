@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,8 +93,8 @@
    involves finding the set of free parameters that maximizes the sum of the
    log-likelihoods across all trials.</p>
 <p>The search for these optimal parameters can be accomplished using various
-   algorithms. For details, please refer to the documentation for
-   <a href="algorithm.html">algorithm</a>.</p>
+   algorithms (e.g. GenSA, GA, NLOPT, ...). For details, please refer to the
+   documentation for <a href="algorithm.html">algorithm</a>.</p>
 <ol><li><p>The Markov Decision Process (MDP) continuously updates the expected
          value of each action.</p></li>
 <li><p>These expected values are transformed into action probabilities using
@@ -112,6 +112,9 @@
    (MLE) In addition to optimizing parameters for each individual subject
    based on the likelihood, Maximum A Posteriori incorporates information
    about the population distribution of the parameters.</p>
+<p>The search for these optimal parameters can be performed using the same
+   algorithms as those employed in MLE. For details, please refer to the
+   documentation for <a href="algorithm.html">algorithm</a>.</p>
 <ol><li><p>Perform an initial Maximum Likelihood Estimation (MLE) to find the
          best-fitting parameters for each individual subject.</p></li>
 <li><p>Use these best-fitting parameters to estimate the Probability
@@ -152,6 +155,11 @@
    mapping between the summary statistics and the free parameters. Once the
    model is trained, given a new set of summary statistics, the model can
    instantly determine the corresponding input parameters.</p>
+<p>An excessive number of options or blocks in an experiment often leads to an
+   information overload in summary statistics, resulting in the curse of
+   dimensionality. In such cases, dimensionality reduction techniques like
+   PCA or PLS are required. For details, please refer to the documentation
+   for <a href="reduction.html">reduction</a>.</p>
 <ol><li><p>Generate a large amount of simulated data using randomly sampled
          input parameters.</p></li>
 <li><p>Compress the simulated data into summary statistics-for instance,
@@ -172,6 +180,10 @@
    simulated dataset itself and the input free parameters. When provided
    with new behavioral data, the trained model can estimate the input
    parameters most likely to have generated that specific dataset.</p>
+<p>For the recurrent layer, users can choose between <code>GRU</code> and <code>LSTM</code>.
+   Subsequently, the loss function can be selected from a variety of options
+   (e.g. MSE, MAE, NLL, ...). For details, please refer to the documentation
+   for <a href="layer.html">layer</a>.</p>
 
 <ul><li><p>The Recurrent Neural Network (RNN) component included in
          <code>multiRL</code> is merely a shell for TensorFlow. Consequently,
@@ -191,8 +203,8 @@
 <li><p>After the simulated data is generated, it is partitioned into a
    training set and a validation set, and the RNN training commences.</p></li>
 <li><p>The iteration stops when both the training and validation sets
-   converge. If the Mean Squared Error (MSE) of the validation set is high
-   while the MSE of the training set is low, this indicates overfitting,
+   converge. If the loss (e.g. MSE) of the validation set is high
+   while the loss of the training set is low, this indicates overfitting,
    suggesting that the Recurrent Neural Network (RNN) model may lack
    generalization ability.</p></li>
 <li><p>Given a new dataset, the trained model infers the input parameters

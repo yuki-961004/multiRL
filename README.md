@@ -69,7 +69,7 @@ system = c("RL", "WM", "...")
 
 ```r
 # learning-rate function
-rate_func = multiRL::func_alpha
+lrng_func = multiRL::func_alpha
 ```
 $$
   Q_{new} = Q_{old} + \alpha \cdot (R - Q_{old})  

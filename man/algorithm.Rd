@@ -5,10 +5,8 @@
 \title{Algorithm Packages (MLE, MAP)}
 \description{
 The package supports the following eight optimization packages for finding 
-   the optimal values of the model's free parameters. Note that if you use 
-   "NLOPT", you must consult its official documentation to input a specific 
-   algorithm name. If no local search algorithm is specified, the default 
-   local search method used will be "NLOPT_LN_BOBYQA".
+   the optimal values of the model's free parameters 
+   (default: global = "NLOPT_GN_MLSL", local = "NLOPT_LN_BOBYQA").
 }
 \section{Class}{
  
@@ -32,14 +30,12 @@ The package supports the following eight optimization packages for finding
 \section{Example}{
  
 \preformatted{ # supported algorithms
- algorithm = "L-BFGS-B"
- algorithm = "GenSA"
- algorithm = "GA"
- algorithm = "DEoptim"
- algorithm = "Bayesian"
- algorithm = "PSO"
- algorithm = "CMA-ES"
- algorithm = "NLOPT_GN_MLSL"
+control = list(
+ algorithm = c(
+   "L-BFGS-B", "GenSA", "GA", "DEoptim",
+   "Bayesian", "PSO", "CMA-ES", "NLOPT_GN_MLSL"
+ )
+)
 }
 }
 

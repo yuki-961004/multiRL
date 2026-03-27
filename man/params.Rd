@@ -4,258 +4,292 @@
 \alias{params}
 \title{Model Parameters}
 \description{
-The names of all these parameters are not necessarily fixed. You can define 
-   the parameters you need and set their names according to the functions 
-   used in your custom model. You must only ensure that the parameter names 
-   defined here are consistent with those used in your model's functions, 
+The names of all these parameters are not necessarily fixed. You can define
+   the parameters you need and set their names according to the functions
+   used in your custom model. You must only ensure that the parameter names
+   defined here are consistent with those used in your model's functions,
    and that their names do not conflict with each other.
 }
 \section{Class}{
- 
+
 \code{params [List]}
 }
 
 \section{Note}{
- 
- The parameters are divided into three types: \code{free}, \code{fixed}, 
-   and \code{constant.} This classification is not mandatory, any parameter 
+
+ The parameters are divided into three types: \code{free}, \code{fixed},
+   and \code{constant.} This classification is not mandatory, any parameter
    can be treated as a free parameter depending on the user's specification.
-   By default, the learning rate \code{alpha} and the inverse-temperature 
+   By default, the learning rate \code{alpha} and the inverse-temperature
    \code{beta} are the required free parameters.
 }
 
 \section{Slots}{
- 
+
 \subsection{free}{
 \itemize{
-   \item \code{alpha [double]} 
-   
-         Learning Rate \code{alpha} specifies how aggressively or 
-         conservatively the agent adopts the prediction error 
-         (the difference between the observed reward and the expected value). 
-         
-         A value closer to 1 indicates a more aggressive update of the value 
-         function, meaning the agent relies more heavily on the current 
-         observed reward. Conversely, a value closer to 0 indicates a more 
-         conservative update, meaning the agent trusts its previously 
+   \item \code{alpha [double]}
+
+         Learning Rate \code{alpha} specifies how aggressively or
+         conservatively the agent adopts the prediction error
+         (the difference between the observed reward and the expected value).
+
+         A value closer to 1 indicates a more aggressive update of the value
+         function, meaning the agent relies more heavily on the current
+         observed reward. Conversely, a value closer to 0 indicates a more
+         conservative update, meaning the agent trusts its previously
          established expected value more.
-         
-   \item \code{beta [double]} 
-   
-         The inverse temperature parameter, \code{beta}, is a crucial 
-         component of the soft-max function. It reflects the extent to which 
-         the agent's decision-making relies on the value differences between 
+
+   \item \code{beta [double]}
+
+         The inverse temperature parameter, \code{beta}, is a crucial
+         component of the soft-max function. It reflects the extent to which
+         the agent's decision-making relies on the value differences between
          various available options.
-         
-         A higher value of \code{beta} signifies more rational 
-         decision-making; that is, the probability of executing actions with 
-         higher expected value is greater. Conversely, a lower \code{beta} 
-         value signifies more stochastic decision-making, where the 
-         probability of executing different actions becomes nearly equal, 
+
+         A higher value of \code{beta} signifies more rational
+         decision-making; that is, the probability of executing actions with
+         higher expected value is greater. Conversely, a lower \code{beta}
+         value signifies more stochastic decision-making, where the
+         probability of executing different actions becomes nearly equal,
          regardless of the differences in their expected values.
 }
 }
 
 \subsection{fixed}{
 \itemize{
-   \item \code{gamma [double]} 
-   
-         The physical reward received is often distinct from the 
-         psychological value perceived by an individual. This concept 
-         originates in psychophysics, specifically Stevens' Power Law. 
-         
-         Note: The default utility function is defined as 
-         \eqn{y = x^{\gamma}} and \eqn{\gamma = 1}, which assumed that the 
+   \item \code{gamma [double]}
+
+         The physical reward received is often distinct from the
+         psychological value perceived by an individual. This concept
+         originates in psychophysics, specifically Stevens' Power Law.
+
+         Note: The default utility function is defined as
+         \eqn{y = x^{\gamma}} and \eqn{\gamma = 1}, which assumed that the
          physical quantity is equivalent to the psychological quantity.
-         
-   \item \code{delta [double]} 
-   
-         This parameter represents the weight given to the number of times 
-         an option has been selected. Following the Upper Confidence Bound 
-         (UCB) algorithm proposed by Sutton and Barto 
+
+         Since any number raised to the power of zero is one, fixing
+         \code{gamma} at 0 holds a unique theoretical significance: it
+         represents the 'H agent' as proposed by Collins, 2025 
+         \doi{10.1038/s41562-025-02340-0}.
+         In this state, the agent treats every feedback as a reward,
+         effectively transforming repeated choices into a manifestation of
+         pure habit.
+
+   \item \code{delta [double]}
+
+         This parameter represents the weight given to the number of times
+         an option has been selected. Following the Upper Confidence Bound
+         (UCB) algorithm proposed by Sutton and Barto
          (\href{http://incompleteideas.net/book/the-book-2nd.html}{2018})
-         options that have been selected less frequently should be assigned 
+         options that have been selected less frequently should be assigned
          a higher exploratory bias.
-         
-         Note: With the default set to 0.1, a bias value is effectively 
-         applied only to options that have never been chosen. Once an action 
-         has been executed even a single time, the assigned bias value 
+
+         Note: With the default set to 0.1, a bias value is effectively
+         applied only to options that have never been chosen. Once an action
+         has been executed even a single time, the assigned bias value
          approaches zero.
-         
-   \item \code{epsilon [double]} 
-   
-         This parameter governs the Exploration-Exploitation trade-off and 
-         can be used to implement three distinct strategies by adjusting 
-         \code{epsilon} and \code{threshold}:  
-         
-         When set to \eqn{\epsilon-greedy}: \code{epsilon} represents the 
-         probability that the agent will execute a random exploratory action 
+
+   \item \code{epsilon [double]}
+
+         This parameter governs the Exploration-Exploitation trade-off and
+         can be used to implement three distinct strategies by adjusting
+         \code{epsilon} and \code{threshold}:
+
+         When set to \eqn{\epsilon-greedy}: \code{epsilon} represents the
+         probability that the agent will execute a random exploratory action
          throughout the entire experiment, regardless of the estimated value.
-         
-         When set to \eqn{\epsilon-decreasing}: The probability of the agent 
-         making a random choice decreases as the number of trials increases. 
+
+         When set to \eqn{\epsilon-decreasing}: The probability of the agent
+         making a random choice decreases as the number of trials increases.
          The rate of this decay is influenced by \code{epsilon}.
-         
-         By default, \code{epsilon} is set to \code{NA}, which corresponds 
-         to the \eqn{\epsilon-first} model. In this model, the agent always 
+
+         By default, \code{epsilon} is set to \code{NA}, which corresponds
+         to the \eqn{\epsilon-first} model. In this model, the agent always
          selects randomly before a specified trial (\code{threshold = 1}).
-         
-   \item \code{zeta [double]} 
-   
-         Collins and Frank, (2012) \doi{10.1111/j.1460-9568.2011.07980.x} 
-         proposed that in every trial, not only the chosen option undergoes 
-         value updating, but the expected values of unchosen options also 
-         decay towards their initial value, due to the constraints of 
-         working memory. This specific parameter represents the rate of this 
-         decay. 
-         
-         Note: A larger value signifies a faster decay from the learned 
-         value back to the initial value. The default value is set to 0, 
+
+   \item \code{zeta [double]}
+
+         Collins and Frank, (2012) \doi{10.1111/j.1460-9568.2011.07980.x}
+         proposed that in every trial, not only the chosen option undergoes
+         value updating, but the expected values of unchosen options also
+         decay towards their initial value, due to the constraints of
+         working memory. This specific parameter represents the rate of this
+         decay.
+
+         Note: A larger value signifies a faster decay from the learned
+         value back to the initial value. The default value is set to 0,
          which assumes that no such working memory system exists.
+
+         When assuming the existence of a working memory system, it is
+         advisable to select a meaningful \code{Q0} toward which the
+         Q-values can decay.
 }
 }
 
 \subsection{constant}{
 \itemize{
-   \item \code{seed [int]} 
-         This seed controls the random choice of actions in the 
-         reinforcement learning model when the \code{sample()} function is 
-         called to select actions based on probabilities estimated by the 
-         softmax. It is not the seed used by the algorithm package when 
-         searching for optimal input parameters. In most cases, there is no 
-         need to modify this value; please keep it at the default value of 
+   \item \code{seed [int]}
+         This seed controls the random choice of actions in the
+         reinforcement learning model when the \code{sample()} function is
+         called to select actions based on probabilities estimated by the
+         softmax. It is not the seed used by the algorithm package when
+         searching for optimal input parameters. In most cases, there is no
+         need to modify this value; please keep it at the default value of
          \code{123}.
-   
-   
-   \item \code{Q0 [double]} 
-   
-         This parameter represents the initial value assigned to each action 
-         at the start of the Markov Decision Process. As argued by 
-         Sutton and Barto 
-         (\href{http://incompleteideas.net/book/the-book-2nd.html}{2018}), 
-         initial values are often set to be optimistic 
-         (i.e., higher than all possible rewards) to encourage exploration. 
-         Conversely, an overly low initial value might lead the agent to 
-         cease exploring other options after receiving the first reward, 
+
+
+   \item \code{Q0 [double]}
+
+         This parameter represents the initial value assigned to each action
+         at the start of the Markov Decision Process. As argued by
+         Sutton and Barto
+         (\href{http://incompleteideas.net/book/the-book-2nd.html}{2018}),
+         initial values are often set to be optimistic
+         (i.e., higher than all possible rewards) to encourage exploration.
+         Conversely, an overly low initial value might lead the agent to
+         cease exploring other options after receiving the first reward,
          resulting in repeated selection of the initially chosen action.
-         
-         The default value is set to \code{NA}, which implies that the agent 
-         will use the first observed reward as the initial value for that 
-         action. When combined with Upper Confidence Bound, this setting 
-         ensures that every option is selected at least once, and their 
+
+         The default value is set to \code{NA}, which implies that the agent
+         will use the first observed reward as the initial value for that
+         action. When combined with Upper Confidence Bound, this setting
+         ensures that every option is selected at least once, and their
          first rewards are immediately memorized.
-         
-         Note: This is what I consider the reasonable setting. If you 
-         think this interpretation unsuitable, you may explicitly set 
+
+         Note: This is what I consider the reasonable setting. If you
+         think this interpretation unsuitable, you may explicitly set
          \code{Q0} to 0 or another optimistic initial value instead.
-   
-   \item \code{reset [double]} 
-   
-         If changes may occur between blocks, you can choose whether to 
-         reset the learned values for each option. By default, no reset is 
-         applied. For example, setting \code{reset = 0} means that upon 
-         entering a new block, the values of all options are reset to 0. In 
-         addition, if \code{Q0} is also set to 0, this implies that the 
-         learning rate on the first trial of each block will be 100%. 
-         
-   \item \code{lapse [double]} 
-   
-         Wilson and Collins, (2019) \doi{10.7554/eLife.49547} 
-         introduced the concept of the Lapse Rate, which represents the 
-         probability that a subject makes a error (lapse). This parameter 
-         ensures that every option has a minimum probability of being chosen, 
-         preventing the probability from reaching zero. This is a very 
-         reasonable assumption and, crucially, it avoids the numerical 
-         instability issue where 
-         \eqn{\log(P) = \log(0)} results in \code{-Inf}. 
-         
-         Note: The default value here is set to 0.01, meaning every action 
+
+   \item \code{reset [double]}
+
+         If changes may occur between blocks, you can choose whether to
+         reset the learned values for each option. By default, no reset is
+         applied. For example, setting \code{reset = 0} means that upon
+         entering a new block, the values of all options are reset to 0. In
+         addition, if \code{Q0} is also set to 0, this implies that the
+         learning rate on the first trial of each block will be 100%.
+
+   \item \code{lapse [double]}
+
+         Wilson and Collins, (2019) \doi{10.7554/eLife.49547}
+         introduced the concept of the Lapse Rate, which represents the
+         probability that a subject makes a error (lapse). This parameter
+         ensures that every option has a minimum probability of being chosen,
+         preventing the probability from reaching zero. This is a very
+         reasonable assumption and, crucially, it avoids the numerical
+         instability issue where
+         \eqn{\log(P) = \log(0)} results in \code{-Inf}.
+
+         Note: The default value here is set to 0.01, meaning every action
          has at least 1\% probability of being executed by the agent. If the
-         paradigm you use have a large number of available actions, a 1\% 
-         minimum probability for each action might be unreasonable. You can 
+         paradigm you use have a large number of available actions, a 1\%
+         minimum probability for each action might be unreasonable. You can
          adjust this value to be even smaller.
-         
-   \item \code{threshold [double]} 
-   
-         This parameter represents the trial number before which the agent 
-         will select completely randomly. 
-         
-         Note: The default value is set to 1, meaning that only the very 
+
+   \item \code{threshold [double]}
+
+         This parameter represents the trial number before which the agent
+         will select completely randomly.
+
+         Note: The default value is set to 1, meaning that only the very
          first trial involves a purely random choice by the agent.
-         
-   \item \code{bonus [double]} 
-   
-         Hitchcock, Kim and Frank, (2025) \doi{10.1037/xge0001817} 
-         introduced modifications to the working memory model, positing that 
-         the value of unchosen options is not merely subject to decay toward 
-         the initial value. They suggest that the outcome obtained after 
-         selecting an option might, to some extent, provide information 
-         about the value of the unchosen options. This information, referred 
-         to as a reward bonus, also influences the value update of the 
-         unchosen options. 
-         
-         Note: The default value for this \code{bonus} is 0, which assumes 
+
+   \item \code{bonus [double]}
+
+         Hitchcock, Kim and Frank, (2025) \doi{10.1037/xge0001817}
+         introduced modifications to the working memory model, positing that
+         the value of unchosen options is not merely subject to decay toward
+         the initial value. They suggest that the outcome obtained after
+         selecting an option might, to some extent, provide information
+         about the value of the unchosen options. This information, referred
+         to as a reward bonus, also influences the value update of the
+         unchosen options.
+
+         Note: The default value for this \code{bonus} is 0, which assumes
          that no such bonus value change exists.
-         
-   \item \code{weight [NumericVector]} 
-   
-         The \code{weight} parameter governs the policy integration stage. 
-         After each cognitive system (e.g., reinforcement learning (RL) and 
-         working memory (WM)) calculates action probabilities using a soft-max 
-         function based on its internal value estimates, the agent combines 
-         these suggestions into a single choice probability. 
-         
-         The default is \code{1}, which is equivalent to 
-         \code{weight = c(1, 0)}. This represents exclusive reliance on 
-         the first system (typically the incremental Reinforcement Learning 
-         system).
-         
-         In a dual-system model (e.g., RL + WM), setting \code{weight = 0.5} 
-         implies that the agent places equal trust in both the long-term RL 
-         rewards and the immediate WM memory. 
-   
-   \item \code{capacity [double]} 
-   
-         This parameter represents the maximum number of stimulus-action 
-         associations an individual can actively maintain in working memory 
-         \eqn{weight = weight_{0} * min(1, (capacity / ns))}. 
-         
-         This parameter determines the extent to which working memory (WM) 
-         Q-values are prioritized during decision-making. When the stimulus 
-         set size (\code{ns}) is within the capacity (\code{capacity}), 
-         the model fully relies on the working memory system, resulting in a 
-         working memory weight of 1. However, if \code{ns} exceeds 
-         \code{capacity}, the decision-making process partially integrates 
+
+         The concept of a bonus often does not require an additional
+         parameter; instead, it can be implemented through specific
+         \code{if-else} logic. For instance, in tasks with a single correct
+         answer, once the agent identifies the correct choice, it can infer
+         with certainty that the Q-values of all other actions should
+         be updated to zero.
+
+   \item \code{weight [NumericVector]}
+
+         The \code{weight} parameter governs the policy integration stage.
+         After each cognitive system (e.g., reinforcement learning (RL) and
+         working memory (WM)) calculates action probabilities using a soft-max
+         function based on its internal value estimates, the agent combines
+         these suggestions into a single choice probability.
+
+         The default is \code{1}, which is equivalent to
+         \code{weight = c(1, 0)}. This represents exclusive reliance on
+         the first system (typically the Reinforcement Learning system).
+
+         In a dual-system model (e.g., RL + WM), setting \code{weight = 0.5}
+         implies that the agent places equal trust in both the long-term RL
+         rewards and the immediate WM memory.
+
+   \item \code{capacity [double]}
+
+         This parameter represents the maximum number of stimulus-action
+         associations an individual can actively maintain in working memory
+         \eqn{weight = weight_{0} * min(1, (capacity / ns))}.
+
+         This parameter determines the extent to which working memory (WM)
+         Q-values are prioritized during decision-making. When the stimulus
+         set size (\code{ns}) is within the capacity (\code{capacity}),
+         the model fully relies on the working memory system, resulting in a
+         working memory weight of 1. However, if \code{ns} exceeds
+         \code{capacity}, the decision-making process partially integrates
          Q-values from the reinforcement learning (RL) system.
-         
-   \item \code{sticky [double]} 
-         
-         The \code{sticky} parameter (represented as \eqn{kappa} in 
-         Collins, 2025 \doi{10.1038/s41562-025-02340-0}) quantifies the 
-         extent to which an agent tends to repeat the physical action 
-         performed in the previous trial. It captures a form of motor 
-         inertia that is fundamentally stimulus-independent. 
-         
-         Example: Consider a paradigm with four keys (e.g., Up, Down, Left, 
-         Right). If an agent pressed "Up" in the previous trial, they might 
-         press "Up" again in the current trial, simply due to a reluctance 
-         to switch their physical response (i.e., motor stickiness). 
-         
-         It is imperative that the definition of sticky aligns with the 
-         participant's actual physical execution. If a task involves choosing 
-         between four bandits (A, B, C, D) displayed on the left or right of 
-         a screen, sticky should track the repetition of the physical 
-         position (Left or Right) rather than the bandit's identity 
-         (A/B/C/D). If your experimental paradigm dissociates the 
-         value-updating entities (e.g., bandit IDs) from the physical 
-         response dimensions (e.g., spatial locations), you must define the 
-         sticky term based on the actual motor response. 
+
+   \item \code{sticky [double]}
+
+         The \code{sticky} parameter (represented as \eqn{kappa} in
+         Collins, 2025 \doi{10.1038/s41562-025-02340-0}) quantifies the
+         tendency for an agent to repeat a previous choice, a phenomenon
+         known as perseveration. This is fundamentally distinct from
+         value-based decision-making and captures a form of choice inertia.
+         In my opinion, the implementation of stickiness can vary depending 
+         on the specifics of the experimental task. Here are three common 
+         forms:
+
+         \itemize{
+           \item Stick to the Same Stimulus: 
+                 The agent tends to choose the same stimulus that was chosen 
+                 in the previous trial. For example, if red and blue squares 
+                 are presented and the agent chose the red square on the 
+                 last trial, they are more likely to choose the red square 
+                 again on the current trial, regardless of its position.
+
+           \item Stick to the Same Position: 
+                 The agent tends to choose the stimulus at the same physical 
+                 location as the previously chosen one. For instance, if two 
+                 stimuli are presented on the left and right sides of the 
+                 screen and the agent chose the left stimulus on the last 
+                 trial, they are more likely to choose the left stimulus on 
+                 the current trial, regardless of what stimulus is presented 
+                 there.
+
+           \item Stick to the Same Latent: 
+                 The agent tends to repeat the same physical motor action. 
+                 This is particularly relevant in latent learning paradigms 
+                 where stimuli and responses are dissociated. For example, 
+                 if the task requires pressing Up, Down, Left, or Right keys 
+                 in response to colored arrows, an agent who pressed 'Up' 
+                 on the previous trial might be more inclined to press 'Up' 
+                 again, irrespective of the arrow stimuli.
+         }
+
 }
 }
 }
 
 \section{Example}{
- 
+
 \preformatted{ # TD
  params = list(
    free = list(
@@ -263,13 +297,15 @@ The names of all these parameters are not necessarily fixed. You can define
      beta = x[2]
    ),
    fixed = list(
-     gamma = 1, 
-     delta = 0.1, 
-     epsilon = NA_real_, 
+     gamma = 1,
+     delta = 0.1,
+     epsilon = NA_real_,
      zeta = 0
    ),
    constant = list(
-     Q0 = NA_real_, 
+     seed = 123,
+     Q0 = NA_real_,
+     reset = NA_real_,
      lapse = 0.01,
      threshold = 1,
      bonus = 0,
@@ -282,25 +318,25 @@ The names of all these parameters are not necessarily fixed. You can define
 }
 
 \references{
-Sutton, R. S., & Barto, A. G. (2018). Reinforcement Learning: 
+Sutton, R. S., & Barto, A. G. (2018). Reinforcement Learning:
 An Introduction (2nd ed). MIT press.
 
-Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning 
-is working memory, not reinforcement learning? A behavioral, computational, 
-and neurogenetic analysis. \emph{European Journal of Neuroscience, 35}(7), 
+Collins, A. G., & Frank, M. J. (2012). How much of reinforcement learning
+is working memory, not reinforcement learning? A behavioral, computational,
+and neurogenetic analysis. \emph{European Journal of Neuroscience, 35}(7),
 1024-1035.
 \doi{10.1111/j.1460-9568.2011.07980.x}
 
-Wilson, R. C., & Collins, A. G. (2019). Ten simple rules for the 
-computational modeling of behavioral data. \emph{Elife, 8}, e49547. 
+Wilson, R. C., & Collins, A. G. (2019). Ten simple rules for the
+computational modeling of behavioral data. \emph{Elife, 8}, e49547.
 \doi{10.7554/eLife.49547}
 
-Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory 
-and reinforcement learning interact when avoiding punishment and pursuing 
-reward concurrently. \emph{Journal of Experimental Psychology: General}. 
+Hitchcock, P. F., Kim, J., Frank, M. J. (2025). How working memory
+and reinforcement learning interact when avoiding punishment and pursuing
+reward concurrently. \emph{Journal of Experimental Psychology: General}.
 \doi{10.1037/xge0001817}
 
-Collins, A. G. (2025). A habit and working memory model as an alternative 
-account of human reward-based learning. \emph{Nature Human Behaviour}, 1-13. 
+Collins, A. G. (2025). A habit and working memory model as an alternative
+account of human reward-based learning. \emph{Nature Human Behaviour}, 1-13.
 \doi{10.1038/s41562-025-02340-0}
 }
