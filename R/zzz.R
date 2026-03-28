@@ -15,5 +15,6 @@ utils::globalVariables(c(
   # ABC
   "tol", "reduction", "ncomp", "metric",
   # RNN,
-  "info", "layer", "loss", "units", "batch_size", "epochs", "check"
+  "layer", "loss", "info", "units", "dropout", "L", "penalty", 
+  "batch_size", "epochs", "check"
 ))

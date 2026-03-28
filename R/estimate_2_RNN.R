@@ -113,6 +113,9 @@ estimate_2_RNN <- function(
     loss = "MSE",
     info = c(colnames$object, colnames$action),
     units = 128,
+    dropout = 0,
+    L = 0,
+    penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
     check = TRUE

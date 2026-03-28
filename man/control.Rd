@@ -312,10 +312,39 @@ The \code{control} argument is a mandatory list used to customize and manage
    \item \code{units [int]}
 
          The number of neurons (or units) in the Recurrent Layer
-         (GRU or LSTM). Conceptually, this parameter represents the memory
-         capacity and complexity of the network; it dictates how much
+         (RNN, GRU or LSTM). Conceptually, this parameter represents the 
+         memory capacity and complexity of the network; it dictates how much
          information about the sequential trials the model can store and
          process.
+         
+   \item \code{dropout [double]}
+   
+         Dropout is a powerful regularization technique used to prevent 
+         overfitting in RNNs. During each training iteration, a predefined 
+         percentage of neurons (units) are randomly "dropped" or deactivated 
+         by setting their activations to zero.
+
+   \item \code{L [int]}
+
+         This parameter determines the type of regularization applied to the
+         log-likelihood to penalize model complexity, which helps prevent
+         overfitting. The default is \code{0}.
+         \itemize{
+           \item \code{L = 0}: No regularization.
+           \item \code{L = 1}: L1 regularization (Lasso), which adds a
+                 penalty proportional to the sum of the absolute values of 
+                 the free parameters.
+           \item \code{L = 2}: L2 regularization (Ridge), which adds a
+                 penalty proportional to the sum of the squared values of 
+                 the free parameters.
+         }
+
+   \item \code{penalty [double]}
+
+         This parameter specifies the strength of the regularization, acting
+         as a multiplier for the penalty term defined by \code{L}. A larger
+         value imposes a stronger penalty on the free parameters. The
+         default value is \code{1e-5}.
 
    \item \code{batch_size [int]}
 
@@ -376,6 +405,9 @@ The \code{control} argument is a mandatory list used to customize and manage
    loss = "MSE",
    info = c(colnames$object, colnames$action),
    units = 128,
+   dropout = 0
+   L = 0,
+   penalty = 1e-5,
    batch_size = 10,
    epochs = 100,
    check = TRUE

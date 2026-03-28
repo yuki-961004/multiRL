@@ -197,7 +197,7 @@ engine_RNN <- function(
   } else if (loss == "MAE") {
     units_out <- n_params
     loss_func <- "mean_absolute_error"
-  } else if (loss == "Huber") {
+  } else if (loss == "HBR") {
     units_out <- n_params
     loss_func <- "huber_loss"
   } else {
@@ -216,7 +216,6 @@ engine_RNN <- function(
         object = RNN,
         units = units,
         input_shape = c(n_trials, n_info),
-        return_sequences = FALSE
       )
     },
     "GRU" = {
@@ -224,7 +223,6 @@ engine_RNN <- function(
         object = RNN,
         units = units,
         input_shape = c(n_trials, n_info),
-        return_sequences = FALSE,
       )
     },
     "LSTM" = {
@@ -232,39 +230,65 @@ engine_RNN <- function(
         object = RNN,
         units = units,
         input_shape = c(n_trials, n_info),
-        return_sequences = FALSE,
       )
     },
     "BiRNN" = {
       RNN <- keras::bidirectional(
         object = RNN,
-        layer = keras::layer_simple_rnn(
-          units = units,
-          return_sequences = FALSE
-        ),
+        layer = keras::layer_simple_rnn(units = units),
         input_shape = c(n_trials, n_info)
       )
     },
     "BiGRU" = {
       RNN <- keras::bidirectional(
         object = RNN,
-        layer = keras::layer_gru(units = units, return_sequences = FALSE),
+          layer = keras::layer_gru(units = units),
         input_shape = c(n_trials, n_info)
       )
     },
     "BiLSTM" = {
       RNN <- keras::bidirectional(
         object = RNN,
-        layer = keras::layer_lstm(units = units, return_sequences = FALSE),
+          layer = keras::layer_lstm(units = units),
         input_shape = c(n_trials, n_info)
       )
     },
-  ) |>
-    # Hidden Layer
-    keras::layer_dense(
-      units = units / 2,
-      activation = "relu"
-    ) |>
+  )
+
+  # Hidden Layer
+  switch(
+    EXPR = as.character(L),
+    "0" = {
+      RNN <- keras::layer_dense(
+        object = RNN,
+        units = units / 2,
+        activation = "relu",
+        kernel_initializer = keras::initializer_he_normal()
+      )
+    },
+    "1" = {
+      RNN <- keras::layer_dense(
+        object = RNN,
+        units = units / 2,
+        activation = "relu",
+        kernel_initializer = keras::initializer_he_normal(),
+        kernel_regularizer = keras::regularizer_l1(penalty)
+      )
+    },
+    "2" = {
+      RNN <- keras::layer_dense(
+        object = RNN,
+        units = units / 2,
+        activation = "relu",
+        kernel_initializer = keras::initializer_he_normal(),
+        kernel_regularizer = keras::regularizer_l2(penalty)
+      )
+    }
+  )
+
+  RNN <- RNN |>
+    # Dropout Layer
+    keras::layer_dropout(rate = dropout) |>
     # Output Layer
     keras::layer_dense(
       units = units_out,
