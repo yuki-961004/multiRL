@@ -207,9 +207,7 @@ multiRL.input <- multiRL::process_1_input(
     free = list(
       alpha = 0.5,
       beta = 0.01,
-      delta = 0,
-      sticky = 100,
-      reset = 999
+      delta = 0
     ),
     constant = list(
       weight = c(1, 0)

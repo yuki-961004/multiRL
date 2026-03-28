@@ -98,6 +98,8 @@ multiRL.model <- multiRL::run_m(
     ),
     constant = list(
       seed = 123,
+      L = 0,
+      penalty = 1,
       Q0 = NA_real_, 
       reset = NA_real_,
       lapse = 0.01,

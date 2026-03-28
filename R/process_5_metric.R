@@ -49,6 +49,8 @@ process_5_metric <- function(
   LL          <- NA_real_
   AIC         <- NA_real_
   BIC         <- NA_real_
+  L           <- output@input@params@constant$L
+  penalty     <- output@input@params@constant$penalty
   
   # for MAP
   priors      <- output@input@priors
@@ -70,7 +72,13 @@ process_5_metric <- function(
     # 如果刺激和反应是一一对应, 才能计算LL
     P <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
     logP <- log(P)
-    LL <- sum(logP)
+
+    LL <- sum(logP) - switch(
+      EXPR = as.character(L),
+      "0" = 0,
+      "1" = penalty * sum(abs(unlist(params))),
+      "2" = penalty * sum(unlist(params) ^ 2),
+    )
     AIC <- 2 * n_params - 2 * LL
     BIC <- n_params * log(n_rows) - 2 * LL
 

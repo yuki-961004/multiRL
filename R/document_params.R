@@ -123,6 +123,7 @@
 #' \subsection{constant}{
 #' \itemize{
 #'    \item \code{seed [int]}
+#'
 #'          This seed controls the random choice of actions in the
 #'          reinforcement learning model when the \code{sample()} function is
 #'          called to select actions based on probabilities estimated by the
@@ -131,6 +132,27 @@
 #'          need to modify this value; please keep it at the default value of
 #'          \code{123}.
 #'
+#'    \item \code{L [int]}
+#'
+#'          This parameter determines the type of regularization applied to the
+#'          log-likelihood to penalize model complexity, which helps prevent
+#'          overfitting. The default is \code{0}.
+#'          \itemize{
+#'            \item \code{L = 0}: No regularization.
+#'            \item \code{L = 1}: L1 regularization (Lasso), which adds a
+#'                  penalty proportional to the sum of the absolute values of 
+#'                  the free parameters.
+#'            \item \code{L = 2}: L2 regularization (Ridge), which adds a
+#'                  penalty proportional to the sum of the squared values of 
+#'                  the free parameters.
+#'          }
+#'
+#'    \item \code{penalty [double]}
+#'
+#'          This parameter specifies the strength of the regularization, acting
+#'          as a multiplier for the penalty term defined by \code{L}. A larger
+#'          value imposes a stronger penalty on the free parameters. The
+#'          default value is \code{1}.
 #'
 #'    \item \code{Q0 [double]}
 #'
@@ -295,6 +317,8 @@
 #'    ),
 #'    constant = list(
 #'      seed = 123,
+#'      L = 0,
+#'      penalty = 1,
 #'      Q0 = NA_real_,
 #'      reset = NA_real_,
 #'      lapse = 0.01,
