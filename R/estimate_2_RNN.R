@@ -182,13 +182,19 @@ estimate_2_RNN <- function(
             
             sub_data <- data[data[, subid] == j, ]
             
-            n_info   <- length(info)
             n_params <- length(priors[[i]])
             n_trials <- nrow(sub_data)
             
             # 预测真实数据对应的参数
+            sub_matrix <- .df2matrix(df = sub_data)
+            mat_cols <- colnames(sub_matrix)
+            split_info <- unlist(lapply(info, function(col) {
+              grep(paste0("^", col, "(_[0-9]+)?$"), mat_cols, value = TRUE)
+            }))
+            n_info <- length(split_info)
+            
             X_sub <- array(NA, dim = c(1, n_trials, n_info))
-            X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
+            X_sub[1, , ] <- sub_matrix[, split_info, drop = FALSE]
             X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
             X_pred <- .name_rnnouts(
               X_pred = X_pred, loss = loss, param_names = names(priors[[i]])
@@ -203,7 +209,6 @@ estimate_2_RNN <- function(
             
             sub_data <- data[data[, subid] == j, ]
             
-            n_info   <- length(info)
             n_params <- length(priors[[i]])
             n_trials <- nrow(sub_data)
             
@@ -219,8 +224,15 @@ estimate_2_RNN <- function(
               control = control
             )
             # 预测真实数据对应的参数
+            sub_matrix <- .df2matrix(df = sub_data)
+            mat_cols <- colnames(sub_matrix)
+            split_info <- unlist(lapply(info, function(col) {
+              grep(paste0("^", col, "(_[0-9]+)?$"), mat_cols, value = TRUE)
+            }))
+            n_info <- length(split_info)
+            
             X_sub <- array(NA, dim = c(1, n_trials, n_info))
-            X_sub[1, , ] <- .df2matrix(df = sub_data)[, info, drop = FALSE]
+            X_sub[1, , ] <- sub_matrix[, split_info, drop = FALSE]
             X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
             X_pred <- .name_rnnouts(
               X_pred = X_pred, loss = loss, param_names = names(priors[[i]])

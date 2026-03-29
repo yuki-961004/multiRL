@@ -78,14 +78,20 @@ engine_RNN <- function(
 
   n_sample <- sample
   n_trials <- nrow(data)
-  n_info <- length(info)
   n_params <- length(priors)
+
+  # 动态获取拆分后的列名 (匹配原列名或拆分衍生的 _1, _2 等)
+  mat_cols <- colnames(list_simulated[[1]]$matrix)
+  split_info <- unlist(lapply(info, function(col) {
+    grep(paste0("^", col, "(_[0-9]+)?$"), mat_cols, value = TRUE)
+  }))
+  n_info <- length(split_info)
 
   # Input: n_sample, n_trials, n_info
   X <- array(NA, dim = c(n_sample, n_trials, n_info))
 
   for (i in 1:n_sample) {
-    X[i, , ] <- list_simulated[[i]]$matrix[, info, drop = FALSE]
+    X[i, , ] <- list_simulated[[i]]$matrix[, split_info, drop = FALSE]
   }
 
   # Output: n_sample, n_params

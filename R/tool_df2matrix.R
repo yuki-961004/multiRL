@@ -1,42 +1,50 @@
 .df2matrix <- function(df) {
-  # 因为RNN只接受全数字的矩阵, 所以需要将表格中的字符串按照唯一值转换成字符串
-
-  # 提取所有列，转为字符后拼成一个向量
+  out_df <- list()
+  
   all_values <- unlist(lapply(df, as.character))
   
-  # 检查哪些可以转为数字
   suppressWarnings(num_values <- as.numeric(all_values))
   
-  # 提取非数字的唯一字符串并按字母排序
-  uniq_str <- sort(unique(all_values[is.na(num_values)]))
+  # 提取非数字的字符串，并按照 "_" 拆分，获取所有基础词汇 (Sub-tokens)
+  str_values <- all_values[is.na(num_values) & !is.na(all_values)]
+  all_tokens <- unlist(strsplit(str_values, "_"))
   
-  # 建立全局映射表（字典）
-  mapping <- stats::setNames(seq_along(uniq_str), uniq_str)
+  # 建立全局基础词汇映射表（字典），这样 "Right" 无论出现在哪，数字都一样
+  uniq_tokens <- sort(unique(all_tokens))
+  mapping <- stats::setNames(seq_along(uniq_tokens), uniq_tokens)
   
-  # 对每一列进行转换
-  df[] <- lapply(df, function(col) {
-    # 如果本身是数字型，直接返回
-    if (is.numeric(col)) return(col)
+  for (col_name in names(df)) {
+    col_data <- df[[col_name]]
     
-    # 转字符
-    col_char <- as.character(col)
+    if (is.numeric(col_data)) {
+      out_df[[col_name]] <- col_data
+      next
+    }
     
-    # 尝试转换为数字
+    col_char <- as.character(col_data)
     suppressWarnings(num_col <- as.numeric(col_char))
     
-    # 如果全是数字字符，直接返回数值
-    if (!any(is.na(num_col))) return(num_col)
+    if (!any(is.na(num_col) & !is.na(col_data))) {
+      out_df[[col_name]] <- num_col
+      next
+    }
     
-    # 否则用全局映射表替换
-    col_char[col_char %in% names(mapping)] <- as.character(
-      mapping[col_char[col_char %in% names(mapping)]]
-    )
+    # 按 "_" 拆分。如果是单独的词(如Action)，max_len为1；如果是组合词，会自动分列
+    split_list <- strsplit(col_char, "_")
+    max_len <- max(sapply(split_list, length), na.rm = TRUE)
     
-    # 再转为数值
-    as.numeric(col_char)
-  })
+    if (max_len <= 1) {
+      out_df[[col_name]] <- as.numeric(mapping[col_char])
+    } else {
+      for (i in 1:max_len) {
+        # 提取每一行的第 i 个元素，缺失补 NA
+        sub_col <- sapply(split_list, function(x) {
+          if (length(x) >= i) x[i] else NA_character_
+        })
+        out_df[[paste0(col_name, "_", i)]] <- as.numeric(mapping[sub_col])
+      }
+    }
+  }
   
-  df <- as.matrix(df)
-  
-  return(df)
+  return(as.matrix(as.data.frame(out_df)))
 }

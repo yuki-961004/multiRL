@@ -222,6 +222,50 @@ colnames = list(
 ```
 
 ```{r}
+data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ]
+behrule = list(
+  cue = c("Red", "Yellow", "Green", "Blue"),
+  rsp = c("Up", "Down", "Left", "Right")
+)
+colnames = list(
+  subid = "Subject", block = "Block", trial = "Trial",
+  object = NA_character_, reward = NA_character_, action = "Action"
+)
+settings = list(
+  name = "TD",
+  mode = "simulating",
+  estimate = "RNN",
+  policy = "on"
+)
+```
+
+```{r}
+multiRL.env <- multiRL::estimate_0_ENV(
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+  settings = settings,
+)
+```
+
+```{r}
+list_simulated <- multiRL::estimate_2_SBI(
+  model = multiRL::TD,
+  env = multiRL.env,
+  priors = list(
+    alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+    beta = function(x) {stats::rexp(n = 1, rate = 1)}
+  ),
+  control = list(
+    core = 10, sample = 100, train = 100,
+    #tol = 0.5, reduction = "PCA", 
+    layer = "GRU", loss = "MSE", check = FALSE, dropout = 0, L = 2
+  )
+)
+
+```
+
+```{r}
 reticulate::use_condaenv(condaenv = "tf-gpu", required = TRUE)
 ```
 
