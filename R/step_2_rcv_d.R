@@ -209,6 +209,8 @@ rcv_d <- function(
     penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
+    keras = 2,
+    backend = "tensorflow",
     check = TRUE
   )
   control <- utils::modifyList(x = default, val = control, keep.null = TRUE)

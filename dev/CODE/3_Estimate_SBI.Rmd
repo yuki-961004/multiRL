@@ -289,9 +289,10 @@ recovery.RNN <- multiRL::rcv_d(
   lowers = list(c(0, 0)),
   uppers = list(c(1, 10)),
   control = list(
-    core = 10, sample = 100, train = 1000,
+    core = 10, sample = 100, train = 100,
     #tol = 0.5, reduction = "PCA", 
-    layer = "GRU", loss = "MSE", check = FALSE, dropout = 0, L = 2
+    layer = "GRU", loss = "MSE", check = FALSE, dropout = 0, L = 2,
+    keras = 2, backend = "tensorflow"
   )
 )
 ```

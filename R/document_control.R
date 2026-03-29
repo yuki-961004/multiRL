@@ -350,6 +350,21 @@
 #'          "textbook" multiple times. Each epoch means the model has seen
 #'          every training sample once. More epochs allow for more training but
 #'          increase the risk of overfitting.
+#'          
+#'     \item \code{keras [int]}: 
+#'     
+#'          The version of Keras to be used for model construction. Currently 
+#'          supports \code{2} (Legacy Keras) and \code{3} (Keras 3). Note that 
+#'          \code{keras = 3} enables multi-backend support via the 
+#'          \code{backend} parameter.
+#'          
+#'     \item \code{backend [Character]}: 
+#'     
+#'          The deep learning framework to serve as the computation engine 
+#'          when \code{keras = 3}. Options include \code{"tensorflow"}, 
+#'          \code{"jax"}, and \code{"torch"}. This parameter is ignored 
+#'          if \code{keras = 2}, as it defaults to the \code{"tensorflow"} 
+#'          backend.
 #'
 #'    \item \code{check [logical]}
 #'

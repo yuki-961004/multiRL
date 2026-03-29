@@ -56,4 +56,4 @@ Suggests:
   cmaes,
   nloptr,
   abc, pls,
-  tensorflow, keras, reticulate
+  reticulate, keras, keras3

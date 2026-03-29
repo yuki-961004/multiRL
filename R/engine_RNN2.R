@@ -38,7 +38,7 @@
 #'  on a new data frame, estimating the input parameters that are most likely
 #'  to have generated the given dataset.
 #'
-engine_RNN <- function(
+engine_RNN2 <- function(
   data,
   colnames,
   behrule,
@@ -112,11 +112,7 @@ engine_RNN <- function(
   Y_train <- Y[train_indices, , drop = FALSE]
   Y_valid <- Y[valid_indices, , drop = FALSE]
 
-  ############################## [tensorflow] ####################################
-
-  set.seed(seed)
-  tensorflow::tf$random$set_seed(seed)
-  tensorflow::tf$get_logger()$setLevel('ERROR')
+############################# [loss function] ##################################
 
   if (loss == "NLL") {
     units_out <- n_params * 2
@@ -179,7 +175,7 @@ engine_RNN <- function(
       mix_weights <- keras::k_softmax(pi_logits, axis = -1L)
 
       # 扩展真实Y值的维度以便广播计算 (batch_size, n_params, 1)
-      y_true_exp <- tensorflow::tf$expand_dims(y_true, axis = -1L)
+      y_true_exp <- keras::k_expand_dims(y_true, axis = -1L)
 
       # 计算高斯分布的对数概率
       cst <- 0.5 * log(2 * base::pi)
@@ -192,7 +188,7 @@ engine_RNN <- function(
       weighted_log_prob <- log_mix_weights + log_prob
 
       # Log-Sum-Exp 技巧合并K个成分，防止数值溢出
-      log_mix_prob <- tensorflow::tf$reduce_logsumexp(
+      log_mix_prob <- keras::k_logsumexp(
         weighted_log_prob,
         axis = -1L
       )
@@ -210,6 +206,8 @@ engine_RNN <- function(
     units_out <- n_params
     loss_func <- "mean_squared_error"
   }
+
+################################# [RNN] ########################################
 
   # Initialize Model (sequential decision making)
   RNN <- keras::keras_model_sequential()
@@ -248,14 +246,14 @@ engine_RNN <- function(
     "BiGRU" = {
       RNN <- keras::bidirectional(
         object = RNN,
-          layer = keras::layer_gru(units = units),
+        layer = keras::layer_gru(units = units),
         input_shape = c(n_trials, n_info)
       )
     },
     "BiLSTM" = {
       RNN <- keras::bidirectional(
         object = RNN,
-          layer = keras::layer_lstm(units = units),
+        layer = keras::layer_lstm(units = units),
         input_shape = c(n_trials, n_info)
       )
     },

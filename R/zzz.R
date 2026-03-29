@@ -16,5 +16,5 @@ utils::globalVariables(c(
   "tol", "reduction", "ncomp", "metric",
   # RNN,
   "layer", "loss", "info", "units", "dropout", "L", "penalty", 
-  "batch_size", "epochs", "check"
+  "batch_size", "epochs", "keras", "backend", "check"
 ))
