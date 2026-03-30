@@ -244,7 +244,7 @@ estimate_2_ABC <- function(
                 param_names = names(priors[[i]])
               )
               opt_params_j <- .fix_params(
-                params_df = opt_params_j, param_names = names(priors[[i]]),
+                params_df = t(opt_params_j), param_names = names(priors[[i]]),
                 lower = lowers[[i]], upper = uppers[[i]], dash = dash
               )
               p()
