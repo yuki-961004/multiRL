@@ -11,11 +11,10 @@
 #'    enables flexible and consistent parameter estimation across different
 #'    optimization backends.
 #'
-#'
-#' @param model
-#'  Reinforcement Learning Model
 #' @param env
 #'  multiRL.env
+#' @param model
+#'  Reinforcement Learning Model
 #' @param lower
 #'  Lower bound of free parameters
 #' @param upper
@@ -30,12 +29,12 @@
 #'  generated using the estimated optimal parameters.
 #'
 estimate_1_LBI <- function(
-  model,
-  env,
-  lower,
-  upper,
-  control = list(),
-  ...
+    env,
+    model,
+    lower,
+    upper,
+    control = list(),
+    ...
 ) {
   # 编译对象函数
   model <- compiler::cmpfun(model)
@@ -51,11 +50,11 @@ estimate_1_LBI <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # LBI
     algorithm = "NLOPT_GN_MLSL",
     pars = NA,
-    size = 50,
-    dash = 1e-5
+    size = 50
   )
   control <- utils::modifyList(x = default, val = control, keep.null = TRUE)
 

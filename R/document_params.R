@@ -132,20 +132,26 @@
 #'          need to modify this value; please keep it at the default value of
 #'          \code{123}.
 #'
-#'    \item \code{L [int]}
+#'   \item \code{L [numeric]}
 #'
-#'          This parameter determines the type of regularization applied to the
-#'          log-likelihood to penalize model complexity, which helps prevent
-#'          overfitting. The default is \code{0}.
-#'          \itemize{
-#'            \item \code{L = 0}: No regularization.
-#'            \item \code{L = 1}: L1 regularization (Lasso), which adds a
-#'                  penalty proportional to the sum of the absolute values of 
-#'                  the free parameters.
-#'            \item \code{L = 2}: L2 regularization (Ridge), which adds a
-#'                  penalty proportional to the sum of the squared values of 
-#'                  the free parameters.
-#'          }
+#'         This parameter determines the type of regularization applied to the
+#'         log-likelihood to penalize model complexity, which helps prevent
+#'         overfitting. The default is \code{NA_real_}, meaning no 
+#'         regularization is applied. Examples of valid inputs include:
+#'         \itemize{
+#'           \item \code{L = 0}: L0 regularization, which adds a penalty
+#'                 proportional to the total number of free parameters.
+#'           \item \code{L = 1}: L1 regularization (Lasso), which adds a
+#'                 penalty proportional to the sum of the absolute values of
+#'                 the free parameters.
+#'           \item \code{L = 2}: L2 regularization (Ridge), which adds a
+#'                 penalty proportional to the sum of the squared values of
+#'                 the free parameters.
+#'           \item \code{L = p}: Lp regularization, where \code{p} is any
+#'                 numeric value. The penalty is proportional to the sum of
+#'                 the \code{p}-th power of the absolute values of the free
+#'                 parameters.
+#'         }
 #'
 #'    \item \code{penalty [double]}
 #'

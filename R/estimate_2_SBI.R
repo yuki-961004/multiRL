@@ -10,10 +10,10 @@
 #'    input parameters using user-specified distributions and produces 
 #'    simulated data based on these parameters.
 #'
-#' @param model 
-#'  Reinforcement Learning Model
 #' @param env 
 #'  multiRL.env
+#' @param model 
+#'  Reinforcement Learning Model
 #' @param priors 
 #'  Prior probability density function of the free parameters,
 #'    see \link[multiRL]{priors}
@@ -27,8 +27,8 @@
 #'   using randomly sampled parameters.
 #' 
 estimate_2_SBI <- function(
-    model,
     env,
+    model,
     priors,
     control = list(),
     ...
@@ -46,6 +46,7 @@ estimate_2_SBI <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # SBI
     train = 1000
     #scope = "individual"

@@ -107,7 +107,7 @@ process_1_input <- function(
     ),
     constant = list(
       seed = 123,
-      L = 0,
+      L = NA_real_,
       penalty = 1,
       Q0 = NA_real_, 
       reset = NA_real_,

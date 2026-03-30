@@ -47,20 +47,20 @@
 #'  the estimated optimal parameters and associated model fit metrics.
 #'
 estimate_1_MAP <- function(
-  data,
-  colnames,
-  behrule,
-  ids = NULL,
-
-  models,
-  funcs = NULL,
-  priors,
-  settings = NULL,
-
-  lowers,
-  uppers,
-  control,
-  ...
+    data,
+    colnames,
+    behrule,
+    ids = NULL,
+  
+    models,
+    funcs = NULL,
+    priors,
+    settings = NULL,
+  
+    lowers,
+    uppers,
+    control,
+    ...
 ) {
   ################################ [default] #####################################
 
@@ -116,11 +116,11 @@ estimate_1_MAP <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # LBI
     algorithm = "NLOPT_GN_MLSL",
     pars = NA,
     size = 50,
-    dash = 1e-5,
     # MAP
     iter = c(100, 10),
     diff = 0.001,
@@ -211,8 +211,8 @@ estimate_1_MAP <- function(
               settings = settings[[i]]
             )
             out <- estimate_1_LBI(
-              model = models[[i]],
               env = env,
+              model = models[[i]],
               lower = lowers[[i]],
               upper = uppers[[i]],
               control = control
@@ -279,8 +279,8 @@ estimate_1_MAP <- function(
                 settings = settings[[i]]
               )
               out <- estimate_1_LBI(
-                model = models[[i]],
                 env = env,
+                model = models[[i]],
                 lower = lowers[[i]],
                 upper = uppers[[i]],
                 control = control

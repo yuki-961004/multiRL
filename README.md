@@ -121,7 +121,7 @@ $$
   W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
 $$
 
-### Multiple Methods
+### Multiple Estimators
 
 | Category | Method | Supported Options |
 | :--- | :--- | :--- |

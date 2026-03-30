@@ -181,11 +181,11 @@ rcv_d <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # LBI
     algorithm = "NLOPT_GN_MLSL",
     pars = NA,
     size = 50,
-    dash = 1e-5,
     # MLE
     iter = 10,
     # MAP
@@ -205,7 +205,7 @@ rcv_d <- function(
     info = c(colnames$object, colnames$action),
     units = 128,
     dropout = 0,
-    L = 0,
+    L = NA_character_,
     penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
@@ -253,9 +253,11 @@ rcv_d <- function(
 
     multiRL.env <- estimate_0_ENV(
       data = data,
-      behrule = behrule,
       colnames = colnames,
-      settings = sim_settings[[i]],
+      behrule = behrule,
+      funcs = funcs[[i]],
+      priors = sim_priors[[i]],
+      settings = sim_settings[[i]]
     )
 
     list_simulated <- estimate_2_SBI(
@@ -273,15 +275,18 @@ rcv_d <- function(
     ############################## [recovery data] #################################
 
     list_recovery[[i]] <- estimation_methods(
+      estimate = estimate,
+      
       data = simulated_data[[i]],
       behrule = behrule,
-      ids = NULL,
       colnames = colnames,
+      ids = NULL,
+      
+      models = models,
       funcs = funcs,
       priors = fit_priors,
       settings = fit_settings,
-      models = models,
-      estimate = estimate,
+
       lowers = lowers,
       uppers = uppers,
       control = control

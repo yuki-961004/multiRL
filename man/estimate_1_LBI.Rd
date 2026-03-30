@@ -4,12 +4,12 @@
 \alias{estimate_1_LBI}
 \title{Likelihood-Based Inference (LBI)}
 \usage{
-estimate_1_LBI(model, env, lower, upper, control = list(), ...)
+estimate_1_LBI(env, model, lower, upper, control = list(), ...)
 }
 \arguments{
-\item{model}{Reinforcement Learning Model}
-
 \item{env}{multiRL.env}
+
+\item{model}{Reinforcement Learning Model}
 
 \item{lower}{Lower bound of free parameters}
 

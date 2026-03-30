@@ -144,11 +144,11 @@ fit_p <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # LBI
     algorithm = "NLOPT_GN_MLSL",
     pars = NA,
     size = 50,
-    dash = 1e-5,
     # MLE
     iter = 10,
     # MAP
@@ -168,7 +168,7 @@ fit_p <- function(
     info = c(colnames$object, colnames$action),
     units = 128,
     dropout = 0,
-    L = 0,
+    L = NA_character_,
     penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
@@ -200,15 +200,18 @@ fit_p <- function(
   ############################### [results] ######################################
 
   fitting <- estimation_methods(
+    estimate = estimate,
+    
     data = data,
+    colnames = colnames,
     behrule = behrule,
     ids = ids,
-    colnames = colnames,
+    
+    models = models,
     funcs = funcs,
     priors = fit_priors,
     settings = fit_settings,
-    models = models,
-    estimate = estimate,
+    
     lowers = lowers,
     uppers = uppers,
     control = control

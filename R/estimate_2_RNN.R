@@ -28,6 +28,10 @@
 #' @param settings 
 #'  Other model settings, 
 #'    see \link[multiRL]{settings}
+#' @param lowers
+#'  Lower bound of free parameters in each model.
+#' @param uppers
+#'  Upper bound of free parameters in each model.
 #' @param control 
 #'  Settings manage various aspects of the iterative process,
 #'    see \link[multiRL]{control}
@@ -47,7 +51,9 @@ estimate_2_RNN <- function(
     funcs = NULL,
     priors,
     settings,
-
+    
+    lowers,
+    uppers,
     control,
     ...
 ){
@@ -105,6 +111,7 @@ estimate_2_RNN <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # SBI
     train = 1000,
     scope = "individual",
@@ -114,7 +121,7 @@ estimate_2_RNN <- function(
     info = c(colnames$object, colnames$action),
     units = 128,
     dropout = 0,
-    L = 0,
+    L = NA_character_,
     penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
@@ -214,6 +221,10 @@ estimate_2_RNN <- function(
             X_pred <- .name_rnnouts(
               X_pred = X_pred, loss = loss, param_names = names(priors[[i]])
             )
+            X_pred <- .fix_params(
+              params_df = X_pred, param_names = names(priors[[i]]),
+              lower = lowers[[i]], upper = uppers[[i]], dash = dash
+            )
             opt_params[[j]] <- X_pred
             p()
           }
@@ -265,6 +276,10 @@ estimate_2_RNN <- function(
             X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
             X_pred <- .name_rnnouts(
               X_pred = X_pred, loss = loss, param_names = names(priors[[i]])
+            )
+            X_pred <- .fix_params(
+              params_df = X_pred, param_names = names(priors[[i]]),
+              lower = lowers[[i]], upper = uppers[[i]], dash = dash
             )
             opt_params[[j]] <- X_pred
             p()

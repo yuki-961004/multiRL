@@ -86,9 +86,9 @@ estimation_methods <- function(
     "MAP" = {
       estimate_1_MAP(
         data = data,
+        colnames = colnames,
         behrule = behrule,
         ids = ids,
-        colnames = colnames,
 
         models = models,
         funcs = funcs,
@@ -103,9 +103,9 @@ estimation_methods <- function(
     "ABC" = {
       estimate_2_ABC(
         data = data,
+        colnames = colnames,
         behrule = behrule,
         ids = ids,
-        colnames = colnames,
 
         models = models,
         funcs = funcs,
@@ -120,15 +120,17 @@ estimation_methods <- function(
     "RNN" = {
       estimate_2_RNN(
         data = data,
+        colnames = colnames,
         behrule = behrule,
         ids = ids,
-        colnames = colnames,
 
         models = models,
         funcs = funcs,
         priors = priors,
         settings = settings,
 
+        lowers = lowers,
+        uppers = uppers,
         control = control
       )
     },

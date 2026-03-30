@@ -42,20 +42,20 @@
 #'  the estimated optimal parameters and associated model fit metrics.
 #'
 estimate_2_ABC <- function(
-  data,
-  colnames,
-  behrule,
-  ids = NULL,
-
-  models,
-  funcs = NULL,
-  priors,
-  settings = NULL,
-
-  lowers,
-  uppers,
-  control,
-  ...
+    data,
+    colnames,
+    behrule,
+    ids = NULL,
+  
+    models,
+    funcs = NULL,
+    priors,
+    settings = NULL,
+  
+    lowers,
+    uppers,
+    control,
+    ...
 ) {
   ################################ [default] #####################################
 
@@ -112,6 +112,7 @@ estimate_2_ABC <- function(
     seed = 123,
     core = 1,
     sample = 100,
+    dash = 1e-5,
     # SBI
     train = 1000,
     scope = "individual",
@@ -192,12 +193,14 @@ estimate_2_ABC <- function(
         if (scope == "shared") {
           ABC <- engine_ABC(
             data = data[data[, subid] == 1, ],
-            behrule = behrule,
             colnames = colnames,
-            funcs = funcs[[i]],
-            settings = settings[[i]],
-            priors = priors[[i]],
+            behrule = behrule,
+            
             model = models[[i]],
+            funcs = funcs[[i]],
+            priors = priors[[i]],
+            settings = settings[[i]],
+            
             control = control
           )
 
@@ -237,9 +240,12 @@ estimate_2_ABC <- function(
               )
 
               opt_params_j <- .name_abcouts(
-                summary = abc_sum,
-                metric = metric,
+                summary = abc_sum, metric = metric, 
                 param_names = names(priors[[i]])
+              )
+              opt_params_j <- .fix_params(
+                params_df = opt_params_j, param_names = names(priors[[i]]),
+                lower = lowers[[i]], upper = uppers[[i]], dash = dash
               )
               p()
               return(opt_params_j)
@@ -254,12 +260,14 @@ estimate_2_ABC <- function(
 
               ABC <- engine_ABC(
                 data = sub_data,
-                behrule = behrule,
                 colnames = colnames,
-                funcs = funcs[[i]],
-                settings = settings[[i]],
-                priors = priors[[i]],
+                behrule = behrule,
+                
                 model = models[[i]],
+                funcs = funcs[[i]],
+                priors = priors[[i]],
+                settings = settings[[i]],
+                
                 control = control
               )
 
@@ -292,9 +300,12 @@ estimate_2_ABC <- function(
               )
 
               opt_params_j <- .name_abcouts(
-                summary = abc_sum,
-                metric = metric,
+                summary = abc_sum, metric = metric,
                 param_names = names(priors[[i]])
+              )
+              opt_params_j <- .fix_params(
+                params_df = opt_params_j, param_names = names(priors[[i]]),
+                lower = lowers[[i]], upper = uppers[[i]], dash = dash
               )
               p()
               return(opt_params_j)

@@ -45,8 +45,8 @@ engine_ABC <- function(
     model,
     funcs = NULL,
     priors,
-    
     settings = NULL,
+    
     control = control,
     ...
 ){
@@ -60,17 +60,18 @@ engine_ABC <- function(
   
 ############################### [Simulate] #####################################
   
-  multiRL.env <- estimate_0_ENV(
+  env <- estimate_0_ENV(
     data = data,
-    behrule = behrule,
     colnames = colnames,
+    behrule = behrule,
     funcs = funcs,
+    priors = priors,
     settings = settings,
   )
   
   list_simulated <- estimate_2_SBI(
+    env = env,
     model = model,
-    env = multiRL.env,
     priors = priors,
     control = control
   )

@@ -315,16 +315,18 @@
          overfitting in RNNs. During each training iteration, a predefined
          percentage of neurons (units) are randomly "dropped" or deactivated
          by setting their activations to zero.</p></li>
-<li><p><code>L [int]</code></p>
+<li><p><code>L [Character]</code></p>
 <p>This parameter determines the type of regularization applied to the
-         log-likelihood to penalize model complexity, which helps prevent
-         overfitting. The default is <code>0</code>.</p><ul><li><p><code>L = 0</code>: No regularization.</p></li>
-<li><p><code>L = 1</code>: L1 regularization (Lasso), which adds a
-                 penalty proportional to the sum of the absolute values of
-                 the free parameters.</p></li>
+        log-likelihood to penalize model complexity, which helps prevent
+        overfitting. The default is <code>NA_character_</code>, meaning no
+        regularization is applied. Supported values include:</p><ul><li><p><code>L = 1</code>: L1 regularization (Lasso), which adds a
+                penalty proportional to the sum of the absolute values of
+                the free parameters.</p></li>
 <li><p><code>L = 2</code>: L2 regularization (Ridge), which adds a
-                 penalty proportional to the sum of the squared values of
-                 the free parameters.</p></li>
+                penalty proportional to the sum of the squared values of
+                the free parameters.</p></li>
+<li><p><code>L = 12</code>: Elastic Net regularization, which applies
+                both L1 and L2 penalties simultaneously.</p></li>
 </ul></li>
 <li><p><code>penalty [double]</code></p>
 <p>This parameter specifies the strength of the regularization, acting
@@ -366,46 +368,45 @@
     <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a></h2>
 
 
-<div class="sourceCode"><pre><code> # default values
- control = list(
-   # General
-   seed = 123,
-   core = 1,
-   sample = 100,
-   # LBI
-   algorithm = "NLOPT_GN_MLSL",
-   pars = NA,
-   size = 50,
-   dash = 1e-5,
-   # MLE
-   iter = 10,
-   # MAP
-   diff = 0.001,
-   patience = 10,
-   # SBI
-   sample = 100,
-   train = 1000,
-   scope = "individual",
-   # ABC
-   tol = 0.1,
-   reduction = "PCA",
-   ncomp = NULL,
-   metric = "mode",
-   # RNN
-   layer = "GRU",
-   loss = "MSE",
-   info = c(colnames$object, colnames$action),
-   units = 128,
-   dropout = 0
-   L = 0,
-   penalty = 1e-5,
-   batch_size = 10,
-   epochs = 100,
-   keras3 = FALSE,
-   backend = "tensorflow",
-   check = TRUE
- )
-</code></pre></div>
+<div class="sourceCode"><pre><code><span> <span class="co"># default values</span></span>
+<span> <span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>   <span class="co"># General</span></span>
+<span>   seed <span class="op">=</span> <span class="fl">123</span>,</span>
+<span>   core <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>   sample <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>   <span class="co"># LBI</span></span>
+<span>   algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
+<span>   pars <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>   size <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>   dash <span class="op">=</span> <span class="fl">1e-5</span>,</span>
+<span>   <span class="co"># MLE</span></span>
+<span>   iter <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>   <span class="co"># MAP</span></span>
+<span>   diff <span class="op">=</span> <span class="fl">0.001</span>,</span>
+<span>   patience <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>   <span class="co"># SBI</span></span>
+<span>   sample <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>   train <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>   scope <span class="op">=</span> <span class="st">"individual"</span>,</span>
+<span>   <span class="co"># ABC</span></span>
+<span>   tol <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>   reduction <span class="op">=</span> <span class="st">"PCA"</span>,</span>
+<span>   ncomp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>   metric <span class="op">=</span> <span class="st">"mode"</span>,</span>
+<span>   <span class="co"># RNN</span></span>
+<span>   layer <span class="op">=</span> <span class="st">"GRU"</span>,</span>
+<span>   loss <span class="op">=</span> <span class="st">"MSE"</span>,</span>
+<span>   info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">colnames</span><span class="op">$</span><span class="va">object</span>, <span class="va">colnames</span><span class="op">$</span><span class="va">action</span><span class="op">)</span>,</span>
+<span>   units <span class="op">=</span> <span class="fl">128</span>,</span>
+<span>   dropout <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>   L <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>   penalty <span class="op">=</span> <span class="fl">1e-5</span>,</span>
+<span>   batch_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>   epochs <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>   keras3 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>   backend <span class="op">=</span> <span class="st">"tensorflow"</span>,</span>
+<span>   check <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span> <span class="op">)</span></span></code></pre></div>
 
     </div>
 

@@ -73,12 +73,7 @@ process_5_metric <- function(
     P <- prob[cbind(seq_len(nrow(prob)), match(action, colnames(prob)))]
     logP <- log(P)
 
-    LL <- sum(logP) - switch(
-      EXPR = as.character(L),
-      "0" = 0,
-      "1" = penalty * sum(abs(unlist(params))),
-      "2" = penalty * sum(unlist(params) ^ 2),
-    )
+    LL <- sum(logP) - if (is.na(L)) 0 else penalty * sum(abs(unlist(params)) ^ L)
     AIC <- 2 * n_params - 2 * LL
     BIC <- n_params * log(n_rows) - 2 * LL
 

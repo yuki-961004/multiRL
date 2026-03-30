@@ -4,12 +4,12 @@
 \alias{estimate_2_SBI}
 \title{Simulated-Based Inference (SBI)}
 \usage{
-estimate_2_SBI(model, env, priors, control = list(), ...)
+estimate_2_SBI(env, model, priors, control = list(), ...)
 }
 \arguments{
-\item{model}{Reinforcement Learning Model}
-
 \item{env}{multiRL.env}
+
+\item{model}{Reinforcement Learning Model}
 
 \item{priors}{Prior probability density function of the free parameters,
 see \link[multiRL]{priors}}

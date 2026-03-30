@@ -324,20 +324,22 @@ The \code{control} argument is a mandatory list used to customize and manage
          percentage of neurons (units) are randomly "dropped" or deactivated 
          by setting their activations to zero.
 
-   \item \code{L [int]}
+  \item \code{L [Character]}
 
-         This parameter determines the type of regularization applied to the
-         log-likelihood to penalize model complexity, which helps prevent
-         overfitting. The default is \code{0}.
-         \itemize{
-           \item \code{L = 0}: No regularization.
-           \item \code{L = 1}: L1 regularization (Lasso), which adds a
-                 penalty proportional to the sum of the absolute values of 
-                 the free parameters.
-           \item \code{L = 2}: L2 regularization (Ridge), which adds a
-                 penalty proportional to the sum of the squared values of 
-                 the free parameters.
-         }
+        This parameter determines the type of regularization applied to the
+        log-likelihood to penalize model complexity, which helps prevent
+        overfitting. The default is \code{NA_character_}, meaning no
+        regularization is applied. Supported values include:
+        \itemize{
+          \item \code{L = 1}: L1 regularization (Lasso), which adds a
+                penalty proportional to the sum of the absolute values of
+                the free parameters.
+          \item \code{L = 2}: L2 regularization (Ridge), which adds a
+                penalty proportional to the sum of the squared values of
+                the free parameters.
+          \item \code{L = 12}: Elastic Net regularization, which applies
+                both L1 and L2 penalties simultaneously.
+        }
 
    \item \code{penalty [double]}
 
@@ -420,8 +422,8 @@ The \code{control} argument is a mandatory list used to customize and manage
    loss = "MSE",
    info = c(colnames$object, colnames$action),
    units = 128,
-   dropout = 0
-   L = 0,
+   dropout = 0,
+   L = NA_character_,
    penalty = 1e-5,
    batch_size = 10,
    epochs = 100,

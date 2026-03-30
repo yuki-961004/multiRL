@@ -13,6 +13,8 @@ estimate_2_RNN(
   funcs = NULL,
   priors,
   settings,
+  lowers,
+  uppers,
   control,
   ...
 )
@@ -39,6 +41,10 @@ see \link[multiRL]{priors}}
 
 \item{settings}{Other model settings, 
 see \link[multiRL]{settings}}
+
+\item{lowers}{Lower bound of free parameters in each model.}
+
+\item{uppers}{Upper bound of free parameters in each model.}
 
 \item{control}{Settings manage various aspects of the iterative process,
 see \link[multiRL]{control}}

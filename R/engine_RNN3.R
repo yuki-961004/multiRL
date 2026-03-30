@@ -59,17 +59,18 @@ engine_RNN3 <- function(
 
 ############################### [Simulate] #####################################
 
-  multiRL.env <- estimate_0_ENV(
+  env <- estimate_0_ENV(
     data = data,
-    behrule = behrule,
     colnames = colnames,
+    behrule = behrule,
     funcs = funcs,
+    priors = priors,
     settings = settings,
   )
-
+  
   list_simulated <- estimate_2_SBI(
+    env = env,
     model = model,
-    env = multiRL.env,
     priors = priors,
     control = control
   )
@@ -260,21 +261,13 @@ engine_RNN3 <- function(
   # Hidden Layer
   switch(
     EXPR = as.character(L),
-    "0" = {
-      RNN <- keras3::layer_dense(
-        object = RNN,
-        units = units / 2,
-        activation = "relu",
-        kernel_initializer = keras3::initializer_he_normal()
-      )
-    },
     "1" = {
       RNN <- keras3::layer_dense(
         object = RNN,
         units = units / 2,
         activation = "relu",
         kernel_initializer = keras3::initializer_he_normal(),
-        kernel_regularizer = keras3::regularizer_l1(penalty)
+        kernel_regularizer = keras3::regularizer_l1(l1 = penalty)
       )
     },
     "2" = {
@@ -283,7 +276,24 @@ engine_RNN3 <- function(
         units = units / 2,
         activation = "relu",
         kernel_initializer = keras3::initializer_he_normal(),
-        kernel_regularizer = keras3::regularizer_l2(penalty)
+        kernel_regularizer = keras3::regularizer_l2(l2 = penalty)
+      )
+    },
+    "12" = {
+      RNN <- keras3::layer_dense(
+        object = RNN,
+        units = units / 2,
+        activation = "relu",
+        kernel_initializer = keras3::initializer_he_normal(),
+        kernel_regularizer = keras3::regularizer_l1_l2(l1 = penalty, l2 = penalty)
+      )
+    },
+    {
+      RNN <- keras3::layer_dense(
+        object = RNN,
+        units = units / 2,
+        activation = "relu",
+        kernel_initializer = keras3::initializer_he_normal()
       )
     }
   )
