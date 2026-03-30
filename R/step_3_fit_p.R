@@ -172,7 +172,7 @@ fit_p <- function(
     penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
-    keras = 2,
+    keras3 = FALSE,
     backend = "tensorflow",
     check = TRUE
   )

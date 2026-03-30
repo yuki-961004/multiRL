@@ -121,6 +121,16 @@ $$
   W_{new} = W_{old} + \zeta \cdot (W_{0} - W_{old})
 $$
 
+### Multiple Methods
+
+| Category | Method | Supported Options |
+| :--- | :--- | :--- |
+| **LBI** Likelihood Based Inference | **MLE** Maximum Likelihood Estimation | [8 Optimization Algorithms](./reference/algorithm.html) |
+| | **MAP** Maximum A Posteriori (EM-MAP) | [8 Optimization Algorithms](./reference/algorithm.html) |
+| **SBI** Simulation Based Inference | **ABC** Approximate Bayesian Computation | [2 Dimension Reduction](./reference/reduction.html) |
+| | **RNN** Recurrent Neural Network | [3 Layers & 6 Loss Functions](./reference/layer.html) |
+
+
 ## Reference  
 
 - Sutton, R. S., & Barto, A. G. (2018). *Reinforcement Learning: An Introduction* (2nd ed). MIT press.  

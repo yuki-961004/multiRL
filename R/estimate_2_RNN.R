@@ -118,7 +118,7 @@ estimate_2_RNN <- function(
     penalty = 1e-5,
     batch_size = 10,
     epochs = 100,
-    keras = 2,
+    keras3 = FALSE,
     backend = "tensorflow",
     check = TRUE
   )
@@ -169,21 +169,7 @@ estimate_2_RNN <- function(
         if ( scope == "shared" ) {
           
           # 只训练一个RNN
-          switch(
-            EXPR = as.character(keras),
-            "2" = {
-              RNN <- engine_RNN2(
-                data = data[data[, subid] == 1, ],
-                behrule = behrule,
-                colnames = colnames,
-                funcs = funcs[[i]],
-                settings = settings[[i]],
-                priors = priors[[i]],
-                model = models[[i]],
-                control = control
-              )
-            },
-            "3" = {
+          if (keras3) {
               RNN <- engine_RNN3(
                 data = data[data[, subid] == 1, ],
                 behrule = behrule,
@@ -194,8 +180,18 @@ estimate_2_RNN <- function(
                 model = models[[i]],
                 control = control
               )
-            },
-          )
+          } else {
+              RNN <- engine_RNN(
+                data = data[data[, subid] == 1, ],
+                behrule = behrule,
+                colnames = colnames,
+                funcs = funcs[[i]],
+                settings = settings[[i]],
+                priors = priors[[i]],
+                model = models[[i]],
+                control = control
+              )
+          }
 
           for (j in ids) {
             
@@ -232,33 +228,29 @@ estimate_2_RNN <- function(
             n_trials <- nrow(sub_data)
             
             # 为每个被试单独训练模型
-            switch(
-              EXPR = as.character(keras),
-              "2" = {
-                RNN <- engine_RNN2(
-                  data = sub_data,
-                  behrule = behrule,
-                  colnames = colnames,
-                  funcs = funcs[[i]],
-                  settings = settings[[i]],
-                  priors = priors[[i]],
-                  model = models[[i]],
-                  control = control
-                )
-              },
-              "3" = {
-                RNN <- engine_RNN3(
-                  data = sub_data,
-                  behrule = behrule,
-                  colnames = colnames,
-                  funcs = funcs[[i]],
-                  settings = settings[[i]],
-                  priors = priors[[i]],
-                  model = models[[i]],
-                  control = control
-                )
-              },
-            )
+            if (keras3) {
+              RNN <- engine_RNN3(
+                data = sub_data,
+                behrule = behrule,
+                colnames = colnames,
+                funcs = funcs[[i]],
+                settings = settings[[i]],
+                priors = priors[[i]],
+                model = models[[i]],
+                control = control
+              )
+            } else {
+              RNN <- engine_RNN(
+                data = sub_data,
+                behrule = behrule,
+                colnames = colnames,
+                funcs = funcs[[i]],
+                settings = settings[[i]],
+                priors = priors[[i]],
+                model = models[[i]],
+                control = control
+              )
+            }
 
             # 预测真实数据对应的参数
             sub_matrix <- .df2matrix(df = sub_data)

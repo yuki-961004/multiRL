@@ -113,7 +113,7 @@ Step 2: Generating fake data for parameter and model recovery
 
    lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
    uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
-   control = list(core = 10, sample = 100, iter = 100)
+   control = list(core = 10, iter = 100, sample = 100)
  )
 }
 }

@@ -33,12 +33,12 @@
 #' @param ...
 #'  Additional arguments passed to internal functions.
 #'
-#' @return A specialized TensorFlow-trained Recurrent Neural Network (RNN) object.
+#' @return A specialized Recurrent Neural Network (RNN) object.
 #'  The model can be used with the \code{predict()} function to make predictions
 #'  on a new data frame, estimating the input parameters that are most likely
 #'  to have generated the given dataset.
 #'
-engine_RNN2 <- function(
+engine_RNN <- function(
   data,
   colnames,
   behrule,
@@ -126,7 +126,7 @@ engine_RNN2 <- function(
       # 计算精度, 确保方差为正
       precision <- keras::k_exp(-log_var)
       # 负对数似然核心公式
-      loss_val <- precision * keras::k_square(y_true - mu) + log_var
+      loss_val <- 0.5 * precision * keras::k_square(y_true - mu) + 0.5 * log_var
 
       return(keras::k_mean(keras::k_sum(loss_val, axis = -1L)))
     }
