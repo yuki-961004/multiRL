@@ -36,7 +36,10 @@ testthat::test_that("MLE", {
     # 算法
     lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
     uppers = list(c(1, 1), c(1, 1, 1), c(1, 1, 1)),
-    control = list(core = 4, iter = 5)
+    control = list(
+      algorithm = c("NLOPT_GN_MLSL", "NLOPT_LN_BOBYQA"), 
+      core = 4, iter = 5
+    )
   )
   
   testthat::expect_s3_class(result.MLE, "data.frame")

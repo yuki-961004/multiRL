@@ -103,6 +103,14 @@
 <li><p><code>sample [int]</code></p>
 <p>This parameter denotes the quantity of simulated data generated
          during the parameter recovery process.</p></li>
+<li><p><code>dash [Numeric]</code></p>
+<p>To prevent the optimal parameter estimates from converging to
+         boundary values when the number of iterations is insufficient, a
+         small value is added to the lower bound and subtracted from the
+         upper bound.</p>
+<p>For instance, if the input parameter bounds are <code>(0, 1)</code>,
+         the actual bounds used for fitting will be <code>[0.00001, 0.99999]</code>.
+         This design prevents the occurrence of Infinite values.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="-likelihood-based-inference-lbi-">1. Likelihood Based Inference (LBI)<a class="anchor" aria-label="anchor" href="#-likelihood-based-inference-lbi-"></a></h2>
@@ -130,14 +138,6 @@
          the population, users may refer to the relevant documentation on
          evolutionary algorithms. The default value is consistent with the
          standard default in <code>GA</code>, which is <code>50</code>.</p></li>
-<li><p><code>dash [Numeric]</code></p>
-<p>To prevent the optimal parameter estimates from converging to
-         boundary values when the number of iterations is insufficient, a
-         small value is added to the lower bound and subtracted from the
-         upper bound.</p>
-<p>For instance, if the input parameter bounds are <code>(0, 1)</code>,
-         the actual bounds used for fitting will be <code>[0.00001, 0.99999]</code>.
-         This design prevents the occurrence of Infinite values.</p></li>
 </ul><div class="section">
 <h3 id="-maximum-likelihood-estimation-mle-">1.1 Maximum Likelihood Estimation (MLE)<a class="anchor" aria-label="anchor" href="#-maximum-likelihood-estimation-mle-"></a></h3>
 
@@ -374,11 +374,11 @@
 <span>   seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>   core <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>   sample <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>   dash <span class="op">=</span> <span class="fl">1e-5</span>,</span>
 <span>   <span class="co"># LBI</span></span>
 <span>   algorithm <span class="op">=</span> <span class="st">"NLOPT_GN_MLSL"</span>,</span>
 <span>   pars <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>   size <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>   dash <span class="op">=</span> <span class="fl">1e-5</span>,</span>
 <span>   <span class="co"># MLE</span></span>
 <span>   iter <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>   <span class="co"># MAP</span></span>

@@ -158,6 +158,8 @@ The names of all these parameters are not necessarily fixed. You can define
                 numeric value. The penalty is proportional to the sum of
                 the \code{p}-th power of the absolute values of the free
                 parameters.
+          \item \code{L = 12}: Elastic Net regularization, which applies
+                both L1 and L2 penalties simultaneously.
         }
 
    \item \code{penalty [double]}

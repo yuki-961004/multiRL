@@ -47,6 +47,17 @@ The \code{control} argument is a mandatory list used to customize and manage
          This parameter denotes the quantity of simulated data generated
          during the parameter recovery process.
 
+   \item \code{dash [Numeric]}
+
+         To prevent the optimal parameter estimates from converging to
+         boundary values when the number of iterations is insufficient, a
+         small value is added to the lower bound and subtracted from the
+         upper bound.
+
+         For instance, if the input parameter bounds are \code{(0, 1)},
+         the actual bounds used for fitting will be \code{[0.00001, 0.99999]}.
+         This design prevents the occurrence of Infinite values.
+
 }
 }
 
@@ -83,17 +94,6 @@ The \code{control} argument is a mandatory list used to customize and manage
          the population, users may refer to the relevant documentation on
          evolutionary algorithms. The default value is consistent with the
          standard default in \code{GA}, which is \code{50}.
-
-   \item \code{dash [Numeric]}
-
-         To prevent the optimal parameter estimates from converging to
-         boundary values when the number of iterations is insufficient, a
-         small value is added to the lower bound and subtracted from the
-         upper bound.
-
-         For instance, if the input parameter bounds are \code{(0, 1)},
-         the actual bounds used for fitting will be \code{[0.00001, 0.99999]}.
-         This design prevents the occurrence of Infinite values.
 
 }
 
@@ -398,11 +398,11 @@ The \code{control} argument is a mandatory list used to customize and manage
    seed = 123,
    core = 1,
    sample = 100,
+   dash = 1e-5,
    # LBI
    algorithm = "NLOPT_GN_MLSL",
    pars = NA,
    size = 50,
-   dash = 1e-5,
    # MLE
    iter = 10,
    # MAP

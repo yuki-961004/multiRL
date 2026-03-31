@@ -189,10 +189,11 @@ engine_RNN <- function(
       weighted_log_prob <- log_mix_weights + log_prob
 
       # Log-Sum-Exp 技巧合并K个成分，防止数值溢出
-      log_mix_prob <- keras::k_logsumexp(
-        weighted_log_prob,
-        axis = -1L
-      )
+      m <- keras::k_max(weighted_log_prob, axis = -1L, keepdims = TRUE)
+      # log(sum(exp(x - m))) + m
+      log_mix_prob <- keras::k_log(
+        keras::k_sum(keras::k_exp(weighted_log_prob - m), axis = -1L)
+      ) + keras::k_squeeze(m, axis = -1L)
 
       # 对所有参数求和，再对批次求均值
       return(keras::k_mean(-keras::k_sum(log_mix_prob, axis = -1L)))
