@@ -216,19 +216,17 @@
          dimensions (compressing the data) helps retain the "fingerprint"
          of the original data while removing noise, ensuring the program
          can efficiently identify the underlying parameters.</p>
-<p></p><ul><li><p><code>NULL</code>:
-                 No compression is applied. This is suitable for
-                 smaller datasets where the total number of features
-                 (e.g., blocks * responses) is relatively low
-                 (typically less than 200).</p></li>
-</ul><p></p><ul><li><p><code>"PLS"</code> (Partial Least Squares):
-                 A supervised reduction method that compresses the summary
-                 statistics into a space with dimensions equal to the number
-                 users set (as default, it is equal to the number of blocks).</p></li>
-</ul><p></p><ul><li><p><code>"PCA"</code> (Principal Component Analysis):
-                 An unsupervised reduction method that compresses the
-                 information into a space with dimensions equal to users set
-                 (as default, it is equal to the number of blocks).</p></li>
+<p></p><ul><li><p><code>NULL</code>: No compression is applied. This is suitable for
+           smaller datasets where the total number of features (e.g.,
+           blocks * responses) is relatively low (typically less than 200).</p></li>
+<li><p><code>"PLS"</code> (Partial Least Squares): A supervised reduction
+           method that compresses the summary statistics into a space with
+           dimensions equal to the number users set (as default, it is equal
+           to the number of blocks).</p></li>
+<li><p><code>"PCA"</code> (Principal Component Analysis): An unsupervised
+           reduction method that compresses the information into a space with
+           dimensions equal to users set (as default, it is equal to the
+           number of blocks).</p></li>
 </ul></li>
 <li><p><code>ncomp [int]</code></p>
 <p>The number of components represents the quantity of information

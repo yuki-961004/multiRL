@@ -185,24 +185,20 @@
 #'          can efficiently identify the underlying parameters.
 #'
 #'          \itemize{
-#'              \code{NULL}:
-#'                  No compression is applied. This is suitable for
-#'                  smaller datasets where the total number of features
-#'                  (e.g., blocks * responses) is relatively low
-#'                  (typically less than 200).
-#'          }
-#'          \itemize{
-#'              \code{"PLS"} (Partial Least Squares):
-#'                  A supervised reduction method that compresses the summary
-#'                  statistics into a space with dimensions equal to the number
-#'                  users set (as default, it is equal to the number of blocks).
-#'          }
-#'          \itemize{
-#'              \code{"PCA"} (Principal Component Analysis):
-#'                  An unsupervised reduction method that compresses the
-#'                  information into a space with dimensions equal to users set
-#'                  (as default, it is equal to the number of blocks).
-#'          }
+#'            \item \code{NULL}: No compression is applied. This is suitable for
+#'            smaller datasets where the total number of features (e.g., 
+#'            blocks * responses) is relatively low (typically less than 200).
+#'            
+#'            \item \code{"PLS"} (Partial Least Squares): A supervised reduction 
+#'            method that compresses the summary statistics into a space with 
+#'            dimensions equal to the number users set (as default, it is equal 
+#'            to the number of blocks).
+#'            
+#'            \item \code{"PCA"} (Principal Component Analysis): An unsupervised 
+#'            reduction method that compresses the information into a space with 
+#'            dimensions equal to users set (as default, it is equal to the 
+#'            number of blocks).
+#' }
 #'
 #'    \item \code{ncomp [int]}
 #'
