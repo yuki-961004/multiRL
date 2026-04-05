@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -197,7 +197,27 @@
          (RNN) model is trained and shared across all datasets. In the
          context of the <code>rcv_d</code> function, the default setting is
          <code>"shared"</code>, whereas in <code>fit_p</code>, the default is
-         <code>"individual"</code>.</p></li>
+         <code>"individual"</code>.</p>
+<p></p><ul><li><p><code>"shared"</code>:</p>
+<p>The most aggressive approach. It assumes that the trial
+             presentation order does not influence RNN construction. All
+             subjects are assumed to follow a single template, and only one
+             model is trained. This is the default for <code>rcv_d</code>.</p></li>
+<li><p><code>"individual"</code>:</p>
+<p>The most conservative approach. It assumes that the RNN model
+             is sensitive to even minor variations in trial sequences. A
+             separate model is trained for each subject's unique data. This
+             is the default for <code>fit_p</code>.</p></li>
+<li><p><code>"universal"</code>:</p>
+<p>An experimental "one-for-all" trade-off recommended only for
+             <code>fit_p</code>. It expands the training pool by generating a
+             dataset of size <code>n_sub * n_train</code>, incorporating templates
+             from all subjects into a single trained RNN. This significantly
+             reduces fitting time but may compromise the model's
+             generalization performance.</p>
+<p>NOTE: Since <code>abc</code> lacks generalization capability, this
+             scope is only applicable when <code>estimate = "RNN"</code>.</p></li>
+</ul></li>
 </ul><div class="section">
 <h3 id="-approximate-bayesian-computation-abc-">2.1 Approximate Bayesian Computation (ABC)<a class="anchor" aria-label="anchor" href="#-approximate-bayesian-computation-abc-"></a></h3>
 

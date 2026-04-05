@@ -290,10 +290,40 @@ recovery.RNN <- multiRL::rcv_d(
   uppers = list(c(1, 10)),
   control = list(
     core = 10, sample = 100, train = 100,
+    #scope = "universal",
     #tol = 0.5, reduction = "PCA", 
-    layer = "GRU", loss = "NLL", check = FALSE, dropout = 0, L = 2,
-    keras = FALSE, backend = "tensorflow"
+    layer = "GRU", loss = "MSE", check = FALSE, dropout = 0, L = 2,
+    keras3 = FALSE, backend = "tensorflow"
   )
 )
 ```
 
+```{r}
+fitting.RNN <- multiRL::fit_p(
+  estimate = "RNN",
+
+  data = data,
+  behrule = behrule,
+  colnames = colnames,
+  ids = 1:10,
+
+  models = list(multiRL::TD),
+  priors = list(
+    list(
+      alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
+      beta = function(x) {stats::rexp(n = 1, rate = 1)}
+    )
+  ),
+  settings = list(name = c("TD")),
+  
+  lowers = list(c(0, 0)),
+  uppers = list(c(1, 10)),
+  control = list(
+    core = 1, sample = 100, train = 100,
+    scope = "universal",
+    #tol = 0.5, reduction = "PCA", 
+    layer = "GRU", loss = "MSE", check = FALSE, dropout = 0, L = 2,
+    keras3 = FALSE, backend = "tensorflow"
+  )
+)
+```

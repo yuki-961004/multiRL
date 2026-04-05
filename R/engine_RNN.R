@@ -59,26 +59,54 @@ engine_RNN <- function(
 
   ############################### [Simulate] #####################################
 
-  env <- estimate_0_ENV(
-    data = data,
-    colnames = colnames,
-    behrule = behrule,
-    funcs = funcs,
-    priors = priors,
-    settings = settings,
-  )
+  # 如果是universal, 则说明进来的数据集不仅包含一个被试
+  if (scope == "universal") {
+    subid <- control$subid
+    ids <- control$ids
+    list_simulated <- list()
+    
+    for (j in ids) {
+      sub_data <- data[data[, subid] == j, ]
+      env <- estimate_0_ENV(
+        data = sub_data,
+        colnames = colnames,
+        behrule = behrule,
+        funcs = funcs,
+        priors = priors,
+        settings = settings,
+      )
+      
+      sub_simulated <- estimate_2_SBI(
+        env = env,
+        model = model,
+        priors = priors,
+        control = control
+      )
+      list_simulated <- c(list_simulated, sub_simulated)
+    }
+  # 其他情况(shared, individual)进来的都是仅包含一个被试的data
+  } else {
+    env <- estimate_0_ENV(
+      data = data,
+      colnames = colnames,
+      behrule = behrule,
+      funcs = funcs,
+      priors = priors,
+      settings = settings,
+    )
 
-  list_simulated <- estimate_2_SBI(
-    env = env,
-    model = model,
-    priors = priors,
-    control = control
-  )
+    list_simulated <- estimate_2_SBI(
+      env = env,
+      model = model,
+      priors = priors,
+      control = control
+    )
+  }
 
   ################################ [matrix] ######################################
 
-  n_sample <- sample
-  n_trials <- nrow(data)
+  n_sample <- length(list_simulated)
+  n_trials <- nrow(list_simulated[[1]]$matrix)
   n_params <- length(priors)
 
   # 动态获取拆分后的列名 (匹配原列名或拆分衍生的 _1, _2 等)

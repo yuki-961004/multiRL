@@ -170,7 +170,35 @@ The \code{control} argument is a mandatory list used to customize and manage
          context of the \code{rcv_d} function, the default setting is
          \code{"shared"}, whereas in \code{fit_p}, the default is
          \code{"individual"}.
-
+         
+         \itemize{
+           
+           \item \code{"shared"}: 
+             
+             The most aggressive approach. It assumes that the trial 
+             presentation order does not influence RNN construction. All 
+             subjects are assumed to follow a single template, and only one 
+             model is trained. This is the default for \code{rcv_d}.
+           
+           \item \code{"individual"}: 
+             
+             The most conservative approach. It assumes that the RNN model 
+             is sensitive to even minor variations in trial sequences. A 
+             separate model is trained for each subject's unique data. This 
+             is the default for \code{fit_p}.
+           
+           \item \code{"universal"}: 
+             
+             An experimental "one-for-all" trade-off recommended only for 
+             \code{fit_p}. It expands the training pool by generating a 
+             dataset of size \code{n_sub * n_train}, incorporating templates 
+             from all subjects into a single trained RNN. This significantly 
+             reduces fitting time but may compromise the model's 
+             generalization performance.
+             
+             NOTE: Since \code{abc} lacks generalization capability, this 
+             scope is only applicable when \code{estimate = "RNN"}.
+  }
 }
 
 \subsection{2.1 Approximate Bayesian Computation (ABC)}{

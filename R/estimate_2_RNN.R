@@ -284,7 +284,70 @@ estimate_2_RNN <- function(
             opt_params[[j]] <- X_pred
             p()
           }
-        }
+        } else if ( scope == "universal" ) {
+          
+          # 把subid(被试序号所在列名), ids(需要拟合的被试序号)传入control
+          control$subid <- subid
+          control$ids <- ids
+          
+          # 训练一个包含所有被试模板的RNN
+          if (keras3) {
+            RNN <- engine_RNN3(
+              data = data,
+              behrule = behrule,
+              colnames = colnames,
+              funcs = funcs[[i]],
+              settings = settings[[i]],
+              priors = priors[[i]],
+              model = models[[i]],
+              control = control
+            )
+          } else {
+            RNN <- engine_RNN(
+              data = data,
+              behrule = behrule,
+              colnames = colnames,
+              funcs = funcs[[i]],
+              settings = settings[[i]],
+              priors = priors[[i]],
+              model = models[[i]],
+              control = control
+            )
+          }
+          
+          # 将训练好的模型直接传出到全局变量
+          assign(paste0("RNN_", model_name), RNN, envir = .GlobalEnv)
+          
+          for (j in ids) {
+            
+            sub_data <- data[data[, subid] == j, ]
+            
+            n_params <- length(priors[[i]])
+            n_trials <- nrow(sub_data)
+            
+            # 预测真实数据对应的参数
+            sub_matrix <- .df2matrix(df = sub_data)
+            mat_cols <- colnames(sub_matrix)
+            split_info <- unlist(lapply(info, function(col) {
+              grep(paste0("^", col, "(_[0-9]+)?$"), mat_cols, value = TRUE)
+            }))
+            n_info <- length(split_info)
+            
+            X_sub <- array(NA, dim = c(1, n_trials, n_info))
+            X_sub[1, , ] <- sub_matrix[, split_info, drop = FALSE]
+            X_pred <- stats::predict(object = RNN, x = X_sub, verbose = 0)
+            X_pred <- .name_rnnouts(
+              X_pred = X_pred, loss = loss, param_names = names(priors[[i]])
+            )
+            X_pred <- .fix_params(
+              params_df = X_pred, param_names = names(priors[[i]]),
+              lower = lowers[[i]], upper = uppers[[i]], dash = dash
+            )
+            opt_params[[j]] <- X_pred
+            p()
+          }
+          
+        } 
         result.RNN[[i]] <- do.call(rbind, opt_params)
       })
     })
