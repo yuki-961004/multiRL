@@ -15,13 +15,17 @@
 #' @param utility 
 #'  The subjective value (internal representation) assigned by 
 #'   the agent to the objective reward.
-#' @param params 
-#'  Parameters used by the model's internal functions,
-#'    see \link[multiRL]{params}
 #' @param system
 #'  When the agent makes a decision, is a single system at work, or are multiple 
 #'  systems involved?
 #'    see \link[multiRL]{system} 
+#' @param rownum 
+#'  The trial number
+#' @param params 
+#'  Parameters used by the model's internal functions,
+#'    see \link[multiRL]{params}
+#' @param others
+#'  All latent variables within the MDP process belong here.
 #' @param ... 
 #'  It currently contains the following information; additional information 
 #'    may be added in future package versions.
@@ -70,8 +74,10 @@
 #'     values,
 #'     reward,
 #'     utility,
-#'     params,
 #'     system,
+#'     rownum,
+#'     params,
+#'     others,
 #'     ...
 #' ){
 #' 
@@ -95,7 +101,7 @@
 #'     decay <- values + zeta * (value0 - values) - bonus
 #'   }
 #'   
-#'   return(decay)
+#'   return(list(decay = decay, others = others)) 
 #' }
 #' }
 #' 
@@ -105,8 +111,10 @@ func_zeta <- function(
     values,
     reward,
     utility,
-    params,
     system,
+    rownum,
+    params,
+    others,
     ...
 ){
   
@@ -130,5 +138,5 @@ func_zeta <- function(
     decay <- values + zeta * (value0 - values) - bonus
   }
 
-  return(decay)
+  return(list(decay = decay, others = others)) 
 }

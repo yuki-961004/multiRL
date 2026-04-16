@@ -38,6 +38,8 @@
 #' @param params 
 #'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
+#' @param others
+#'  All latent variables within the MDP process belong here.
 #' @param ... 
 #'  It currently contains the following information; additional information 
 #'    may be added in future package versions.
@@ -84,6 +86,7 @@
 #'     shown,
 #'     rownum,
 #'     params,
+#'     others,
 #'     ...
 #' ){
 #' 
@@ -125,7 +128,7 @@
 #'     try <- as.integer(stats::runif(1) < prob_explore)
 #'   }
 #'   
-#'   return(try)
+#'   return(list(try = try, others = others)) 
 #' }
 #' }
 #' 
@@ -133,6 +136,7 @@ func_epsilon <- function(
     shown,
     rownum,
     params,
+    others,
     ...
 ){
   
@@ -174,5 +178,5 @@ func_epsilon <- function(
     try <- as.integer(stats::runif(1) < prob_explore)
   }
   
-  return(try)
+  return(list(try = try, others = others)) 
 }

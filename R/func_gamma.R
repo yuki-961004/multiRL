@@ -8,9 +8,13 @@
 #' @param reward 
 #'  The feedback received by the agent from the environment at trial(t) 
 #'    following the execution of action(a)
+#' @param rownum 
+#'  The trial number
 #' @param params 
 #'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
+#' @param others
+#'  All latent variables within the MDP process belong here.
 #' @param ... 
 #'  It currently contains the following information; additional information 
 #'    may be added in future package versions.
@@ -74,14 +78,16 @@
 #'   # Stevens' Power Law
 #'   utility <- ((reward >= 0) * 2 - 1) * (abs(reward) ^ gamma)
 #'   
-#'   return(utility)
+#'   return(list(utility = utility, others = others)) 
 #' }
 #' }
 #' 
 func_gamma <- function(
     shown,
     reward,
+    rownum,
     params,
+    others,
     ...
 ){
   
@@ -99,5 +105,5 @@ func_gamma <- function(
   # Stevens' Power Law
   utility <- ((reward >= 0) * 2 - 1) * (abs(reward) ^ gamma)
   
-  return(utility)
+  return(list(utility = utility, others = others)) 
 }

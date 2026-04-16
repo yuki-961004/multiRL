@@ -315,9 +315,6 @@ estimate_2_RNN <- function(
             )
           }
           
-          # 将训练好的模型直接传出到全局变量
-          assign(paste0("RNN_", model_name), RNN, envir = .GlobalEnv)
-          
           for (j in ids) {
             
             sub_data <- data[data[, subid] == j, ]
@@ -370,5 +367,8 @@ estimate_2_RNN <- function(
   
   result.RNN <- .rbind_fill(result.RNN)
   
+  if (scope == "universal") {attr(result.RNN, "model") <- RNN}
+  
   return(result.RNN)
+  
 }

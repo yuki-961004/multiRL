@@ -4,15 +4,19 @@
 \alias{func_delta}
 \title{Function: Bias}
 \usage{
-func_delta(shown, count, params, ...)
+func_delta(shown, count, rownum, params, others, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
 
 \item{count}{How many times this action has been executed}
 
+\item{rownum}{The trial number}
+
 \item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
+
+\item{others}{All latent variables within the MDP process belong here.}
 
 \item{...}{It currently contains the following information; additional information 
    may be added in future package versions.
@@ -65,7 +69,9 @@ A \code{NumericVector} containing the bias for each option based on
 \preformatted{func_delta <- function(
     shown,
     count,
+    rownum,
     params,
+    others,
     ...
 ){
   
@@ -114,7 +120,7 @@ A \code{NumericVector} containing the bias for each option based on
     # Sticky to the same position
     sticky * last_position 
   
-  return(bias)
+  return(list(bias = bias, others = others)) 
 }
 }
 }

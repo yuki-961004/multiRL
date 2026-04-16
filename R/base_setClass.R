@@ -83,6 +83,7 @@ methods::setClass(
   slots = list(
     cue = "character", 
     rsp = "character",
+    dyn = "character",
     extra = "list"
   )
 )
@@ -97,6 +98,9 @@ methods::setClass(
     shown = "matrix",
     prob = "matrix",
     count = "matrix",
+
+    others = "matrix",
+
     exploration = "matrix",
     latent = "matrix",
     reward = "matrix",

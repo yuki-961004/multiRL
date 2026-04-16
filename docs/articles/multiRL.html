@@ -37,7 +37,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -251,8 +251,10 @@ Learning Rate (α)
 <span>    <span class="va">qvalue</span>,</span>
 <span>    <span class="va">reward</span>,</span>
 <span>    <span class="va">utility</span>,</span>
-<span>    <span class="va">params</span>,</span>
 <span>    <span class="va">system</span>,</span>
+<span>    <span class="va">rownum</span>,</span>
+<span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  </span>
@@ -300,7 +302,7 @@ Learning Rate (α)
 <span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alpha</span>  <span class="op">*</span> <span class="op">(</span><span class="va">reward</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">update</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>update <span class="op">=</span> <span class="va">update</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
 Probability Function (β)
@@ -311,7 +313,9 @@ Probability Function (β)
 <span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">qvalue</span>, </span>
 <span>    <span class="va">explor</span>,</span>
+<span>    <span class="va">rownum</span>,</span>
 <span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">system</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
@@ -360,7 +364,7 @@ Probability Function (β)
 <span>  <span class="co"># lapse</span></span>
 <span>  <span class="va">prob</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">lapse</span> <span class="op">*</span> <span class="va">n_shown</span><span class="op">)</span> <span class="op">*</span> <span class="va">prob</span> <span class="op">+</span> <span class="va">lapse</span></span>
 <span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">prob</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>prob <span class="op">=</span> <span class="va">prob</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
 Utility Function (γ)
@@ -370,7 +374,9 @@ Utility Function (γ)
 <code class="sourceCode R"><span><span class="va">func_gamma</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">reward</span>,</span>
+<span>    <span class="va">rownum</span>,</span>
 <span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  </span>
@@ -388,7 +394,7 @@ Utility Function (γ)
 <span>  <span class="co"># Stevens' Power Law</span></span>
 <span>  <span class="va">utility</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="va">reward</span> <span class="op">&gt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">^</span> <span class="va">gamma</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">utility</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>utility <span class="op">=</span> <span class="va">utility</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
 Bias Function (δ)
@@ -398,7 +404,9 @@ Bias Function (δ)
 <code class="sourceCode R"><span><span class="va">func_delta</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">count</span>,</span>
+<span>    <span class="va">rownum</span>,</span>
 <span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  </span>
@@ -445,9 +453,9 @@ Bias Function (δ)
 <span>    <span class="co"># Sticky to the same action(simulation)</span></span>
 <span>    <span class="va">sticky</span> <span class="op">*</span> <span class="va">last_simulation</span> <span class="op">+</span></span>
 <span>    <span class="co"># Sticky to the same position</span></span>
-<span>    <span class="va">sticky</span> <span class="op">*</span> <span class="va">last_position</span> </span>
-<span>    </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">bias</span><span class="op">)</span></span>
+<span>    <span class="va">sticky</span> <span class="op">*</span> <span class="va">last_position</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>bias <span class="op">=</span> <span class="va">bias</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
 Exploration Function (ε)
@@ -458,6 +466,7 @@ Exploration Function (ε)
 <span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">rownum</span>,</span>
 <span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  </span>
@@ -499,7 +508,7 @@ Exploration Function (ε)
 <span>    <span class="va">try</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">prob_explore</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">try</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>try <span class="op">=</span> <span class="va">try</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!----------------------------------------------------------><details><summary>
 Decay Rate (ζ)
@@ -512,8 +521,10 @@ Decay Rate (ζ)
 <span>    <span class="va">values</span>,</span>
 <span>    <span class="va">reward</span>,</span>
 <span>    <span class="va">utility</span>,</span>
-<span>    <span class="va">params</span>,</span>
 <span>    <span class="va">system</span>,</span>
+<span>    <span class="va">rownum</span>,</span>
+<span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  </span>
@@ -537,7 +548,7 @@ Decay Rate (ζ)
 <span>    <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span> <span class="op">-</span> <span class="va">bonus</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">decay</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>decay <span class="op">=</span> <span class="va">decay</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </details><!---------------------------------------------------------->
 </div>

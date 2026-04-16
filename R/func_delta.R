@@ -9,9 +9,13 @@
 #'  Which options shown in this trial.
 #' @param count 
 #'  How many times this action has been executed
+#' @param rownum 
+#'  The trial number
 #' @param params 
 #'  Parameters used by the model's internal functions,
 #'    see \link[multiRL]{params}
+#' @param others
+#'  All latent variables within the MDP process belong here.
 #' @param ... 
 #'  It currently contains the following information; additional information 
 #'    may be added in future package versions.
@@ -57,7 +61,9 @@
 #' \preformatted{func_delta <- function(
 #'     shown,
 #'     count,
+#'     rownum,
 #'     params,
+#'     others,
 #'     ...
 #' ){
 #'   
@@ -106,14 +112,16 @@
 #'     # Sticky to the same position
 #'     sticky * last_position 
 #'   
-#'   return(bias)
+#'   return(list(bias = bias, others = others)) 
 #' }
 #' }
 #' 
 func_delta <- function(
     shown,
     count,
+    rownum,
     params,
+    others,
     ...
 ){
   
@@ -160,7 +168,7 @@ func_delta <- function(
     # Sticky to the same action(simulation)
     sticky * last_simulation +
     # Sticky to the same position
-    sticky * last_position 
-    
-  return(bias)
+    sticky * last_position
+
+  return(list(bias = bias, others = others)) 
 }

@@ -4,7 +4,7 @@
 \alias{func_alpha}
 \title{Function: Learning Rate}
 \usage{
-func_alpha(shown, qvalue, reward, utility, params, system, ...)
+func_alpha(shown, qvalue, reward, utility, system, rownum, params, others, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -18,12 +18,16 @@ following the execution of action(a)}
 \item{utility}{The subjective value (internal representation) assigned by 
 the agent to the objective reward.}
 
-\item{params}{Parameters used by the model's internal functions,
-see \link[multiRL]{params}}
-
 \item{system}{When the agent makes a decision, is a single system at work, or are multiple 
 systems involved?
   see \link[multiRL]{system}}
+
+\item{rownum}{The trial number}
+
+\item{params}{Parameters used by the model's internal functions,
+see \link[multiRL]{params}}
+
+\item{others}{All latent variables within the MDP process belong here.}
 
 \item{...}{It currently contains the following information; additional information 
    may be added in future package versions.
@@ -77,7 +81,9 @@ A \code{NumericVector} containing the updated values computed based
     reward,
     utility,
     params,
+    rownum,
     system,
+    others,
     ...
 ){
 
@@ -125,7 +131,7 @@ A \code{NumericVector} containing the updated values computed based
     update <- qvalue + alpha  * (reward - qvalue)
   }
   
-  return(update)
+  return(list(update = update, others = others)) 
 }
 }
 }

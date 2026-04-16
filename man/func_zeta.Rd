@@ -4,7 +4,18 @@
 \alias{func_zeta}
 \title{Function: Decay Rate}
 \usage{
-func_zeta(shown, value0, values, reward, utility, params, system, ...)
+func_zeta(
+  shown,
+  value0,
+  values,
+  reward,
+  utility,
+  system,
+  rownum,
+  params,
+  others,
+  ...
+)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -19,12 +30,16 @@ following the execution of action(a)}
 \item{utility}{The subjective value (internal representation) assigned by 
 the agent to the objective reward.}
 
-\item{params}{Parameters used by the model's internal functions,
-see \link[multiRL]{params}}
-
 \item{system}{When the agent makes a decision, is a single system at work, or are multiple 
 systems involved?
   see \link[multiRL]{system}}
+
+\item{rownum}{The trial number}
+
+\item{params}{Parameters used by the model's internal functions,
+see \link[multiRL]{params}}
+
+\item{others}{All latent variables within the MDP process belong here.}
 
 \item{...}{It currently contains the following information; additional information 
    may be added in future package versions.
@@ -78,8 +93,10 @@ A \code{NumericVector} representing the values of unchosen options
     values,
     reward,
     utility,
-    params,
     system,
+    rownum,
+    params,
+    others,
     ...
 ){
 
@@ -103,7 +120,7 @@ A \code{NumericVector} representing the values of unchosen options
     decay <- values + zeta * (value0 - values) - bonus
   }
   
-  return(decay)
+  return(list(decay = decay, others = others)) 
 }
 }
 }

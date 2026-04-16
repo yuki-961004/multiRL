@@ -15,18 +15,16 @@ multiRL.input <- multiRL::process_1_input(
   ),
   params = list(
     free = list(
-      alphaN = 0.3,
-      alphaP = 0.7,
+      alpha = 0.3,
       beta = 0.5
     )
   ),
   priors = list(
-    alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-    alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    name = "RSTD",
+    name = "TD",
     mode = "fitting",
     estimate = "MLE",
     policy = "on"
@@ -38,7 +36,8 @@ multiRL.input <- multiRL::process_1_input(
 multiRL.behrule <- multiRL::process_2_behrule(
   behrule = list(
     cue = c("Red", "Yellow", "Green", "Blue"),
-    rsp = c("Up", "Down", "Left", "Right")
+    rsp = c("Up", "Down", "Left", "Right"),
+    dyn = c("alpha", "beta", "gamma", "delta", "epsilon", "zeta")
   )
 )
 ```
@@ -81,18 +80,22 @@ View(multiRL.output@result@prob)
 
 ```{r}
 multiRL.model <- multiRL::run_m(
-  engine = "Cpp",
+  #engine = "R",
   data = multiRL::MAB[multiRL::MAB[, "Subject"] == 1, ],
   behrule = list(
     cue = c("Red", "Yellow", "Green", "Blue"),
-    rsp = c("Up", "Down", "Left", "Right")
+    rsp = c("Up", "Down", "Left", "Right"),
+    dyn = c("alpha", "beta", "gamma", "delta", "epsilon", "zeta")
   ),
   params = list(
     free = list(
-      alphaN = 0.3,
-      alphaP = 0.7,
-      beta = 0.5,
-      delta = 0,
+      alphaN = 0.33,
+      alphaP = 0.2,
+      beta = 0.55,
+      gamma = 1.03,
+      delta = 0.01,
+      epsilon = 0.5,
+      zeta = 0.1,
       sticky = 100
     )
   ),

@@ -12,11 +12,10 @@ binaryRL.res <- binaryRL::run_m(
   n_params = 3,
   n_trials = 360,
   pi = 0.1,
-  eta = c(0.3, 0.7),
+  eta = c(0.3),
   tau = c(0.5), 
   threshold = 20,
   priors = list(
-    eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     eta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     tau = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
@@ -39,15 +38,13 @@ multiRL.model <- multiRL::run_m(
   ),
   params = list(
     free = list(
-      alphaN = 0.3,
-      alphaP = 0.7,
+      alpha = 0.3,
       beta = 0.5
     ),
     fixed = list(threshold = 20)
   ),
   priors = list(
-    alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
-    alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(

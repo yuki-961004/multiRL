@@ -4,7 +4,7 @@
 \alias{func_gamma}
 \title{Function: Utility}
 \usage{
-func_gamma(shown, reward, params, ...)
+func_gamma(shown, reward, rownum, params, others, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -12,8 +12,12 @@ func_gamma(shown, reward, params, ...)
 \item{reward}{The feedback received by the agent from the environment at trial(t) 
 following the execution of action(a)}
 
+\item{rownum}{The trial number}
+
 \item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
+
+\item{others}{All latent variables within the MDP process belong here.}
 
 \item{...}{It currently contains the following information; additional information 
    may be added in future package versions.
@@ -82,7 +86,7 @@ A \code{NumericVector} of length one representing the subjective
   # Stevens' Power Law
   utility <- ((reward >= 0) * 2 - 1) * (abs(reward) ^ gamma)
   
-  return(utility)
+  return(list(utility = utility, others = others)) 
 }
 }
 }

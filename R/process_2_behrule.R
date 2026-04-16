@@ -30,13 +30,15 @@ process_2_behrule <- function(
   
 ################################## [check] #####################################
   
-  key_names <- c("cue", "rsp")
-  # 检查colnames的元素名称是否一致
-  check_key <- all(sort(names(behrule)) == sort(key_names))
-  if (!(check_key)) {message("Invalid behrule keys")}
-  # 检查colnames的元素类型是否一致
+  # 检查cue, rsp, mid是否都是字符串
   check_type <- all(sapply(behrule, is.character))
   if (!(check_type)) {message("Invalid behrule key type")}
+  
+  # 默认others
+  default <- list(
+    dyn = c("alpha", "beta", "gamma", "delta", "epsilon", "zeta")
+  )
+  behrule <- utils::modifyList(x = default, val = behrule)
   
 ################################ [behrule] #####################################
   
@@ -45,6 +47,7 @@ process_2_behrule <- function(
     Class = "multiRL.behrule",
     cue = behrule$cue,
     rsp = behrule$rsp,
+    dyn = behrule$dyn,
     extra = extra
   )
   

@@ -4,7 +4,7 @@
 \alias{func_beta}
 \title{Function: Probability}
 \usage{
-func_beta(shown, qvalue, explor, params, system, ...)
+func_beta(shown, qvalue, explor, rownum, params, others, system, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -14,8 +14,12 @@ when updated to this trial.}
 
 \item{explor}{Whether the agent made a random choice (exploration) in this trial.}
 
+\item{rownum}{The trial number}
+
 \item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
+
+\item{others}{All latent variables within the MDP process belong here.}
 
 \item{system}{When the agent makes a decision, is a single system at work, or are multiple 
 systems involved?
@@ -86,8 +90,10 @@ A \code{NumericVector} containing the probability of choosing each
     shown,
     qvalue, 
     explor,
-    params,
     system,
+    rownum,
+    params,
+    others,
     ...
 ){
   
@@ -135,7 +141,7 @@ A \code{NumericVector} containing the probability of choosing each
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse
    
-  return(prob)
+  return(list(prob = prob, others = others)) 
 }
 }
 }

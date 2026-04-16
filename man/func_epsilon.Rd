@@ -4,7 +4,7 @@
 \alias{func_epsilon}
 \title{Function: Exploration or Exploitation}
 \usage{
-func_epsilon(shown, rownum, params, ...)
+func_epsilon(shown, rownum, params, others, ...)
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
@@ -13,6 +13,8 @@ func_epsilon(shown, rownum, params, ...)
 
 \item{params}{Parameters used by the model's internal functions,
 see \link[multiRL]{params}}
+
+\item{others}{All latent variables within the MDP process belong here.}
 
 \item{...}{It currently contains the following information; additional information 
    may be added in future package versions.
@@ -92,6 +94,7 @@ An \code{int}, either 0 or 1, indicating exploration or
     shown,
     rownum,
     params,
+    others,
     ...
 ){
 
@@ -133,7 +136,7 @@ An \code{int}, either 0 or 1, indicating exploration or
     try <- as.integer(stats::runif(1) < prob_explore)
   }
   
-  return(try)
+  return(list(try = try, others = others)) 
 }
 }
 }

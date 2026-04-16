@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -214,7 +214,9 @@ compatibility with both Stevens’ Power Law and Prospect Theory.</p>
 <code class="sourceCode R"><span><span class="va">my_func_gamma</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">shown</span>,</span>
 <span>    <span class="va">reward</span>,</span>
+<span>    <span class="va">rownum</span>,</span>
 <span>    <span class="va">params</span>,</span>
+<span>    <span class="va">others</span>,</span>
 <span>    <span class="va">...</span></span>
 <span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># `get_param` is an internal function and must be accessed using `:::`</span></span>
@@ -247,7 +249,7 @@ compatibility with both Stevens’ Power Law and Prospect Theory.</p>
 <span>    <span class="va">utility</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">reward</span><span class="op">)</span> <span class="op">^</span> <span class="va">gammaP</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span>  </span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">utility</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>utility <span class="op">=</span> <span class="va">utility</span>, others <span class="op">=</span> <span class="va">others</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>

@@ -25,13 +25,17 @@
 #'    when updated to this trial.
 #' @param explor 
 #'  Whether the agent made a random choice (exploration) in this trial.
-#' @param params 
-#'  Parameters used by the model's internal functions,
-#'    see \link[multiRL]{params}
 #' @param system
 #'  When the agent makes a decision, is a single system at work, or are multiple 
 #'  systems involved?
 #'    see \link[multiRL]{system} 
+#' @param rownum 
+#'  The trial number
+#' @param params 
+#'  Parameters used by the model's internal functions,
+#'    see \link[multiRL]{params}
+#' @param others
+#'  All latent variables within the MDP process belong here.
 #' @param ... 
 #'  It currently contains the following information; additional information 
 #'    may be added in future package versions.
@@ -78,8 +82,10 @@
 #'     shown,
 #'     qvalue, 
 #'     explor,
-#'     params,
 #'     system,
+#'     rownum,
+#'     params,
+#'     others,
 #'     ...
 #' ){
 #'   
@@ -127,7 +133,7 @@
 #'   # lapse
 #'   prob <- (1 - lapse * n_shown) * prob + lapse
 #'    
-#'   return(prob)
+#'   return(list(prob = prob, others = others)) 
 #' }
 #' }
 #' 
@@ -135,7 +141,9 @@ func_beta <- function(
     shown,
     qvalue, 
     explor,
+    rownum,
     params,
+    others,
     system,
     ...
 ){
@@ -184,5 +192,5 @@ func_beta <- function(
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse
   
-  return(prob)
+  return(list(prob = prob, others = others)) 
 }

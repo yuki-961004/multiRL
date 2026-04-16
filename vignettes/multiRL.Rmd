@@ -94,8 +94,10 @@ func_alpha <- function(
     qvalue,
     reward,
     utility,
-    params,
     system,
+    rownum,
+    params,
+    others,
     ...
 ){
   
@@ -143,7 +145,7 @@ func_alpha <- function(
     update <- qvalue + alpha  * (reward - qvalue)
   }
 
-  return(update)
+  return(list(update = update, others = others)) 
 }
 ```
 </details>
@@ -162,7 +164,9 @@ func_beta <- function(
     shown,
     qvalue, 
     explor,
+    rownum,
     params,
+    others,
     system,
     ...
 ){
@@ -211,7 +215,7 @@ func_beta <- function(
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse
   
-  return(prob)
+  return(list(prob = prob, others = others)) 
 }
 ```
 
@@ -230,7 +234,9 @@ print(multiRL::func_gamma)
 func_gamma <- function(
     shown,
     reward,
+    rownum,
     params,
+    others,
     ...
 ){
   
@@ -248,7 +254,7 @@ func_gamma <- function(
   # Stevens' Power Law
   utility <- ((reward >= 0) * 2 - 1) * (abs(reward) ^ gamma)
   
-  return(utility)
+  return(list(utility = utility, others = others)) 
 }
 ```
 </details>
@@ -266,7 +272,9 @@ print(multiRL::func_delta)
 func_delta <- function(
     shown,
     count,
+    rownum,
     params,
+    others,
     ...
 ){
   
@@ -313,9 +321,9 @@ func_delta <- function(
     # Sticky to the same action(simulation)
     sticky * last_simulation +
     # Sticky to the same position
-    sticky * last_position 
-    
-  return(bias)
+    sticky * last_position
+
+  return(list(bias = bias, others = others)) 
 }
 ```
 </details>
@@ -334,6 +342,7 @@ func_epsilon <- function(
     shown,
     rownum,
     params,
+    others,
     ...
 ){
   
@@ -375,7 +384,7 @@ func_epsilon <- function(
     try <- as.integer(stats::runif(1) < prob_explore)
   }
   
-  return(try)
+  return(list(try = try, others = others)) 
 }
 ```
 </details>
@@ -395,8 +404,10 @@ func_zeta <- function(
     values,
     reward,
     utility,
-    params,
     system,
+    rownum,
+    params,
+    others,
     ...
 ){
   
@@ -420,7 +431,7 @@ func_zeta <- function(
     decay <- values + zeta * (value0 - values) - bonus
   }
 
-  return(decay)
+  return(list(decay = decay, others = others)) 
 }
 ```
 </details>
