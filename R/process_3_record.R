@@ -62,10 +62,10 @@ process_3_record <- function(
   dynamicdf <- matrix(
     data = NA_character_,
     nrow = input@n_rows,
-    ncol = length(behrule@dyn)
+    ncol = length(behrule@mid)
   )
   # 列数表示需要更新的价值, 即潜在规则
-  colnames(dynamicdf) <- behrule@dyn
+  colnames(dynamicdf) <- behrule@mid
 
   value <- replicate(n = n_system, expr = nulldf, simplify = FALSE)
   names(value) <- system
@@ -75,7 +75,7 @@ process_3_record <- function(
   prob        <- nulldf
   count       <- nulldf
   
-  others      <- dynamicdf
+  hidden      <- dynamicdf
 
   exploration <- matrix(as.numeric(singledf), nrow = nrow(singledf), ncol = 1)
   latent      <- matrix(as.character(singledf), nrow = nrow(singledf), ncol = 1)
@@ -92,7 +92,7 @@ process_3_record <- function(
     prob = prob,
     count = count,
     
-    others = others,
+    hidden = hidden,
 
     exploration = exploration,
     latent = latent,

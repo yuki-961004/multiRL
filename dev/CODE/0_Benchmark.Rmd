@@ -48,7 +48,7 @@ multiRL.model <- multiRL::run_m(
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    name = "RSTD",
+    name = "TD",
     mode = "fitting",
     estimate = "MLE",
     policy = "off"

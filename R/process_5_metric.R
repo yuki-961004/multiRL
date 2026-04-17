@@ -37,7 +37,7 @@ process_5_metric <- function(
   # 删掉初始行
   output@result@value  <- lapply(output@result@value, function(x) {x[-1, ]})
   output@result@count  <- output@result@count[-1, ]
-  output@result@others <- output@result@others[-nrow(output@result@others), ]
+  output@result@hidden <- output@result@hidden[-nrow(output@result@hidden), ]
 
   extra <- list(...)
   

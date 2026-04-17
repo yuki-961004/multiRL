@@ -34,9 +34,9 @@ process_2_behrule <- function(
   check_type <- all(sapply(behrule, is.character))
   if (!(check_type)) {message("Invalid behrule key type")}
   
-  # 默认others
+  # 默认hidden(mid)
   default <- list(
-    dyn = c("alpha", "beta", "gamma", "delta", "epsilon", "zeta")
+    mid = c("alpha", "beta", "gamma", "delta", "epsilon", "zeta")
   )
   behrule <- utils::modifyList(x = default, val = behrule)
   
@@ -46,8 +46,8 @@ process_2_behrule <- function(
   multiRL.behrule <- methods::new(
     Class = "multiRL.behrule",
     cue = behrule$cue,
+    mid = behrule$mid,
     rsp = behrule$rsp,
-    dyn = behrule$dyn,
     extra = extra
   )
   

@@ -30,7 +30,23 @@
 #'          target the agent selects, which may differ from the actual 
 #'          behavioral response. For instance, cue is the color of arrows, 
 #'          rather than the direction. 
-#'          
+#' 
+#'    \item \code{mid [CharacterVector]}
+#'
+#'          The \code{mid} represents user-defined internal variables generated
+#'          by the model during the MDP process. It accepts a character vector
+#'          of arbitrary length, where each element corresponds to a named
+#'          intermediate (latent) variable.
+#'
+#'          These variables are not external inputs, but are created, modified,
+#'          and passed along internally as the model executes each function.
+#'          Each function in the MDP pipeline may read from or write to
+#'          \code{mid}, enabling flexible information flow.
+#'
+#'          Through this interface, users can implement custom intermediate
+#'          states, track hidden dynamics, and exert fine-grained control over
+#'          the behavior of the MDP process.
+#' 
 #'    \item \code{rsp [CharacterVector]}
 #'    
 #'          The \code{rsp} represents the action the agent actually makes. 
@@ -40,6 +56,7 @@
 #'          the agent updates the value associated with the arrow's color, but 
 #'          the overt response is the direction corresponding to the currently 
 #'          chosen color arrow.
+#' 
 #' }
 #' 
 #' @section Example: 

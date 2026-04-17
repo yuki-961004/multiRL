@@ -126,7 +126,7 @@ my_func_gamma <- function(
     reward,
     rownum,
     params,
-    others,
+    hidden,
     ...
 ){
   # `get_param` is an internal function and must be accessed using `:::`
@@ -159,7 +159,7 @@ my_func_gamma <- function(
     utility <- sign(reward) * (abs(reward) ^ gammaP)
   }
   
-  return(list(utility = utility, others = others))
+  return(list(output = utility, hidden = hidden))
 }
 ```
 

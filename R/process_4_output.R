@@ -56,8 +56,8 @@ process_4_output_r <- function(
   dcay_func   <- record@input@funcs@dcay_func
   
   cue         <- record@behrule@cue
+  mid         <- record@behrule@mid
   rsp         <- record@behrule@rsp
-  dyn         <- record@behrule@dyn
   
   value       <- record@result@value
   bias        <- record@result@bias
@@ -66,7 +66,7 @@ process_4_output_r <- function(
   prob        <- record@result@prob
   count       <- record@result@count
   
-  others      <- record@result@others
+  hidden      <- record@result@hidden
 
   exploration <- record@result@exploration
   latent      <- record@result@latent
@@ -96,8 +96,8 @@ process_4_output_r <- function(
   behave <- rbind(behave, rep(NA_character_, ncol(behave)))
   colnames(behave) <- c("action", "latent", "simulation", "position")
   
-  others <- rbind(others, rep(NA_character_, ncol(others)))
-  colnames(others) <- dyn
+  hidden <- rbind(hidden, rep(NA_character_, ncol(hidden)))
+  colnames(hidden) <- mid
 
 ############################# [action select] ##################################
   
@@ -120,7 +120,7 @@ process_4_output_r <- function(
 
       rownum = i,
       params = params,
-      others = others[i, ], 
+      hidden = hidden[i, ], 
 
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
@@ -128,9 +128,9 @@ process_4_output_r <- function(
       cue = cue, rsp = rsp,
       state = state[i, , ]
     )
-    bias[i, ] <- bias_results$bias 
-    others[i, ] <- bias_results$others 
-    others[i + 1, ] <- bias_results$others 
+    bias[i, ] <- bias_results$output 
+    hidden[i, ] <- bias_results$hidden 
+    hidden[i + 1, ] <- bias_results$hidden 
 
     # exploration function: 此次是否进行探索
     expl_results <- expl_func(
@@ -138,7 +138,7 @@ process_4_output_r <- function(
 
       rownum = i,
       params = params,
-      others = others[i, ],
+      hidden = hidden[i, ],
 
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
@@ -146,9 +146,9 @@ process_4_output_r <- function(
       cue = cue, rsp = rsp,
       state = state[i, , ]
     )
-    exploration[i, ] <- expl_results$try
-    others[i, ] <- expl_results$others 
-    others[i + 1, ] <- expl_results$others 
+    exploration[i, ] <- expl_results$output
+    hidden[i, ] <- expl_results$hidden 
+    hidden[i + 1, ] <- expl_results$hidden 
 
     qvalue <- lapply(value, function(x) {
       v <- x[i, ] + bias[i, ]
@@ -165,7 +165,7 @@ process_4_output_r <- function(
 
       rownum = i,
       params = params,
-      others = others[i, ],
+      hidden = hidden[i, ],
       
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
@@ -173,9 +173,9 @@ process_4_output_r <- function(
       cue = cue, rsp = rsp,
       state = state[i, , ]
     )
-    prob[i, ] <- prob_results$prob
-    others[i, ] <- prob_results$others 
-    others[i + 1, ] <- prob_results$others 
+    prob[i, ] <- prob_results$output
+    hidden[i, ] <- prob_results$hidden 
+    hidden[i + 1, ] <- prob_results$hidden 
 
     switch(
       EXPR = policy,
@@ -221,7 +221,7 @@ process_4_output_r <- function(
 
       rownum = i,
       params = params,
-      others = others[i, ],
+      hidden = hidden[i, ],
 
       idinfo = idinfo[i, ],
       exinfo = exinfo[i, ],
@@ -229,9 +229,9 @@ process_4_output_r <- function(
       cue = cue, rsp = rsp,
       state = state[i, , ]
     )
-    utility[i, ] <- util_results$utility 
-    others[i, ] <- util_results$others 
-    others[i + 1, ] <- util_results$others 
+    utility[i, ] <- util_results$output 
+    hidden[i, ] <- util_results$hidden 
+    hidden[i + 1, ] <- util_results$hidden 
     
     # 判断是否需要重置：Block是否发生变化
     if (!is.na(reset)) {
@@ -267,7 +267,7 @@ process_4_output_r <- function(
 
         rownum = i,
         params = params,
-        others = others[i, ],
+        hidden = hidden[i, ],
         
         idinfo = idinfo[i, ],
         exinfo = exinfo[i, ],
@@ -275,9 +275,9 @@ process_4_output_r <- function(
         cue = cue, rsp = rsp,
         state = state[i, , ]
       )
-      sub_value[i + 1, ] <- dcay_results$decay 
-      others[i, ] <- dcay_results$others 
-      others[i + 1, ] <- dcay_results$others 
+      sub_value[i + 1, ] <- dcay_results$output 
+      hidden[i, ] <- dcay_results$hidden 
+      hidden[i + 1, ] <- dcay_results$hidden 
 
       if (is.na(Q0) && is.fp) {
         # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
@@ -295,7 +295,7 @@ process_4_output_r <- function(
 
           rownum = i,
           params = params,
-          others = others[i, ],
+          hidden = hidden[i, ],
           
           idinfo = idinfo[i, ],
           exinfo = exinfo[i, ],
@@ -303,9 +303,9 @@ process_4_output_r <- function(
           cue = cue, rsp = rsp,
           state = state[i, , ]
         )
-        sub_value[i + 1, latent[i, ]] <- lrng_results$update 
-        others[i, ] <- lrng_results$others 
-        others[i + 1, ] <- lrng_results$others 
+        sub_value[i + 1, latent[i, ]] <- lrng_results$output 
+        hidden[i, ] <- lrng_results$hidden 
+        hidden[i + 1, ] <- lrng_results$hidden 
       }
       
       value[[sub_system]] <- sub_value
@@ -329,7 +329,7 @@ process_4_output_r <- function(
   record@result@prob        <- prob
   record@result@count       <- count
   
-  record@result@others      <- others
+  record@result@hidden      <- hidden
 
   record@result@exploration <- exploration
   record@result@latent      <- latent
