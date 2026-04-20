@@ -174,7 +174,7 @@
 #'          cease exploring other options after receiving the first reward,
 #'          resulting in repeated selection of the initially chosen action.
 #'
-#'          The default value is set to \code{NA}, which implies that the agent
+#'          The default value is set to \code{NaN}, which implies that the agent
 #'          will use the first observed reward as the initial value for that
 #'          action. When combined with Upper Confidence Bound, this setting
 #'          ensures that every option is selected at least once, and their
@@ -183,15 +183,26 @@
 #'          Note: This is what I consider the reasonable setting. If you
 #'          think this interpretation unsuitable, you may explicitly set
 #'          \code{Q0} to 0 or another optimistic initial value instead.
+#'          
+#'          Advanced: If you’re using \code{dcay_func} to set initial values 
+#'          (for example, when they vary across blocks and can’t be captured by 
+#'          a single number), just set this parameter to \code{NA_real_}. 
+#'          In that case, the initial values will be taken directly from 
+#'          \code{dcay_func}.
 #'
 #'    \item \code{reset [double]}
 #'
 #'          If changes may occur between blocks, you can choose whether to
 #'          reset the learned values for each option. By default, no reset is
-#'          applied. For example, setting \code{reset = 0} means that upon
-#'          entering a new block, the values of all options are reset to 0. In
-#'          addition, if \code{Q0} is also set to 0, this implies that the
-#'          learning rate on the first trial of each block will be 100%.
+#'          applied (\code{reset = NaN}). 
+#'          For example, setting \code{reset = 0} means that upon entering a 
+#'          new block, the values of all options are reset to 0. 
+#' 
+#'          Advanced: If you’re using \code{dcay_func} to set reset values 
+#'          (for example, when they vary across blocks and can’t be captured by 
+#'          a single number), just set this parameter to \code{NA_real_}. 
+#'          In that case, the initial values will be taken directly from 
+#'          \code{dcay_func}.
 #'
 #'    \item \code{lapse [double]}
 #'
@@ -327,8 +338,8 @@
 #'      seed = 123,
 #'      L = 0,
 #'      penalty = 1,
-#'      Q0 = NA_real_,
-#'      reset = NA_real_,
+#'      Q0 = NaN,
+#'      reset = NaN,
 #'      lapse = 0.01,
 #'      threshold = 1,
 #'      bonus = 0,

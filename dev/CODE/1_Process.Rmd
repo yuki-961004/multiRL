@@ -15,16 +15,22 @@ multiRL.input <- multiRL::process_1_input(
   ),
   params = list(
     free = list(
-      alpha = 0.3,
+      alpha = 0.5,
+      # alphaN = 0.3,
+      # alphaP = 0.7,
       beta = 0.5
-    )
+    ),
+    fixed = list(Q0 = NA_real_, reset = NA_real_)
+    #fixed = list(Q0 = NaN, reset = NaN)
   ),
   priors = list(
     alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    # alphaN = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    # alphaP = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
     beta = function(x) {stats::dexp(x, rate = 1, log = TRUE)}
   ),
   settings = list(
-    name = "TD",
+    name = "RSTD",
     mode = "fitting",
     estimate = "MLE",
     policy = "on"

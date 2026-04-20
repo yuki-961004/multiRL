@@ -85,7 +85,7 @@ process_4_output_r <- function(
   reset       <- params[["reset"]]
   
   value       <- lapply(value, function(x) {
-    x[1, ] <- ifelse(is.na(Q0), yes = 0, no = Q0)
+    x[1, ] <- ifelse(is.nan(Q0), yes = 0, no = Q0)
     rbind(x, rep(NA_real_, ncol(x)))
   })
 
@@ -152,7 +152,10 @@ process_4_output_r <- function(
 
     qvalue <- lapply(value, function(x) {
       v <- x[i, ] + bias[i, ]
-      v[is.na(shown[i, ])] <- NA
+      # 如果该试次不出现某选项, 则替换成NA_real_
+      v[is.na(shown[i, ])] <- NA_real_
+      # 如果该试次出现的选项价值都是NA, 则说明Q0 = NA_real_, 第零行Q需要替换为0
+      v[!is.na(shown[i, ]) & is.na(v)] <- 0
       return(v)
     })
 
@@ -234,8 +237,8 @@ process_4_output_r <- function(
     hidden[i + 1, ] <- util_results$hidden 
     
     # 判断是否需要重置：Block是否发生变化
-    if (!is.na(reset)) {
-      is.nb <- i > 1 && block[i] != block[i - 1]
+    if (!is.nan(reset)) {
+      is.nb <- trial[i] == 1
     } else {
       is.nb <- FALSE
     }
@@ -279,33 +282,36 @@ process_4_output_r <- function(
       hidden[i, ] <- dcay_results$hidden 
       hidden[i + 1, ] <- dcay_results$hidden 
 
-      if (is.na(Q0) && is.fp) {
-        # 如果是第一次选, 则直接记录价值 (等同于学习率100%的价值更新)
-        sub_value[i + 1, latent[i, ]] <- utility[i, ]
-        # 修改初始值为第一次见到的值
-        sub_value[1, latent[i, ]]     <- utility[i, ]
-      } else {
-        # learning rate function: 如果不是第一次选, 则按照学习率方程更新
-        lrng_results <- lrng_func(
-          shown = shown[i, ],
-          qvalue = Qi,
-          reward = as.numeric(reward[i, ]),
-          utility = as.numeric(utility[i, ]),
-          system = sub_system,
+      # 当使用dcay_func设定初始值(Q0 = NA_real_)需要从事实第一行读取初始值.
+      if (is.nb) {Qi = sub_value[i + 1, latent[i, ]]}
 
-          rownum = i,
-          params = params,
-          hidden = hidden[i, ],
-          
-          idinfo = idinfo[i, ],
-          exinfo = exinfo[i, ],
-          behave = behave[i, ],
-          cue = cue, rsp = rsp,
-          state = state[i, , ]
-        )
-        sub_value[i + 1, latent[i, ]] <- lrng_results$output 
-        hidden[i, ] <- lrng_results$hidden 
-        hidden[i + 1, ] <- lrng_results$hidden 
+      # learning rate function: 如果不是第一次选, 则按照学习率方程更新
+      lrng_results <- lrng_func(
+        shown = shown[i, ],
+        first = is.fp,
+        qvalue = Qi,
+        reward = as.numeric(reward[i, ]),
+        utility = as.numeric(utility[i, ]),
+        system = sub_system,
+
+        rownum = i,
+        params = params,
+        hidden = hidden[i, ],
+        
+        idinfo = idinfo[i, ],
+        exinfo = exinfo[i, ],
+        behave = behave[i, ],
+        cue = cue, rsp = rsp,
+        state = state[i, , ]
+      )
+      sub_value[i + 1, latent[i, ]] <- lrng_results$output 
+      hidden[i, ] <- lrng_results$hidden 
+      hidden[i + 1, ] <- lrng_results$hidden 
+
+      # 如果Q0为NaN, 且是第一次选, 进行了100%学习率价值更新
+      if (is.nan(Q0) && is.fp) {
+        # 将初始值替换为第一次见到的值
+        sub_value[1, latent[i, ]] <- lrng_results$output
       }
       
       value[[sub_system]] <- sub_value

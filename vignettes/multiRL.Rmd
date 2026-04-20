@@ -91,13 +91,14 @@ print(multiRL::func_alpha)
 ```{r eval=FALSE}
 func_alpha <- function(
     shown,
+    first,
     qvalue,
     reward,
     utility,
     system,
     rownum,
     params,
-    others,
+    hidden,
     ...
 ){
   
@@ -110,9 +111,16 @@ func_alpha <- function(
   # Frame  <- exinfo[1]
   # Action <- behave[1]
   
+  Q0        <-  params[["Q0"]]
   alpha     <-  params[["alpha"]]
   alphaN    <-  params[["alphaN"]]
   alphaP    <-  params[["alphaP"]]
+
+  if (is.nan(Q0) && first) {
+    update <- utility
+    hidden[1] <- "first"
+    return(list(output = update, hidden = hidden))
+  }
   
   # Determine the model currently in use based on which parameters are free.
   if (
@@ -145,7 +153,9 @@ func_alpha <- function(
     update <- qvalue + alpha  * (reward - qvalue)
   }
 
-  return(list(update = update, others = others)) 
+  hidden[1] <- "alpha"
+
+  return(list(output = update, hidden = hidden)) 
 }
 ```
 </details>
@@ -166,7 +176,7 @@ func_beta <- function(
     explor,
     rownum,
     params,
-    others,
+    hidden,
     system,
     ...
 ){
@@ -215,7 +225,9 @@ func_beta <- function(
   # lapse
   prob <- (1 - lapse * n_shown) * prob + lapse
   
-  return(list(prob = prob, others = others)) 
+  hidden[2] <- "beta"
+
+  return(list(output = prob, hidden = hidden)) 
 }
 ```
 
@@ -236,7 +248,7 @@ func_gamma <- function(
     reward,
     rownum,
     params,
-    others,
+    hidden,
     ...
 ){
   
@@ -254,7 +266,9 @@ func_gamma <- function(
   # Stevens' Power Law
   utility <- ((reward >= 0) * 2 - 1) * (abs(reward) ^ gamma)
   
-  return(list(utility = utility, others = others)) 
+  hidden[3] <- "gamma"
+
+  return(list(output = utility, hidden = hidden)) 
 }
 ```
 </details>
@@ -274,7 +288,7 @@ func_delta <- function(
     count,
     rownum,
     params,
-    others,
+    hidden,
     ...
 ){
   
@@ -323,7 +337,9 @@ func_delta <- function(
     # Sticky to the same position
     sticky * last_position
 
-  return(list(bias = bias, others = others)) 
+  hidden[4] <- "delta"
+
+  return(list(output = bias, hidden = hidden)) 
 }
 ```
 </details>
@@ -342,7 +358,7 @@ func_epsilon <- function(
     shown,
     rownum,
     params,
-    others,
+    hidden,
     ...
 ){
   
@@ -384,7 +400,9 @@ func_epsilon <- function(
     try <- as.integer(stats::runif(1) < prob_explore)
   }
   
-  return(list(try = try, others = others)) 
+  hidden[5] <- "epsilon"
+
+  return(list(output = try, hidden = hidden)) 
 }
 ```
 </details>
@@ -407,7 +425,7 @@ func_zeta <- function(
     system,
     rownum,
     params,
-    others,
+    hidden,
     ...
 ){
   
@@ -431,7 +449,9 @@ func_zeta <- function(
     decay <- values + zeta * (value0 - values) - bonus
   }
 
-  return(list(decay = decay, others = others)) 
+  hidden[6] <- "zeta"
+
+  return(list(output = decay, hidden = hidden)) 
 }
 ```
 </details>

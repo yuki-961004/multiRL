@@ -58,8 +58,10 @@
 #'    ),
 #'    constant = list(
 #'      seed = 123,
-#'      Q0 = NA_real_, 
-#'      reset = NA_real_,
+#'      L = 0,
+#'      penalty = 1,
+#'      Q0 = NaN, 
+#'      reset = NaN,
 #'      lapse = 0.01,
 #'      threshold = 1,
 #'      bonus = 0,

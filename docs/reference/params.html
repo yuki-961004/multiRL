@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -222,21 +222,30 @@
          Conversely, an overly low initial value might lead the agent to
          cease exploring other options after receiving the first reward,
          resulting in repeated selection of the initially chosen action.</p>
-<p>The default value is set to <code>NA</code>, which implies that the agent
+<p>The default value is set to <code>NaN</code>, which implies that the agent
          will use the first observed reward as the initial value for that
          action. When combined with Upper Confidence Bound, this setting
          ensures that every option is selected at least once, and their
          first rewards are immediately memorized.</p>
 <p>Note: This is what I consider the reasonable setting. If you
          think this interpretation unsuitable, you may explicitly set
-         <code>Q0</code> to 0 or another optimistic initial value instead.</p></li>
+         <code>Q0</code> to 0 or another optimistic initial value instead.</p>
+<p>Advanced: If you’re using <code>dcay_func</code> to set initial values
+         (for example, when they vary across blocks and can’t be captured by
+         a single number), just set this parameter to <code>NA_real_</code>.
+         In that case, the initial values will be taken directly from
+         <code>dcay_func</code>.</p></li>
 <li><p><code>reset [double]</code></p>
 <p>If changes may occur between blocks, you can choose whether to
          reset the learned values for each option. By default, no reset is
-         applied. For example, setting <code>reset = 0</code> means that upon
-         entering a new block, the values of all options are reset to 0. In
-         addition, if <code>Q0</code> is also set to 0, this implies that the
-         learning rate on the first trial of each block will be 100<!-- %. --></p></li>
+         applied (<code>reset = NaN</code>).
+         For example, setting <code>reset = 0</code> means that upon entering a
+         new block, the values of all options are reset to 0.</p>
+<p>Advanced: If you’re using <code>dcay_func</code> to set reset values
+         (for example, when they vary across blocks and can’t be captured by
+         a single number), just set this parameter to <code>NA_real_</code>.
+         In that case, the initial values will be taken directly from
+         <code>dcay_func</code>.</p></li>
 <li><p><code>lapse [double]</code></p>
 <p>Wilson and Collins, (2019) <a href="https://doi.org/10.7554/eLife.49547" class="external-link">doi:10.7554/eLife.49547</a>
 
@@ -354,8 +363,8 @@
 <span>     seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>     L <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>     penalty <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>     Q0 <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
-<span>     reset <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>     Q0 <span class="op">=</span> <span class="cn">NaN</span>,</span>
+<span>     reset <span class="op">=</span> <span class="cn">NaN</span>,</span>
 <span>     lapse <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>     threshold <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>     bonus <span class="op">=</span> <span class="fl">0</span>,</span>

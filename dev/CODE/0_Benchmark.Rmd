@@ -25,7 +25,7 @@ binaryRL.res <- binaryRL::run_m(
 summary(binaryRL.res)
 
 multiRL.model <- multiRL::run_m(
-  #engine = "R",
+  engine = "R",
   data = binaryRL::Mason_2024_G2[binaryRL::Mason_2024_G2[, "Subject"] == 1, ],
   behrule = list(
     cue = c("A", "B", "C", "D"),
