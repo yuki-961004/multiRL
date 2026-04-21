@@ -237,33 +237,21 @@ process_4_output_r <- function(
     hidden[i + 1, ] <- util_results$hidden 
     
     # 判断是否需要重置：Block是否发生变化
-    if (!is.nan(reset)) {
-      is.nb <- trial[i] == 1
-    } else {
-      is.nb <- FALSE
-    }
-
+    is.nb <- trial[i] == 1
     # 检查此时是否是第一次选(全局第一次 or 局部第一次, 都算)
     is.fp <- count[i, latent[i, ]] == 0
 
     # 多系统更新价值
     for (sub_system in system) {
-      sub_value <- value[[sub_system]]
       
-      # 是否在进入新block时重置
-      if (is.nb) {
-        cur_value <- rep(reset, length(sub_value[i, ]))
-        Qi <- reset
-      } else {
-        cur_value <- sub_value[i, ]
-        Qi <- sub_value[i, latent[i, ]]
-      }
+      sub_value <- value[[sub_system]]
       
       # 工作记忆容量有限导致未被选择选项的价值衰减
       dcay_results <- dcay_func(
         shown = shown[i, ],
+        is.nb = is.nb,
         value0 = sub_value[1, ],
-        values = cur_value,
+        values = sub_value[i, ],
         reward = as.numeric(reward[i, ]),
         utility = as.numeric(utility[i, ]),
         system = sub_system,
@@ -282,13 +270,17 @@ process_4_output_r <- function(
       hidden[i, ] <- dcay_results$hidden 
       hidden[i + 1, ] <- dcay_results$hidden 
 
-      # 当使用dcay_func设定初始值(Q0 = NA_real_)需要从事实第一行读取初始值.
-      if (is.nb) {Qi = sub_value[i + 1, latent[i, ]]}
+      # 从当前行读取Qi
+      Qi = sub_value[i, latent[i, ]]
+      # 如果是新block, 且reset是NA_real而非NaN, 则Qi从新block第一试次读取. 
+      if (is.nb && is.na(reset) && !is.nan(reset)) {
+        Qi = sub_value[i + 1, latent[i, ]]
+      }
 
       # learning rate function: 如果不是第一次选, 则按照学习率方程更新
       lrng_results <- lrng_func(
         shown = shown[i, ],
-        first = is.fp,
+        is.fp = is.fp,
         qvalue = Qi,
         reward = as.numeric(reward[i, ]),
         utility = as.numeric(utility[i, ]),
@@ -318,7 +310,7 @@ process_4_output_r <- function(
     }
     
     # 如果需要重置, 且进入了新block, 则计数器也要归零
-    if (is.nb) {
+    if (is.nb && is.nan(reset)) {
       count[i + 1, ] <- 0
     } else {
       count[i + 1, ] <- count[i, ]

@@ -6,6 +6,7 @@
 \usage{
 func_zeta(
   shown,
+  is.nb,
   value0,
   values,
   reward,
@@ -19,6 +20,8 @@ func_zeta(
 }
 \arguments{
 \item{shown}{Which options shown in this trial.}
+
+\item{is.nb}{Is it the new block?}
 
 \item{value0}{The initial values for all actions.}
 
@@ -125,7 +128,15 @@ A \code{List}
   
   zeta       <-  params[["zeta"]]
   bonus      <-  params[["bonus"]]
-  
+  reset      <-  params[["reset"]]
+    
+  # If reset all Q values 
+  if (is.nb && !is.na(reset)) {
+    decay <- rep(reset, length(values))
+    hidden[6] <- "reset"
+    return(list(output = decay, hidden = hidden)) 
+  } 
+
   if (reward == 0) {
     decay <- values + zeta * (value0 - values)
   } else if (reward < 0) {

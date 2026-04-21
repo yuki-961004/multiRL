@@ -5,8 +5,8 @@
 #'
 #' @param shown
 #'  Which options shown in this trial.
-#' @param first
-#'  Is it the first time pick this option?
+#' @param is.fp
+#'  Is it the first time picking this option?
 #' @param qvalue 
 #'  The expected Q values of different behaviors produced by different systems 
 #'    when updated to this trial.
@@ -88,7 +88,7 @@
 #' @section Body: 
 #' \preformatted{func_alpha <- function(
 #'     shown,
-#'     first,
+#'     is.fp,
 #'     qvalue,
 #'     reward,
 #'     utility,
@@ -156,7 +156,7 @@
 #' 
 func_alpha <- function(
     shown,
-    first,
+    is.fp,
     qvalue,
     reward,
     utility,
@@ -181,11 +181,11 @@ func_alpha <- function(
   alphaN    <-  params[["alphaN"]]
   alphaP    <-  params[["alphaP"]]
 
-  if (is.nan(Q0) && first) {
+  if (is.nan(Q0) && is.fp) {
     update <- utility
     hidden[1] <- "first"
     return(list(output = update, hidden = hidden))
-  }
+  } 
   
   # Determine the model currently in use based on which parameters are free.
   if (

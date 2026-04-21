@@ -5,6 +5,8 @@
 #'
 #' @param shown
 #'  Which options shown in this trial.
+#' @param is.nb
+#'  Is it the new block?
 #' @param value0 
 #'  The initial values for all actions.
 #' @param values 
@@ -106,7 +108,15 @@
 #'   
 #'   zeta       <-  params[["zeta"]]
 #'   bonus      <-  params[["bonus"]]
-#'   
+#'   reset      <-  params[["reset"]]
+#'     
+#'   # If reset all Q values 
+#'   if (is.nb && !is.na(reset)) {
+#'     decay <- rep(reset, length(values))
+#'     hidden[6] <- "reset"
+#'     return(list(output = decay, hidden = hidden)) 
+#'   } 
+#' 
 #'   if (reward == 0) {
 #'     decay <- values + zeta * (value0 - values)
 #'   } else if (reward < 0) {
@@ -121,6 +131,7 @@
 #' 
 func_zeta <- function(
     shown,
+    is.nb,
     value0, 
     values,
     reward,
@@ -143,7 +154,15 @@ func_zeta <- function(
   
   zeta       <-  params[["zeta"]]
   bonus      <-  params[["bonus"]]
+  reset      <-  params[["reset"]]
   
+  # If reset all Q values 
+  if (is.nb && !is.na(reset)) {
+    decay <- rep(reset, length(values))
+    hidden[6] <- "reset"
+    return(list(output = decay, hidden = hidden)) 
+  } 
+
   if (reward == 0) {
     decay <- values + zeta * (value0 - values)
   } else if (reward < 0) {

@@ -65,6 +65,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">func_zeta</span><span class="op">(</span></span>
 <span>  <span class="va">shown</span>,</span>
+<span>  <span class="va">is.nb</span>,</span>
 <span>  <span class="va">value0</span>,</span>
 <span>  <span class="va">values</span>,</span>
 <span>  <span class="va">reward</span>,</span>
@@ -83,6 +84,10 @@
 
 <dl><dt id="arg-shown">shown<a class="anchor" aria-label="anchor" href="#arg-shown"></a></dt>
 <dd><p>Which options shown in this trial.</p></dd>
+
+
+<dt id="arg-is-nb">is.nb<a class="anchor" aria-label="anchor" href="#arg-is-nb"></a></dt>
+<dd><p>Is it the new block?</p></dd>
 
 
 <dt id="arg-value-">value0<a class="anchor" aria-label="anchor" href="#arg-value-"></a></dt>
@@ -192,6 +197,14 @@ see <a href="params.html">params</a></p></dd>
 <span></span>
 <span>  <span class="va">zeta</span>       <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"zeta"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">bonus</span>      <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"bonus"</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">reset</span>      <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"reset"</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span>  <span class="co"># If reset all Q values</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">is.nb</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">reset</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">decay</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">reset</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">values</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">hidden</span><span class="op">[</span><span class="fl">6</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"reset"</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>output <span class="op">=</span> <span class="va">decay</span>, hidden <span class="op">=</span> <span class="va">hidden</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">reward</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">decay</span> <span class="op">&lt;-</span> <span class="va">values</span> <span class="op">+</span> <span class="va">zeta</span> <span class="op">*</span> <span class="op">(</span><span class="va">value0</span> <span class="op">-</span> <span class="va">values</span><span class="op">)</span></span>

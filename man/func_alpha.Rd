@@ -6,7 +6,7 @@
 \usage{
 func_alpha(
   shown,
-  first,
+  is.fp,
   qvalue,
   reward,
   utility,
@@ -20,7 +20,7 @@ func_alpha(
 \arguments{
 \item{shown}{Which options shown in this trial.}
 
-\item{first}{Is it the first time pick this option?}
+\item{is.fp}{Is it the first time picking this option?}
 
 \item{qvalue}{The expected Q values of different behaviors produced by different systems 
 when updated to this trial.}
@@ -107,7 +107,7 @@ A \code{List}
  
 \preformatted{func_alpha <- function(
     shown,
-    first,
+    is.fp,
     qvalue,
     reward,
     utility,

@@ -443,12 +443,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         // 在cue中寻找target
         col_index = cue_map[target];
         
-        bool is_nb;
-        if (!R_IsNaN(reset)) {
-            is_nb = trial[i] == 1;
-        } else {
-            is_nb = false;  
-        }
+        bool is_nb = trial[i] == 1;
 
         // 检查此时是否是第一次选(全局第一次 or 局部第一次, 都算)
         bool is_fp = (count(i, col_index) == 0);
@@ -462,20 +457,12 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             double Qi;
             Rcpp::NumericVector cur_value;
 
-            // 是否在进入新 block 时重置
-            if (is_nb) {
-                cur_value = Rcpp::rep(reset, sub_value.ncol());
-                Qi        = reset;
-            } else {
-                cur_value = Rcpp::NumericVector(sub_value.row(i));
-                Qi        = sub_value(i, col_index);
-            }
-
             // decay：未被选择选项的价值衰减
             Rcpp::List dcay_results = dcay_func(
                 Rcpp::_["shown"]  = Rcpp::NumericVector(shown.row(i)),
+                Rcpp::_["is.nb"]  = is_nb,
                 Rcpp::_["value0"] = Rcpp::NumericVector(sub_value.row(0)),
-                Rcpp::_["values"] = cur_value,
+                Rcpp::_["values"] = Rcpp::NumericVector(sub_value.row(i)),
                 Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                 Rcpp::_["utility"] = utility(i, 0),
                 Rcpp::_["system"] = sub_system,
@@ -495,12 +482,15 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
             hidden.row(i) = updated_hidden;
             hidden.row(i + 1) = updated_hidden;
 
-            if (is_nb) {Qi = sub_value(i + 1, col_index);}
+            Qi = sub_value(i, col_index);
+            if (is_nb && R_IsNA(reset)) {
+                Qi = sub_value(i + 1, col_index);
+            }
 
             // learning rate 更新
             Rcpp::List lrng_results = lrng_func(
                 Rcpp::_["shown"] = Rcpp::NumericVector(shown.row(i)),
-                Rcpp::_["first"] = is_fp,
+                Rcpp::_["is.fp"] = is_fp,
                 Rcpp::_["qvalue"] = Qi,
                 Rcpp::_["reward"] = Rcpp::NumericVector(reward.row(i)),
                 Rcpp::_["utility"] = utility(i, 0),
@@ -530,7 +520,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         }
         
         //如果需要重置, 且进入了新block, 则计数器也要归零
-        if (is_nb) {
+        if (is_nb && R_IsNaN(reset)) {
             std::fill( count.row(i+1).begin(), count.row(i+1).end(), 0.0 );
         } else {
             count.row(i+1) = count.row(i);
