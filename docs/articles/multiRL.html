@@ -37,7 +37,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -248,7 +248,7 @@ Learning Rate (α)
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">func_alpha</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>    <span class="va">shown</span>,</span>
-<span>    <span class="va">first</span>,</span>
+<span>    <span class="va">is.fp</span>,</span>
 <span>    <span class="va">qvalue</span>,</span>
 <span>    <span class="va">reward</span>,</span>
 <span>    <span class="va">utility</span>,</span>
@@ -273,11 +273,11 @@ Learning Rate (α)
 <span>  <span class="va">alphaN</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"alphaN"</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="va">alphaP</span>    <span class="op">&lt;-</span>  <span class="va">params</span><span class="op">[[</span><span class="st">"alphaP"</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.nan</a></span><span class="op">(</span><span class="va">Q0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">first</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.nan</a></span><span class="op">(</span><span class="va">Q0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">is.fp</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">utility</span></span>
 <span>    <span class="va">hidden</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"first"</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>output <span class="op">=</span> <span class="va">update</span>, hidden <span class="op">=</span> <span class="va">hidden</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
+<span>  <span class="op">}</span> </span>
 <span>  </span>
 <span>  <span class="co"># Determine the model currently in use based on which parameters are free.</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span></span>
@@ -292,22 +292,21 @@ Learning Rate (α)
 <span>    <span class="va">system</span> <span class="op">==</span> <span class="st">"WM"</span></span>
 <span>  <span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"WM"</span></span>
-<span>    <span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Unknown Model! Plase modify your learning rate function"</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="co"># TD</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">model</span> <span class="op">==</span> <span class="st">"TD"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alpha</span>  <span class="op">*</span> <span class="op">(</span><span class="va">reward</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
+<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alpha</span> <span class="op">*</span> <span class="op">(</span><span class="va">utility</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
 <span>  <span class="co"># RSTD</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">model</span> <span class="op">==</span> <span class="st">"RSTD"</span> <span class="op">&amp;&amp;</span> <span class="va">reward</span> <span class="op">&lt;</span> <span class="va">qvalue</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alphaN</span> <span class="op">*</span> <span class="op">(</span><span class="va">reward</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">model</span> <span class="op">==</span> <span class="st">"RSTD"</span> <span class="op">&amp;&amp;</span> <span class="va">reward</span> <span class="op">&gt;=</span> <span class="va">qvalue</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alphaP</span> <span class="op">*</span> <span class="op">(</span><span class="va">reward</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">model</span> <span class="op">==</span> <span class="st">"RSTD"</span> <span class="op">&amp;&amp;</span> <span class="va">utility</span> <span class="op">&lt;</span> <span class="va">qvalue</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alphaN</span> <span class="op">*</span> <span class="op">(</span><span class="va">utility</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">model</span> <span class="op">==</span> <span class="st">"RSTD"</span> <span class="op">&amp;&amp;</span> <span class="va">utility</span> <span class="op">&gt;=</span> <span class="va">qvalue</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alphaP</span> <span class="op">*</span> <span class="op">(</span><span class="va">utility</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
 <span>  <span class="co"># WM</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">model</span> <span class="op">==</span> <span class="st">"WM"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">qvalue</span> <span class="op">+</span> <span class="va">alpha</span>  <span class="op">*</span> <span class="op">(</span><span class="va">reward</span> <span class="op">-</span> <span class="va">qvalue</span><span class="op">)</span></span>
+<span>    <span class="va">update</span> <span class="op">&lt;-</span> <span class="va">reward</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="va">hidden</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"alpha"</span></span>

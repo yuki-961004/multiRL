@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,7 +116,7 @@
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>      beta <span class="op">=</span> <span class="fl">0.01</span></span>
+<span>      beta <span class="op">=</span> <span class="fl">0.5</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -128,12 +128,12 @@
 <span></span>
 <span><span class="va">multiRL.summary</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">multiRL.model</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Model Fit:</span></span>
-<span><span class="co">##   Accuracy: 51.39%</span></span>
-<span><span class="co">##   Log-Likelihood: -254.54</span></span>
-<span><span class="co">##   Log-Prior Probability: 0.4</span></span>
-<span><span class="co">##   Log-Posterior Probability: -254.14</span></span>
-<span><span class="co">##   AIC: 513.07</span></span>
-<span><span class="co">##   BIC: 520.84</span></span></code></pre>
+<span><span class="co">##   Accuracy: 56.94%</span></span>
+<span><span class="co">##   Log-Likelihood: -418.56</span></span>
+<span><span class="co">##   Log-Prior Probability: -0.09</span></span>
+<span><span class="co">##   Log-Posterior Probability: -418.65</span></span>
+<span><span class="co">##   AIC: 841.11</span></span>
+<span><span class="co">##   BIC: 848.89</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="rstd">RSTD<a class="anchor" aria-label="anchor" href="#rstd"></a>
@@ -196,12 +196,12 @@
 <span></span>
 <span><span class="va">multiRL.summary</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">multiRL.model</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Model Fit:</span></span>
-<span><span class="co">##   Accuracy: 54.17%</span></span>
-<span><span class="co">##   Log-Likelihood: -441.01</span></span>
+<span><span class="co">##   Accuracy: 53.06%</span></span>
+<span><span class="co">##   Log-Likelihood: -271.62</span></span>
 <span><span class="co">##   Log-Prior Probability: 0.31</span></span>
-<span><span class="co">##   Log-Posterior Probability: -440.7</span></span>
-<span><span class="co">##   AIC: 888.02</span></span>
-<span><span class="co">##   BIC: 899.68</span></span></code></pre>
+<span><span class="co">##   Log-Posterior Probability: -271.31</span></span>
+<span><span class="co">##   AIC: 549.24</span></span>
+<span><span class="co">##   BIC: 560.9</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="prospect">Prospect<a class="anchor" aria-label="anchor" href="#prospect"></a>
@@ -281,12 +281,12 @@ compatibility with both Stevens’ Power Law and Prospect Theory.</p>
 <span></span>
 <span><span class="va">multiRL.summary</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">multiRL.model</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Model Fit:</span></span>
-<span><span class="co">##   Accuracy: 55%</span></span>
-<span><span class="co">##   Log-Likelihood: -438.79</span></span>
+<span><span class="co">##   Accuracy: 54.44%</span></span>
+<span><span class="co">##   Log-Likelihood: -278.4</span></span>
 <span><span class="co">##   Log-Prior Probability: -0.74</span></span>
-<span><span class="co">##   Log-Posterior Probability: -439.52</span></span>
-<span><span class="co">##   AIC: 887.58</span></span>
-<span><span class="co">##   BIC: 907.01</span></span></code></pre>
+<span><span class="co">##   Log-Posterior Probability: -279.13</span></span>
+<span><span class="co">##   AIC: 566.8</span></span>
+<span><span class="co">##   BIC: 586.23</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

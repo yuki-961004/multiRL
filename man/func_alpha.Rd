@@ -151,22 +151,21 @@ A \code{List}
     system == "WM"
   ) {
     model <- "WM"
-    alpha <- 1
   } else {
     stop("Unknown Model! Plase modify your learning rate function")
   }
   
   # TD
   if (model == "TD") {
-    update <- qvalue + alpha   * (reward - qvalue)
+    update <- qvalue + alpha * (utility - qvalue)
   # RSTD
-  } else if (model == "RSTD" && reward < qvalue) {
-    update <- qvalue + alphaN * (reward - qvalue)
-  } else if (model == "RSTD" && reward >= qvalue) {
-    update <- qvalue + alphaP * (reward - qvalue)
+  } else if (model == "RSTD" && utility < qvalue) {
+    update <- qvalue + alphaN * (utility - qvalue)
+  } else if (model == "RSTD" && utility >= qvalue) {
+    update <- qvalue + alphaP * (utility - qvalue)
   # WM
   } else if (model == "WM") {
-    update <- qvalue + alpha  * (reward - qvalue)
+    update <- reward
   }
   
   return(list(output = update, hidden = hidden)) 
