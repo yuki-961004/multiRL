@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -287,6 +287,70 @@ compatibility with both Stevens’ Power Law and Prospect Theory.</p>
 <span><span class="co">##   Log-Posterior Probability: -279.13</span></span>
 <span><span class="co">##   AIC: 566.8</span></span>
 <span><span class="co">##   BIC: 586.23</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="rlwm">RLWM<a class="anchor" aria-label="anchor" href="#rlwm"></a>
+</h2>
+<p align="center">
+<img src="fig/WM.png" alt="WM" width="50%" style="display: inline;"></p>
+<p>For more information, see <a href="https://github.com/yuki-961004/RLWMH" class="external-link uri">https://github.com/yuki-961004/RLWMH</a></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="va"><a href="../reference/WMT.html">WMT</a></span></span>
+<span><span class="va">behrule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  cue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"AJ"</span>, <span class="st">"AK"</span>, <span class="st">"AL"</span>, </span>
+<span>    <span class="st">"BJ"</span>, <span class="st">"BK"</span>, <span class="st">"BL"</span>, </span>
+<span>    <span class="st">"CJ"</span>, <span class="st">"CK"</span>, <span class="st">"CL"</span>, </span>
+<span>    <span class="st">"DJ"</span>, <span class="st">"DK"</span>, <span class="st">"DL"</span>, </span>
+<span>    <span class="st">"EJ"</span>, <span class="st">"EK"</span>, <span class="st">"EL"</span>, </span>
+<span>    <span class="st">"FJ"</span>, <span class="st">"FK"</span>, <span class="st">"FL"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  rsp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"AJ"</span>, <span class="st">"AK"</span>, <span class="st">"AL"</span>, </span>
+<span>    <span class="st">"BJ"</span>, <span class="st">"BK"</span>, <span class="st">"BL"</span>, </span>
+<span>    <span class="st">"CJ"</span>, <span class="st">"CK"</span>, <span class="st">"CL"</span>, </span>
+<span>    <span class="st">"DJ"</span>, <span class="st">"DK"</span>, <span class="st">"DL"</span>, </span>
+<span>    <span class="st">"EJ"</span>, <span class="st">"EK"</span>, <span class="st">"EL"</span>, </span>
+<span>    <span class="st">"FJ"</span>, <span class="st">"FK"</span>, <span class="st">"FL"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">colnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  subid <span class="op">=</span> <span class="st">"Subject"</span>, block <span class="op">=</span> <span class="st">"Block"</span>, trial <span class="op">=</span> <span class="st">"Trial"</span>,</span>
+<span>  object <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Object_1"</span>, <span class="st">"Object_2"</span>, <span class="st">"Object_3"</span><span class="op">)</span>,</span>
+<span>  reward <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Reward_1"</span>, <span class="st">"Reward_2"</span>, <span class="st">"Reward_3"</span><span class="op">)</span>,</span>
+<span>  action <span class="op">=</span> <span class="st">"Action"</span>,</span>
+<span>  exinfo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SetSize"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">multiRL.model</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="../reference/run_m.html">run_m</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">[</span>, <span class="st">"Subject"</span><span class="op">]</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
+<span>  behrule <span class="op">=</span> <span class="va">behrule</span>,</span>
+<span>  colnames <span class="op">=</span> <span class="va">colnames</span>,</span>
+<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>      beta <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>      zeta <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>      weight <span class="op">=</span> <span class="fl">0.5</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  priors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    alpha <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>    beta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span><span class="va">x</span>, rate <span class="op">=</span> <span class="fl">0.1</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>    zeta <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>, </span>
+<span>    weight <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Beta.html" class="external-link">dbeta</a></span><span class="op">(</span><span class="va">x</span>, shape1 <span class="op">=</span> <span class="fl">2</span>, shape2 <span class="op">=</span> <span class="fl">2</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"RLWM"</span>, policy <span class="op">=</span> <span class="st">"on"</span>, system <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RL"</span>, <span class="st">"WM"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">multiRL.summary</span> <span class="op">&lt;-</span> <span class="fu">multiRL</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">multiRL.model</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Model Fit:</span></span>
+<span><span class="co">##   Accuracy: 44.51%</span></span>
+<span><span class="co">##   Log-Likelihood: -933.42</span></span>
+<span><span class="co">##   Log-Prior Probability: -3.59</span></span>
+<span><span class="co">##   Log-Posterior Probability: -937.01</span></span>
+<span><span class="co">##   AIC: 1874.85</span></span>
+<span><span class="co">##   BIC: 1893.16</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -194,3 +194,65 @@ multiRL.model <- multiRL::run_m(
 multiRL.summary <- multiRL::summary(multiRL.model)
 ```
 
+## RLWM
+
+<p align="center">
+    <img src="./fig/WM.png" alt="WM" width="50%" style="display: inline;">
+</p>
+
+For more information, see https://github.com/yuki-961004/RLWMH
+
+```{r}
+data <- multiRL::WMT
+behrule = list(
+  cue = c(
+    "AJ", "AK", "AL", 
+    "BJ", "BK", "BL", 
+    "CJ", "CK", "CL", 
+    "DJ", "DK", "DL", 
+    "EJ", "EK", "EL", 
+    "FJ", "FK", "FL"
+  ),
+  rsp = c(
+    "AJ", "AK", "AL", 
+    "BJ", "BK", "BL", 
+    "CJ", "CK", "CL", 
+    "DJ", "DK", "DL", 
+    "EJ", "EK", "EL", 
+    "FJ", "FK", "FL"
+  )
+)
+colnames = list(
+  subid = "Subject", block = "Block", trial = "Trial",
+  object = c("Object_1", "Object_2", "Object_3"),
+  reward = c("Reward_1", "Reward_2", "Reward_3"),
+  action = "Action",
+  exinfo = c("SetSize")
+)
+```
+
+```{r}
+multiRL.model <- multiRL::run_m(
+  data = data[data[, "Subject"] == 1, ],
+  behrule = behrule,
+  colnames = colnames,
+  params = list(
+    free = list(
+      alpha = 0.5,
+      beta = 25,
+      zeta = 0.5,
+      weight = 0.5
+    )
+  ),
+  priors = list(
+    alpha = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    beta = function(x) {stats::dexp(x, rate = 0.1, log = TRUE)},
+    zeta = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}, 
+    weight = function(x) {stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)}
+  ),
+  settings = list(name = "RLWM", policy = "on", system = c("RL", "WM"))
+)
+
+multiRL.summary <- multiRL::summary(multiRL.model)
+```
+
