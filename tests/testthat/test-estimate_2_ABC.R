@@ -17,11 +17,6 @@ testthat::test_that("ABC", {
     ),
     
     models = list(multiRL::TD, multiRL::RSTD, multiRL::Utility),
-    params = list(
-      list(constant = list(chunk = 9)),
-      list(constant = list(chunk = 9)),
-      list(constant = list(chunk = 9)),
-    ),
     priors = list(
       list(
         alpha = function(x) {stats::rbeta(n = 1, shape1 = 2, shape2 = 2)}, 
