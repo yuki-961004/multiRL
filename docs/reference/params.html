@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">multiRL</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -188,6 +188,13 @@
          searching for optimal input parameters. In most cases, there is no
          need to modify this value; please keep it at the default value of
          <code>123</code>.</p></li>
+<li><p><code>chunk [int]</code></p>
+<p>Because the summary statistics are defined as the proportion of
+         each action executed within each block, when blocks are absent or
+         consist entirely of 1, the dataset must be partitioned into smaller
+         segments. This number should evenly divide the total number of
+         trials. Doing so allows ABC to obtain higher-resolution summary
+         statistics.</p></li>
 <li><p><code>L [numeric]</code></p>
 <p>This parameter determines the type of regularization applied to the
         log-likelihood to penalize model complexity, which helps prevent

@@ -122,6 +122,7 @@
 #'
 #' \subsection{constant}{
 #' \itemize{
+#' 
 #'    \item \code{seed [int]}
 #'
 #'          This seed controls the random choice of actions in the
@@ -131,6 +132,15 @@
 #'          searching for optimal input parameters. In most cases, there is no
 #'          need to modify this value; please keep it at the default value of
 #'          \code{123}.
+#'          
+#'    \item \code{chunk [int]}
+#'    
+#'          Because the summary statistics are defined as the proportion of 
+#'          each action executed within each block, when blocks are absent or 
+#'          consist entirely of 1, the dataset must be partitioned into smaller 
+#'          segments. This number should evenly divide the total number of 
+#'          trials. Doing so allows ABC to obtain higher-resolution summary 
+#'          statistics. 
 #'
 #'   \item \code{L [numeric]}
 #'
