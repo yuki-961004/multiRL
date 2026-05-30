@@ -310,7 +310,7 @@ process_4_output_r <- function(
     }
     
     # 如果需要重置, 且进入了新block, 则计数器也要归零
-    if (is.nb && is.nan(reset)) {
+    if (is.nb && !is.nan(reset)) {
       count[i + 1, ] <- 0
     } else {
       count[i + 1, ] <- count[i, ]

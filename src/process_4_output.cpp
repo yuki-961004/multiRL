@@ -520,7 +520,7 @@ Rcpp::S4 process_4_output_cpp(const Rcpp::S4 record, const Rcpp::List& extra) {
         }
         
         //如果需要重置, 且进入了新block, 则计数器也要归零
-        if (is_nb && R_IsNaN(reset)) {
+        if (is_nb && !R_IsNaN(reset)) {
             std::fill( count.row(i+1).begin(), count.row(i+1).end(), 0.0 );
         } else {
             count.row(i+1) = count.row(i);
