@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <multiRL/estimate_mle.hpp>
 #include <multiRL/modify_priors.hpp>
 #include <multiRL/process_MDP_free.hpp>
 #include <multiRL/shell_run_m.hpp>
@@ -62,9 +63,40 @@ pybind11::dict py_wrap_result(
     return out;
 }
 
+pybind11::dict py_wrap_estimate_mle_result(
+    const multiRL::EstimateMleResult& result
+) {
+    pybind11::dict params;
+    for (const auto& kv : result.params.values) {
+        params[pybind11::str(kv.first)] = kv.second;
+    }
+
+    pybind11::dict metric;
+    metric["ACC"] = result.metric.acc;
+    metric["LogL"] = result.metric.log_likelihood;
+    metric["LogPr"] = result.metric.log_prior;
+    metric["LogPo"] = result.metric.log_posterior;
+    metric["NLL"] = result.metric.nll;
+    metric["AIC"] = result.metric.aic;
+    metric["BIC"] = result.metric.bic;
+
+    pybind11::dict estimator;
+    estimator["status"] = result.status;
+    estimator["n_evals"] = result.n_evals;
+    estimator["optimum_value"] = result.optimum_value;
+    estimator["result_message"] = result.result_message;
+    estimator["stop_reason"] = result.stop_reason;
+
+    pybind11::dict out;
+    out["params"] = params;
+    out["metric"] = metric;
+    out["estimator"] = estimator;
+    return out;
+}
+
 }  // namespace
 
-pybind11::dict py_shell_run_m(
+multiRL::RunTask py_make_task(
     const multiRL::StringMatrix& object,
     const multiRL::DoubleMatrix& reward,
     const std::vector<std::string>& action,
@@ -122,8 +154,103 @@ pybind11::dict py_shell_run_m(
         prior_active
     );
 
+    return task;
+}
+
+pybind11::dict py_shell_run_m(
+    const multiRL::StringMatrix& object,
+    const multiRL::DoubleMatrix& reward,
+    const std::vector<std::string>& action,
+    const std::vector<int>& block,
+    const std::vector<int>& trial,
+    const std::vector<std::string>& cue,
+    const std::vector<std::string>& rsp,
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names,
+    const std::vector<std::string>& system,
+    const std::vector<std::string>& prior_names,
+    const std::vector<std::string>& prior_types,
+    const std::vector<double>& prior_param1,
+    const std::vector<double>& prior_param2,
+    bool prior_active,
+    const std::string& policy,
+    const std::string& name,
+    const std::string& mode,
+    const std::string& estimate
+) {
+    multiRL::RunTask task = py_make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        estimate
+    );
     multiRL::RunResult result = multiRL::shell_run_m(task);
     return py_wrap_result(result, system);
+}
+
+pybind11::dict py_estimate_mle(
+    const multiRL::StringMatrix& object,
+    const multiRL::DoubleMatrix& reward,
+    const std::vector<std::string>& action,
+    const std::vector<int>& block,
+    const std::vector<int>& trial,
+    const std::vector<std::string>& cue,
+    const std::vector<std::string>& rsp,
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names,
+    const std::vector<std::string>& system,
+    const std::vector<std::string>& prior_names,
+    const std::vector<std::string>& prior_types,
+    const std::vector<double>& prior_param1,
+    const std::vector<double>& prior_param2,
+    bool prior_active,
+    const std::string& policy,
+    const std::string& name,
+    const std::string& mode,
+    const int maxeval
+) {
+    multiRL::RunTask task = py_make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        "MLE"
+    );
+
+    multiRL::NLoptControl control;
+    control.maxeval = maxeval;
+
+    multiRL::EstimateMleResult result = multiRL::estimate_mle(task, control);
+    return py_wrap_estimate_mle_result(result);
 }
 
 PYBIND11_MODULE(_shell_run_m, module) {
@@ -150,5 +277,28 @@ PYBIND11_MODULE(_shell_run_m, module) {
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "LBI",
         pybind11::arg("estimate") = "MLE"
+    );
+    module.def(
+        "estimate_mle",
+        &py_estimate_mle,
+        pybind11::arg("object"),
+        pybind11::arg("reward"),
+        pybind11::arg("action"),
+        pybind11::arg("block"),
+        pybind11::arg("trial"),
+        pybind11::arg("cue"),
+        pybind11::arg("rsp"),
+        pybind11::arg("params"),
+        pybind11::arg("free_names"),
+        pybind11::arg("system"),
+        pybind11::arg("prior_names") = std::vector<std::string>(),
+        pybind11::arg("prior_types") = std::vector<std::string>(),
+        pybind11::arg("prior_param1") = std::vector<double>(),
+        pybind11::arg("prior_param2") = std::vector<double>(),
+        pybind11::arg("prior_active") = false,
+        pybind11::arg("policy") = "off",
+        pybind11::arg("name") = "TD",
+        pybind11::arg("mode") = "fitting",
+        pybind11::arg("maxeval") = 10000
     );
 }

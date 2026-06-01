@@ -1,6 +1,7 @@
+export(estimate_mle)
 export(run_m)
 importFrom(Rcpp, evalCpp)
+S3method(summary, multiRLcpp_estimate_mle)
 S3method(summary, multiRLcpp_run_m)
-S3method(summary, multiRLcpp_shell_run_m)
 S3method(summary, multiRLcpp_run)
 useDynLib(multiRLcpp, .registration = TRUE)

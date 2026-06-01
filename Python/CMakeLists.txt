@@ -35,6 +35,24 @@ list(APPEND CMAKE_PREFIX_PATH "${MULTIRL_PYBIND11_CMAKE_DIR}")
 find_package(pybind11 CONFIG REQUIRED)
 find_package(OpenMP)
 
+option(
+    MULTIRL_ENABLE_NLOPT
+    "Enable NLopt-backed estimators"
+    OFF
+)
+
+if(MULTIRL_ENABLE_NLOPT)
+    find_package(NLopt REQUIRED)
+
+    if(TARGET NLopt::nlopt)
+        set(MULTIRL_NLOPT_TARGET NLopt::nlopt)
+    elseif(TARGET nlopt)
+        set(MULTIRL_NLOPT_TARGET nlopt)
+    else()
+        message(FATAL_ERROR "NLopt has no usable CMake target.")
+    endif()
+endif()
+
 set(
     MULTIRL_PY_BACKEND_SOURCES
     src/cpp/func_alpha.cpp
@@ -43,10 +61,8 @@ set(
     src/cpp/func_delta.cpp
     src/cpp/func_epsilon.cpp
     src/cpp/func_zeta.cpp
+    src/cpp/estimate_mle.cpp
     src/cpp/process_MDP_free.cpp
-    src/cpp/criterion_likelihood.cpp
-    src/cpp/criterion_prior.cpp
-    src/cpp/criterion_posterior.cpp
     src/cpp/modify_params.cpp
     src/cpp/modify_priors.cpp
     src/cpp/task_builder.cpp
@@ -67,6 +83,15 @@ if(OpenMP_CXX_FOUND)
         multiRL_python_core
         PUBLIC
             OpenMP::OpenMP_CXX
+    )
+endif()
+
+if(MULTIRL_ENABLE_NLOPT)
+    target_compile_definitions(multiRL_python_core PUBLIC MULTIRL_HAS_NLOPT)
+    target_link_libraries(
+        multiRL_python_core
+        PUBLIC
+            ${MULTIRL_NLOPT_TARGET}
     )
 endif()
 

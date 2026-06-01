@@ -5,3 +5,7 @@
     .Call(`_multiRLcpp_r_shell_run_m`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate)
 }
 
+.cpp_estimate_mle <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate, maxeval, algorithm, xtol_rel, lower_bounds, upper_bounds) {
+    .Call(`_multiRLcpp_r_estimate_mle`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate, maxeval, algorithm, xtol_rel, lower_bounds, upper_bounds)
+}
+

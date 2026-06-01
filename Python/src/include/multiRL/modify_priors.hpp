@@ -13,9 +13,4 @@ PriorGroup modify_priors(
     bool active
 );
 
-void update_priors(
-    PriorGroup& priors,
-    const std::vector<std::unordered_map<std::string, double>>& free_params
-);
-
 }  // namespace multiRL

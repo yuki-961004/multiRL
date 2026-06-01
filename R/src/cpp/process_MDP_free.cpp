@@ -1,5 +1,6 @@
 #include <multiRL/process_MDP_free.hpp>
 
+#include <multiRL/criterion_posterior.hpp>
 #include <multiRL/funcs.hpp>
 
 #include <cmath>
@@ -110,13 +111,11 @@ Process2Behrule process_2_behrule(
     return behrule;
 }
 
-namespace {
-
 /* ========================================================================== *
  *                            Record Initialization                           *
  * ========================================================================== */
 
-Process3Record initialize_record(const RunTask& task) {
+Process3Record process_3_record(const RunTask& task) {
     const Process1Input& input = task.input;
     const Process2Behrule& behrule = task.behrule;
     const Settings& settings = task.settings;
@@ -167,6 +166,8 @@ Process3Record initialize_record(const RunTask& task) {
 
     return record;
 }
+
+namespace {
 
 /* ========================================================================== *
  *                              Trial Context                                 *
@@ -306,16 +307,17 @@ std::string sample_choice(
 }  // namespace
 
 /* ========================================================================== *
- *                         Model-Free MDP Processor                           *
+ *                             Trial Processor                                *
  * ========================================================================== */
 
-Process3Record process_MDP_free(const RunTask& task) {
+Process3Record process_4_output(
+    const RunTask& task,
+    Process3Record record
+) {
     const Process1Input& input = task.input;
     const Process2Behrule& behrule = task.behrule;
     const Params& params = task.params;
     const Settings& settings = task.settings;
-
-    Process3Record record = initialize_record(task);
 
     std::unordered_set<std::string> rsp_set;
     for (const std::string& value : behrule.rsp) {
@@ -470,6 +472,29 @@ Process3Record process_MDP_free(const RunTask& task) {
     }
 
     return record;
+}
+
+/* ========================================================================== *
+ *                              Metric Builder                                *
+ * ========================================================================== */
+
+CriterionResult process_5_metric(
+    const RunTask& task,
+    const Process3Record& output
+) {
+    return criterion_posterior(task, output);
+}
+
+/* ========================================================================== *
+ *                         Model-Free MDP Processor                           *
+ * ========================================================================== */
+
+RunResult process_MDP_free(const RunTask& task) {
+    RunResult result;
+    Process3Record record = process_3_record(task);
+    result.result = process_4_output(task, record);
+    result.metric = process_5_metric(task, result.result);
+    return result;
 }
 
 }  // namespace multiRL

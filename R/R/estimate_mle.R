@@ -1,4 +1,4 @@
-run_m <- function(
+estimate_mle <- function(
     data,
     id = NULL,
     colnames = list(),
@@ -7,10 +7,13 @@ run_m <- function(
     params = list(),
     priors = list(),
     settings = list(),
+    lower = NULL,
+    upper = NULL,
+    control = list(),
     engine = "Cpp",
     ...
 ) {
-  .shell_run_m(
+  .estimate_mle(
     data = data,
     id = id,
     colnames = colnames,
@@ -19,12 +22,15 @@ run_m <- function(
     params = params,
     priors = priors,
     settings = settings,
+    lower = lower,
+    upper = upper,
+    control = control,
     engine = engine,
     extra = list(...)
   )
 }
 
-.shell_run_m <- function(
+.estimate_mle <- function(
     data,
     id,
     colnames,
@@ -33,6 +39,9 @@ run_m <- function(
     params,
     priors,
     settings,
+    lower,
+    upper,
+    control,
     engine,
     extra
 ) {
@@ -58,21 +67,14 @@ run_m <- function(
   behrule <- .modify_behrule(behrule = behrule)
   settings <- .modify_settings(settings = settings)
   features <- .modify_features(data = data, colnames = colnames)
-
-  request <- list(
-    data = data,
-    colnames = colnames,
-    behrule = behrule,
-    funcs = funcs,
-    params = params,
-    priors = priors,
-    settings = settings,
-    engine = engine,
-    features = features,
-    extra = extra
+  control <- .modify_estimate_mle_control(
+    control = control,
+    lower = lower,
+    upper = upper,
+    free_names = base::names(params$free)
   )
 
-  cpp_result <- .cpp_shell_run_m(
+  cpp_result <- .cpp_estimate_mle(
     object = features$object,
     reward = features$reward,
     action = features$action,
@@ -93,7 +95,12 @@ run_m <- function(
     policy = settings$policy,
     name = settings$name,
     mode = settings$mode,
-    estimate = settings$estimate
+    estimate = "MLE",
+    maxeval = control$maxeval,
+    algorithm = control$algorithm,
+    xtol_rel = control$xtol_rel,
+    lower_bounds = control$lower_bounds,
+    upper_bounds = control$upper_bounds
   )
 
   fit <- base::data.frame(
@@ -106,12 +113,60 @@ run_m <- function(
   )
 
   out <- list(
-    input = request,
-    result = cpp_result$result,
-    sumstat = fit,
+    input = list(
+      data = data,
+      colnames = colnames,
+      behrule = behrule,
+      funcs = funcs,
+      params = params,
+      priors = priors,
+      settings = settings,
+      lower = lower,
+      upper = upper,
+      control = control,
+      engine = engine,
+      features = features,
+      extra = extra
+    ),
+    params = cpp_result$params,
     fit = fit,
-    extra = extra
+    estimator = cpp_result$estimator
   )
-  base::class(out) <- c("multiRLcpp_run_m", "multiRLcpp_run", "list")
+  base::class(out) <- c("multiRLcpp_estimate_mle", "multiRLcpp_run", "list")
   out
+}
+
+.modify_estimate_mle_control <- function(control, lower, upper, free_names) {
+  default_control <- list(
+    algorithm = "LN_BOBYQA",
+    maxeval = 10000L,
+    xtol_rel = 1e-6
+  )
+  out <- utils::modifyList(default_control, control)
+  out$maxeval <- base::as.integer(out$maxeval[[1L]])
+  out$algorithm <- base::as.character(out$algorithm[[1L]])
+  out$xtol_rel <- base::as.numeric(out$xtol_rel[[1L]])
+  out$lower_bounds <- .modify_estimate_mle_bounds(
+    bounds = lower,
+    free_names = free_names,
+    default = -Inf
+  )
+  out$upper_bounds <- .modify_estimate_mle_bounds(
+    bounds = upper,
+    free_names = free_names,
+    default = Inf
+  )
+  out
+}
+
+.modify_estimate_mle_bounds <- function(bounds, free_names, default) {
+  if (base::is.null(bounds)) {
+    return(base::rep(default, base::length(free_names)))
+  }
+
+  if (base::is.list(bounds) && !base::is.null(base::names(bounds))) {
+    return(base::as.numeric(base::unlist(bounds[free_names])))
+  }
+
+  base::as.numeric(bounds)
 }

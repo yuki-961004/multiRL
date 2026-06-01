@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.15...3.27)
 project(multiRL VERSION 0.5.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
+include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -19,6 +20,18 @@ option(
 option(
     MULTIRL_BUILD_PYTHON
     "Build the pybind11 Python shell wrapper"
+    OFF
+)
+
+option(
+    MULTIRL_ENABLE_NLOPT
+    "Enable NLopt-backed estimators"
+    OFF
+)
+
+option(
+    MULTIRL_FETCH_NLOPT
+    "Fetch NLopt instead of using a system installation"
     OFF
 )
 
@@ -57,6 +70,47 @@ if(MSVC)
     add_compile_options(/utf-8 /wd4819 /wd4267 /wd4101)
 endif()
 
+set(MULTIRL_NLOPT_TARGET "")
+set(MULTIRL_NLOPT_INCLUDE_DIRS "")
+
+if(MULTIRL_ENABLE_NLOPT)
+    if(MULTIRL_FETCH_NLOPT)
+        set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+        set(NLOPT_SHARED OFF CACHE BOOL "" FORCE)
+        set(NLOPT_TESTS OFF CACHE BOOL "" FORCE)
+        set(NLOPT_CXX ON CACHE BOOL "" FORCE)
+        set(NLOPT_CXX11 OFF CACHE BOOL "" FORCE)
+        set(NLOPT_FORTRAN OFF CACHE BOOL "" FORCE)
+        set(NLOPT_PYTHON OFF CACHE BOOL "" FORCE)
+        set(NLOPT_GUILE OFF CACHE BOOL "" FORCE)
+        set(NLOPT_MATLAB OFF CACHE BOOL "" FORCE)
+        set(NLOPT_OCTAVE OFF CACHE BOOL "" FORCE)
+        set(NLOPT_SWIG OFF CACHE BOOL "" FORCE)
+
+        FetchContent_Declare(
+            nlopt
+            GIT_REPOSITORY https://github.com/stevengj/nlopt.git
+            GIT_TAG master
+            GIT_SHALLOW TRUE
+        )
+        FetchContent_MakeAvailable(nlopt)
+
+        set(MULTIRL_NLOPT_TARGET nlopt)
+        list(APPEND MULTIRL_NLOPT_INCLUDE_DIRS "${nlopt_BINARY_DIR}")
+        list(APPEND MULTIRL_NLOPT_INCLUDE_DIRS "${nlopt_SOURCE_DIR}/src/api")
+    else()
+        find_package(NLopt REQUIRED)
+
+        if(TARGET NLopt::nlopt)
+            set(MULTIRL_NLOPT_TARGET NLopt::nlopt)
+        elseif(TARGET nlopt)
+            set(MULTIRL_NLOPT_TARGET nlopt)
+        else()
+            message(FATAL_ERROR "NLopt has no usable CMake target.")
+        endif()
+    endif()
+endif()
+
 set(
     MULTIRL_SOURCES
     Cpp/src/func_alpha.cpp
@@ -65,10 +119,8 @@ set(
     Cpp/src/func_delta.cpp
     Cpp/src/func_epsilon.cpp
     Cpp/src/func_zeta.cpp
+    Cpp/src/estimate_mle.cpp
     Cpp/src/process_MDP_free.cpp
-    Cpp/src/criterion_likelihood.cpp
-    Cpp/src/criterion_prior.cpp
-    Cpp/src/criterion_posterior.cpp
     Cpp/src/modify_params.cpp
     Cpp/src/modify_priors.cpp
     Cpp/src/task_builder.cpp
@@ -88,6 +140,19 @@ target_include_directories(
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(multiRL PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+if(MULTIRL_ENABLE_NLOPT)
+    target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_NLOPT)
+    target_link_libraries(multiRL PUBLIC ${MULTIRL_NLOPT_TARGET})
+
+    foreach(nlopt_include_dir ${MULTIRL_NLOPT_INCLUDE_DIRS})
+        target_include_directories(
+            multiRL
+            PUBLIC
+                $<BUILD_INTERFACE:${nlopt_include_dir}>
+        )
+    endforeach()
 endif()
 
 if(MULTIRL_BUILD_PYTHON)
@@ -131,6 +196,11 @@ if(MULTIRL_BUILD_PYTHON)
 
     if(OpenMP_CXX_FOUND)
         target_link_libraries(_shell_run_m PRIVATE OpenMP::OpenMP_CXX)
+    endif()
+
+    if(MULTIRL_ENABLE_NLOPT)
+        target_compile_definitions(_shell_run_m PRIVATE MULTIRL_HAS_NLOPT)
+        target_link_libraries(_shell_run_m PRIVATE ${MULTIRL_NLOPT_TARGET})
     endif()
 endif()
 

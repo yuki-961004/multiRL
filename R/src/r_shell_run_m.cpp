@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 
+#include <multiRL/estimate_mle.hpp>
 #include <multiRL/modify_params.hpp>
 #include <multiRL/modify_priors.hpp>
 #include <multiRL/process_MDP_free.hpp>
@@ -12,10 +13,8 @@
 #include "cpp/func_delta.cpp"
 #include "cpp/func_epsilon.cpp"
 #include "cpp/func_zeta.cpp"
+#include "cpp/estimate_mle.cpp"
 #include "cpp/process_MDP_free.cpp"
-#include "cpp/criterion_likelihood.cpp"
-#include "cpp/criterion_prior.cpp"
-#include "cpp/criterion_posterior.cpp"
 #include "cpp/modify_params.cpp"
 #include "cpp/modify_priors.cpp"
 #include "cpp/task_builder.cpp"
@@ -215,10 +214,7 @@ Rcpp::List wrap_result(
     );
 }
 
-}  // namespace
-
-// [[Rcpp::export(name = ".cpp_shell_run_m")]]
-Rcpp::List r_shell_run_m(
+multiRL::RunTask make_task(
     Rcpp::CharacterMatrix object,
     Rcpp::NumericMatrix reward,
     Rcpp::CharacterVector action,
@@ -263,7 +259,7 @@ Rcpp::List r_shell_run_m(
     settings.estimate = estimate;
     settings.system = as_string_vector(system);
 
-    multiRL::RunTask task = multiRL::task_builder(
+    return multiRL::task_builder(
         input,
         behrule,
         as_params(params, free_names),
@@ -277,7 +273,156 @@ Rcpp::List r_shell_run_m(
             prior_active
         )
     );
+}
 
+Rcpp::List wrap_estimate_mle_result(
+    const multiRL::EstimateMleResult& result
+) {
+    Rcpp::NumericVector params(result.params.values.size());
+    Rcpp::CharacterVector names(result.params.values.size());
+
+    std::size_t index = 0;
+    for (const auto& kv : result.params.values) {
+        names[static_cast<R_xlen_t>(index)] = kv.first;
+        params[static_cast<R_xlen_t>(index)] = kv.second;
+        ++index;
+    }
+    params.names() = names;
+
+    return Rcpp::List::create(
+        Rcpp::_["params"] = params,
+        Rcpp::_["metric"] = Rcpp::List::create(
+            Rcpp::_["ACC"] = result.metric.acc,
+            Rcpp::_["LogL"] = result.metric.log_likelihood,
+            Rcpp::_["LogPr"] = result.metric.log_prior,
+            Rcpp::_["LogPo"] = result.metric.log_posterior,
+            Rcpp::_["NLL"] = result.metric.nll,
+            Rcpp::_["AIC"] = result.metric.aic,
+            Rcpp::_["BIC"] = result.metric.bic
+        ),
+        Rcpp::_["estimator"] = Rcpp::List::create(
+            Rcpp::_["status"] = result.status,
+            Rcpp::_["n_evals"] = result.n_evals,
+            Rcpp::_["optimum_value"] = result.optimum_value,
+            Rcpp::_["result_message"] = result.result_message,
+            Rcpp::_["stop_reason"] = result.stop_reason
+        )
+    );
+}
+
+}  // namespace
+
+// [[Rcpp::export(name = ".cpp_shell_run_m")]]
+Rcpp::List r_shell_run_m(
+    Rcpp::CharacterMatrix object,
+    Rcpp::NumericMatrix reward,
+    Rcpp::CharacterVector action,
+    Rcpp::IntegerVector block,
+    Rcpp::IntegerVector trial,
+    Rcpp::CharacterMatrix idinfo,
+    Rcpp::CharacterMatrix exinfo,
+    Rcpp::CharacterVector cue,
+    Rcpp::CharacterVector rsp,
+    Rcpp::NumericVector params,
+    Rcpp::CharacterVector free_names,
+    Rcpp::CharacterVector system,
+    Rcpp::CharacterVector prior_names,
+    Rcpp::CharacterVector prior_types,
+    Rcpp::NumericVector prior_param1,
+    Rcpp::NumericVector prior_param2,
+    bool prior_active,
+    std::string policy,
+    std::string name,
+    std::string mode,
+    std::string estimate
+) {
+    multiRL::RunTask task = make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        idinfo,
+        exinfo,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        estimate
+    );
     multiRL::RunResult result = multiRL::shell_run_m(task);
     return wrap_result(result, system);
+}
+
+// [[Rcpp::export(name = ".cpp_estimate_mle")]]
+Rcpp::List r_estimate_mle(
+    Rcpp::CharacterMatrix object,
+    Rcpp::NumericMatrix reward,
+    Rcpp::CharacterVector action,
+    Rcpp::IntegerVector block,
+    Rcpp::IntegerVector trial,
+    Rcpp::CharacterMatrix idinfo,
+    Rcpp::CharacterMatrix exinfo,
+    Rcpp::CharacterVector cue,
+    Rcpp::CharacterVector rsp,
+    Rcpp::NumericVector params,
+    Rcpp::CharacterVector free_names,
+    Rcpp::CharacterVector system,
+    Rcpp::CharacterVector prior_names,
+    Rcpp::CharacterVector prior_types,
+    Rcpp::NumericVector prior_param1,
+    Rcpp::NumericVector prior_param2,
+    bool prior_active,
+    std::string policy,
+    std::string name,
+    std::string mode,
+    std::string estimate,
+    int maxeval,
+    std::string algorithm,
+    double xtol_rel,
+    Rcpp::NumericVector lower_bounds,
+    Rcpp::NumericVector upper_bounds
+) {
+    multiRL::RunTask task = make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        idinfo,
+        exinfo,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        estimate
+    );
+
+    multiRL::NLoptControl control;
+    control.maxeval = maxeval;
+    control.algorithm = algorithm;
+    control.xtol_rel = xtol_rel;
+    control.lower_bounds = as_double_vector(lower_bounds);
+    control.upper_bounds = as_double_vector(upper_bounds);
+
+    multiRL::EstimateMleResult result = multiRL::estimate_mle(task, control);
+    return wrap_estimate_mle_result(result);
 }
