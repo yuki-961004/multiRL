@@ -1,11 +1,11 @@
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <algorithm>
 #include <cmath>
 #include <numeric>
 #include <vector>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 std::vector<double> func_beta(
     const TrialContext& context,
@@ -106,4 +106,4 @@ std::vector<double> func_beta(
     return prob;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

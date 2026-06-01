@@ -26,7 +26,7 @@ def import_shell_module():
     except ImportError as error:
         pytest.skip(
             "Build Python wrapper first with "
-            "`cmake -S . -B build-python -DMULTIRLCPP_BUILD_PYTHON=ON` "
+            "`cmake -S . -B build-python -DMULTIRL_BUILD_PYTHON=ON` "
             "and `cmake --build build-python --config Release`: "
             f"{error}"
         )

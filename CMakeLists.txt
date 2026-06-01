@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15...3.27)
 
-project(multiRLcpp VERSION 0.0.0 LANGUAGES CXX)
+project(multiRL VERSION 0.5.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
@@ -11,20 +11,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(OpenMP)
 
 option(
-    MULTIRLCPP_SYNC_PACKAGE_SOURCES
+    MULTIRL_SYNC_PACKAGE_SOURCES
     "Sync C++ sources into R and Python package directories"
     ON
 )
 
 option(
-    MULTIRLCPP_BUILD_PYTHON
+    MULTIRL_BUILD_PYTHON
     "Build the pybind11 Python shell wrapper"
     OFF
 )
 
-if(MULTIRLCPP_SYNC_PACKAGE_SOURCES)
+if(MULTIRL_SYNC_PACKAGE_SOURCES)
     set(
-        MULTIRLCPP_SYNC_SCRIPT
+        MULTIRL_SYNC_SCRIPT
         "${CMAKE_CURRENT_SOURCE_DIR}/SYNC.cmake"
     )
 
@@ -32,24 +32,24 @@ if(MULTIRLCPP_SYNC_PACKAGE_SOURCES)
         COMMAND
             "${CMAKE_COMMAND}"
             "-DREPO_ROOT=${CMAKE_CURRENT_SOURCE_DIR}"
-            -P "${MULTIRLCPP_SYNC_SCRIPT}"
-        RESULT_VARIABLE MULTIRLCPP_SYNC_RESULT
+            -P "${MULTIRL_SYNC_SCRIPT}"
+        RESULT_VARIABLE MULTIRL_SYNC_RESULT
     )
 
-    if(NOT MULTIRLCPP_SYNC_RESULT EQUAL 0)
+    if(NOT MULTIRL_SYNC_RESULT EQUAL 0)
         message(
             FATAL_ERROR
-            "multiRLcpp package source synchronization failed."
+            "multiRL package source synchronization failed."
         )
     endif()
 
     add_custom_target(
-        multiRLcpp_sync_package_sources ALL
+        multiRL_sync_package_sources ALL
         COMMAND
             "${CMAKE_COMMAND}"
             "-DREPO_ROOT=${CMAKE_CURRENT_SOURCE_DIR}"
-            -P "${MULTIRLCPP_SYNC_SCRIPT}"
-        COMMENT "Syncing multiRLcpp package C++ sources"
+            -P "${MULTIRL_SYNC_SCRIPT}"
+        COMMENT "Syncing multiRL package C++ sources"
     )
 endif()
 
@@ -58,7 +58,7 @@ if(MSVC)
 endif()
 
 set(
-    MULTIRLCPP_SOURCES
+    MULTIRL_SOURCES
     Cpp/src/func_alpha.cpp
     Cpp/src/func_beta.cpp
     Cpp/src/func_gamma.cpp
@@ -75,44 +75,44 @@ set(
     Cpp/src/shell_run_m.cpp
 )
 
-add_library(multiRLcpp STATIC ${MULTIRLCPP_SOURCES})
+add_library(multiRL STATIC ${MULTIRL_SOURCES})
 
-set_property(TARGET multiRLcpp PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET multiRL PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(
-    multiRLcpp
+    multiRL
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cpp/include>
         $<INSTALL_INTERFACE:include>
 )
 
 if(OpenMP_CXX_FOUND)
-    target_link_libraries(multiRLcpp PUBLIC OpenMP::OpenMP_CXX)
+    target_link_libraries(multiRL PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
-if(MULTIRLCPP_BUILD_PYTHON)
+if(MULTIRL_BUILD_PYTHON)
     find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 
     execute_process(
         COMMAND
             "${Python3_EXECUTABLE}" -m pybind11 --cmakedir
-        OUTPUT_VARIABLE MULTIRLCPP_PYBIND11_CMAKE_DIR
+        OUTPUT_VARIABLE MULTIRL_PYBIND11_CMAKE_DIR
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE MULTIRLCPP_PYBIND11_CMAKE_RESULT
+        RESULT_VARIABLE MULTIRL_PYBIND11_CMAKE_RESULT
     )
 
-    if(NOT MULTIRLCPP_PYBIND11_CMAKE_RESULT EQUAL 0)
+    if(NOT MULTIRL_PYBIND11_CMAKE_RESULT EQUAL 0)
         message(FATAL_ERROR "pybind11 is required for Python wrapper tests.")
     endif()
 
-    list(APPEND CMAKE_PREFIX_PATH "${MULTIRLCPP_PYBIND11_CMAKE_DIR}")
+    list(APPEND CMAKE_PREFIX_PATH "${MULTIRL_PYBIND11_CMAKE_DIR}")
     find_package(pybind11 CONFIG REQUIRED)
 
     pybind11_add_module(
         _shell_run_m
         MODULE
             Python/src/py_shell_run_m.cpp
-            ${MULTIRLCPP_SOURCES}
+            ${MULTIRL_SOURCES}
     )
 
     target_include_directories(
@@ -135,8 +135,8 @@ if(MULTIRLCPP_BUILD_PYTHON)
 endif()
 
 install(
-    TARGETS multiRLcpp
-    EXPORT multiRLcpp_Targets
+    TARGETS multiRL
+    EXPORT multiRL_Targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

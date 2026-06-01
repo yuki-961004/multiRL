@@ -1,6 +1,6 @@
-#include <multiRLcpp/task_builder.hpp>
+#include <multiRL/task_builder.hpp>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 RunTask task_builder(
     const Process1Input& input,
@@ -18,4 +18,4 @@ RunTask task_builder(
     return task;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

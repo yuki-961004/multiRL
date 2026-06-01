@@ -1,8 +1,8 @@
-#include <multiRLcpp/criterion_prior.hpp>
+#include <multiRL/criterion_prior.hpp>
 
 #include <cmath>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 template <typename T>
 T criterion_prior_value(const Params& params, const PriorGroup& priors) {
@@ -103,4 +103,4 @@ template double criterion_prior_value<double>(
     const PriorGroup& priors
 );
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

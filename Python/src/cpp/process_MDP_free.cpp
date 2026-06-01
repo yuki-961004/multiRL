@@ -1,13 +1,13 @@
-#include <multiRLcpp/process_MDP_free.hpp>
+#include <multiRL/process_MDP_free.hpp>
 
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <cmath>
 #include <random>
 #include <stdexcept>
 #include <unordered_set>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 namespace {
 
@@ -472,4 +472,4 @@ Process3Record process_MDP_free(const RunTask& task) {
     return record;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

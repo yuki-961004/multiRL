@@ -1,10 +1,10 @@
-#include <multiRLcpp/criterion_likelihood.hpp>
+#include <multiRL/criterion_likelihood.hpp>
 
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 namespace {
 
@@ -97,4 +97,4 @@ template CriterionValue<double> criterion_likelihood_value<double>(
     const Process3Record& output
 );
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

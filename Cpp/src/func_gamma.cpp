@@ -1,8 +1,8 @@
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <cmath>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 double func_gamma(
     const TrialContext& context,
@@ -16,4 +16,4 @@ double func_gamma(
     return sign * std::pow(std::abs(reward), gamma);
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

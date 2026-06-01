@@ -1,6 +1,6 @@
-#include <multiRLcpp/modify_params.hpp>
+#include <multiRL/modify_params.hpp>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 bool Params::has(const std::string& name) const {
     return values.find(name) != values.end();
@@ -31,4 +31,4 @@ Params modify_params(
     return out;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

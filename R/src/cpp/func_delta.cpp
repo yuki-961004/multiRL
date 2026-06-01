@@ -1,9 +1,9 @@
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <cmath>
 #include <string>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 namespace {
 
@@ -83,4 +83,4 @@ std::vector<double> func_delta(
     return bias;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

@@ -1,11 +1,11 @@
-#include <multiRLcpp/criterion_posterior.hpp>
+#include <multiRL/criterion_posterior.hpp>
 
-#include <multiRLcpp/criterion_likelihood.hpp>
-#include <multiRLcpp/criterion_prior.hpp>
+#include <multiRL/criterion_likelihood.hpp>
+#include <multiRL/criterion_prior.hpp>
 
 #include <cmath>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 CriterionResult criterion_posterior(
     const RunTask& task,
@@ -21,4 +21,4 @@ CriterionResult criterion_posterior(
     return result;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

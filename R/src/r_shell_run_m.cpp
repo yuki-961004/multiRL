@@ -1,10 +1,10 @@
 #include <Rcpp.h>
 
-#include <multiRLcpp/modify_params.hpp>
-#include <multiRLcpp/modify_priors.hpp>
-#include <multiRLcpp/process_MDP_free.hpp>
-#include <multiRLcpp/shell_run_m.hpp>
-#include <multiRLcpp/task_builder.hpp>
+#include <multiRL/modify_params.hpp>
+#include <multiRL/modify_priors.hpp>
+#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/shell_run_m.hpp>
+#include <multiRL/task_builder.hpp>
 
 #include "cpp/func_alpha.cpp"
 #include "cpp/func_beta.cpp"
@@ -23,10 +23,10 @@
 
 namespace {
 
-multiRLcpp::StringMatrix as_string_matrix(
+multiRL::StringMatrix as_string_matrix(
     const Rcpp::CharacterMatrix& matrix
 ) {
-    multiRLcpp::StringMatrix out(
+    multiRL::StringMatrix out(
         static_cast<std::size_t>(matrix.nrow()),
         std::vector<std::string>(static_cast<std::size_t>(matrix.ncol()))
     );
@@ -41,10 +41,10 @@ multiRLcpp::StringMatrix as_string_matrix(
     return out;
 }
 
-multiRLcpp::DoubleMatrix as_double_matrix(
+multiRL::DoubleMatrix as_double_matrix(
     const Rcpp::NumericMatrix& matrix
 ) {
-    multiRLcpp::DoubleMatrix out(
+    multiRL::DoubleMatrix out(
         static_cast<std::size_t>(matrix.nrow()),
         std::vector<double>(static_cast<std::size_t>(matrix.ncol()))
     );
@@ -92,7 +92,7 @@ std::vector<double> as_double_vector(const Rcpp::NumericVector& vector) {
     return out;
 }
 
-multiRLcpp::Params as_params(
+multiRL::Params as_params(
     const Rcpp::NumericVector& params,
     const Rcpp::CharacterVector& free_names
 ) {
@@ -107,14 +107,14 @@ multiRLcpp::Params as_params(
         cpp_values.push_back(params[index]);
     }
 
-    return multiRLcpp::modify_params(
+    return multiRL::modify_params(
         cpp_names,
         cpp_values,
         as_string_vector(free_names)
     );
 }
 
-multiRLcpp::PriorGroup as_priors(
+multiRL::PriorGroup as_priors(
     const Rcpp::CharacterVector& prior_names,
     const Rcpp::CharacterVector& prior_types,
     const Rcpp::NumericVector& prior_param1,
@@ -122,7 +122,7 @@ multiRLcpp::PriorGroup as_priors(
     const Rcpp::CharacterVector& free_names,
     const bool prior_active
 ) {
-    return multiRLcpp::modify_priors(
+    return multiRL::modify_priors(
         as_string_vector(prior_names),
         as_string_vector(prior_types),
         as_double_vector(prior_param1),
@@ -133,7 +133,7 @@ multiRLcpp::PriorGroup as_priors(
 }
 
 Rcpp::NumericMatrix wrap_double_matrix(
-    const multiRLcpp::DoubleMatrix& matrix
+    const multiRL::DoubleMatrix& matrix
 ) {
     if (matrix.empty()) {
         return Rcpp::NumericMatrix(0, 0);
@@ -155,7 +155,7 @@ Rcpp::NumericMatrix wrap_double_matrix(
 }
 
 Rcpp::CharacterMatrix wrap_string_matrix(
-    const multiRLcpp::StringMatrix& matrix
+    const multiRL::StringMatrix& matrix
 ) {
     if (matrix.empty()) {
         return Rcpp::CharacterMatrix(0, 0);
@@ -177,7 +177,7 @@ Rcpp::CharacterMatrix wrap_string_matrix(
 }
 
 Rcpp::List wrap_result(
-    const multiRLcpp::RunResult& result,
+    const multiRL::RunResult& result,
     const Rcpp::CharacterVector& system
 ) {
     Rcpp::List value(system.size());
@@ -241,7 +241,7 @@ Rcpp::List r_shell_run_m(
     std::string mode,
     std::string estimate
 ) {
-    multiRLcpp::Process1Input input = multiRLcpp::process_1_input(
+    multiRL::Process1Input input = multiRL::process_1_input(
         as_string_matrix(object),
         as_double_matrix(reward),
         as_string_vector(action),
@@ -251,19 +251,19 @@ Rcpp::List r_shell_run_m(
         as_string_matrix(exinfo)
     );
 
-    multiRLcpp::Process2Behrule behrule = multiRLcpp::process_2_behrule(
+    multiRL::Process2Behrule behrule = multiRL::process_2_behrule(
         as_string_vector(cue),
         as_string_vector(rsp)
     );
 
-    multiRLcpp::Settings settings;
+    multiRL::Settings settings;
     settings.policy = policy;
     settings.name = name;
     settings.mode = mode;
     settings.estimate = estimate;
     settings.system = as_string_vector(system);
 
-    multiRLcpp::RunTask task = multiRLcpp::task_builder(
+    multiRL::RunTask task = multiRL::task_builder(
         input,
         behrule,
         as_params(params, free_names),
@@ -278,6 +278,6 @@ Rcpp::List r_shell_run_m(
         )
     );
 
-    multiRLcpp::RunResult result = multiRLcpp::shell_run_m(task);
+    multiRL::RunResult result = multiRL::shell_run_m(task);
     return wrap_result(result, system);
 }

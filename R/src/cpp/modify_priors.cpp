@@ -1,4 +1,4 @@
-#include <multiRLcpp/modify_priors.hpp>
+#include <multiRL/modify_priors.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <unordered_set>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 namespace {
 
@@ -187,4 +187,4 @@ void update_priors(
     }
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

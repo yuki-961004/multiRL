@@ -1,9 +1,9 @@
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <cmath>
 #include <stdexcept>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 double func_alpha(
     const TrialContext& context,
@@ -48,4 +48,4 @@ double func_alpha(
     throw std::invalid_argument("Unknown model in func_alpha.");
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

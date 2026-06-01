@@ -1,10 +1,10 @@
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <cmath>
 #include <random>
 #include <stdexcept>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 int func_epsilon(const TrialContext& context, const Params& params) {
     const double epsilon = params.get("epsilon");
@@ -41,4 +41,4 @@ int func_epsilon(const TrialContext& context, const Params& params) {
     return runif(rng) < prob_explore ? 1 : 0;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

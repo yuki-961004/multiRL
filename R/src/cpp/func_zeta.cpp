@@ -1,8 +1,8 @@
-#include <multiRLcpp/funcs.hpp>
+#include <multiRL/funcs.hpp>
 
 #include <cmath>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 std::vector<double> func_zeta(
     const TrialContext& context,
@@ -40,4 +40,4 @@ std::vector<double> func_zeta(
     return decay;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL

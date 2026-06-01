@@ -1,9 +1,9 @@
-#include <multiRLcpp/shell_run_m.hpp>
+#include <multiRL/shell_run_m.hpp>
 
-#include <multiRLcpp/criterion_posterior.hpp>
-#include <multiRLcpp/process_MDP_free.hpp>
+#include <multiRL/criterion_posterior.hpp>
+#include <multiRL/process_MDP_free.hpp>
 
-namespace multiRLcpp {
+namespace multiRL {
 
 RunResult shell_run_m(const RunTask& task) {
     RunResult out;
@@ -12,4 +12,4 @@ RunResult shell_run_m(const RunTask& task) {
     return out;
 }
 
-}  // namespace multiRLcpp
+}  // namespace multiRL
