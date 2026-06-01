@@ -12,3 +12,11 @@ desktop.ini
 # temp
 ~*
 .positai
+
+# build
+*build*/
+
+# demo
+raw/
+metaSDT/
+abcpp/

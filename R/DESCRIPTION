@@ -1,0 +1,25 @@
+Package: multiRLcpp
+Type: Package
+Title: C++ Backend for multiRL
+Version: 0.5.0
+Authors@R:
+  c(
+    person(
+      given = "YuKi",
+      role = c("aut", "cre"),
+      email = "hmz1969a@gmail.com"
+    )
+  )
+Description: C++ backend remake for the multiRL process workflow.
+License: GPL-3
+Encoding: UTF-8
+LazyData: TRUE
+ByteCompile: TRUE
+Depends: R (>= 4.1.0)
+Imports:
+    Rcpp,
+    stats,
+    utils
+LinkingTo: Rcpp
+SystemRequirements: C++17
+

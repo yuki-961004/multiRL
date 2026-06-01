@@ -1,0 +1,6 @@
+export(run_m)
+export(shell_run_m)
+importFrom(Rcpp, evalCpp)
+S3method(summary, multiRLcpp_shell_run_m)
+S3method(summary, multiRLcpp_run)
+useDynLib(multiRLcpp, .registration = TRUE)

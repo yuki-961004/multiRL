@@ -1,0 +1,135 @@
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include <multiRLcpp/process_MDP_free.hpp>
+#include <multiRLcpp/shell_run_m.hpp>
+#include <multiRLcpp/task_builder.hpp>
+#include <multiRLcpp/types.hpp>
+
+namespace {
+
+multiRLcpp::Params py_params_to_cpp(
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names
+) {
+    multiRLcpp::Params out;
+    out.values = params;
+    out.free_names = free_names;
+    return out;
+}
+
+pybind11::dict py_wrap_result(
+    const multiRLcpp::RunResult& result,
+    const std::vector<std::string>& system
+) {
+    pybind11::dict value;
+    for (std::size_t index = 0; index < system.size(); ++index) {
+        value[pybind11::str(system[index])] =
+            result.result.value[index];
+    }
+
+    pybind11::dict metric;
+    metric["ACC"] = result.metric.acc;
+    metric["LogL"] = result.metric.log_likelihood;
+    metric["LogPr"] = result.metric.log_prior;
+    metric["LogPo"] = result.metric.log_posterior;
+    metric["NLL"] = result.metric.nll;
+    metric["AIC"] = result.metric.aic;
+    metric["BIC"] = result.metric.bic;
+
+    pybind11::dict run_result;
+    run_result["value"] = value;
+    run_result["bias"] = result.result.bias;
+    run_result["shown"] = result.result.shown;
+    run_result["prob"] = result.result.prob;
+    run_result["count"] = result.result.count;
+    run_result["behave"] = result.result.behave;
+    run_result["exploration"] = result.result.exploration;
+    run_result["latent"] = result.result.latent;
+    run_result["reward"] = result.result.reward;
+    run_result["utility"] = result.result.utility;
+    run_result["simulation"] = result.result.simulation;
+    run_result["position"] = result.result.position;
+
+    pybind11::dict out;
+    out["metric"] = metric;
+    out["result"] = run_result;
+    return out;
+}
+
+}  // namespace
+
+pybind11::dict py_shell_run_m(
+    const multiRLcpp::StringMatrix& object,
+    const multiRLcpp::DoubleMatrix& reward,
+    const std::vector<std::string>& action,
+    const std::vector<int>& block,
+    const std::vector<int>& trial,
+    const std::vector<std::string>& cue,
+    const std::vector<std::string>& rsp,
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names,
+    const std::vector<std::string>& system,
+    const std::string& policy,
+    const std::string& name,
+    const std::string& mode,
+    const std::string& estimate
+) {
+    multiRLcpp::Process1Input input = multiRLcpp::process_1_input(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        multiRLcpp::StringMatrix(action.size()),
+        multiRLcpp::StringMatrix(action.size())
+    );
+
+    multiRLcpp::Process2Behrule behrule = multiRLcpp::process_2_behrule(
+        cue,
+        rsp
+    );
+
+    multiRLcpp::Settings settings;
+    settings.policy = policy;
+    settings.name = name;
+    settings.mode = mode;
+    settings.estimate = estimate;
+    settings.system = system;
+
+    multiRLcpp::RunTask task = multiRLcpp::task_builder(
+        input,
+        behrule,
+        py_params_to_cpp(params, free_names),
+        settings
+    );
+
+    multiRLcpp::RunResult result = multiRLcpp::shell_run_m(task);
+    return py_wrap_result(result, system);
+}
+
+PYBIND11_MODULE(_shell_run_m, module) {
+    module.doc() = "multiRLcpp shell_run_m wrapper";
+    module.def(
+        "shell_run_m",
+        &py_shell_run_m,
+        pybind11::arg("object"),
+        pybind11::arg("reward"),
+        pybind11::arg("action"),
+        pybind11::arg("block"),
+        pybind11::arg("trial"),
+        pybind11::arg("cue"),
+        pybind11::arg("rsp"),
+        pybind11::arg("params"),
+        pybind11::arg("free_names"),
+        pybind11::arg("system"),
+        pybind11::arg("policy") = "off",
+        pybind11::arg("name") = "TD",
+        pybind11::arg("mode") = "LBI",
+        pybind11::arg("estimate") = "MLE"
+    );
+}
