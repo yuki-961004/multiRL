@@ -49,4 +49,5 @@ summary.multiRLcpp_shell_run_m <- function(object, ...) {
   base::invisible(object)
 }
 
+summary.multiRLcpp_run_m <- summary.multiRLcpp_shell_run_m
 summary.multiRLcpp_run <- summary.multiRLcpp_shell_run_m

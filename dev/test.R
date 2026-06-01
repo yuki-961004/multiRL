@@ -114,12 +114,8 @@ multiRLcpp.model <- run_m(
     fixed = list(threshold = 20)
   ),
   priors = list(
-    alpha = function(x) {
-      stats::dbeta(x, shape1 = 2, shape2 = 2, log = TRUE)
-    },
-    beta = function(x) {
-      stats::dexp(x, rate = 1, log = TRUE)
-    }
+    alpha = list(type = "beta", shape1 = 2, shape2 = 2),
+    beta = list(type = "exp", rate = 1)
   ),
   settings = list(
     name = "TD",

@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <multiRL/modify_priors.hpp>
 #include <multiRL/process_MDP_free.hpp>
 #include <multiRL/shell_run_m.hpp>
 #include <multiRL/task_builder.hpp>
@@ -74,6 +75,11 @@ pybind11::dict py_shell_run_m(
     const std::unordered_map<std::string, double>& params,
     const std::vector<std::string>& free_names,
     const std::vector<std::string>& system,
+    const std::vector<std::string>& prior_names,
+    const std::vector<std::string>& prior_types,
+    const std::vector<double>& prior_param1,
+    const std::vector<double>& prior_param2,
+    bool prior_active,
     const std::string& policy,
     const std::string& name,
     const std::string& mode,
@@ -107,6 +113,14 @@ pybind11::dict py_shell_run_m(
         py_params_to_cpp(params, free_names),
         settings
     );
+    task.priors = multiRL::modify_priors(
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        free_names,
+        prior_active
+    );
 
     multiRL::RunResult result = multiRL::shell_run_m(task);
     return py_wrap_result(result, system);
@@ -127,6 +141,11 @@ PYBIND11_MODULE(_shell_run_m, module) {
         pybind11::arg("params"),
         pybind11::arg("free_names"),
         pybind11::arg("system"),
+        pybind11::arg("prior_names") = std::vector<std::string>(),
+        pybind11::arg("prior_types") = std::vector<std::string>(),
+        pybind11::arg("prior_param1") = std::vector<double>(),
+        pybind11::arg("prior_param2") = std::vector<double>(),
+        pybind11::arg("prior_active") = false,
         pybind11::arg("policy") = "off",
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "LBI",

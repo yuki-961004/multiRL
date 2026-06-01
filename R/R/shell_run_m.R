@@ -1,4 +1,4 @@
-shell_run_m <- function(
+run_m <- function(
     data,
     id = NULL,
     colnames = list(),
@@ -63,11 +63,9 @@ shell_run_m <- function(
     fit = fit,
     extra = request$extra
   )
-  base::class(out) <- c("multiRLcpp_shell_run_m", "multiRLcpp_run", "list")
+  base::class(out) <- c("multiRLcpp_run_m", "multiRLcpp_run", "list")
   out
 }
-
-run_m <- shell_run_m
 
 .shell_standardize_run_m <- function(
     data,
@@ -82,11 +80,11 @@ run_m <- shell_run_m
     extra
 ) {
   if (!base::identical(engine, "Cpp")) {
-    base::stop("multiRLcpp 0.0.0 only supports engine = 'Cpp'.")
+    base::stop("multiRLcpp 0.5.0 only supports engine = 'Cpp'.")
   }
 
   if (base::length(funcs) > 0L) {
-    base::stop("multiRLcpp 0.0.0 only supports built-in C++ functions.")
+    base::stop("multiRLcpp 0.5.0 only supports built-in C++ functions.")
   }
 
   default_colnames <- list(
@@ -231,4 +229,29 @@ run_m <- shell_run_m
     ),
     extra = extra
   )
+}
+
+.shell_modify_params <- function(x, val) {
+  params <- utils::modifyList(x = x, val = val)
+
+  free_names <- base::names(params$free)
+
+  keep_in_fixed <- base::setdiff(
+    x = base::names(params$fixed),
+    y = free_names
+  )
+  params$fixed <- params$fixed[keep_in_fixed]
+
+  keep_in_constant <- base::setdiff(
+    x = base::names(params$constant),
+    y = free_names
+  )
+  params$constant <- params$constant[keep_in_constant]
+
+  params
+}
+
+.shell_flatten_params <- function(params) {
+  flat <- base::c(params$free, params$fixed, params$constant)
+  base::unlist(flat, use.names = TRUE)
 }

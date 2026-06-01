@@ -1,16 +1,7 @@
-"""Python frontend for the multiRL C++ remake."""
+"""Python frontend for the multiRL C++ backend."""
 
-
-def shell_run_m(*args, **kwargs):
-    from ._shell import shell_run_m as shell_run_m_impl
-
-    return shell_run_m_impl(*args, **kwargs)
-
-
-def run_m(*args, **kwargs):
-    return shell_run_m(*args, **kwargs)
+from ._shell import run_m
 
 __all__ = [
     "run_m",
-    "shell_run_m",
 ]
