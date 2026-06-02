@@ -5,6 +5,10 @@
     .Call(`_multiRLcpp_r_estimate_map`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, mle_maxeval, map_maxiter, map_tol, map_patience, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds)
 }
 
+.estimate_mcmc <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, warmup, samples, chains, thin, step_size, target_accept, max_tree_depth, seed, algorithm, lower_bounds, upper_bounds) {
+    .Call(`_multiRLcpp_r_estimate_mcmc`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, warmup, samples, chains, thin, step_size, target_accept, max_tree_depth, seed, algorithm, lower_bounds, upper_bounds)
+}
+
 .estimate_mle <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, maxeval, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds) {
     .Call(`_multiRLcpp_r_estimate_mle`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, maxeval, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds)
 }

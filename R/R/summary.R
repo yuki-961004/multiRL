@@ -57,3 +57,5 @@ summary.multiRLcpp_run_m <- function(object, ...) {
 summary.multiRLcpp_estimate_mle <- summary.multiRLcpp_run_m
 summary.multiRLcpp_estimate_map <- summary.multiRLcpp_run_m
 summary.multiRLcpp_run <- summary.multiRLcpp_run_m
+
+summary.multiRLcpp_estimate_mcmc <- summary.multiRLcpp_run_m

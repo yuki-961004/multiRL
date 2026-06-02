@@ -8,7 +8,9 @@
 
 namespace multiRL {
 
-void update_free_values(
+namespace FreeValues {
+
+void assign(
     Params& params,
     const std::vector<double>& free_values
 ) {
@@ -17,7 +19,7 @@ void update_free_values(
     }
 }
 
-std::vector<double> extract_free_values(const Params& params) {
+std::vector<double> extract(const Params& params) {
     std::vector<double> out;
     out.reserve(params.free_names.size());
 
@@ -28,20 +30,24 @@ std::vector<double> extract_free_values(const Params& params) {
     return out;
 }
 
-CriterionResult evaluate_mle_task(
+}  // namespace FreeValues
+
+namespace Nlopt {
+
+CriterionResult evaluate(
     const RunTask& task,
     const std::vector<double>& free_values
 ) {
     RunTask local_task = task;
-    update_free_values(local_task.params, free_values);
+    FreeValues::assign(local_task.params, free_values);
     return process_MDP_free(local_task).metric;
 }
 
-double estimate_objective_value(
+double score(
     const RunTask& task,
     const std::vector<double>& free_values
 ) {
-    const CriterionResult metric = evaluate_mle_task(task, free_values);
+    const CriterionResult metric = evaluate(task, free_values);
 
     if (task.settings.estimate == "MAP" &&
         !std::isnan(metric.log_posterior)) {
@@ -53,7 +59,7 @@ double estimate_objective_value(
 
 #ifdef MULTIRL_HAS_NLOPT
 
-double nlopt_mle_objective(
+double objective(
     const std::vector<double>& x,
     std::vector<double>& grad,
     void* data
@@ -61,10 +67,10 @@ double nlopt_mle_objective(
     (void) grad;
 
     const RunTask* task = static_cast<const RunTask*>(data);
-    return estimate_objective_value(*task, x);
+    return score(*task, x);
 }
 
-nlopt::opt build_nlopt_optimizer(
+nlopt::opt build(
     const NLoptControl& control,
     const std::size_t n_params
 ) {
@@ -133,5 +139,7 @@ nlopt::opt build_nlopt_optimizer(
 }
 
 #endif
+
+}  // namespace Nlopt
 
 }  // namespace multiRL

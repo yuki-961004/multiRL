@@ -67,31 +67,39 @@ pybind11::dict py_wrap_result(
 pybind11::dict py_wrap_estimate_mle_result(
     const multiRL::EstimateMleResult& result
 ) {
-    pybind11::dict params;
-    for (const auto& kv : result.params.values) {
-        params[pybind11::str(kv.first)] = kv.second;
+    pybind11::dict fit;
+    fit["subid"] = "1";
+    for (const std::string& name : result.params.free_names) {
+        fit[pybind11::str(name)] = result.params.get(name);
     }
+    fit["ACC"] = result.metric.acc;
+    fit["LogL"] = result.metric.log_likelihood;
+    fit["LogPr"] = result.metric.log_prior;
+    fit["LogPo"] = result.metric.log_posterior;
+    fit["NLL"] = result.metric.nll;
+    fit["AIC"] = result.metric.aic;
+    fit["BIC"] = result.metric.bic;
+    fit["status"] = result.status;
+    fit["n_evals"] = result.n_evals;
+    fit["optimum_value"] = result.optimum_value;
 
-    pybind11::dict metric;
-    metric["ACC"] = result.metric.acc;
-    metric["LogL"] = result.metric.log_likelihood;
-    metric["LogPr"] = result.metric.log_prior;
-    metric["LogPo"] = result.metric.log_posterior;
-    metric["NLL"] = result.metric.nll;
-    metric["AIC"] = result.metric.aic;
-    metric["BIC"] = result.metric.bic;
+    pybind11::dict subject;
+    subject["subid"] = "1";
+    subject["status"] = result.status;
+    subject["n_evals"] = result.n_evals;
+    subject["optimum_value"] = result.optimum_value;
+    subject["result_message"] = result.result_message;
+    subject["stop_reason"] = result.stop_reason;
 
-    pybind11::dict estimator;
-    estimator["status"] = result.status;
-    estimator["n_evals"] = result.n_evals;
-    estimator["optimum_value"] = result.optimum_value;
-    estimator["result_message"] = result.result_message;
-    estimator["stop_reason"] = result.stop_reason;
+    pybind11::list subjects;
+    subjects.append(subject);
+
+    pybind11::dict diagnostics;
+    diagnostics["subjects"] = subjects;
 
     pybind11::dict out;
-    out["params"] = params;
-    out["metric"] = metric;
-    out["estimator"] = estimator;
+    out["fit"] = fit;
+    out["diagnostics"] = diagnostics;
     return out;
 }
 
@@ -99,12 +107,14 @@ pybind11::dict py_wrap_estimate_map_result(
     const multiRL::EstimateMapResult& result
 ) {
     pybind11::dict out = py_wrap_estimate_mle_result(result.best);
-    pybind11::dict estimator = out["estimator"].cast<pybind11::dict>();
-    estimator["stop_reason"] = result.stop_reason;
-    estimator["iterations"] = result.iterations;
-    estimator["delta"] = result.delta;
-    estimator["best_log_posterior"] = result.best_log_posterior;
-    out["estimator"] = estimator;
+    pybind11::dict diagnostics = out["diagnostics"].cast<pybind11::dict>();
+    pybind11::dict em;
+    em["iterations"] = result.iterations;
+    em["delta"] = result.delta;
+    em["best_log_posterior"] = result.best_log_posterior;
+    em["stop_reason"] = result.stop_reason;
+    diagnostics["em"] = em;
+    out["diagnostics"] = diagnostics;
     return out;
 }
 
@@ -241,7 +251,9 @@ pybind11::dict py_estimate_mle(
     const std::string& local_algorithm,
     const double xtol_rel,
     const double local_xtol_rel,
-    const int seed
+    const int seed,
+    const std::vector<double>& lower_bounds,
+    const std::vector<double>& upper_bounds
 ) {
     multiRL::RunTask task = py_make_task(
         object,
@@ -265,13 +277,15 @@ pybind11::dict py_estimate_mle(
         "MLE"
     );
 
-    multiRL::NLoptControl control;
-    control.maxeval = maxeval;
-    control.algorithm = algorithm;
-    control.local_algorithm = local_algorithm;
-    control.xtol_rel = xtol_rel;
-    control.local_xtol_rel = local_xtol_rel;
-    control.seed = seed;
+    multiRL::MLEControl control;
+    control.nlopt.maxeval = maxeval;
+    control.nlopt.algorithm = algorithm;
+    control.nlopt.local_algorithm = local_algorithm;
+    control.nlopt.xtol_rel = xtol_rel;
+    control.nlopt.local_xtol_rel = local_xtol_rel;
+    control.nlopt.seed = seed;
+    control.nlopt.lower_bounds = lower_bounds;
+    control.nlopt.upper_bounds = upper_bounds;
 
     multiRL::EstimateMleResult result = multiRL::estimate_mle(task, control);
     return py_wrap_estimate_mle_result(result);
@@ -304,7 +318,9 @@ pybind11::dict py_estimate_map(
     const std::string& local_algorithm,
     const double xtol_rel,
     const double local_xtol_rel,
-    const int seed
+    const int seed,
+    const std::vector<double>& lower_bounds,
+    const std::vector<double>& upper_bounds
 ) {
     multiRL::RunTask task = py_make_task(
         object,
@@ -335,6 +351,8 @@ pybind11::dict py_estimate_map(
     control.mle.nlopt.xtol_rel = xtol_rel;
     control.mle.nlopt.local_xtol_rel = local_xtol_rel;
     control.mle.nlopt.seed = seed;
+    control.mle.nlopt.lower_bounds = lower_bounds;
+    control.mle.nlopt.upper_bounds = upper_bounds;
     control.map_maxiter = map_maxiter;
     control.map_tol = map_tol;
     control.map_patience = map_patience;
@@ -343,7 +361,7 @@ pybind11::dict py_estimate_map(
     return py_wrap_estimate_map_result(result);
 }
 
-PYBIND11_MODULE(_shell_run_m, module) {
+PYBIND11_MODULE(_backend, module) {
     module.doc() = "multiRL shell_run_m wrapper";
     module.def(
         "shell_run_m",
@@ -394,7 +412,9 @@ PYBIND11_MODULE(_shell_run_m, module) {
         pybind11::arg("local_algorithm") = "LN_BOBYQA",
         pybind11::arg("xtol_rel") = 1e-6,
         pybind11::arg("local_xtol_rel") = 1e-8,
-        pybind11::arg("seed") = 1004
+        pybind11::arg("seed") = 1004,
+        pybind11::arg("lower_bounds") = std::vector<double>(),
+        pybind11::arg("upper_bounds") = std::vector<double>()
     );
     module.def(
         "estimate_map",
@@ -425,6 +445,8 @@ PYBIND11_MODULE(_shell_run_m, module) {
         pybind11::arg("local_algorithm") = "LN_BOBYQA",
         pybind11::arg("xtol_rel") = 1e-6,
         pybind11::arg("local_xtol_rel") = 1e-8,
-        pybind11::arg("seed") = 1004
+        pybind11::arg("seed") = 1004,
+        pybind11::arg("lower_bounds") = std::vector<double>(),
+        pybind11::arg("upper_bounds") = std::vector<double>()
     );
 }

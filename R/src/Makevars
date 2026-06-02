@@ -1,3 +1,16 @@
 CXX_STD = CXX17
-PKG_CPPFLAGS = -I../inst/include -DMULTIRL_HAS_NLOPT $(SHLIB_OPENMP_CXXFLAGS)
-PKG_LIBS = -lnlopt $(SHLIB_OPENMP_CXXFLAGS)
+
+R_SCRIPT = "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript"
+STAN_CXXFLAGS = $(shell $(R_SCRIPT) -e "StanHeaders:::CxxFlags()")
+STAN_LIBS = $(shell $(R_SCRIPT) -e "StanHeaders:::LdFlags()")
+STANHEADERS_SRC = $(shell $(R_SCRIPT) \
+	-e "cat(system.file('include','src',package='StanHeaders',mustWork=TRUE))")
+
+PKG_CPPFLAGS = -I../inst/include -I"$(STANHEADERS_SRC)" -DMULTIRL_HAS_NLOPT -DMULTIRL_HAS_STAN $(SHLIB_OPENMP_CXXFLAGS)
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) \
+	$(STAN_CXXFLAGS) \
+	-Wno-ignored-attributes \
+	-Wno-deprecated-declarations
+PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) \
+	$(STAN_LIBS) \
+	-lnlopt

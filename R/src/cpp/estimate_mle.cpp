@@ -1,4 +1,4 @@
-#include <multiRL/estimate_mle.hpp>
+﻿#include <multiRL/estimate_mle.hpp>
 
 #include <multiRL/algorithm_nlopt.hpp>
 #include <multiRL/info_nlopt.hpp>
@@ -29,7 +29,7 @@ EstimateMleResult estimate_mle_single(
     EstimateMleResult result;
     result.params = task.params;
 
-    std::vector<double> x0 = extract_free_values(task.params);
+    std::vector<double> x0 = FreeValues::extract(task.params);
     if (x0.empty()) {
         result.metric = process_MDP_free(task).metric;
         result.optimum_value = result.metric.nll;
@@ -44,8 +44,8 @@ EstimateMleResult estimate_mle_single(
         nlopt::srand(static_cast<unsigned long>(nlopt_control.seed));
     }
 
-    nlopt::opt opt = build_nlopt_optimizer(nlopt_control, x0.size());
-    opt.set_min_objective(nlopt_mle_objective, const_cast<RunTask*>(&task));
+    nlopt::opt opt = Nlopt::build(nlopt_control, x0.size());
+    opt.set_min_objective(Nlopt::objective, const_cast<RunTask*>(&task));
 
     double minf = 0.0;
     nlopt::result status = nlopt::FAILURE;
@@ -53,8 +53,8 @@ EstimateMleResult estimate_mle_single(
     try {
         status = opt.optimize(x0, minf);
     } catch (const std::exception& error) {
-        update_free_values(result.params, x0);
-        result.metric = evaluate_mle_task(task, x0);
+        FreeValues::assign(result.params, x0);
+        result.metric = Nlopt::evaluate(task, x0);
         result.status = static_cast<int>(status);
         result.n_evals = opt.get_numevals();
         result.result_message = error.what();
@@ -63,8 +63,8 @@ EstimateMleResult estimate_mle_single(
         return result;
     }
 
-    update_free_values(result.params, x0);
-    result.metric = evaluate_mle_task(task, x0);
+    FreeValues::assign(result.params, x0);
+    result.metric = Nlopt::evaluate(task, x0);
     result.status = static_cast<int>(status);
     result.n_evals = opt.get_numevals();
     result.optimum_value = minf;
@@ -73,7 +73,7 @@ EstimateMleResult estimate_mle_single(
     return result;
 #else
     (void) control;
-    result.metric = evaluate_mle_task(task, x0);
+    result.metric = Nlopt::evaluate(task, x0);
     result.optimum_value = result.metric.nll;
     result.result_message = "NLopt support is not enabled.";
     result.stop_reason = "nlopt_disabled";

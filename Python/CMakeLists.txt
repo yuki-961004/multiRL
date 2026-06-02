@@ -117,4 +117,4 @@ function(add_multiRL_module module_name source_file)
     install(TARGETS ${module_name} DESTINATION ${MULTIRL_PY_PACKAGE_NAME})
 endfunction()
 
-add_multiRL_module(_shell_run_m src/py_shell_run_m.cpp)
+add_multiRL_module(_backend src/py_shell_run_m.cpp)

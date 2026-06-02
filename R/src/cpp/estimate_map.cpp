@@ -15,10 +15,10 @@ namespace multiRL {
 namespace {
 
 /* -------------------------------------------------------------------------- *
- * Subject Result Helpers                                                     *
+ * Subject Result Helpers
  * -------------------------------------------------------------------------- */
 
-double map_score(const EstimateMleResult& result) {
+double score(const EstimateMleResult& result) {
     if (!std::isnan(result.metric.log_posterior)) {
         return result.metric.log_posterior;
     }
@@ -26,7 +26,7 @@ double map_score(const EstimateMleResult& result) {
     return result.metric.log_likelihood;
 }
 
-std::unordered_map<std::string, double> free_param_map(
+std::unordered_map<std::string, double> free_values(
     const EstimateMleResult& result
 ) {
     std::unordered_map<std::string, double> out;
@@ -38,30 +38,30 @@ std::unordered_map<std::string, double> free_param_map(
     return out;
 }
 
-std::vector<std::unordered_map<std::string, double>> free_param_maps(
+std::vector<std::unordered_map<std::string, double>> all_free_values(
     const std::vector<EstimateMleResult>& results
 ) {
     std::vector<std::unordered_map<std::string, double>> out;
     out.reserve(results.size());
 
     for (const EstimateMleResult& result : results) {
-        out.push_back(free_param_map(result));
+        out.push_back(free_values(result));
     }
 
     return out;
 }
 
-double sum_map_score(const std::vector<EstimateMleResult>& results) {
+double sum_score(const std::vector<EstimateMleResult>& results) {
     double out = 0.0;
 
     for (const EstimateMleResult& result : results) {
-        out += map_score(result);
+        out += score(result);
     }
 
     return out;
 }
 
-CriterionResult sum_metric(const std::vector<EstimateMleResult>& results) {
+CriterionResult aggregate(const std::vector<EstimateMleResult>& results) {
     CriterionResult out;
     out.acc = 0.0;
     out.log_likelihood = 0.0;
@@ -94,7 +94,7 @@ CriterionResult sum_metric(const std::vector<EstimateMleResult>& results) {
     return out;
 }
 
-void apply_subject_results(
+void assign_results(
     std::vector<RunTask>& tasks,
     const std::vector<EstimateMleResult>& results
 ) {
@@ -105,7 +105,7 @@ void apply_subject_results(
     }
 }
 
-void apply_prior_group(
+void assign_priors(
     std::vector<RunTask>& tasks,
     const PriorGroup& priors
 ) {
@@ -114,7 +114,7 @@ void apply_prior_group(
     }
 }
 
-void apply_estimate_name(
+void assign_estimate(
     std::vector<RunTask>& tasks,
     const std::string& estimate
 ) {
@@ -131,35 +131,35 @@ std::string signed_number(const double value) {
     return "";
 }
 
-void print_map_message(const MAPControl& control, const std::string& message) {
+void log_message(const MAPControl& control, const std::string& message) {
     if (control.mle.nlopt.print_level > 0) {
         std::cout << message << std::endl;
     }
 }
 
 /* -------------------------------------------------------------------------- *
- * Expectation Step                                                           *
+ * Expectation Step
  * -------------------------------------------------------------------------- */
 
-std::vector<EstimateMleResult> em_e_step(
+std::vector<EstimateMleResult> e_step(
     std::vector<RunTask>& tasks,
     const MLEControl& control,
     const std::string& estimate
 ) {
-    apply_estimate_name(tasks, estimate);
+    assign_estimate(tasks, estimate);
     return estimate_mle(tasks, control);
 }
 
 /* -------------------------------------------------------------------------- *
- * Maximization Step                                                          *
+ * Maximization Step
  * -------------------------------------------------------------------------- */
 
-PriorGroup em_m_step(
+PriorGroup m_step(
     const PriorGroup& current_priors,
     const std::vector<EstimateMleResult>& results
 ) {
     CriterionPrior prior_engine(current_priors);
-    prior_engine.update(free_param_maps(results));
+    prior_engine.update(all_free_values(results));
     return prior_engine.group();
 }
 
@@ -185,23 +185,23 @@ EstimateMapResult estimate_map(
         return out;
     }
 
-    print_map_message(
+    log_message(
         control,
         "Initializing " + local_tasks.front().settings.name
     );
 
-    std::vector<EstimateMleResult> current = em_e_step(
+    std::vector<EstimateMleResult> current = e_step(
         local_tasks,
         control.mle,
         "MLE"
     );
     std::vector<EstimateMleResult> best = current;
-    PriorGroup posteriors = em_m_step(local_tasks.front().priors, current);
+    PriorGroup posteriors = m_step(local_tasks.front().priors, current);
 
-    apply_subject_results(local_tasks, current);
-    apply_prior_group(local_tasks, posteriors);
+    assign_results(local_tasks, current);
+    assign_priors(local_tasks, posteriors);
 
-    double log_posterior = sum_map_score(current);
+    double log_posterior = sum_score(current);
     double best_log_posterior = -std::numeric_limits<double>::infinity();
     double delta_log_posterior = 1.0;
     int patience = control.map_patience - 1;
@@ -209,27 +209,27 @@ EstimateMapResult estimate_map(
 
     if (!std::isfinite(log_posterior)) {
         log_posterior = 0.0;
-        print_map_message(
+        log_message(
             control,
             "Infinite log-priors detected. Please adjust the priors."
         );
     }
 
-    print_map_message(
+    log_message(
         control,
         "Starting Expectation-Maximization Algorithm\n"
         "Log-Posterior Probability: " + std::to_string(log_posterior)
     );
 
     while (std::abs(delta_log_posterior) > control.map_tol) {
-        current = em_e_step(local_tasks, control.mle, "MAP");
+        current = e_step(local_tasks, control.mle, "MAP");
 
-        const double sum_log_posterior = sum_map_score(current);
+        const double sum_log_posterior = sum_score(current);
 
         if (!std::isfinite(sum_log_posterior)) {
             ++stuck;
             --patience;
-            print_map_message(
+            log_message(
                 control,
                 "Invalid log-priors detected. Please adjust the priors."
             );
@@ -238,7 +238,7 @@ EstimateMapResult estimate_map(
             out.delta = delta_log_posterior;
 
             if (out.iterations >= control.map_maxiter) {
-                print_map_message(
+                log_message(
                     control,
                     "Iteration limit reached without convergence."
                 );
@@ -247,7 +247,7 @@ EstimateMapResult estimate_map(
             }
 
             if (stuck > 1 || patience == 0) {
-                print_map_message(
+                log_message(
                     control,
                     "EM-MAP seems to be stuck. You could try other priors or "
                     "just accept the best results for now."
@@ -267,9 +267,9 @@ EstimateMapResult estimate_map(
         delta_log_posterior = sum_log_posterior - log_posterior;
         log_posterior = sum_log_posterior;
 
-        posteriors = em_m_step(posteriors, current);
-        apply_subject_results(local_tasks, current);
-        apply_prior_group(local_tasks, posteriors);
+        posteriors = m_step(posteriors, current);
+        assign_results(local_tasks, current);
+        assign_priors(local_tasks, posteriors);
 
         if (log_posterior > best_log_posterior) {
             best_log_posterior = log_posterior;
@@ -289,13 +289,13 @@ EstimateMapResult estimate_map(
                 << std::round(best_log_posterior * 100.0) / 100.0
                 << ", "
                 << "patience: " << patience;
-        print_map_message(control, message.str());
+        log_message(control, message.str());
 
         ++out.iterations;
         out.delta = delta_log_posterior;
 
         if (std::abs(delta_log_posterior) <= control.map_tol) {
-            print_map_message(
+            log_message(
                 control,
                 "Congrets~ EM-MAP finds solution!"
             );
@@ -304,7 +304,7 @@ EstimateMapResult estimate_map(
         }
 
         if (out.iterations >= control.map_maxiter) {
-            print_map_message(
+            log_message(
                 control,
                 "Iteration limit reached without convergence."
             );
@@ -313,7 +313,7 @@ EstimateMapResult estimate_map(
         }
 
         if (stuck > 1 || patience == 0) {
-            print_map_message(
+            log_message(
                 control,
                 "EM-MAP seems to be stuck. You could try other priors or "
                 "just accept the best results for now."
@@ -325,7 +325,7 @@ EstimateMapResult estimate_map(
 
     out.subjects = best;
     out.best = best.front();
-    out.best.metric = sum_metric(best);
+    out.best.metric = aggregate(best);
     out.priors = posteriors;
     out.best_log_posterior = best_log_posterior;
 

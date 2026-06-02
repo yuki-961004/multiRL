@@ -3,6 +3,7 @@
 #include <multiRL/estimate_mle.hpp>
 
 #include <string>
+#include <vector>
 
 namespace multiRL {
 
@@ -20,12 +21,24 @@ struct MCMCControl {
     int warmup = 1000;
     int samples = 1000;
     int thin = 1;
+    int leapfrog_steps = 10;
     double step_size = 0.05;
     int max_tree_depth = 8;
+    double max_delta_energy = 1000.0;
     double target_accept = 0.80;
+    double min_step_size = 1e-8;
+    double max_step_size = 1.0;
+    double initial_jitter = 1e-6;
+    bool adapt_step_size = true;
     long seed = 1004;
     int print_level = 1;
     int threads = 0;
+    int progress_refresh_ms = 200;
+    double progress_line_interval_sec = 10.0;
+    double progress_line_interval_pct = 10.0;
+    std::string progress = "bar";
+    std::vector<double> lower_bounds;
+    std::vector<double> upper_bounds;
 };
 
 struct ABCControl {

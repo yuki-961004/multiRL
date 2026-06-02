@@ -19,7 +19,16 @@ Depends: R (>= 4.1.0)
 Imports:
     Rcpp,
     stats,
-    utils
-LinkingTo: Rcpp
+    utils,
+    nloptr,
+    RcppEigen,
+    StanHeaders,
+    RcppParallel
+LinkingTo:
+    Rcpp,
+    nloptr,
+    RcppEigen,
+    StanHeaders,
+    BH,
+    RcppParallel
 SystemRequirements: C++17
-

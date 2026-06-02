@@ -1,7 +1,16 @@
 """Internal MAP estimator for the Python multiRL frontend."""
 
-from . import _shell_run_m as _cpp_estimate_map
+from . import _backend as _cpp_estimate_map
 from ._shell_run_m import _modify_request
+import math
+
+
+def _modify_bounds(bounds, free_names, default):
+    if bounds is None:
+        return [default] * len(free_names)
+    if isinstance(bounds, dict):
+        return [float(bounds.get(name, default)) for name in free_names]
+    return [float(b) for b in bounds]
 
 
 def estimate_map(
@@ -13,6 +22,8 @@ def estimate_map(
     params=None,
     priors=None,
     settings=None,
+    lower=None,
+    upper=None,
     control=None,
     object=None,
     reward=None,
@@ -54,7 +65,11 @@ def estimate_map(
         estimate="MAP",
     )
 
-    return _cpp_estimate_map.estimate_map(
+    free_names_list = request["free_names"]
+    lower_bounds = _modify_bounds(lower, free_names_list, -float("inf"))
+    upper_bounds = _modify_bounds(upper, free_names_list, float("inf"))
+
+    cpp_result = _cpp_estimate_map.estimate_map(
         object=request["object"],
         reward=request["reward"],
         action=request["action"],
@@ -84,4 +99,38 @@ def estimate_map(
         xtol_rel=float(control.get("xtol_rel", 1e-6)),
         local_xtol_rel=float(control.get("local_xtol_rel", 1e-8)),
         seed=int(control.get("seed", 1004)),
+        lower_bounds=lower_bounds,
+        upper_bounds=upper_bounds,
     )
+
+    return {
+        "input": {
+            "data": data,
+            "colnames": request.get("colnames", colnames),
+            "behrule": request.get("behrule", behrule),
+            "funcs": request.get("funcs", funcs),
+            "params": params,
+            "priors": priors,
+            "settings": request.get("settings", settings),
+            "lower": lower,
+            "upper": upper,
+            "control": control,
+            "features": {
+                "object": request["object"],
+                "reward": request["reward"],
+                "action": request["action"],
+                "block": request["block"],
+                "trial": request["trial"]
+            }
+        },
+        "fit": cpp_result["fit"],
+        "estimator": {
+            "name": "MAP",
+            "backend": "nlopt",
+            "algorithm": str(control.get("algorithm", "GN_MLSL")),
+            "global_algorithm": str(control.get("algorithm", "GN_MLSL")),
+            "local_algorithm": str(control.get("local_algorithm", "LN_BOBYQA")),
+            "control": control
+        },
+        "diagnostics": cpp_result["diagnostics"]
+    }

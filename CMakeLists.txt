@@ -129,6 +129,8 @@ set(
     Cpp/src/modify_priors.cpp
     Cpp/src/task_builder.cpp
     Cpp/src/shell_run_m.cpp
+    Cpp/src/algorithm_stan.cpp
+    Cpp/src/estimate_mcmc.cpp
 )
 
 add_library(multiRL STATIC ${MULTIRL_SOURCES})

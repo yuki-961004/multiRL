@@ -1,6 +1,6 @@
 """Internal shell for the Python multiRL frontend."""
 
-from . import _shell_run_m as _cpp_shell_run_m
+from . import _backend as _cpp_shell_run_m
 from ._modify_behrule import _modify_behrule
 from ._modify_colnames import _modify_colnames
 from ._modify_features import _modify_features

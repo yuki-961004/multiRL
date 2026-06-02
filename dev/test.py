@@ -140,7 +140,7 @@ mle = multiRL.estimate_mle(
     },
 )
 
-print(mle["metric"])
+print(mle["fit"])
 
 # %%
 import multiRL
@@ -196,4 +196,63 @@ map_fit = multiRL.estimate_map(
     },
 )
 
-print(map_fit["metric"])
+print(map_fit["fit"])
+
+# %%
+# MCMC (requires Stan Math headers)
+import multiRL
+import pandas
+
+data = pandas.read_csv("data/TAB.csv")
+data = data[data["Subject"] == 1]
+
+mcmc_result = multiRL.estimate_mcmc(
+    object=data[["L_choice", "R_choice"]].values.tolist(),
+    reward=data[["L_reward", "R_reward"]].values.tolist(),
+    action=data["Sub_Choose"].tolist(),
+    block=data["Block"].tolist(),
+    trial=data["Trial"].tolist(),
+    cue=["A", "B", "C", "D"],
+    rsp=["A", "B", "C", "D"],
+    params={
+        "alpha": 0.3,
+        "beta": 0.5,
+        "gamma": 1.0,
+        "delta": 0.1,
+        "epsilon": float("nan"),
+        "zeta": 0.0,
+        "seed": 123.0,
+        "L": float("nan"),
+        "penalty": 1.0,
+        "Q0": float("nan"),
+        "reset": float("nan"),
+        "lapse": 0.01,
+        "threshold": 20.0,
+        "bonus": 0.0,
+        "weight": 1.0,
+        "capacity": 0.0,
+        "sticky": 0.0,
+    },
+    free_names=["alpha", "beta"],
+    system=["RL"],
+    policy="off",
+    name="TD",
+    mode="fitting",
+    priors={
+        "alpha": {"type": "beta", "shape1": 2, "shape2": 2},
+        "beta": {"type": "exp", "rate": 1},
+    },
+    control={
+        "algorithm": "nuts",
+        "warmup": 50,
+        "samples": 50,
+        "chains": 2,
+        "thin": 1,
+        "step_size": 0.05,
+        "target_accept": 0.80,
+        "max_tree_depth": 4,
+        "seed": 1004,
+    },
+)
+
+print(mcmc_result["fit"])
