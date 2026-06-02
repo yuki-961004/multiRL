@@ -66,9 +66,6 @@ double clamp_probability(double value) {
 }
 
 // Check whether a floating-point value is finite (not NaN or Inf).
-bool is_finite(double value) {
-    return std::isfinite(value);
-}
 
 // Check whether all elements of a vector are finite real numbers.
 // Used in HMC gradient computation to detect anomalies.
@@ -109,23 +106,6 @@ Eigen::VectorXd draw_momentum(
     return momentum;
 }
 
-// Add slight random jitter to initial positions so that multiple chains
-// start from slightly different points, reducing risk of identical traces.
-void jitter_initial(
-    Eigen::VectorXd& initial,
-    double jitter,
-    std::mt19937_64& rng
-) {
-    if (jitter <= 0.0) {
-        return;
-    }
-
-    std::normal_distribution<double> normal(0.0, jitter);
-
-    for (Eigen::Index i = 0; i < initial.size(); ++i) {
-        initial(i) += normal(rng);
-    }
-}
 
 // Draw from Exponential(1) distribution for slice sampling in NUTS.
 double exponential(std::mt19937_64& rng) {

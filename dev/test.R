@@ -313,7 +313,7 @@ multiRLcpp.mcmc <- estimate_mcmc(
   ),
   control = list(
     algorithm = "nuts",
-    warmup = 50L,
+    warmup = 25L,
     samples = 50L,
     chains = 2L,
     thin = 1L,

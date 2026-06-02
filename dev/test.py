@@ -2,7 +2,15 @@
 # python -m pip install -e Python
 
 # %%
+import sys
 import time
+
+sys.path.insert(0, "Python")
+sys.meta_path = [
+    finder
+    for finder in sys.meta_path
+    if "_multiRL_editable" not in type(finder).__module__
+]
 
 import multiRL
 import pandas

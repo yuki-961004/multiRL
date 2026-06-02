@@ -9,7 +9,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(OpenMP)
+set(CMAKE_DISABLE_FIND_PACKAGE_Java ON)
+set(CMAKE_DISABLE_FIND_PACKAGE_JNI ON)
+
+find_package(OpenMP REQUIRED)
 
 option(
     MULTIRL_SYNC_PACKAGE_SOURCES
@@ -26,14 +29,57 @@ option(
 option(
     MULTIRL_ENABLE_NLOPT
     "Enable NLopt-backed estimators"
-    OFF
+    ON
 )
 
 option(
     MULTIRL_FETCH_NLOPT
     "Fetch NLopt instead of using a system installation"
-    OFF
+    ON
 )
+
+option(
+    MULTIRL_ENABLE_MCMC
+    "Build MCMC estimator with Stan Math support"
+    ON
+)
+
+set(
+    MULTIRL_STAN_MATH_TAG
+    "latest"
+    CACHE STRING
+    "Stan Math tag to fetch, or 'latest' to query GitHub releases"
+)
+
+if(MULTIRL_ENABLE_MCMC AND MULTIRL_STAN_MATH_TAG STREQUAL "latest")
+    file(
+        DOWNLOAD
+        "https://api.github.com/repos/stan-dev/math/releases/latest"
+        "${CMAKE_BINARY_DIR}/stan_release.json"
+        STATUS MULTIRL_STAN_RELEASE_STATUS
+        TLS_VERIFY ON
+    )
+
+    list(GET MULTIRL_STAN_RELEASE_STATUS 0 MULTIRL_STAN_RELEASE_CODE)
+    list(GET MULTIRL_STAN_RELEASE_STATUS 1 MULTIRL_STAN_RELEASE_MESSAGE)
+
+    if(NOT MULTIRL_STAN_RELEASE_CODE EQUAL 0)
+        message(
+            FATAL_ERROR
+            "Failed to resolve latest Stan Math release: "
+            "${MULTIRL_STAN_RELEASE_MESSAGE}. "
+            "Set -DMULTIRL_STAN_MATH_TAG=v5.3.0 for an offline build."
+        )
+    endif()
+
+    file(READ "${CMAKE_BINARY_DIR}/stan_release.json" MULTIRL_STAN_RELEASE)
+    string(
+        JSON MULTIRL_STAN_MATH_TAG
+        GET "${MULTIRL_STAN_RELEASE}" "tag_name"
+    )
+
+    message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
+endif()
 
 if(MULTIRL_SYNC_PACKAGE_SOURCES)
     set(
@@ -68,6 +114,76 @@ endif()
 
 if(MSVC)
     add_compile_options(/utf-8 /wd4819 /wd4267 /wd4101)
+endif()
+
+set(MULTIRL_EIGEN_SOURCE_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-src")
+set(MULTIRL_EIGEN_BINARY_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-build")
+set(MULTIRL_EIGEN_SUBBUILD_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-subbuild")
+
+if(NOT EXISTS "${MULTIRL_EIGEN_SOURCE_DIR}/Eigen")
+    FetchContent_Populate(
+        eigen
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+        GIT_TAG master
+        GIT_SHALLOW TRUE
+        SOURCE_DIR "${MULTIRL_EIGEN_SOURCE_DIR}"
+        BINARY_DIR "${MULTIRL_EIGEN_BINARY_DIR}"
+        SUBBUILD_DIR "${MULTIRL_EIGEN_SUBBUILD_DIR}"
+    )
+else()
+    set(eigen_SOURCE_DIR "${MULTIRL_EIGEN_SOURCE_DIR}")
+endif()
+
+set(MULTIRL_STAN_MATH_INCLUDE_DIRS "")
+
+if(MULTIRL_ENABLE_MCMC)
+    FetchContent_Declare(
+        stan_math
+        GIT_REPOSITORY https://github.com/stan-dev/math.git
+        GIT_TAG ${MULTIRL_STAN_MATH_TAG}
+        GIT_SHALLOW TRUE
+        GIT_SUBMODULES_RECURSE TRUE
+    )
+    FetchContent_MakeAvailable(stan_math)
+
+    file(
+        GLOB MULTIRL_STAN_EIGEN_DIRS
+        CONFIGURE_DEPENDS
+        "${stan_math_SOURCE_DIR}/lib/eigen_*"
+    )
+    file(
+        GLOB MULTIRL_STAN_BOOST_DIRS
+        CONFIGURE_DEPENDS
+        "${stan_math_SOURCE_DIR}/lib/boost_*"
+    )
+    file(
+        GLOB MULTIRL_STAN_SUNDIALS_DIRS
+        CONFIGURE_DEPENDS
+        "${stan_math_SOURCE_DIR}/lib/sundials_*"
+    )
+    file(
+        GLOB MULTIRL_STAN_TBB_DIRS
+        CONFIGURE_DEPENDS
+        "${stan_math_SOURCE_DIR}/lib/tbb_*"
+    )
+
+    list(APPEND MULTIRL_STAN_MATH_INCLUDE_DIRS "${stan_math_SOURCE_DIR}")
+    list(APPEND MULTIRL_STAN_MATH_INCLUDE_DIRS ${MULTIRL_STAN_EIGEN_DIRS})
+    list(APPEND MULTIRL_STAN_MATH_INCLUDE_DIRS ${MULTIRL_STAN_BOOST_DIRS})
+
+    foreach(stan_sundials_dir ${MULTIRL_STAN_SUNDIALS_DIRS})
+        list(
+            APPEND MULTIRL_STAN_MATH_INCLUDE_DIRS
+            "${stan_sundials_dir}/include"
+        )
+    endforeach()
+
+    foreach(stan_tbb_dir ${MULTIRL_STAN_TBB_DIRS})
+        list(
+            APPEND MULTIRL_STAN_MATH_INCLUDE_DIRS
+            "${stan_tbb_dir}/include"
+        )
+    endforeach()
 endif()
 
 set(MULTIRL_NLOPT_TARGET "")
@@ -112,7 +228,7 @@ if(MULTIRL_ENABLE_NLOPT)
 endif()
 
 set(
-    MULTIRL_SOURCES
+    MULTIRL_BASE_SOURCES
     Cpp/src/func_alpha.cpp
     Cpp/src/func_beta.cpp
     Cpp/src/func_gamma.cpp
@@ -129,9 +245,20 @@ set(
     Cpp/src/modify_priors.cpp
     Cpp/src/task_builder.cpp
     Cpp/src/shell_run_m.cpp
-    Cpp/src/algorithm_stan.cpp
-    Cpp/src/estimate_mcmc.cpp
 )
+
+set(
+    MULTIRL_SOURCES
+    ${MULTIRL_BASE_SOURCES}
+)
+
+if(MULTIRL_ENABLE_MCMC)
+    list(
+        APPEND MULTIRL_SOURCES
+        Cpp/src/algorithm_stan.cpp
+        Cpp/src/estimate_mcmc.cpp
+    )
+endif()
 
 add_library(multiRL STATIC ${MULTIRL_SOURCES})
 
@@ -141,6 +268,7 @@ target_include_directories(
     multiRL
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cpp/include>
+        $<BUILD_INTERFACE:${eigen_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 
@@ -159,6 +287,16 @@ if(MULTIRL_ENABLE_NLOPT)
                 $<BUILD_INTERFACE:${nlopt_include_dir}>
         )
     endforeach()
+endif()
+
+if(MULTIRL_ENABLE_MCMC)
+    target_include_directories(
+        multiRL
+        PRIVATE
+            ${MULTIRL_STAN_MATH_INCLUDE_DIRS}
+    )
+
+    target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_STAN)
 endif()
 
 if(MULTIRL_BUILD_PYTHON)
@@ -208,6 +346,15 @@ if(MULTIRL_BUILD_PYTHON)
         target_compile_definitions(_shell_run_m PRIVATE MULTIRL_HAS_NLOPT)
         target_link_libraries(_shell_run_m PRIVATE ${MULTIRL_NLOPT_TARGET})
     endif()
+
+    if(MULTIRL_ENABLE_MCMC)
+        target_compile_definitions(_shell_run_m PRIVATE MULTIRL_HAS_STAN)
+        target_include_directories(
+            _shell_run_m
+            PRIVATE
+                ${MULTIRL_STAN_MATH_INCLUDE_DIRS}
+        )
+    endif()
 endif()
 
 install(
@@ -219,3 +366,6 @@ install(
 )
 
 install(DIRECTORY Cpp/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${eigen_SOURCE_DIR}/Eigen DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+message(STATUS "Stan Math tag ${MULTIRL_STAN_MATH_TAG}")

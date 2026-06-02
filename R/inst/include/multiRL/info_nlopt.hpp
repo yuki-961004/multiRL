@@ -20,14 +20,18 @@ struct NLoptStatusInfo {
 
 #ifdef MULTIRL_HAS_NLOPT
 
-std::string nlopt_result_message(nlopt::result code);
-std::string nlopt_stop_reason(nlopt::result code);
-std::string nlopt_result_code_name(nlopt::result code);
-bool nlopt_is_success(nlopt::result code);
-bool nlopt_is_stopping_condition(nlopt::result code);
-bool nlopt_is_error(nlopt::result code);
-NLoptStatusInfo nlopt_status_info(nlopt::result code);
-std::string nlopt_status_summary(nlopt::result code);
+namespace NloptInfo {
+
+std::string message(nlopt::result code);
+std::string stop_reason(nlopt::result code);
+std::string code_name(nlopt::result code);
+bool is_success(nlopt::result code);
+bool is_stopping(nlopt::result code);
+bool is_error(nlopt::result code);
+NLoptStatusInfo status(nlopt::result code);
+std::string summary(nlopt::result code);
+
+}  // namespace NloptInfo
 
 #endif
 

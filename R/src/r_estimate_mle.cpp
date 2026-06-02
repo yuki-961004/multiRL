@@ -1,18 +1,32 @@
 #include <Rcpp.h>
 
 #include <multiRL/estimate_mle.hpp>
+#include <multiRL/modify_outputs.hpp>
 
 #include "r_wrapper_common.hpp"
 
 namespace {
 
+Rcpp::List wrap_estimator(const multiRL::modify_outputs::OutputEstimator& est) {
+    Rcpp::List out = Rcpp::List::create(
+        Rcpp::_["name"] = est.name,
+        Rcpp::_["backend"] = est.backend,
+        Rcpp::_["algorithm"] = est.algorithm,
+        Rcpp::_["global_algorithm"] = est.global_algorithm,
+        Rcpp::_["local_algorithm"] = est.local_algorithm
+    );
+    return out;
+}
+
 Rcpp::List wrap_estimate_mle_result(
     const std::vector<multiRL::RunTask>& tasks,
-    const std::vector<multiRL::EstimateMleResult>& results
+    const std::vector<multiRL::EstimateMleResult>& results,
+    const multiRL::modify_outputs::OutputEstimator& estimator
 ) {
     if (results.empty()) {
         return Rcpp::List::create(
             Rcpp::_["fit"] = Rcpp::DataFrame::create(),
+            Rcpp::_["estimator"] = wrap_estimator(estimator),
             Rcpp::_["diagnostics"] = Rcpp::List::create(
                 Rcpp::_["subjects"] = Rcpp::DataFrame::create()
             )
@@ -91,6 +105,7 @@ Rcpp::List wrap_estimate_mle_result(
 
     Rcpp::List out = Rcpp::List::create(
         Rcpp::_["fit"] = Rcpp::DataFrame(fit_columns),
+        Rcpp::_["estimator"] = wrap_estimator(estimator),
         Rcpp::_["diagnostics"] = Rcpp::List::create(
             Rcpp::_["subjects"] = Rcpp::DataFrame::create(
                 Rcpp::_["subid"] = subid,
@@ -180,5 +195,8 @@ Rcpp::List r_estimate_mle(
     std::vector<multiRL::EstimateMleResult> results =
         multiRL::estimate_mle(tasks, control);
 
-    return wrap_estimate_mle_result(tasks, results);
+    multiRL::modify_outputs::OutputEstimator estimator =
+        multiRL::modify_outputs::nlopt_estimator("MLE", control.nlopt);
+
+    return wrap_estimate_mle_result(tasks, results, estimator);
 }

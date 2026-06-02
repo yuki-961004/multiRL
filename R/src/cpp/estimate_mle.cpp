@@ -1,4 +1,4 @@
-﻿#include <multiRL/estimate_mle.hpp>
+#include <multiRL/estimate_mle.hpp>
 
 #include <multiRL/algorithm_nlopt.hpp>
 #include <multiRL/info_nlopt.hpp>
@@ -68,8 +68,8 @@ EstimateMleResult estimate_mle_single(
     result.status = static_cast<int>(status);
     result.n_evals = opt.get_numevals();
     result.optimum_value = minf;
-    result.result_message = nlopt_result_message(status);
-    result.stop_reason = nlopt_stop_reason(status);
+    result.result_message = NloptInfo::message(status);
+    result.stop_reason = NloptInfo::stop_reason(status);
     return result;
 #else
     (void) control;

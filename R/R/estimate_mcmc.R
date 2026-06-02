@@ -114,14 +114,7 @@ estimate_mcmc <- function(
       extra = extra
     ),
     fit = cpp_result$fit,
-    estimator = list(
-      name = "MCMC",
-      backend = "stan",
-      algorithm = control$algorithm,
-      global_algorithm = control$algorithm,
-      local_algorithm = "",
-      control = control
-    ),
+    estimator = cpp_result$estimator,
     diagnostics = cpp_result$diagnostics
   )
   base::class(out) <- c("multiRLcpp_estimate_mcmc", "multiRLcpp_run", "list")

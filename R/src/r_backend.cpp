@@ -11,6 +11,7 @@
 #include "cpp/estimate_mle.cpp"
 #include "cpp/info_nlopt.cpp"
 #include "cpp/modify_control.cpp"
+#include "cpp/modify_outputs.cpp"
 #include "cpp/process_MDP_free.cpp"
 #include "cpp/modify_params.cpp"
 #include "cpp/modify_priors.cpp"

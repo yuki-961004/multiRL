@@ -1,40 +1,49 @@
 #include <multiRL/info_nlopt.hpp>
 
+#include <string>
+
 #ifdef MULTIRL_HAS_NLOPT
+#include <nlopt.hpp>
+#endif
 
 namespace multiRL {
+namespace NloptInfo {
 
-std::string nlopt_result_message(nlopt::result code) {
+#ifdef MULTIRL_HAS_NLOPT
+
+std::string message(nlopt::result code) {
     switch (code) {
         case nlopt::SUCCESS:
-            return "Success";
+            return "Generic success (NLOPT_SUCCESS).";
         case nlopt::STOPVAL_REACHED:
-            return "Stop value reached";
+            return "Stop value reached (NLOPT_STOPVAL_REACHED).";
         case nlopt::FTOL_REACHED:
-            return "Function tolerance reached";
+            return "Function tolerance reached (NLOPT_FTOL_REACHED).";
         case nlopt::XTOL_REACHED:
-            return "Parameter tolerance reached";
+            return "Parameter tolerance reached (NLOPT_XTOL_REACHED).";
         case nlopt::MAXEVAL_REACHED:
-            return "Maximum evaluations reached";
+            return "Maximum evaluations reached (NLOPT_MAXEVAL_REACHED).";
         case nlopt::MAXTIME_REACHED:
-            return "Maximum time reached";
+            return "Maximum time reached (NLOPT_MAXTIME_REACHED).";
         case nlopt::FAILURE:
-            return "Generic failure";
+            return "Generic failure (NLOPT_FAILURE).";
         case nlopt::INVALID_ARGS:
-            return "Invalid arguments";
+            return "Invalid arguments (NLOPT_INVALID_ARGS).";
         case nlopt::OUT_OF_MEMORY:
-            return "Out of memory";
+            return "Out of memory (NLOPT_OUT_OF_MEMORY).";
         case nlopt::ROUNDOFF_LIMITED:
-            return "Roundoff limited progress";
+            return "Roundoff limited (NLOPT_ROUNDOFF_LIMITED).";
         case nlopt::FORCED_STOP:
-            return "Forced stop";
+            return "Forced stop (NLOPT_FORCED_STOP).";
         default:
-            return "Unknown result";
+            return "Unknown NLopt result.";
     }
 }
 
-std::string nlopt_stop_reason(nlopt::result code) {
+std::string stop_reason(nlopt::result code) {
     switch (code) {
+        case nlopt::SUCCESS:
+            return "converged";
         case nlopt::STOPVAL_REACHED:
             return "stopval";
         case nlopt::FTOL_REACHED:
@@ -45,18 +54,22 @@ std::string nlopt_stop_reason(nlopt::result code) {
             return "maxeval";
         case nlopt::MAXTIME_REACHED:
             return "maxtime";
-        case nlopt::SUCCESS:
-            return "success";
+        case nlopt::FAILURE:
+            return "failure";
+        case nlopt::INVALID_ARGS:
+            return "invalid_args";
+        case nlopt::OUT_OF_MEMORY:
+            return "out_of_memory";
         case nlopt::ROUNDOFF_LIMITED:
-            return "roundoff_limited";
+            return "roundoff";
         case nlopt::FORCED_STOP:
             return "forced_stop";
         default:
-            return "failure";
+            return "unknown";
     }
 }
 
-std::string nlopt_result_code_name(nlopt::result code) {
+std::string code_name(nlopt::result code) {
     switch (code) {
         case nlopt::SUCCESS:
             return "SUCCESS";
@@ -85,49 +98,40 @@ std::string nlopt_result_code_name(nlopt::result code) {
     }
 }
 
-bool nlopt_is_success(nlopt::result code) {
-    return static_cast<int>(code) > 0;
+bool is_success(nlopt::result code) {
+    return code > 0 && code < 5;
 }
 
-bool nlopt_is_stopping_condition(nlopt::result code) {
-    switch (code) {
-        case nlopt::STOPVAL_REACHED:
-        case nlopt::FTOL_REACHED:
-        case nlopt::XTOL_REACHED:
-        case nlopt::MAXEVAL_REACHED:
-        case nlopt::MAXTIME_REACHED:
-        case nlopt::ROUNDOFF_LIMITED:
-        case nlopt::FORCED_STOP:
-            return true;
-        default:
-            return false;
-    }
+bool is_stopping(nlopt::result code) {
+    return code == nlopt::STOPVAL_REACHED ||
+        code == nlopt::FTOL_REACHED ||
+        code == nlopt::XTOL_REACHED ||
+        code == nlopt::MAXEVAL_REACHED ||
+        code == nlopt::MAXTIME_REACHED;
 }
 
-bool nlopt_is_error(nlopt::result code) {
-    return static_cast<int>(code) < 0;
+bool is_error(nlopt::result code) {
+    return code < 0 && code != nlopt::FORCED_STOP;
 }
 
-NLoptStatusInfo nlopt_status_info(nlopt::result code) {
+NLoptStatusInfo status(nlopt::result code) {
     NLoptStatusInfo out;
     out.code = static_cast<int>(code);
-    out.code_name = nlopt_result_code_name(code);
-    out.message = nlopt_result_message(code);
-    out.stop_reason = nlopt_stop_reason(code);
-    out.is_success = nlopt_is_success(code);
-    out.is_stopping_condition = nlopt_is_stopping_condition(code);
-    out.is_error = nlopt_is_error(code);
+    out.code_name = code_name(code);
+    out.message = message(code);
+    out.stop_reason = stop_reason(code);
+    out.is_success = is_success(code);
+    out.is_stopping_condition = is_stopping(code);
+    out.is_error = is_error(code);
     return out;
 }
 
-std::string nlopt_status_summary(nlopt::result code) {
-    const NLoptStatusInfo info = nlopt_status_info(code);
-    return "code=" + std::to_string(info.code) +
-           ",name=" + info.code_name +
-           ",reason=" + info.stop_reason +
-           ",message=" + info.message;
+std::string summary(nlopt::result code) {
+    const NLoptStatusInfo info = status(code);
+    return info.code_name + ": " + info.message;
 }
 
-}  // namespace multiRL
-
 #endif
+
+}  // namespace NloptInfo
+}  // namespace multiRL

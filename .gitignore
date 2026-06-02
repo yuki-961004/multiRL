@@ -20,3 +20,25 @@ desktop.ini
 raw/
 metaSDT/
 abcpp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+*.egg
+Python/src/cpp/
+Python/src/include/
+
+# R build artifacts
+R/src/*.o
+R/src/*.dll
+R/src/cpp/
+R/inst/include/
+.tmp-r/
+.tmp-python/
+
+# IDE
+*.swp
+*.swo

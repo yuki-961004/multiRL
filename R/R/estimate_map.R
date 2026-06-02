@@ -114,14 +114,7 @@ estimate_map <- function(
       extra = extra
     ),
     fit = cpp_result$fit,
-    estimator = list(
-      name = "MAP",
-      backend = "nlopt",
-      algorithm = control$algorithm,
-      global_algorithm = control$algorithm,
-      local_algorithm = control$local_algorithm,
-      control = control
-    ),
+    estimator = cpp_result$estimator,
     diagnostics = cpp_result$diagnostics
   )
   base::class(out) <- c("multiRLcpp_estimate_map", "multiRLcpp_run", "list")
