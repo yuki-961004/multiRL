@@ -1,8 +1,11 @@
 """Python frontend for the multiRL C++ backend."""
 
-from ._shell_run_m import estimate_mle, run_m
+from ._estimate_mle import estimate_mle
+from ._estimate_map import estimate_map
+from ._shell_run_m import run_m
 
 __all__ = [
+    "estimate_map",
     "estimate_mle",
     "run_m",
 ]

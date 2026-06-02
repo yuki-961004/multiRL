@@ -7,10 +7,9 @@ run_m <- function(
     params = list(),
     priors = list(),
     settings = list(),
-    engine = "Cpp",
     ...
 ) {
-  .shell_run_m(
+  .run_m_request(
     data = data,
     id = id,
     colnames = colnames,
@@ -19,12 +18,11 @@ run_m <- function(
     params = params,
     priors = priors,
     settings = settings,
-    engine = engine,
     extra = list(...)
   )
 }
 
-.shell_run_m <- function(
+.run_m_request <- function(
     data,
     id,
     colnames,
@@ -33,17 +31,8 @@ run_m <- function(
     params,
     priors,
     settings,
-    engine,
     extra
 ) {
-  if (!base::identical(engine, "Cpp")) {
-    base::stop("multiRLcpp 0.5.0 only supports engine = 'Cpp'.")
-  }
-
-  if (base::length(funcs) > 0L) {
-    base::stop("multiRLcpp 0.5.0 only supports built-in C++ functions.")
-  }
-
   colnames <- .modify_colnames(data = data, colnames = colnames)
   data <- .modify_data_id(
     data = data,
@@ -67,12 +56,11 @@ run_m <- function(
     params = params,
     priors = priors,
     settings = settings,
-    engine = engine,
     features = features,
     extra = extra
   )
 
-  cpp_result <- .cpp_shell_run_m(
+  cpp_result <- .shell_run_m(
     object = features$object,
     reward = features$reward,
     action = features$action,
@@ -96,20 +84,11 @@ run_m <- function(
     estimate = settings$estimate
   )
 
-  fit <- base::data.frame(
-    ACC = cpp_result$metric$ACC,
-    LogL = cpp_result$metric$LogL,
-    LogPr = cpp_result$metric$LogPr,
-    LogPo = cpp_result$metric$LogPo,
-    AIC = cpp_result$metric$AIC,
-    BIC = cpp_result$metric$BIC
-  )
-
   out <- list(
     input = request,
     result = cpp_result$result,
-    sumstat = fit,
-    fit = fit,
+    sumstat = cpp_result$fit,
+    fit = cpp_result$fit,
     extra = extra
   )
   base::class(out) <- c("multiRLcpp_run_m", "multiRLcpp_run", "list")

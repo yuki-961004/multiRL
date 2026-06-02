@@ -12,4 +12,6 @@ RunTask task_builder(
     const PriorGroup& priors = PriorGroup()
 );
 
+std::vector<RunTask> split_task_by_subject(const RunTask& task);
+
 }  // namespace multiRL

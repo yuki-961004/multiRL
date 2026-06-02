@@ -199,6 +199,28 @@ inline void update_prior_group(
     }
 }
 
+inline std::vector<std::unordered_map<std::string, double>>
+prior_group_params_from_matrix(
+    const std::vector<std::vector<double>>& group_free_params,
+    const std::vector<std::string>& free_names
+) {
+    std::vector<std::unordered_map<std::string, double>> out;
+    out.reserve(group_free_params.size());
+
+    for (const std::vector<double>& row : group_free_params) {
+        std::unordered_map<std::string, double> subject_params;
+        const std::size_t n_values = std::min(row.size(), free_names.size());
+
+        for (std::size_t index = 0; index < n_values; ++index) {
+            subject_params[free_names[index]] = row[index];
+        }
+
+        out.push_back(subject_params);
+    }
+
+    return out;
+}
+
 class CriterionPrior {
 public:
     CriterionPrior() = default;
@@ -215,6 +237,15 @@ public:
             free_params
     ) {
         update_prior_group(priors_, free_params);
+    }
+
+    void update(
+        const std::vector<std::vector<double>>& group_free_params,
+        const std::vector<std::string>& free_names
+    ) {
+        update(
+            prior_group_params_from_matrix(group_free_params, free_names)
+        );
     }
 
     const PriorGroup& group() const {

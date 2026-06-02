@@ -90,4 +90,32 @@ inline CriterionResult criterion_likelihood(
     return criterion_likelihood_value<double>(task, output);
 }
 
+class CriterionLikelihood {
+public:
+    CriterionLikelihood() = default;
+
+    template <typename T>
+    CriterionValue<T> evaluate(
+        const RunTask& task,
+        const Process3Record& output
+    ) const {
+        return criterion_likelihood_value<T>(task, output);
+    }
+
+    CriterionResult evaluate(
+        const RunTask& task,
+        const Process3Record& output
+    ) const {
+        return evaluate<double>(task, output);
+    }
+
+    template <typename T>
+    CriterionValue<T> operator()(
+        const RunTask& task,
+        const Process3Record& output
+    ) const {
+        return evaluate<T>(task, output);
+    }
+};
+
 }  // namespace multiRL

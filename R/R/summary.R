@@ -1,6 +1,11 @@
 summary.multiRLcpp_run_m <- function(object, ...) {
   fit <- object$fit
 
+  if (base::nrow(fit) > 1L) {
+    base::print(fit)
+    return(base::invisible(object))
+  }
+
   base::cat("Model Fit:\n")
   base::cat(
     "  Accuracy: ",
@@ -50,4 +55,5 @@ summary.multiRLcpp_run_m <- function(object, ...) {
 }
 
 summary.multiRLcpp_estimate_mle <- summary.multiRLcpp_run_m
+summary.multiRLcpp_estimate_map <- summary.multiRLcpp_run_m
 summary.multiRLcpp_run <- summary.multiRLcpp_run_m

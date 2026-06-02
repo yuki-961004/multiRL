@@ -9,7 +9,9 @@
 namespace multiRL {
 
 struct NLoptControl {
-    std::string algorithm = "LN_BOBYQA";
+    std::string algorithm = "GN_MLSL";
+    std::string local_algorithm = "LN_BOBYQA";
+    double local_xtol_rel = 1e-8;
     double xtol_rel = 1e-6;
     double ftol_rel = 0.0;
     double ftol_abs = 0.0;
@@ -20,8 +22,14 @@ struct NLoptControl {
     int population = 0;
     double initial_step = 0.0;
     long seed = 1004;
+    int print_level = 1;
+    int threads = 0;
     std::vector<double> lower_bounds;
     std::vector<double> upper_bounds;
+};
+
+struct MLEControl {
+    NLoptControl nlopt;
 };
 
 struct EstimateMleResult {
@@ -36,7 +44,17 @@ struct EstimateMleResult {
 
 EstimateMleResult estimate_mle(
     const RunTask& task,
-    const NLoptControl& control = NLoptControl()
+    const MLEControl& control = MLEControl()
+);
+
+std::vector<EstimateMleResult> estimate_mle(
+    const std::vector<RunTask>& tasks,
+    const MLEControl& control = MLEControl()
+);
+
+EstimateMleResult estimate_mle(
+    const RunTask& task,
+    const NLoptControl& control
 );
 
 }  // namespace multiRL

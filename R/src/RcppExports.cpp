@@ -10,6 +10,85 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// r_estimate_map
+Rcpp::List r_estimate_map(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, int mle_maxeval, int map_maxiter, double map_tol, int map_patience, std::string algorithm, std::string local_algorithm, double xtol_rel, double local_xtol_rel, int seed, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
+RcppExport SEXP _multiRLcpp_r_estimate_map(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP mle_maxevalSEXP, SEXP map_maxiterSEXP, SEXP map_tolSEXP, SEXP map_patienceSEXP, SEXP algorithmSEXP, SEXP local_algorithmSEXP, SEXP xtol_relSEXP, SEXP local_xtol_relSEXP, SEXP seedSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type object(objectSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type reward(rewardSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type action(actionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type block(blockSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type trial(trialSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type idinfo(idinfoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type exinfo(exinfoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type cue(cueSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type rsp(rspSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type free_names(free_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type system(systemSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_names(prior_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_types(prior_typesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param1(prior_param1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param2(prior_param2SEXP);
+    Rcpp::traits::input_parameter< bool >::type prior_active(prior_activeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type policy(policySEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< int >::type mle_maxeval(mle_maxevalSEXP);
+    Rcpp::traits::input_parameter< int >::type map_maxiter(map_maxiterSEXP);
+    Rcpp::traits::input_parameter< double >::type map_tol(map_tolSEXP);
+    Rcpp::traits::input_parameter< int >::type map_patience(map_patienceSEXP);
+    Rcpp::traits::input_parameter< std::string >::type algorithm(algorithmSEXP);
+    Rcpp::traits::input_parameter< std::string >::type local_algorithm(local_algorithmSEXP);
+    Rcpp::traits::input_parameter< double >::type xtol_rel(xtol_relSEXP);
+    Rcpp::traits::input_parameter< double >::type local_xtol_rel(local_xtol_relSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lower_bounds(lower_boundsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type upper_bounds(upper_boundsSEXP);
+    rcpp_result_gen = Rcpp::wrap(r_estimate_map(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, mle_maxeval, map_maxiter, map_tol, map_patience, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds));
+    return rcpp_result_gen;
+END_RCPP
+}
+// r_estimate_mle
+Rcpp::List r_estimate_mle(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, int maxeval, std::string algorithm, std::string local_algorithm, double xtol_rel, double local_xtol_rel, int seed, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
+RcppExport SEXP _multiRLcpp_r_estimate_mle(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP maxevalSEXP, SEXP algorithmSEXP, SEXP local_algorithmSEXP, SEXP xtol_relSEXP, SEXP local_xtol_relSEXP, SEXP seedSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type object(objectSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type reward(rewardSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type action(actionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type block(blockSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type trial(trialSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type idinfo(idinfoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type exinfo(exinfoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type cue(cueSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type rsp(rspSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type free_names(free_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type system(systemSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_names(prior_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_types(prior_typesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param1(prior_param1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param2(prior_param2SEXP);
+    Rcpp::traits::input_parameter< bool >::type prior_active(prior_activeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type policy(policySEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< int >::type maxeval(maxevalSEXP);
+    Rcpp::traits::input_parameter< std::string >::type algorithm(algorithmSEXP);
+    Rcpp::traits::input_parameter< std::string >::type local_algorithm(local_algorithmSEXP);
+    Rcpp::traits::input_parameter< double >::type xtol_rel(xtol_relSEXP);
+    Rcpp::traits::input_parameter< double >::type local_xtol_rel(local_xtol_relSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lower_bounds(lower_boundsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type upper_bounds(upper_boundsSEXP);
+    rcpp_result_gen = Rcpp::wrap(r_estimate_mle(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, maxeval, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds));
+    return rcpp_result_gen;
+END_RCPP
+}
 // r_shell_run_m
 Rcpp::List r_shell_run_m(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, std::string estimate);
 RcppExport SEXP _multiRLcpp_r_shell_run_m(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP estimateSEXP) {
@@ -41,46 +120,11 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// r_estimate_mle
-Rcpp::List r_estimate_mle(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, std::string estimate, int maxeval, std::string algorithm, double xtol_rel, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
-RcppExport SEXP _multiRLcpp_r_estimate_mle(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP estimateSEXP, SEXP maxevalSEXP, SEXP algorithmSEXP, SEXP xtol_relSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type object(objectSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type reward(rewardSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type action(actionSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type block(blockSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type trial(trialSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type idinfo(idinfoSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type exinfo(exinfoSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type cue(cueSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type rsp(rspSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type params(paramsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type free_names(free_namesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type system(systemSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_names(prior_namesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_types(prior_typesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param1(prior_param1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param2(prior_param2SEXP);
-    Rcpp::traits::input_parameter< bool >::type prior_active(prior_activeSEXP);
-    Rcpp::traits::input_parameter< std::string >::type policy(policySEXP);
-    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
-    Rcpp::traits::input_parameter< std::string >::type estimate(estimateSEXP);
-    Rcpp::traits::input_parameter< int >::type maxeval(maxevalSEXP);
-    Rcpp::traits::input_parameter< std::string >::type algorithm(algorithmSEXP);
-    Rcpp::traits::input_parameter< double >::type xtol_rel(xtol_relSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lower_bounds(lower_boundsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type upper_bounds(upper_boundsSEXP);
-    rcpp_result_gen = Rcpp::wrap(r_estimate_mle(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate, maxeval, algorithm, xtol_rel, lower_bounds, upper_bounds));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_multiRLcpp_r_estimate_map", (DL_FUNC) &_multiRLcpp_r_estimate_map, 31},
+    {"_multiRLcpp_r_estimate_mle", (DL_FUNC) &_multiRLcpp_r_estimate_mle, 28},
     {"_multiRLcpp_r_shell_run_m", (DL_FUNC) &_multiRLcpp_r_shell_run_m, 21},
-    {"_multiRLcpp_r_estimate_mle", (DL_FUNC) &_multiRLcpp_r_estimate_mle, 26},
     {NULL, NULL, 0}
 };
 

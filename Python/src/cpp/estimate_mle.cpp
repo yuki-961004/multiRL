@@ -1,9 +1,15 @@
 #include <multiRL/estimate_mle.hpp>
 
+#include <multiRL/algorithm_nlopt.hpp>
+#include <multiRL/info_nlopt.hpp>
+#include <multiRL/modify_control.hpp>
 #include <multiRL/process_MDP_free.hpp>
 
-#include <algorithm>
 #include <stdexcept>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 #ifdef MULTIRL_HAS_NLOPT
 #include <nlopt.hpp>
@@ -13,100 +19,13 @@ namespace multiRL {
 
 namespace {
 
-void update_free_values(
-    Params& params,
-    const std::vector<double>& free_values
-) {
-    for (std::size_t index = 0; index < params.free_names.size(); ++index) {
-        params.values[params.free_names[index]] = free_values[index];
-    }
-}
-
-std::vector<double> extract_free_values(const Params& params) {
-    std::vector<double> out;
-    out.reserve(params.free_names.size());
-
-    for (const std::string& name : params.free_names) {
-        out.push_back(params.get(name));
-    }
-
-    return out;
-}
-
-CriterionResult evaluate_mle_task(
+EstimateMleResult estimate_mle_single(
     const RunTask& task,
-    const std::vector<double>& free_values
+    const MLEControl& control,
+    const bool seed_nlopt
 ) {
-    RunTask local_task = task;
-    update_free_values(local_task.params, free_values);
-    return process_MDP_free(local_task).metric;
-}
+    const NLoptControl& nlopt_control = control.nlopt;
 
-#ifdef MULTIRL_HAS_NLOPT
-
-double estimate_mle_objective(
-    const std::vector<double>& x,
-    std::vector<double>& grad,
-    void* data
-) {
-    (void) grad;
-
-    const RunTask* task = static_cast<const RunTask*>(data);
-    return evaluate_mle_task(*task, x).nll;
-}
-
-nlopt::opt build_mle_optimizer(
-    const NLoptControl& control,
-    const std::size_t n_params
-) {
-    nlopt::opt opt(control.algorithm.c_str(), n_params);
-
-    if (control.lower_bounds.size() == n_params) {
-        opt.set_lower_bounds(control.lower_bounds);
-    }
-    if (control.upper_bounds.size() == n_params) {
-        opt.set_upper_bounds(control.upper_bounds);
-    }
-
-    if (control.xtol_rel > 0.0) {
-        opt.set_xtol_rel(control.xtol_rel);
-    }
-    if (control.ftol_rel > 0.0) {
-        opt.set_ftol_rel(control.ftol_rel);
-    }
-    if (control.ftol_abs > 0.0) {
-        opt.set_ftol_abs(control.ftol_abs);
-    }
-    if (control.xtol_abs > 0.0) {
-        opt.set_xtol_abs(control.xtol_abs);
-    }
-    if (control.maxtime > 0.0) {
-        opt.set_maxtime(control.maxtime);
-    }
-    if (control.stopval > 0.0) {
-        opt.set_stopval(control.stopval);
-    }
-    if (control.maxeval > 0) {
-        opt.set_maxeval(control.maxeval);
-    }
-    if (control.population > 0) {
-        opt.set_population(control.population);
-    }
-    if (control.initial_step > 0.0) {
-        opt.set_initial_step(control.initial_step);
-    }
-
-    return opt;
-}
-
-#endif
-
-}  // namespace
-
-EstimateMleResult estimate_mle(
-    const RunTask& task,
-    const NLoptControl& control
-) {
     EstimateMleResult result;
     result.params = task.params;
 
@@ -121,12 +40,12 @@ EstimateMleResult estimate_mle(
     }
 
 #ifdef MULTIRL_HAS_NLOPT
-    if (control.seed >= 0) {
-        nlopt::srand(static_cast<unsigned long>(control.seed));
+    if (seed_nlopt && nlopt_control.seed >= 0) {
+        nlopt::srand(static_cast<unsigned long>(nlopt_control.seed));
     }
 
-    nlopt::opt opt = build_mle_optimizer(control, x0.size());
-    opt.set_min_objective(estimate_mle_objective, const_cast<RunTask*>(&task));
+    nlopt::opt opt = build_nlopt_optimizer(nlopt_control, x0.size());
+    opt.set_min_objective(nlopt_mle_objective, const_cast<RunTask*>(&task));
 
     double minf = 0.0;
     nlopt::result status = nlopt::FAILURE;
@@ -134,6 +53,8 @@ EstimateMleResult estimate_mle(
     try {
         status = opt.optimize(x0, minf);
     } catch (const std::exception& error) {
+        update_free_values(result.params, x0);
+        result.metric = evaluate_mle_task(task, x0);
         result.status = static_cast<int>(status);
         result.n_evals = opt.get_numevals();
         result.result_message = error.what();
@@ -147,8 +68,8 @@ EstimateMleResult estimate_mle(
     result.status = static_cast<int>(status);
     result.n_evals = opt.get_numevals();
     result.optimum_value = minf;
-    result.result_message = "NLopt finished.";
-    result.stop_reason = "nlopt";
+    result.result_message = nlopt_result_message(status);
+    result.stop_reason = nlopt_stop_reason(status);
     return result;
 #else
     (void) control;
@@ -158,6 +79,58 @@ EstimateMleResult estimate_mle(
     result.stop_reason = "nlopt_disabled";
     return result;
 #endif
+}
+
+}  // namespace
+
+EstimateMleResult estimate_mle(
+    const RunTask& task,
+    const MLEControl& raw_control
+) {
+    const MLEControl control = modify_control(raw_control, "mle");
+    return estimate_mle_single(task, control, true);
+}
+
+std::vector<EstimateMleResult> estimate_mle(
+    const std::vector<RunTask>& tasks,
+    const MLEControl& raw_control
+) {
+    const MLEControl control = modify_control(raw_control, "mle");
+    const NLoptControl& nlopt_control = control.nlopt;
+
+#ifdef _OPENMP
+    if (nlopt_control.threads > 0) {
+        omp_set_num_threads(nlopt_control.threads);
+    }
+#endif
+
+#ifdef MULTIRL_HAS_NLOPT
+    if (nlopt_control.seed >= 0) {
+        nlopt::srand(static_cast<unsigned long>(nlopt_control.seed));
+    }
+#endif
+
+    std::vector<EstimateMleResult> results(tasks.size());
+    const int n_tasks = static_cast<int>(tasks.size());
+
+#ifdef _OPENMP
+#pragma omp parallel for if(n_tasks > 1)
+#endif
+    for (int index = 0; index < n_tasks; ++index) {
+        const std::size_t row = static_cast<std::size_t>(index);
+        results[row] = estimate_mle_single(tasks[row], control, false);
+    }
+
+    return results;
+}
+
+EstimateMleResult estimate_mle(
+    const RunTask& task,
+    const NLoptControl& raw_control
+) {
+    MLEControl control;
+    control.nlopt = raw_control;
+    return estimate_mle(task, control);
 }
 
 }  // namespace multiRL

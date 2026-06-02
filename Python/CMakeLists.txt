@@ -61,7 +61,11 @@ set(
     src/cpp/func_delta.cpp
     src/cpp/func_epsilon.cpp
     src/cpp/func_zeta.cpp
+    src/cpp/algorithm_nlopt.cpp
+    src/cpp/estimate_map.cpp
     src/cpp/estimate_mle.cpp
+    src/cpp/info_nlopt.cpp
+    src/cpp/modify_control.cpp
     src/cpp/process_MDP_free.cpp
     src/cpp/modify_params.cpp
     src/cpp/modify_priors.cpp

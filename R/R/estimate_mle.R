@@ -10,10 +10,9 @@ estimate_mle <- function(
     lower = NULL,
     upper = NULL,
     control = list(),
-    engine = "Cpp",
     ...
 ) {
-  .estimate_mle(
+  .estimate_mle_request(
     data = data,
     id = id,
     colnames = colnames,
@@ -25,12 +24,11 @@ estimate_mle <- function(
     lower = lower,
     upper = upper,
     control = control,
-    engine = engine,
     extra = list(...)
   )
 }
 
-.estimate_mle <- function(
+.estimate_mle_request <- function(
     data,
     id,
     colnames,
@@ -42,17 +40,8 @@ estimate_mle <- function(
     lower,
     upper,
     control,
-    engine,
     extra
 ) {
-  if (!base::identical(engine, "Cpp")) {
-    base::stop("multiRLcpp 0.5.0 only supports engine = 'Cpp'.")
-  }
-
-  if (base::length(funcs) > 0L) {
-    base::stop("multiRLcpp 0.5.0 only supports built-in C++ functions.")
-  }
-
   colnames <- .modify_colnames(data = data, colnames = colnames)
   data <- .modify_data_id(
     data = data,
@@ -74,7 +63,7 @@ estimate_mle <- function(
     free_names = base::names(params$free)
   )
 
-  cpp_result <- .cpp_estimate_mle(
+  cpp_result <- .estimate_mle(
     object = features$object,
     reward = features$reward,
     action = features$action,
@@ -95,21 +84,14 @@ estimate_mle <- function(
     policy = settings$policy,
     name = settings$name,
     mode = settings$mode,
-    estimate = "MLE",
     maxeval = control$maxeval,
     algorithm = control$algorithm,
+    local_algorithm = control$local_algorithm,
     xtol_rel = control$xtol_rel,
+    local_xtol_rel = control$local_xtol_rel,
+    seed = control$seed,
     lower_bounds = control$lower_bounds,
     upper_bounds = control$upper_bounds
-  )
-
-  fit <- base::data.frame(
-    ACC = cpp_result$metric$ACC,
-    LogL = cpp_result$metric$LogL,
-    LogPr = cpp_result$metric$LogPr,
-    LogPo = cpp_result$metric$LogPo,
-    AIC = cpp_result$metric$AIC,
-    BIC = cpp_result$metric$BIC
   )
 
   out <- list(
@@ -124,13 +106,19 @@ estimate_mle <- function(
       lower = lower,
       upper = upper,
       control = control,
-      engine = engine,
       features = features,
       extra = extra
     ),
-    params = cpp_result$params,
-    fit = fit,
-    estimator = cpp_result$estimator
+    fit = cpp_result$fit,
+    estimator = list(
+      name = "MLE",
+      backend = "nlopt",
+      algorithm = control$algorithm,
+      global_algorithm = control$algorithm,
+      local_algorithm = control$local_algorithm,
+      control = control
+    ),
+    diagnostics = cpp_result$diagnostics
   )
   base::class(out) <- c("multiRLcpp_estimate_mle", "multiRLcpp_run", "list")
   out
@@ -138,14 +126,20 @@ estimate_mle <- function(
 
 .modify_estimate_mle_control <- function(control, lower, upper, free_names) {
   default_control <- list(
-    algorithm = "LN_BOBYQA",
+    algorithm = "GN_MLSL",
+    local_algorithm = "LN_BOBYQA",
     maxeval = 10000L,
-    xtol_rel = 1e-6
+    xtol_rel = 1e-6,
+    local_xtol_rel = 1e-8,
+    seed = 1004L
   )
   out <- utils::modifyList(default_control, control)
   out$maxeval <- base::as.integer(out$maxeval[[1L]])
   out$algorithm <- base::as.character(out$algorithm[[1L]])
+  out$local_algorithm <- base::as.character(out$local_algorithm[[1L]])
   out$xtol_rel <- base::as.numeric(out$xtol_rel[[1L]])
+  out$local_xtol_rel <- base::as.numeric(out$local_xtol_rel[[1L]])
+  out$seed <- base::as.integer(out$seed[[1L]])
   out$lower_bounds <- .modify_estimate_mle_bounds(
     bounds = lower,
     free_names = free_names,

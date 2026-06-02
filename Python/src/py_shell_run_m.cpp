@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <multiRL/estimate_mle.hpp>
+#include <multiRL/estimate_map.hpp>
 #include <multiRL/modify_priors.hpp>
 #include <multiRL/process_MDP_free.hpp>
 #include <multiRL/shell_run_m.hpp>
@@ -90,6 +91,19 @@ pybind11::dict py_wrap_estimate_mle_result(
     pybind11::dict out;
     out["params"] = params;
     out["metric"] = metric;
+    out["estimator"] = estimator;
+    return out;
+}
+
+pybind11::dict py_wrap_estimate_map_result(
+    const multiRL::EstimateMapResult& result
+) {
+    pybind11::dict out = py_wrap_estimate_mle_result(result.best);
+    pybind11::dict estimator = out["estimator"].cast<pybind11::dict>();
+    estimator["stop_reason"] = result.stop_reason;
+    estimator["iterations"] = result.iterations;
+    estimator["delta"] = result.delta;
+    estimator["best_log_posterior"] = result.best_log_posterior;
     out["estimator"] = estimator;
     return out;
 }
@@ -222,7 +236,12 @@ pybind11::dict py_estimate_mle(
     const std::string& policy,
     const std::string& name,
     const std::string& mode,
-    const int maxeval
+    const int maxeval,
+    const std::string& algorithm,
+    const std::string& local_algorithm,
+    const double xtol_rel,
+    const double local_xtol_rel,
+    const int seed
 ) {
     multiRL::RunTask task = py_make_task(
         object,
@@ -248,9 +267,80 @@ pybind11::dict py_estimate_mle(
 
     multiRL::NLoptControl control;
     control.maxeval = maxeval;
+    control.algorithm = algorithm;
+    control.local_algorithm = local_algorithm;
+    control.xtol_rel = xtol_rel;
+    control.local_xtol_rel = local_xtol_rel;
+    control.seed = seed;
 
     multiRL::EstimateMleResult result = multiRL::estimate_mle(task, control);
     return py_wrap_estimate_mle_result(result);
+}
+
+pybind11::dict py_estimate_map(
+    const multiRL::StringMatrix& object,
+    const multiRL::DoubleMatrix& reward,
+    const std::vector<std::string>& action,
+    const std::vector<int>& block,
+    const std::vector<int>& trial,
+    const std::vector<std::string>& cue,
+    const std::vector<std::string>& rsp,
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names,
+    const std::vector<std::string>& system,
+    const std::vector<std::string>& prior_names,
+    const std::vector<std::string>& prior_types,
+    const std::vector<double>& prior_param1,
+    const std::vector<double>& prior_param2,
+    bool prior_active,
+    const std::string& policy,
+    const std::string& name,
+    const std::string& mode,
+    const int mle_maxeval,
+    const int map_maxiter,
+    const double map_tol,
+    const int map_patience,
+    const std::string& algorithm,
+    const std::string& local_algorithm,
+    const double xtol_rel,
+    const double local_xtol_rel,
+    const int seed
+) {
+    multiRL::RunTask task = py_make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        "MAP"
+    );
+
+    multiRL::MAPControl control;
+    control.mle.nlopt.maxeval = mle_maxeval;
+    control.mle.nlopt.algorithm = algorithm;
+    control.mle.nlopt.local_algorithm = local_algorithm;
+    control.mle.nlopt.xtol_rel = xtol_rel;
+    control.mle.nlopt.local_xtol_rel = local_xtol_rel;
+    control.mle.nlopt.seed = seed;
+    control.map_maxiter = map_maxiter;
+    control.map_tol = map_tol;
+    control.map_patience = map_patience;
+
+    multiRL::EstimateMapResult result = multiRL::estimate_map(task, control);
+    return py_wrap_estimate_map_result(result);
 }
 
 PYBIND11_MODULE(_shell_run_m, module) {
@@ -299,6 +389,42 @@ PYBIND11_MODULE(_shell_run_m, module) {
         pybind11::arg("policy") = "off",
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "fitting",
-        pybind11::arg("maxeval") = 10000
+        pybind11::arg("maxeval") = 10000,
+        pybind11::arg("algorithm") = "GN_MLSL",
+        pybind11::arg("local_algorithm") = "LN_BOBYQA",
+        pybind11::arg("xtol_rel") = 1e-6,
+        pybind11::arg("local_xtol_rel") = 1e-8,
+        pybind11::arg("seed") = 1004
+    );
+    module.def(
+        "estimate_map",
+        &py_estimate_map,
+        pybind11::arg("object"),
+        pybind11::arg("reward"),
+        pybind11::arg("action"),
+        pybind11::arg("block"),
+        pybind11::arg("trial"),
+        pybind11::arg("cue"),
+        pybind11::arg("rsp"),
+        pybind11::arg("params"),
+        pybind11::arg("free_names"),
+        pybind11::arg("system"),
+        pybind11::arg("prior_names") = std::vector<std::string>(),
+        pybind11::arg("prior_types") = std::vector<std::string>(),
+        pybind11::arg("prior_param1") = std::vector<double>(),
+        pybind11::arg("prior_param2") = std::vector<double>(),
+        pybind11::arg("prior_active") = false,
+        pybind11::arg("policy") = "off",
+        pybind11::arg("name") = "TD",
+        pybind11::arg("mode") = "fitting",
+        pybind11::arg("mle_maxeval") = 10000,
+        pybind11::arg("map_maxiter") = 10,
+        pybind11::arg("map_tol") = 1e-3,
+        pybind11::arg("map_patience") = 10,
+        pybind11::arg("algorithm") = "GN_MLSL",
+        pybind11::arg("local_algorithm") = "LN_BOBYQA",
+        pybind11::arg("xtol_rel") = 1e-6,
+        pybind11::arg("local_xtol_rel") = 1e-8,
+        pybind11::arg("seed") = 1004
     );
 }
