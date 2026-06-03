@@ -325,3 +325,46 @@ multiRLcpp.mcmc <- estimate_mcmc(
 )
 
 base::summary(multiRLcpp.mcmc)
+
+# %%
+
+multiRLcpp.abc <- estimate_abc(
+  data = binaryRL::Mason_2024_G2,
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"),
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  params = list(
+    free = list(alpha = 0.3, beta = 0.5),
+    fixed = list(threshold = 20)
+  ),
+  lower = c(0, 0),
+  upper = c(1, 1),
+  settings = list(
+    name = "TD",
+    mode = "fitting",
+    estimate = "ABC",
+    policy = "off"
+  ),
+  control = list(
+    samples = 50L,
+    tol = 0.2,
+    method = "rejection",
+    reduction = "none",
+    seed = 1004L,
+    threads = 1L,
+    print_level = 0L
+  )
+)
+
+print(base::names(multiRLcpp.abc))
+print(multiRLcpp.abc$fit)
+print(multiRLcpp.abc$diagnostics$subjects)
+stopifnot(multiRLcpp.abc$estimator$name == "ABC")
+stopifnot(multiRLcpp.abc$estimator$backend == "abcpp")

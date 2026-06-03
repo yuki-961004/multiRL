@@ -5,6 +5,7 @@
 #include "cpp/func_epsilon.cpp"
 #include "cpp/func_zeta.cpp"
 #include "cpp/algorithm_nlopt.cpp"
+#include "cpp/estimate_abc.cpp"
 #include "cpp/algorithm_stan.cpp"
 #include "cpp/estimate_map.cpp"
 #include "cpp/estimate_mcmc.cpp"

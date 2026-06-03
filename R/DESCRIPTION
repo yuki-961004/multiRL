@@ -23,12 +23,14 @@ Imports:
     nloptr,
     RcppEigen,
     StanHeaders,
-    RcppParallel
+    RcppParallel,
+    abcpp
 LinkingTo:
     Rcpp,
     nloptr,
     RcppEigen,
     StanHeaders,
     BH,
-    RcppParallel
+    RcppParallel,
+    abcpp
 SystemRequirements: C++17

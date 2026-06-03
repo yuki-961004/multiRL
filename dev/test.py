@@ -264,3 +264,65 @@ mcmc_result = multiRL.estimate_mcmc(
 )
 
 print(mcmc_result["fit"])
+
+# %%
+# ABC (uses the abcpp C++ backend)
+import multiRL
+import pandas
+
+data = pandas.read_csv("data/TAB.csv")
+data = data[data["Subject"] == 1]
+
+abc_result = multiRL.estimate_abc(
+    object=data[["L_choice", "R_choice"]].values.tolist(),
+    reward=data[["L_reward", "R_reward"]].values.tolist(),
+    action=data["Sub_Choose"].tolist(),
+    block=data["Block"].tolist(),
+    trial=data["Trial"].tolist(),
+    cue=["A", "B", "C", "D"],
+    rsp=["A", "B", "C", "D"],
+    params={
+        "alpha": 0.3,
+        "beta": 0.5,
+        "gamma": 1.0,
+        "delta": 0.1,
+        "epsilon": float("nan"),
+        "zeta": 0.0,
+        "seed": 123.0,
+        "L": float("nan"),
+        "penalty": 1.0,
+        "Q0": float("nan"),
+        "reset": float("nan"),
+        "lapse": 0.01,
+        "threshold": 20.0,
+        "bonus": 0.0,
+        "weight": 1.0,
+        "capacity": 0.0,
+        "sticky": 0.0,
+    },
+    free_names=["alpha", "beta"],
+    system=["RL"],
+    policy="off",
+    name="TD",
+    mode="fitting",
+    lower=[0, 0],
+    upper=[1, 1],
+    control={
+        "samples": 50,
+        "tol": 0.2,
+        "method": "rejection",
+        "reduction": "none",
+        "seed": 1004,
+        "threads": 1,
+        "print_level": 0,
+    },
+)
+
+print(abc_result["fit"])
+print(abc_result["diagnostics"]["subjects"])
+
+if abc_result["estimator"]["name"] != "ABC":
+    raise RuntimeError("ABC estimator name is not ABC.")
+
+if abc_result["estimator"]["backend"] != "abcpp":
+    raise RuntimeError("ABC backend is not abcpp.")

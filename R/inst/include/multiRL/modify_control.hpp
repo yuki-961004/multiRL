@@ -42,15 +42,21 @@ struct MCMCControl {
 };
 
 struct ABCControl {
-    int seed = 123;
-    int core = 1;
-    int sample = 100;
     int samples = 1000;
     double tol = 0.1;
-    int print_level = 1;
     std::string method = "rejection";
     std::string kernel = "epanechnikov";
     std::string reduction = "none";
+    std::string reduce = "none";
+    int n_comp = 0;
+    bool normalize = true;
+    unsigned int seed = 123;
+    int threads = 0;
+    int print_level = 1;
+    int core = 1;
+    int sample = 100;
+    std::vector<double> lower_bounds;
+    std::vector<double> upper_bounds;
 };
 
 struct RNNControl {

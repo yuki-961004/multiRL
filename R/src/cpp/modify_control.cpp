@@ -183,17 +183,23 @@ ABCControl modify_control(
      * ABC simulation and rejection/regression control                         *
      * ---------------------------------------------------------------------- */
 
-    if (out.seed < 0) {
+    if (out.seed == 0U) {
         out.seed = 123;
     }
-    if (out.core <= 0) {
-        out.core = 1;
+    if (out.threads < 0) {
+        out.threads = 0;
     }
-    if (out.sample <= 0) {
-        out.sample = 100;
+    if (out.core <= 0) {
+        out.core = out.threads > 0 ? out.threads : 1;
+    }
+    if (out.threads == 0 && out.core > 1) {
+        out.threads = out.core;
     }
     if (out.samples <= 0) {
         out.samples = 1000;
+    }
+    if (out.sample <= 0) {
+        out.sample = out.samples;
     }
     if (out.tol <= 0.0 || out.tol > 1.0) {
         out.tol = 0.1;
@@ -206,6 +212,15 @@ ABCControl modify_control(
     }
     if (out.reduction.empty()) {
         out.reduction = "none";
+    }
+    if (out.reduce.empty()) {
+        out.reduce = out.reduction;
+    }
+    if (out.reduction == "none" && out.reduce != "none") {
+        out.reduction = out.reduce;
+    }
+    if (out.n_comp < 0) {
+        out.n_comp = 0;
     }
     if (out.print_level < 0) {
         out.print_level = 0;

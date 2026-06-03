@@ -192,6 +192,7 @@ set(
     src/cpp/func_epsilon.cpp
     src/cpp/func_zeta.cpp
     src/cpp/algorithm_nlopt.cpp
+    src/cpp/estimate_abc.cpp
     src/cpp/estimate_map.cpp
     src/cpp/estimate_mle.cpp
     src/cpp/info_nlopt.cpp
@@ -226,6 +227,8 @@ target_include_directories(
     multiRL_python_core
     PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/src/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/Cpp/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/R/inst/include"
 )
 
 if(OpenMP_CXX_FOUND)
@@ -267,6 +270,8 @@ function(add_multiRL_module module_name source_file)
         ${module_name}
         PRIVATE
             "${CMAKE_CURRENT_SOURCE_DIR}/src/include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/Cpp/include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/R/inst/include"
     )
 
     if(MULTIRL_ENABLE_MCMC)

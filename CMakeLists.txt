@@ -236,6 +236,7 @@ set(
     Cpp/src/func_epsilon.cpp
     Cpp/src/func_zeta.cpp
     Cpp/src/algorithm_nlopt.cpp
+    Cpp/src/estimate_abc.cpp
     Cpp/src/estimate_map.cpp
     Cpp/src/estimate_mle.cpp
     Cpp/src/info_nlopt.cpp
@@ -270,6 +271,8 @@ target_include_directories(
     multiRL
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cpp/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/abcpp/Cpp/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/abcpp/R/inst/include>
         $<BUILD_INTERFACE:${eigen_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
 )

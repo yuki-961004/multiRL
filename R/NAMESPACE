@@ -1,3 +1,4 @@
+export(estimate_abc)
 export(estimate_mle)
 export(estimate_map)
 export(estimate_mcmc)
