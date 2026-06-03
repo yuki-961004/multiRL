@@ -7,20 +7,18 @@ namespace multiRL {
 
 double func_alpha(
     const TrialContext& context,
-    bool is_fp,
-    double qvalue,
-    double reward,
-    double utility,
-    const std::string& system,
     const Params& params
 ) {
-    (void) context;
-    (void) reward;
+    (void) context.reward;
 
     const double q0 = params.get("Q0");
     const bool has_alpha = params.has("alpha");
     const bool has_alpha_n = params.has("alphaN");
     const bool has_alpha_p = params.has("alphaP");
+    const bool is_fp = context.is_fp;
+    const double qvalue = context.qi;
+    const double utility = context.utility;
+    const std::string& system = context.system;
 
     if (std::isnan(q0) && is_fp) {
         return utility;
@@ -42,7 +40,7 @@ double func_alpha(
     }
 
     if (system == "WM") {
-        return reward;
+        return context.reward;
     }
 
     throw std::invalid_argument("Unknown model in func_alpha.");

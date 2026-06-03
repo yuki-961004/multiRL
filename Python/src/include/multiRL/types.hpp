@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <limits>
 #include <string>
 #include <unordered_map>
@@ -33,7 +34,7 @@ struct Process2Behrule {
     std::unordered_map<std::string, std::size_t> cue_index;
 };
 
-struct Process3Record {
+struct Process3Loop {
     std::vector<DoubleMatrix> value;
     DoubleMatrix bias;
     DoubleMatrix shown;
@@ -59,6 +60,17 @@ struct TrialContext {
     std::vector<std::string> cue;
     std::vector<std::string> rsp;
     std::vector<std::vector<std::string>> state;
+    std::vector<std::string> systems;
+    std::vector<std::vector<double>> qvalue;
+    std::vector<double> value0;
+    std::vector<double> values;
+    double exploration = missing_real();
+    double reward = missing_real();
+    double utility = missing_real();
+    double qi = missing_real();
+    bool is_nb = false;
+    bool is_fp = false;
+    std::string system;
 };
 
 struct Params {
@@ -67,6 +79,40 @@ struct Params {
 
     bool has(const std::string& name) const;
     double get(const std::string& name) const;
+};
+
+struct FunctionConfig {
+    std::string lrng_name = "func_alpha";
+    std::string prob_name = "func_beta";
+    std::string util_name = "func_gamma";
+    std::string bias_name = "func_delta";
+    std::string expl_name = "func_epsilon";
+    std::string dcay_name = "func_zeta";
+    bool has_custom = false;
+
+    std::function<double(const TrialContext&, const Params&)> lrng_func;
+
+    std::function<std::vector<double>(
+        const TrialContext&,
+        const Params&
+    )> prob_func;
+
+    std::function<double(const TrialContext&, const Params&)> util_func;
+
+    std::function<std::vector<double>(
+        const TrialContext&,
+        const Params&
+    )> bias_func;
+
+    std::function<int(
+        const TrialContext&,
+        const Params&
+    )> expl_func;
+
+    std::function<std::vector<double>(
+        const TrialContext&,
+        const Params&
+    )> dcay_func;
 };
 
 struct Settings {
@@ -104,6 +150,7 @@ struct RunTask {
     Params params;
     Settings settings;
     PriorGroup priors;
+    FunctionConfig funcs;
 };
 
 template <typename T>
@@ -120,7 +167,7 @@ struct CriterionValue {
 using CriterionResult = CriterionValue<double>;
 
 struct RunResult {
-    Process3Record result;
+    Process3Loop result;
     CriterionResult metric;
 };
 

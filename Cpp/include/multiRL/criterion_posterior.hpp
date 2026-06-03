@@ -17,7 +17,7 @@ public:
 
     CriterionResult evaluate(
         const RunTask& task,
-        const Process3Record& output
+        const Process3Loop& output
     ) const {
         CriterionResult result = likelihood_.evaluate(task, output);
         result.log_prior = prior_.evaluate<double>(task.params);
@@ -31,7 +31,7 @@ public:
 
     CriterionResult operator()(
         const RunTask& task,
-        const Process3Record& output
+        const Process3Loop& output
     ) const {
         return evaluate(task, output);
     }
@@ -51,7 +51,7 @@ private:
 
 inline CriterionResult criterion_posterior(
     const RunTask& task,
-    const Process3Record& output
+    const Process3Loop& output
 ) {
     CriterionPosterior engine(task.priors);
     return engine.evaluate(task, output);

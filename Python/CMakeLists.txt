@@ -196,6 +196,8 @@ set(
     src/cpp/estimate_mle.cpp
     src/cpp/info_nlopt.cpp
     src/cpp/modify_control.cpp
+    src/cpp/modify_context.cpp
+    src/cpp/modify_funcs.cpp
     src/cpp/modify_outputs.cpp
     src/cpp/process_MDP_free.cpp
     src/cpp/modify_params.cpp

@@ -15,14 +15,14 @@ public:
     template <typename T>
     CriterionValue<T> evaluate(
         const RunTask& task,
-        const Process3Record& output
+        const Process3Loop& output
     ) const {
         return compute<T>(task, output);
     }
 
     CriterionResult evaluate(
         const RunTask& task,
-        const Process3Record& output
+        const Process3Loop& output
     ) const {
         return evaluate<double>(task, output);
     }
@@ -30,7 +30,7 @@ public:
     template <typename T>
     CriterionValue<T> operator()(
         const RunTask& task,
-        const Process3Record& output
+        const Process3Loop& output
     ) const {
         return evaluate<T>(task, output);
     }
@@ -64,7 +64,7 @@ private:
     template <typename T>
     static CriterionValue<T> compute(
         const RunTask& task,
-        const Process3Record& output
+        const Process3Loop& output
     ) {
         CriterionValue<T> metric;
 
@@ -135,7 +135,7 @@ private:
 
 inline CriterionResult criterion_likelihood(
     const RunTask& task,
-    const Process3Record& output
+    const Process3Loop& output
 ) {
     CriterionLikelihood engine;
     return engine.evaluate<double>(task, output);

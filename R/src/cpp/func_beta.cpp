@@ -9,14 +9,14 @@ namespace multiRL {
 
 std::vector<double> func_beta(
     const TrialContext& context,
-    const std::vector<std::vector<double>>& qvalue,
-    double explor,
-    const std::vector<std::string>& system,
     const Params& params
 ) {
     const double beta = params.get("beta");
     const double lapse = params.get("lapse");
     const double weight_param = params.get("weight");
+    const std::vector<std::vector<double>>& qvalue = context.qvalue;
+    const double explor = context.exploration;
+    const std::vector<std::string>& system = context.systems;
     const std::size_t n_system = qvalue.size();
     const std::size_t n_options = qvalue[0].size();
 
@@ -101,7 +101,6 @@ std::vector<double> func_beta(
         }
     }
 
-    (void) context;
     (void) system;
     return prob;
 }

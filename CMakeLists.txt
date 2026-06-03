@@ -240,6 +240,8 @@ set(
     Cpp/src/estimate_mle.cpp
     Cpp/src/info_nlopt.cpp
     Cpp/src/modify_control.cpp
+    Cpp/src/modify_context.cpp
+    Cpp/src/modify_funcs.cpp
     Cpp/src/process_MDP_free.cpp
     Cpp/src/modify_params.cpp
     Cpp/src/modify_priors.cpp

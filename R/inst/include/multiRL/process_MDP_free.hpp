@@ -19,17 +19,7 @@ Process2Behrule process_2_behrule(
     const std::vector<std::string>& rsp
 );
 
-Process3Record process_3_record(const RunTask& task);
-
-Process3Record process_4_output(
-    const RunTask& task,
-    Process3Record record
-);
-
-CriterionResult process_5_metric(
-    const RunTask& task,
-    const Process3Record& output
-);
+Process3Loop process_3_loop(const RunTask& task);
 
 RunResult process_MDP_free(const RunTask& task);
 

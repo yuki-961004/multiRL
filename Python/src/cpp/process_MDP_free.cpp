@@ -1,7 +1,8 @@
 #include <multiRL/process_MDP_free.hpp>
 
 #include <multiRL/criterion_posterior.hpp>
-#include <multiRL/funcs.hpp>
+#include <multiRL/modify_context.hpp>
+#include <multiRL/modify_funcs.hpp>
 
 #include <cmath>
 #include <random>
@@ -111,11 +112,13 @@ Process2Behrule process_2_behrule(
     return behrule;
 }
 
+namespace {
+
 /* ========================================================================== *
  *                            Record Initialization                           *
  * ========================================================================== */
 
-Process3Record process_3_record(const RunTask& task) {
+Process3Loop initialize_loop(const RunTask& task) {
     const Process1Input& input = task.input;
     const Process2Behrule& behrule = task.behrule;
     const Settings& settings = task.settings;
@@ -127,88 +130,63 @@ Process3Record process_3_record(const RunTask& task) {
     const double q0 = params.get("Q0");
     const double initial_value = std::isnan(q0) ? 0.0 : q0;
 
-    Process3Record record;
+    Process3Loop output;
 
-    record.value.resize(
+    output.value.resize(
         n_system,
         DoubleMatrix(n_rows + 1, std::vector<double>(n_cues, missing_real()))
     );
 
     for (std::size_t system_index = 0; system_index < n_system;
          ++system_index) {
-        record.value[system_index][0] =
+        output.value[system_index][0] =
             std::vector<double>(n_cues, initial_value);
     }
 
-    record.bias = DoubleMatrix(
+    output.bias = DoubleMatrix(
         n_rows,
         std::vector<double>(n_cues, missing_real())
     );
-    record.shown = record.bias;
-    record.prob = record.bias;
-    record.count = DoubleMatrix(
+    output.shown = output.bias;
+    output.prob = output.bias;
+    output.count = DoubleMatrix(
         n_rows + 1,
         std::vector<double>(n_cues, missing_real())
     );
-    record.count[0] = std::vector<double>(n_cues, 0.0);
+    output.count[0] = std::vector<double>(n_cues, 0.0);
 
-    record.behave = StringMatrix(
+    output.behave = StringMatrix(
         n_rows + 1,
         std::vector<std::string>(4, "")
     );
 
-    record.exploration = std::vector<double>(n_rows, missing_real());
-    record.latent = std::vector<std::string>(n_rows, "");
-    record.reward = std::vector<double>(n_rows, missing_real());
-    record.utility = std::vector<double>(n_rows, missing_real());
-    record.simulation = std::vector<std::string>(n_rows, "");
-    record.position = std::vector<std::string>(n_rows, "");
+    output.exploration = std::vector<double>(n_rows, missing_real());
+    output.latent = std::vector<std::string>(n_rows, "");
+    output.reward = std::vector<double>(n_rows, missing_real());
+    output.utility = std::vector<double>(n_rows, missing_real());
+    output.simulation = std::vector<std::string>(n_rows, "");
+    output.position = std::vector<std::string>(n_rows, "");
 
-    return record;
-}
-
-namespace {
-
-/* ========================================================================== *
- *                              Trial Context                                 *
- * ========================================================================== */
-
-TrialContext make_context(
-    const RunTask& task,
-    const Process3Record& record,
-    const std::size_t row
-) {
-    TrialContext context;
-    context.row = row;
-    context.rownum = static_cast<int>(row + 1);
-    context.shown = record.shown[row];
-    context.count = record.count[row];
-    context.idinfo = task.input.idinfo[row];
-    context.exinfo = task.input.exinfo[row];
-    context.behave = record.behave[row];
-    context.cue = task.behrule.cue;
-    context.rsp = task.behrule.rsp;
-    context.state = task.input.state[row];
-    return context;
+    return output;
 }
 
 void update_behave(
-    Process3Record& record,
+    Process3Loop& output,
     const std::size_t row,
     const std::string& action,
     const std::string& latent,
     const std::string& simulation,
     const std::string& position
 ) {
-    record.behave[row][0] = action;
-    record.behave[row][1] = latent;
-    record.behave[row][2] = simulation;
-    record.behave[row][3] = position;
+    output.behave[row][0] = action;
+    output.behave[row][1] = latent;
+    output.behave[row][2] = simulation;
+    output.behave[row][3] = position;
 
-    record.behave[row + 1][0] = action;
-    record.behave[row + 1][1] = latent;
-    record.behave[row + 1][2] = simulation;
-    record.behave[row + 1][3] = position;
+    output.behave[row + 1][0] = action;
+    output.behave[row + 1][1] = latent;
+    output.behave[row + 1][2] = simulation;
+    output.behave[row + 1][3] = position;
 }
 
 /* ========================================================================== *
@@ -307,17 +285,20 @@ std::string sample_choice(
 }  // namespace
 
 /* ========================================================================== *
- *                             Trial Processor                                *
+ *                             Trial Loop                                     *
  * ========================================================================== */
 
-Process3Record process_4_output(
-    const RunTask& task,
-    Process3Record record
-) {
+Process3Loop process_3_loop(const RunTask& task) {
     const Process1Input& input = task.input;
     const Process2Behrule& behrule = task.behrule;
     const Params& params = task.params;
     const Settings& settings = task.settings;
+    const FunctionConfig default_funcs = modify_funcs();
+    const FunctionConfig& funcs = task.funcs.lrng_func
+        ? task.funcs
+        : default_funcs;
+
+    Process3Loop output = initialize_loop(task);
 
     std::unordered_set<std::string> rsp_set;
     for (const std::string& value : behrule.rsp) {
@@ -330,13 +311,21 @@ Process3Record process_4_output(
 
     for (std::size_t row = 0; row < input.n_rows; ++row) {
         const auto& state_row = input.state[row];
-        record.shown[row] = record_shown(state_row, behrule.cue);
-        TrialContext context = make_context(task, record, row);
+        output.shown[row] = record_shown(state_row, behrule.cue);
+        TrialContext context = modify_context(task, output, row);
 
-        record.bias[row] = func_delta(context, params);
+        /* ------------------------------------------------------------------ *
+         * Bias function: bias_func                                            *
+         * ------------------------------------------------------------------ */
 
-        record.exploration[row] = static_cast<double>(
-            func_epsilon(context, params)
+        output.bias[row] = funcs.bias_func(context, params);
+
+        /* ------------------------------------------------------------------ *
+         * Exploration function: expl_func                                     *
+         * ------------------------------------------------------------------ */
+
+        output.exploration[row] = static_cast<double>(
+            funcs.expl_func(context, params)
         );
 
         std::vector<std::vector<double>> qvalue(settings.system.size());
@@ -347,14 +336,14 @@ Process3Record process_4_output(
             for (std::size_t cue_index = 0;
                  cue_index < behrule.cue.size();
                  ++cue_index) {
-                if (std::isnan(record.shown[row][cue_index])) {
+                if (std::isnan(output.shown[row][cue_index])) {
                     qvalue[system_index][cue_index] = missing_real();
                     continue;
                 }
 
                 double value =
-                    record.value[system_index][row][cue_index] +
-                    record.bias[row][cue_index];
+                    output.value[system_index][row][cue_index] +
+                    output.bias[row][cue_index];
                 if (std::isnan(value)) {
                     value = 0.0;
                 }
@@ -362,29 +351,37 @@ Process3Record process_4_output(
             }
         }
 
-        record.prob[row] = func_beta(
+        /* ------------------------------------------------------------------ *
+         * Choice probability function: prob_func                              *
+         * ------------------------------------------------------------------ */
+
+        modify_context_qvalue(
             context,
             qvalue,
-            record.exploration[row],
-            settings.system,
+            output.exploration[row],
+            settings.system
+        );
+
+        output.prob[row] = funcs.prob_func(
+            context,
             params
         );
 
         int option_row = -1;
         if (settings.policy == "off") {
-            record.latent[row] = input.action[row];
-            record.simulation[row] = input.action[row];
-            option_row = find_option_row(state_row, record.latent[row]);
+            output.latent[row] = input.action[row];
+            output.simulation[row] = input.action[row];
+            option_row = find_option_row(state_row, output.latent[row]);
         } else {
-            record.latent[row] = sample_choice(
-                record.prob[row],
-                record.shown[row],
+            output.latent[row] = sample_choice(
+                output.prob[row],
+                output.shown[row],
                 behrule.cue,
                 rng
             );
-            option_row = find_option_row(state_row, record.latent[row]);
+            option_row = find_option_row(state_row, output.latent[row]);
             if (option_row >= 0) {
-                record.simulation[row] = find_simulation(
+                output.simulation[row] = find_simulation(
                     state_row[static_cast<std::size_t>(option_row)],
                     rsp_set
                 );
@@ -397,92 +394,99 @@ Process3Record process_4_output(
             );
         }
 
-        record.position[row] = std::to_string(option_row + 1);
+        output.position[row] = std::to_string(option_row + 1);
         update_behave(
-            record,
+            output,
             row,
             input.action[row],
-            record.latent[row],
-            record.simulation[row],
-            record.position[row]
+            output.latent[row],
+            output.simulation[row],
+            output.position[row]
         );
-        context.behave = record.behave[row];
+        modify_context_choice(context, output, row);
 
-        record.reward[row] =
+        output.reward[row] =
             input.reward_table[row][static_cast<std::size_t>(option_row)];
-        record.utility[row] = func_gamma(context, record.reward[row], params);
 
-        auto cue_it = behrule.cue_index.find(record.latent[row]);
+        /* ------------------------------------------------------------------ *
+         * Utility function: util_func                                         *
+         * ------------------------------------------------------------------ */
+
+        context.reward = output.reward[row];
+        output.utility[row] = funcs.util_func(context, params);
+
+        auto cue_it = behrule.cue_index.find(output.latent[row]);
         if (cue_it == behrule.cue_index.end()) {
             throw std::runtime_error("Latent action is absent from cue.");
         }
 
         const std::size_t cue_index = cue_it->second;
         const bool is_nb = input.trial[row] == 1;
-        const bool is_fp = record.count[row][cue_index] == 0.0;
+        const bool is_fp = output.count[row][cue_index] == 0.0;
+
+        modify_context_outcome(
+            context,
+            output.reward[row],
+            output.utility[row],
+            is_nb,
+            is_fp
+        );
 
         for (std::size_t system_index = 0;
              system_index < settings.system.size();
              ++system_index) {
-            std::vector<double> next_values = func_zeta(
+            modify_context_system(
                 context,
-                is_nb,
-                record.value[system_index][0],
-                record.value[system_index][row],
-                record.reward[row],
-                record.utility[row],
-                settings.system[system_index],
+                output.value[system_index][0],
+                output.value[system_index][row],
+                output.value[system_index][row][cue_index],
+                settings.system[system_index]
+            );
+
+            /* -------------------------------------------------------------- *
+             * Decay function: dcay_func                                      *
+             * -------------------------------------------------------------- */
+
+            std::vector<double> next_values = funcs.dcay_func(
+                context,
                 params
             );
 
-            double qi = record.value[system_index][row][cue_index];
             const double reset = params.get("reset");
             if (is_nb && !std::isnan(reset)) {
-                qi = next_values[cue_index];
+                context.qi = next_values[cue_index];
             }
 
-            next_values[cue_index] = func_alpha(
+            /* -------------------------------------------------------------- *
+             * Learning function: lrng_func                                   *
+             * -------------------------------------------------------------- */
+
+            next_values[cue_index] = funcs.lrng_func(
                 context,
-                is_fp,
-                qi,
-                record.reward[row],
-                record.utility[row],
-                settings.system[system_index],
                 params
             );
 
-            record.value[system_index][row + 1] = next_values;
+            output.value[system_index][row + 1] = next_values;
 
             const double q0 = params.get("Q0");
             if (std::isnan(q0) && is_fp) {
-                record.value[system_index][0][cue_index] =
+                output.value[system_index][0][cue_index] =
                     next_values[cue_index];
             }
         }
 
         const double reset = params.get("reset");
         if (is_nb && !std::isnan(reset)) {
-            record.count[row + 1] =
+            output.count[row + 1] =
                 std::vector<double>(behrule.cue.size(), 0.0);
         } else {
-            record.count[row + 1] = record.count[row];
+            output.count[row + 1] = output.count[row];
         }
-        record.count[row + 1][cue_index] += 1.0;
+        output.count[row + 1][cue_index] += 1.0;
 
     }
 
-    return record;
-}
-
-/* ========================================================================== *
- *                              Metric Builder                                *
- * ========================================================================== */
-
-CriterionResult process_5_metric(
-    const RunTask& task,
-    const Process3Record& output
-) {
-    return criterion_posterior(task, output);
+    return output;
 }
 
 /* ========================================================================== *
@@ -491,9 +495,12 @@ CriterionResult process_5_metric(
 
 RunResult process_MDP_free(const RunTask& task) {
     RunResult result;
-    Process3Record record = process_3_record(task);
-    result.result = process_4_output(task, record);
-    result.metric = process_5_metric(task, result.result);
+
+    auto output = process_3_loop(task);
+    auto metric = criterion_posterior(task, output);
+
+    result.result = output;
+    result.metric = metric;
     return result;
 }
 

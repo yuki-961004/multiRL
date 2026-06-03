@@ -1,5 +1,7 @@
 #include <multiRL/task_builder.hpp>
 
+#include <multiRL/modify_funcs.hpp>
+
 #include <unordered_map>
 
 namespace multiRL {
@@ -17,6 +19,7 @@ RunTask task_builder(
     task.params = params;
     task.settings = settings;
     task.priors = priors;
+    task.funcs = modify_funcs();
     return task;
 }
 
