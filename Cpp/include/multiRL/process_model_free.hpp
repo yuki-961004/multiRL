@@ -21,6 +21,6 @@ Process2Behrule process_2_behrule(
 
 Process3Loop process_3_loop(const RunTask& task);
 
-RunResult process_MDP_free(const RunTask& task);
+RunResult process_model_free(const RunTask& task);
 
 }  // namespace multiRL

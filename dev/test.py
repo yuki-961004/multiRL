@@ -2,15 +2,7 @@
 # python -m pip install -e Python
 
 # %%
-import sys
 import time
-
-sys.path.insert(0, "Python")
-sys.meta_path = [
-    finder
-    for finder in sys.meta_path
-    if "_multiRL_editable" not in type(finder).__module__
-]
 
 import multiRL
 import pandas
@@ -312,6 +304,7 @@ abc_result = multiRL.estimate_abc(
         "tol": 0.2,
         "method": "rejection",
         "reduction": "none",
+        "fake_block": 4,
         "seed": 1004,
         "threads": 1,
         "print_level": 0,
@@ -326,3 +319,9 @@ if abc_result["estimator"]["name"] != "ABC":
 
 if abc_result["estimator"]["backend"] != "abcpp":
     raise RuntimeError("ABC backend is not abcpp.")
+
+if abc_result["diagnostics"]["subjects"][0]["fake_block"] != 4:
+    raise RuntimeError("ABC fake_block was not reported correctly.")
+
+if abc_result["diagnostics"]["subjects"][0]["n_blocks_used"] != 4:
+    raise RuntimeError("ABC fake_block did not create four blocks.")

@@ -4,7 +4,7 @@
 
 #include <multiRL/algorithm_stan.hpp>
 #include <multiRL/modify_control.hpp>
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -129,7 +129,7 @@ SubjectMCMCResult run_subject_mcmc(
             ] = means[j];
         }
 
-        const RunResult result = process_MDP_free(local_task);
+        const RunResult result = process_model_free(local_task);
         const CriterionPosterior posterior(task.priors);
         const CriterionResult metric = posterior.evaluate(
             local_task,

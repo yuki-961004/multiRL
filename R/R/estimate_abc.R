@@ -90,6 +90,7 @@ estimate_abc <- function(
     method = control$method,
     reduction = control$reduction,
     n_comp = control$n_comp,
+    fake_block = control$fake_block,
     seed = control$seed,
     threads = control$threads,
     print_level = control$print_level,
@@ -127,6 +128,7 @@ estimate_abc <- function(
     method = "rejection",
     reduction = "none",
     n_comp = 0L,
+    fake_block = 0L,
     seed = 123L,
     threads = 0L,
     print_level = 1L
@@ -140,6 +142,7 @@ estimate_abc <- function(
   out$method <- base::as.character(out$method[[1L]])
   out$reduction <- base::as.character(out$reduction[[1L]])
   out$n_comp <- base::as.integer(out$n_comp[[1L]])
+  out$fake_block <- base::as.integer(out$fake_block[[1L]])
   out$seed <- base::as.integer(out$seed[[1L]])
   out$threads <- base::as.integer(out$threads[[1L]])
   out$print_level <- base::as.integer(out$print_level[[1L]])

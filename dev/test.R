@@ -353,10 +353,11 @@ multiRLcpp.abc <- estimate_abc(
     policy = "off"
   ),
   control = list(
-    samples = 50L,
+    samples = 1000L,
     tol = 0.2,
     method = "rejection",
-    reduction = "none",
+    reduction = "pls",
+    fake_block = 4L,
     seed = 1004L,
     threads = 1L,
     print_level = 0L
@@ -368,3 +369,9 @@ print(multiRLcpp.abc$fit)
 print(multiRLcpp.abc$diagnostics$subjects)
 stopifnot(multiRLcpp.abc$estimator$name == "ABC")
 stopifnot(multiRLcpp.abc$estimator$backend == "abcpp")
+stopifnot(multiRLcpp.abc$diagnostics$subjects$fake_block[1L] == 4L)
+stopifnot(multiRLcpp.abc$diagnostics$subjects$n_blocks_used[1L] == 4L)
+stopifnot(
+  multiRLcpp.abc$diagnostics$subjects$n_comp_used[1L] ==
+    multiRLcpp.abc$diagnostics$subjects$n_blocks_used[1L]
+)

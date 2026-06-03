@@ -200,9 +200,10 @@ set(
     src/cpp/modify_context.cpp
     src/cpp/modify_funcs.cpp
     src/cpp/modify_outputs.cpp
-    src/cpp/process_MDP_free.cpp
+    src/cpp/process_model_free.cpp
     src/cpp/modify_params.cpp
     src/cpp/modify_priors.cpp
+    src/cpp/task_sampler.cpp
     src/cpp/task_builder.cpp
     src/cpp/shell_run_m.cpp
 )

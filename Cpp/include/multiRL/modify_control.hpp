@@ -49,6 +49,7 @@ struct ABCControl {
     std::string reduction = "none";
     std::string reduce = "none";
     int n_comp = 0;
+    int fake_block = 0;
     bool normalize = true;
     unsigned int seed = 123;
     int threads = 0;

@@ -13,7 +13,7 @@
 #include <multiRL/estimate_mcmc.hpp>
 #endif
 #include <multiRL/modify_priors.hpp>
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 #include <multiRL/shell_run_m.hpp>
 #include <multiRL/task_builder.hpp>
 #include <multiRL/types.hpp>
@@ -147,6 +147,12 @@ pybind11::dict py_wrap_estimate_abc_result(
     subject["status"] = result.status;
     subject["n_simulations"] = result.n_simulations;
     subject["n_accepted"] = result.n_accepted;
+    subject["n_blocks_real"] = result.n_blocks_real;
+    subject["n_blocks_used"] = result.n_blocks_used;
+    subject["fake_block"] = result.fake_block;
+    subject["n_comp_requested"] = result.n_comp_requested;
+    subject["n_comp_used"] = result.n_comp_used;
+    subject["reduction"] = control.reduction;
     subject["tolerance"] = control.tol;
     subject["result_message"] = result.message;
 
@@ -159,6 +165,7 @@ pybind11::dict py_wrap_estimate_abc_result(
     control_dict["method"] = control.method;
     control_dict["reduction"] = control.reduction;
     control_dict["n_comp"] = control.n_comp;
+    control_dict["fake_block"] = control.fake_block;
     control_dict["seed"] = control.seed;
     control_dict["threads"] = control.threads;
     control_dict["print_level"] = control.print_level;
@@ -508,6 +515,7 @@ pybind11::dict py_estimate_abc(
     const std::string& method,
     const std::string& reduction,
     const int n_comp,
+    const int fake_block,
     const int seed,
     const int threads,
     const int print_level,
@@ -543,6 +551,7 @@ pybind11::dict py_estimate_abc(
     control.reduction = reduction;
     control.reduce = reduction;
     control.n_comp = n_comp;
+    control.fake_block = fake_block;
     control.seed = static_cast<unsigned int>(seed);
     control.threads = threads;
     control.print_level = print_level;
@@ -748,6 +757,7 @@ PYBIND11_MODULE(_backend, module) {
         pybind11::arg("method") = "rejection",
         pybind11::arg("reduction") = "none",
         pybind11::arg("n_comp") = 0,
+        pybind11::arg("fake_block") = 0,
         pybind11::arg("seed") = 123,
         pybind11::arg("threads") = 0,
         pybind11::arg("print_level") = 1,

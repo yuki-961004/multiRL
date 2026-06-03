@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // r_estimate_abc
-Rcpp::List r_estimate_abc(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, int samples, double tol, std::string method, std::string reduction, int n_comp, int seed, int threads, int print_level, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
-RcppExport SEXP _multiRLcpp_r_estimate_abc(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP samplesSEXP, SEXP tolSEXP, SEXP methodSEXP, SEXP reductionSEXP, SEXP n_compSEXP, SEXP seedSEXP, SEXP threadsSEXP, SEXP print_levelSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
+Rcpp::List r_estimate_abc(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, int samples, double tol, std::string method, std::string reduction, int n_comp, int fake_block, int seed, int threads, int print_level, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
+RcppExport SEXP _multiRLcpp_r_estimate_abc(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP samplesSEXP, SEXP tolSEXP, SEXP methodSEXP, SEXP reductionSEXP, SEXP n_compSEXP, SEXP fake_blockSEXP, SEXP seedSEXP, SEXP threadsSEXP, SEXP print_levelSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -42,12 +42,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type method(methodSEXP);
     Rcpp::traits::input_parameter< std::string >::type reduction(reductionSEXP);
     Rcpp::traits::input_parameter< int >::type n_comp(n_compSEXP);
+    Rcpp::traits::input_parameter< int >::type fake_block(fake_blockSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
     Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
     Rcpp::traits::input_parameter< int >::type print_level(print_levelSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lower_bounds(lower_boundsSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type upper_bounds(upper_boundsSEXP);
-    rcpp_result_gen = Rcpp::wrap(r_estimate_abc(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, samples, tol, method, reduction, n_comp, seed, threads, print_level, lower_bounds, upper_bounds));
+    rcpp_result_gen = Rcpp::wrap(r_estimate_abc(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, samples, tol, method, reduction, n_comp, fake_block, seed, threads, print_level, lower_bounds, upper_bounds));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -204,7 +205,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_multiRLcpp_r_estimate_abc", (DL_FUNC) &_multiRLcpp_r_estimate_abc, 30},
+    {"_multiRLcpp_r_estimate_abc", (DL_FUNC) &_multiRLcpp_r_estimate_abc, 31},
     {"_multiRLcpp_r_estimate_map", (DL_FUNC) &_multiRLcpp_r_estimate_map, 31},
     {"_multiRLcpp_r_estimate_mcmc", (DL_FUNC) &_multiRLcpp_r_estimate_mcmc, 31},
     {"_multiRLcpp_r_estimate_mle", (DL_FUNC) &_multiRLcpp_r_estimate_mle, 28},

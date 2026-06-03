@@ -3,7 +3,7 @@
 #include <multiRL/algorithm_nlopt.hpp>
 #include <multiRL/info_nlopt.hpp>
 #include <multiRL/modify_control.hpp>
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 
 #include <stdexcept>
 
@@ -31,7 +31,7 @@ EstimateMleResult estimate_mle_single(
 
     std::vector<double> x0 = FreeValues::extract(task.params);
     if (x0.empty()) {
-        result.metric = process_MDP_free(task).metric;
+        result.metric = process_model_free(task).metric;
         result.optimum_value = result.metric.nll;
         result.status = 0;
         result.result_message = "No free parameters.";

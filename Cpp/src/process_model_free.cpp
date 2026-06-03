@@ -1,4 +1,4 @@
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 
 #include <multiRL/criterion_posterior.hpp>
 #include <multiRL/modify_context.hpp>
@@ -493,7 +493,7 @@ Process3Loop process_3_loop(const RunTask& task) {
  *                         Model-Free MDP Processor                           *
  * ========================================================================== */
 
-RunResult process_MDP_free(const RunTask& task) {
+RunResult process_model_free(const RunTask& task) {
     RunResult result;
 
     auto output = process_3_loop(task);

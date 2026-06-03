@@ -86,6 +86,7 @@ def estimate_abc(
         method=str(control.get("method", "rejection")),
         reduction=reduction,
         n_comp=int(control.get("n_comp", 0)),
+        fake_block=int(control.get("fake_block", 0)),
         seed=int(control.get("seed", 123)),
         threads=int(control.get("threads", 0)),
         print_level=int(control.get("print_level", 1)),

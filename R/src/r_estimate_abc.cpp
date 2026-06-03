@@ -51,6 +51,11 @@ Rcpp::List wrap_estimate_abc_result(
     Rcpp::IntegerVector status(results.size());
     Rcpp::IntegerVector n_simulations(results.size());
     Rcpp::IntegerVector n_accepted(results.size());
+    Rcpp::IntegerVector n_blocks_real(results.size());
+    Rcpp::IntegerVector n_blocks_used(results.size());
+    Rcpp::IntegerVector fake_block(results.size());
+    Rcpp::IntegerVector n_comp_requested(results.size());
+    Rcpp::IntegerVector n_comp_used(results.size());
     Rcpp::NumericVector tolerance(results.size());
     Rcpp::NumericVector min_distance(results.size(), NA_REAL);
     Rcpp::NumericVector mean_distance(results.size(), NA_REAL);
@@ -67,6 +72,14 @@ Rcpp::List wrap_estimate_abc_result(
         n_simulations[static_cast<R_xlen_t>(row)] =
             results[row].n_simulations;
         n_accepted[static_cast<R_xlen_t>(row)] = results[row].n_accepted;
+        n_blocks_real[static_cast<R_xlen_t>(row)] =
+            results[row].n_blocks_real;
+        n_blocks_used[static_cast<R_xlen_t>(row)] =
+            results[row].n_blocks_used;
+        fake_block[static_cast<R_xlen_t>(row)] = results[row].fake_block;
+        n_comp_requested[static_cast<R_xlen_t>(row)] =
+            results[row].n_comp_requested;
+        n_comp_used[static_cast<R_xlen_t>(row)] = results[row].n_comp_used;
         tolerance[static_cast<R_xlen_t>(row)] = control.tol;
         result_message[static_cast<R_xlen_t>(row)] = results[row].message;
         observed_summary[static_cast<R_xlen_t>(row)] =
@@ -97,6 +110,7 @@ Rcpp::List wrap_estimate_abc_result(
         Rcpp::_["method"] = control.method,
         Rcpp::_["reduction"] = control.reduction,
         Rcpp::_["n_comp"] = control.n_comp,
+        Rcpp::_["fake_block"] = control.fake_block,
         Rcpp::_["seed"] = control.seed,
         Rcpp::_["threads"] = control.threads,
         Rcpp::_["print_level"] = control.print_level
@@ -117,6 +131,12 @@ Rcpp::List wrap_estimate_abc_result(
                 Rcpp::_["status"] = status,
                 Rcpp::_["n_simulations"] = n_simulations,
                 Rcpp::_["n_accepted"] = n_accepted,
+                Rcpp::_["n_blocks_real"] = n_blocks_real,
+                Rcpp::_["n_blocks_used"] = n_blocks_used,
+                Rcpp::_["fake_block"] = fake_block,
+                Rcpp::_["n_comp_requested"] = n_comp_requested,
+                Rcpp::_["n_comp_used"] = n_comp_used,
+                Rcpp::_["reduction"] = control.reduction,
                 Rcpp::_["tolerance"] = tolerance,
                 Rcpp::_["min_distance"] = min_distance,
                 Rcpp::_["mean_distance"] = mean_distance,
@@ -165,6 +185,7 @@ Rcpp::List r_estimate_abc(
     std::string method,
     std::string reduction,
     int n_comp,
+    int fake_block,
     int seed,
     int threads,
     int print_level,
@@ -202,6 +223,7 @@ Rcpp::List r_estimate_abc(
     control.reduction = reduction;
     control.reduce = reduction;
     control.n_comp = n_comp;
+    control.fake_block = fake_block;
     control.seed = static_cast<unsigned int>(seed);
     control.threads = threads;
     control.print_level = print_level;

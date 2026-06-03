@@ -30,6 +30,10 @@ struct ABCSubjectResult {
     std::vector<double> accepted_weights;
     int n_simulations = 0;
     int n_accepted = 0;
+    int n_blocks_real = 0;
+    int n_blocks_used = 0;
+    int fake_block = 0;
+    int n_comp_requested = 0;
     int n_comp_used = 0;
     int status = -1;
     std::string message;

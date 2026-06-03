@@ -1,7 +1,7 @@
 #include <multiRL/algorithm_nlopt.hpp>
 
 #include <multiRL/modify_control.hpp>
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 
 #include <cmath>
 #include <string>
@@ -40,7 +40,7 @@ CriterionResult evaluate(
 ) {
     RunTask local_task = task;
     FreeValues::assign(local_task.params, free_values);
-    return process_MDP_free(local_task).metric;
+    return process_model_free(local_task).metric;
 }
 
 double score(

@@ -2,7 +2,7 @@
 
 #include <multiRL/algorithm_stan.hpp>
 
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 
 #include <stan/math/prim/fun/value_of_rec.hpp>
 #include <stan/math/prim/functor/finite_diff_gradient_auto.hpp>
@@ -156,7 +156,7 @@ double Adapter::criterion(const Eigen::VectorXd& unconstrained) const {
         local_task.params.values[name] = constrained(i);
     }
 
-    const RunResult result = process_MDP_free(local_task);
+    const RunResult result = process_model_free(local_task);
 
     const CriterionResult metric = posterior_.evaluate(
         local_task,

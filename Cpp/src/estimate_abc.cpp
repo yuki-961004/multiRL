@@ -1,6 +1,6 @@
 #include <multiRL/estimate_abc.hpp>
 
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 #include <multiRL/task_builder.hpp>
 
 #include <abcpp/abc.hpp>
@@ -14,6 +14,7 @@
 #include <numeric>
 #include <random>
 #include <stdexcept>
+#include <unordered_map>
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -33,17 +34,100 @@ std::string task_subid(const RunTask& task) {
     return "1";
 }
 
-std::vector<double> observed_summary(const RunTask& task) {
+int nearest_divisor(const std::size_t n_rows, const int requested) {
+    if (requested <= 1 || n_rows == 0) {
+        return 0;
+    }
+
+    int best = 1;
+    std::size_t best_distance = n_rows;
+    for (std::size_t value = 1; value <= n_rows; ++value) {
+        if (n_rows % value != 0) {
+            continue;
+        }
+
+        const std::size_t distance = static_cast<std::size_t>(
+            std::abs(static_cast<int>(value) - requested)
+        );
+        if (distance < best_distance) {
+            best = static_cast<int>(value);
+            best_distance = distance;
+        }
+    }
+    return best;
+}
+
+std::vector<int> unique_sorted_blocks(const std::vector<int>& block) {
+    std::vector<int> out = block;
+    std::sort(out.begin(), out.end());
+    out.erase(std::unique(out.begin(), out.end()), out.end());
+    return out;
+}
+
+std::vector<int> summary_blocks(
+    const RunTask& task,
+    const int fake_block
+) {
+    if (fake_block <= 1) {
+        return task.input.block;
+    }
+
+    const int n_blocks = nearest_divisor(task.input.n_rows, fake_block);
+    if (n_blocks <= 1) {
+        return task.input.block;
+    }
+
+    const std::size_t chunk =
+        task.input.n_rows / static_cast<std::size_t>(n_blocks);
+    std::vector<int> out(task.input.n_rows, 1);
+    for (std::size_t row = 0; row < task.input.n_rows; ++row) {
+        out[row] = static_cast<int>(row / chunk) + 1;
+    }
+    return out;
+}
+
+std::vector<int> block_index(
+    const std::vector<int>& block,
+    const std::vector<int>& block_levels
+) {
+    std::unordered_map<int, int> lookup;
+    for (std::size_t index = 0; index < block_levels.size(); ++index) {
+        lookup[block_levels[index]] = static_cast<int>(index);
+    }
+
+    std::vector<int> out(block.size(), 0);
+    for (std::size_t row = 0; row < block.size(); ++row) {
+        out[row] = lookup[block[row]];
+    }
+    return out;
+}
+
+std::vector<double> observed_summary(
+    const RunTask& task,
+    const std::vector<int>& block
+) {
     const std::size_t n_cues = task.behrule.cue.size();
-    std::vector<double> counts(n_cues, 0.0);
-    double reward_sum = 0.0;
-    double valid_reward = 0.0;
+    const std::vector<int> levels = unique_sorted_blocks(block);
+    const std::vector<int> index = block_index(block, levels);
+    const std::size_t n_blocks = levels.size();
+
+    std::vector<double> rows(n_blocks, 0.0);
+    std::vector<double> reward_sum(n_blocks, 0.0);
+    std::vector<double> valid_reward(n_blocks, 0.0);
+    std::vector<std::vector<double>> counts(
+        n_blocks,
+        std::vector<double>(n_cues, 0.0)
+    );
 
     for (std::size_t row = 0; row < task.input.n_rows; ++row) {
+        const std::size_t block_row =
+            static_cast<std::size_t>(index[row]);
         const std::string& action = task.input.action[row];
+        rows[block_row] += 1.0;
+
         const auto cue_it = task.behrule.cue_index.find(action);
         if (cue_it != task.behrule.cue_index.end()) {
-            counts[cue_it->second] += 1.0;
+            counts[block_row][cue_it->second] += 1.0;
         }
 
         for (std::size_t option = 0; option < task.input.state[row].size();
@@ -55,23 +139,27 @@ std::vector<double> observed_summary(const RunTask& task) {
                 }
             }
             if (found && option < task.input.reward_table[row].size()) {
-                reward_sum += task.input.reward_table[row][option];
-                valid_reward += 1.0;
+                reward_sum[block_row] += task.input.reward_table[row][option];
+                valid_reward[block_row] += 1.0;
                 break;
             }
         }
     }
 
     std::vector<double> out;
-    out.reserve(2 + n_cues);
-    out.push_back(1.0);
-    out.push_back(valid_reward > 0.0 ? reward_sum / valid_reward : 0.0);
+    out.reserve(n_blocks * (2 + n_cues));
+    for (std::size_t block_row = 0; block_row < n_blocks; ++block_row) {
+        out.push_back(1.0);
+        out.push_back(
+            valid_reward[block_row] > 0.0
+                ? reward_sum[block_row] / valid_reward[block_row]
+                : 0.0
+        );
 
-    const double denom = static_cast<double>(
-        std::max<std::size_t>(task.input.n_rows, 1)
-    );
-    for (double count : counts) {
-        out.push_back(count / denom);
+        const double denom = std::max(rows[block_row], 1.0);
+        for (double count : counts[block_row]) {
+            out.push_back(count / denom);
+        }
     }
 
     return out;
@@ -79,35 +167,47 @@ std::vector<double> observed_summary(const RunTask& task) {
 
 std::vector<double> simulated_summary(
     const RunTask& task,
-    const RunResult& result
+    const RunResult& result,
+    const std::vector<int>& block
 ) {
     const std::size_t n_cues = task.behrule.cue.size();
-    std::vector<double> counts(n_cues, 0.0);
-    double reward_sum = 0.0;
-    double acc_sum = 0.0;
-    double n_rows = 0.0;
+    const std::vector<int> levels = unique_sorted_blocks(block);
+    const std::vector<int> index = block_index(block, levels);
+    const std::size_t n_blocks = levels.size();
+
+    std::vector<double> rows(n_blocks, 0.0);
+    std::vector<double> reward_sum(n_blocks, 0.0);
+    std::vector<double> acc_sum(n_blocks, 0.0);
+    std::vector<std::vector<double>> counts(
+        n_blocks,
+        std::vector<double>(n_cues, 0.0)
+    );
 
     for (std::size_t row = 0; row < task.input.n_rows; ++row) {
+        const std::size_t block_row =
+            static_cast<std::size_t>(index[row]);
         const std::string& action = result.result.latent[row];
         const auto cue_it = task.behrule.cue_index.find(action);
         if (cue_it != task.behrule.cue_index.end()) {
-            counts[cue_it->second] += 1.0;
+            counts[block_row][cue_it->second] += 1.0;
         }
         if (action == task.input.action[row]) {
-            acc_sum += 1.0;
+            acc_sum[block_row] += 1.0;
         }
-        reward_sum += finite_or(result.result.reward[row], 0.0);
-        n_rows += 1.0;
+        reward_sum[block_row] += finite_or(result.result.reward[row], 0.0);
+        rows[block_row] += 1.0;
     }
 
     std::vector<double> out;
-    out.reserve(2 + n_cues);
-    out.push_back(n_rows > 0.0 ? acc_sum / n_rows : 0.0);
-    out.push_back(n_rows > 0.0 ? reward_sum / n_rows : 0.0);
+    out.reserve(n_blocks * (2 + n_cues));
+    for (std::size_t block_row = 0; block_row < n_blocks; ++block_row) {
+        const double denom = std::max(rows[block_row], 1.0);
+        out.push_back(acc_sum[block_row] / denom);
+        out.push_back(reward_sum[block_row] / denom);
 
-    const double denom = std::max(n_rows, 1.0);
-    for (double count : counts) {
-        out.push_back(count / denom);
+        for (double count : counts[block_row]) {
+            out.push_back(count / denom);
+        }
     }
 
     return out;
@@ -140,7 +240,8 @@ std::vector<abcpp::transform> transformations(
 
 abcpp::AbcOptions options(
     const ABCControl& control,
-    std::size_t n_params
+    std::size_t n_params,
+    int n_comp_used
 ) {
     abcpp::AbcOptions out;
     out.tol = control.tol;
@@ -153,7 +254,7 @@ abcpp::AbcOptions options(
     out.seed = control.seed;
     out.reduction.method = abcpp::parse_reduction(control.reduction);
     out.reduction.n_comp = static_cast<std::size_t>(
-        std::max(control.n_comp, 0)
+        std::max(n_comp_used, 0)
     );
     return out;
 }
@@ -220,9 +321,16 @@ ABCSubjectResult estimate_abc(
     ABCSubjectResult out;
     out.subid = task_subid(raw_task);
     out.parameter_names = raw_task.params.free_names;
-    out.observed_summary = observed_summary(raw_task);
+    const std::vector<int> block = summary_blocks(raw_task, control.fake_block);
+    out.n_blocks_real = static_cast<int>(
+        unique_sorted_blocks(raw_task.input.block).size()
+    );
+    out.n_blocks_used = static_cast<int>(unique_sorted_blocks(block).size());
+    out.fake_block = control.fake_block;
+    out.n_comp_requested = control.n_comp;
+    out.n_comp_used = control.n_comp > 0 ? control.n_comp : out.n_blocks_used;
+    out.observed_summary = observed_summary(raw_task, block);
     out.n_simulations = control.samples;
-    out.n_comp_used = control.n_comp;
 
     std::mt19937 rng(control.seed);
     std::vector<std::vector<double>> param_rows;
@@ -260,16 +368,16 @@ ABCSubjectResult estimate_abc(
             param_row.push_back(value);
         }
 
-        const RunResult sim_result = process_MDP_free(sim_task);
+        const RunResult sim_result = process_model_free(sim_task);
         param_rows.push_back(param_row);
-        summary_rows.push_back(simulated_summary(sim_task, sim_result));
+        summary_rows.push_back(simulated_summary(sim_task, sim_result, block));
     }
 
     abcpp::AbcResult abc_result = abcpp::fit(
         out.observed_summary,
         to_matrix(param_rows),
         to_matrix(summary_rows),
-        options(control, raw_task.params.free_names.size())
+        options(control, raw_task.params.free_names.size(), out.n_comp_used)
     );
     abc_result.parameter_names = raw_task.params.free_names;
 

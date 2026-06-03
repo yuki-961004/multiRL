@@ -243,9 +243,10 @@ set(
     Cpp/src/modify_control.cpp
     Cpp/src/modify_context.cpp
     Cpp/src/modify_funcs.cpp
-    Cpp/src/process_MDP_free.cpp
+    Cpp/src/process_model_free.cpp
     Cpp/src/modify_params.cpp
     Cpp/src/modify_priors.cpp
+    Cpp/src/task_sampler.cpp
     Cpp/src/task_builder.cpp
     Cpp/src/shell_run_m.cpp
 )

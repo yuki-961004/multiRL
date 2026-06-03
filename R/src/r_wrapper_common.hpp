@@ -4,7 +4,7 @@
 
 #include <multiRL/modify_params.hpp>
 #include <multiRL/modify_priors.hpp>
-#include <multiRL/process_MDP_free.hpp>
+#include <multiRL/process_model_free.hpp>
 #include <multiRL/task_builder.hpp>
 
 #include <string>

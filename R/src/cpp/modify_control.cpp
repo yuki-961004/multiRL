@@ -222,6 +222,9 @@ ABCControl modify_control(
     if (out.n_comp < 0) {
         out.n_comp = 0;
     }
+    if (out.fake_block < 0) {
+        out.fake_block = 0;
+    }
     if (out.print_level < 0) {
         out.print_level = 0;
     }
