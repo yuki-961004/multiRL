@@ -42,6 +42,7 @@ struct MCMCControl {
 };
 
 struct ABCControl {
+    std::string scope = "individual";
     int samples = 1000;
     double tol = 0.1;
     std::string method = "rejection";
@@ -61,6 +62,7 @@ struct ABCControl {
 };
 
 struct RNNControl {
+    std::string scope = "individual";
     int seed = 123;
     int epoch = 100;
     int batch_size = 32;

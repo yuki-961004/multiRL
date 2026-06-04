@@ -5,7 +5,7 @@ from ._estimate_mcmc import estimate_mcmc
 from ._estimate_mle import estimate_mle
 from ._estimate_map import estimate_map
 from ._shell_fit_p import fit_p
-from ._rnn import estimate_rnn
+from ._estimate_rnn import estimate_rnn
 from ._shell_run_m import run_m
 
 __all__ = [

@@ -186,6 +186,17 @@ ABCControl modify_control(
     if (out.seed == 0U) {
         out.seed = 123;
     }
+    if (out.scope.empty()) {
+        out.scope = "individual";
+    }
+    out.scope = to_lower(out.scope);
+    if (
+        out.scope != "individual" &&
+        out.scope != "shared" &&
+        out.scope != "universal"
+    ) {
+        out.scope = "individual";
+    }
     if (out.threads < 0) {
         out.threads = 0;
     }
@@ -246,6 +257,17 @@ RNNControl modify_control(
 
     if (out.seed < 0) {
         out.seed = 123;
+    }
+    if (out.scope.empty()) {
+        out.scope = "individual";
+    }
+    out.scope = to_lower(out.scope);
+    if (
+        out.scope != "individual" &&
+        out.scope != "shared" &&
+        out.scope != "universal"
+    ) {
+        out.scope = "individual";
     }
     if (out.epoch <= 0) {
         out.epoch = 100;

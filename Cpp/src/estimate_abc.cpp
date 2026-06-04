@@ -14,6 +14,7 @@
 #include <numeric>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <unordered_map>
 
 #ifdef _OPENMP
@@ -304,45 +305,29 @@ ABCSummaryStats summary_column(const abcpp::SummaryColumn& col) {
     return out;
 }
 
-}  // namespace
-
-ABCSubjectResult estimate_abc(
-    const RunTask& raw_task,
-    const ABCControl& raw_control
-) {
-    const ABCControl control = modify_control(raw_control, "abc");
-
-    if (raw_task.params.free_names.empty()) {
-        throw std::invalid_argument(
-            "estimate_abc requires at least one free parameter."
-        );
-    }
-
-    ABCSubjectResult out;
-    out.subid = task_subid(raw_task);
-    out.parameter_names = raw_task.params.free_names;
-    const std::vector<int> block = summary_blocks(raw_task, control.fake_block);
-    out.n_blocks_real = static_cast<int>(
-        unique_sorted_blocks(raw_task.input.block).size()
-    );
-    out.n_blocks_used = static_cast<int>(unique_sorted_blocks(block).size());
-    out.fake_block = control.fake_block;
-    out.n_comp_requested = control.n_comp;
-    out.n_comp_used = control.n_comp > 0 ? control.n_comp : out.n_blocks_used;
-    out.observed_summary = observed_summary(raw_task, block);
-    out.n_simulations = control.samples;
-
-    std::mt19937 rng(control.seed);
+struct ABCBank {
     std::vector<std::vector<double>> param_rows;
     std::vector<std::vector<double>> summary_rows;
-    param_rows.reserve(static_cast<std::size_t>(control.samples));
-    summary_rows.reserve(static_cast<std::size_t>(control.samples));
+    int n_subjects = 1;
+};
+
+ABCBank simulate_bank(
+    const RunTask& raw_task,
+    const ABCControl& control,
+    const std::vector<int>& block,
+    const unsigned int seed_offset
+) {
+    ABCBank bank;
+    bank.param_rows.reserve(static_cast<std::size_t>(control.samples));
+    bank.summary_rows.reserve(static_cast<std::size_t>(control.samples));
+
+    std::mt19937 rng(control.seed + seed_offset);
 
     for (int sample = 0; sample < control.samples; ++sample) {
         RunTask sim_task = raw_task;
         sim_task.settings.policy = "on";
         sim_task.params.values["seed"] =
-            static_cast<double>(control.seed + sample + 1);
+            static_cast<double>(control.seed + seed_offset + sample + 1);
 
         std::vector<double> param_row;
         param_row.reserve(sim_task.params.free_names.size());
@@ -369,17 +354,70 @@ ABCSubjectResult estimate_abc(
         }
 
         const RunResult sim_result = process_model_free(sim_task);
-        param_rows.push_back(param_row);
-        summary_rows.push_back(simulated_summary(sim_task, sim_result, block));
+        bank.param_rows.push_back(param_row);
+        bank.summary_rows.push_back(
+            simulated_summary(sim_task, sim_result, block)
+        );
     }
+
+    return bank;
+}
+
+void append_bank(
+    ABCBank& target,
+    const ABCBank& source
+) {
+    if (
+        !target.summary_rows.empty() &&
+        !source.summary_rows.empty() &&
+        target.summary_rows.front().size() != source.summary_rows.front().size()
+    ) {
+        throw std::invalid_argument(
+            "scope = 'universal' requires compatible ABC summary lengths."
+        );
+    }
+
+    target.param_rows.insert(
+        target.param_rows.end(),
+        source.param_rows.begin(),
+        source.param_rows.end()
+    );
+    target.summary_rows.insert(
+        target.summary_rows.end(),
+        source.summary_rows.begin(),
+        source.summary_rows.end()
+    );
+    target.n_subjects += source.n_subjects;
+}
+
+ABCSubjectResult fit_with_bank(
+    const RunTask& target_task,
+    const ABCControl& control,
+    const ABCBank& bank,
+    const std::vector<int>& block
+) {
+    ABCSubjectResult out;
+    out.subid = task_subid(target_task);
+    out.scope = control.scope;
+    out.parameter_names = target_task.params.free_names;
+    out.n_blocks_real = static_cast<int>(
+        unique_sorted_blocks(target_task.input.block).size()
+    );
+    out.n_blocks_used = static_cast<int>(unique_sorted_blocks(block).size());
+    out.fake_block = control.fake_block;
+    out.n_comp_requested = control.n_comp;
+    out.n_comp_used = control.n_comp > 0 ? control.n_comp : out.n_blocks_used;
+    out.observed_summary = observed_summary(target_task, block);
+    out.n_simulations = static_cast<int>(bank.param_rows.size());
+    out.n_bank_subjects = bank.n_subjects;
 
     abcpp::AbcResult abc_result = abcpp::fit(
         out.observed_summary,
-        to_matrix(param_rows),
-        to_matrix(summary_rows),
-        options(control, raw_task.params.free_names.size(), out.n_comp_used)
+        to_matrix(bank.param_rows),
+        to_matrix(bank.summary_rows),
+        options(control, target_task.params.free_names.size(), out.n_comp_used)
     );
-    abc_result.parameter_names = raw_task.params.free_names;
+    abc_result.parameter_names = target_task.params.free_names;
 
     const abcpp::SummaryResult summary = abcpp::summary(abc_result);
     out.parameter_summary.reserve(summary.columns.size());
@@ -397,11 +435,172 @@ ABCSubjectResult estimate_abc(
     return out;
 }
 
+bool same_task_structure(const RunTask& left, const RunTask& right) {
+    return left.input.state == right.input.state &&
+           left.input.reward_table == right.input.reward_table &&
+           left.input.block == right.input.block &&
+           left.input.trial == right.input.trial;
+}
+
+RunTask shared_target_task(
+    const RunTask& templ,
+    const RunTask& observed
+) {
+    if (templ.input.n_rows != observed.input.n_rows) {
+        throw std::invalid_argument(
+            "scope = 'shared' requires the same number of rows per task."
+        );
+    }
+
+    RunTask out = templ;
+    out.input.action = observed.input.action;
+    out.input.idinfo = observed.input.idinfo;
+    out.input.exinfo = observed.input.exinfo;
+    return out;
+}
+
+RunTask pooled_task(const std::vector<RunTask>& tasks) {
+    if (tasks.empty()) {
+        throw std::invalid_argument("scope = 'universal' received no tasks.");
+    }
+
+    RunTask out = tasks.front();
+    out.input.state.clear();
+    out.input.reward_table.clear();
+    out.input.action.clear();
+    out.input.block.clear();
+    out.input.trial.clear();
+    out.input.idinfo.clear();
+    out.input.exinfo.clear();
+    out.input.n_rows = 0;
+
+    for (const RunTask& task : tasks) {
+        out.input.state.insert(
+            out.input.state.end(),
+            task.input.state.begin(),
+            task.input.state.end()
+        );
+        out.input.reward_table.insert(
+            out.input.reward_table.end(),
+            task.input.reward_table.begin(),
+            task.input.reward_table.end()
+        );
+        out.input.action.insert(
+            out.input.action.end(),
+            task.input.action.begin(),
+            task.input.action.end()
+        );
+        out.input.block.insert(
+            out.input.block.end(),
+            task.input.block.begin(),
+            task.input.block.end()
+        );
+        out.input.trial.insert(
+            out.input.trial.end(),
+            task.input.trial.begin(),
+            task.input.trial.end()
+        );
+        out.input.idinfo.insert(
+            out.input.idinfo.end(),
+            task.input.idinfo.begin(),
+            task.input.idinfo.end()
+        );
+        out.input.exinfo.insert(
+            out.input.exinfo.end(),
+            task.input.exinfo.begin(),
+            task.input.exinfo.end()
+        );
+        out.input.n_rows += task.input.n_rows;
+    }
+
+    return out;
+}
+
+}  // namespace
+
+ABCSubjectResult estimate_abc(
+    const RunTask& raw_task,
+    const ABCControl& raw_control
+) {
+    const ABCControl control = modify_control(raw_control, "abc");
+
+    if (raw_task.params.free_names.empty()) {
+        throw std::invalid_argument(
+            "estimate_abc requires at least one free parameter."
+        );
+    }
+
+    const std::vector<int> block = summary_blocks(raw_task, control.fake_block);
+    const ABCBank bank = simulate_bank(raw_task, control, block, 0U);
+    ABCSubjectResult out = fit_with_bank(raw_task, control, bank, block);
+    return out;
+}
+
 std::vector<ABCSubjectResult> estimate_abc(
     const std::vector<RunTask>& tasks,
     const ABCControl& raw_control
 ) {
     const ABCControl control = modify_control(raw_control, "abc");
+
+    if (tasks.empty()) {
+        return std::vector<ABCSubjectResult>();
+    }
+
+    if (control.scope == "shared") {
+        const RunTask& templ = tasks.front();
+        const std::vector<int> block = summary_blocks(
+            templ,
+            control.fake_block
+        );
+        ABCBank bank = simulate_bank(templ, control, block, 0U);
+        bank.n_subjects = 1;
+
+        std::vector<ABCSubjectResult> out(tasks.size());
+        for (std::size_t index = 0; index < tasks.size(); ++index) {
+            RunTask target = shared_target_task(templ, tasks[index]);
+            out[index] = fit_with_bank(target, control, bank, block);
+            out[index].n_tasks = static_cast<int>(tasks.size());
+            out[index].n_subjects = static_cast<int>(tasks.size());
+            out[index].n_bank_subjects = 1;
+            out[index].shared_template = true;
+            out[index].structure_mismatch =
+                !same_task_structure(templ, tasks[index]);
+        }
+        return out;
+    }
+
+    if (control.scope == "universal") {
+        RunTask target = pooled_task(tasks);
+        const std::vector<int> block = summary_blocks(
+            target,
+            control.fake_block
+        );
+        ABCBank bank;
+        bank.n_subjects = 0;
+        for (std::size_t index = 0; index < tasks.size(); ++index) {
+            const std::vector<int> task_block = summary_blocks(
+                tasks[index],
+                control.fake_block
+            );
+            ABCBank subject_bank = simulate_bank(
+                tasks[index],
+                control,
+                task_block,
+                static_cast<unsigned int>(index * control.samples)
+            );
+            subject_bank.n_subjects = 1;
+            append_bank(bank, subject_bank);
+        }
+
+        ABCSubjectResult result = fit_with_bank(target, control, bank, block);
+        result.subid = "pooled";
+        result.n_tasks = 1;
+        result.n_subjects = static_cast<int>(tasks.size());
+        result.n_bank_subjects = static_cast<int>(tasks.size());
+        result.pooled = true;
+        return std::vector<ABCSubjectResult>{result};
+    }
+
     std::vector<ABCSubjectResult> out(tasks.size());
 
 #ifdef _OPENMP
@@ -413,6 +612,10 @@ std::vector<ABCSubjectResult> estimate_abc(
     for (int index = 0; index < static_cast<int>(tasks.size()); ++index) {
         out[static_cast<std::size_t>(index)] =
             estimate_abc(tasks[static_cast<std::size_t>(index)], control);
+        out[static_cast<std::size_t>(index)].n_tasks =
+            static_cast<int>(tasks.size());
+        out[static_cast<std::size_t>(index)].n_subjects =
+            static_cast<int>(tasks.size());
     }
 
     return out;

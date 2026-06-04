@@ -21,6 +21,7 @@ struct ABCSummaryStats {
 
 struct ABCSubjectResult {
     std::string subid = "1";
+    std::string scope = "individual";
     std::vector<std::string> parameter_names;
     std::vector<ABCSummaryStats> parameter_summary;
     std::vector<double> estimates;
@@ -35,6 +36,12 @@ struct ABCSubjectResult {
     int fake_block = 0;
     int n_comp_requested = 0;
     int n_comp_used = 0;
+    int n_tasks = 1;
+    int n_subjects = 1;
+    int n_bank_subjects = 1;
+    bool shared_template = false;
+    bool pooled = false;
+    bool structure_mismatch = false;
     int status = -1;
     std::string message;
 };

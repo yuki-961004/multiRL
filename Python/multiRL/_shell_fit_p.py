@@ -4,7 +4,7 @@ from ._estimate_abc import estimate_abc
 from ._estimate_map import estimate_map
 from ._estimate_mcmc import estimate_mcmc
 from ._estimate_mle import estimate_mle
-from ._rnn import estimate_rnn
+from ._estimate_rnn import estimate_rnn
 
 
 def fit_p(

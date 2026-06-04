@@ -56,6 +56,12 @@ Rcpp::List wrap_estimate_abc_result(
     Rcpp::IntegerVector fake_block(results.size());
     Rcpp::IntegerVector n_comp_requested(results.size());
     Rcpp::IntegerVector n_comp_used(results.size());
+    Rcpp::IntegerVector n_tasks(results.size());
+    Rcpp::IntegerVector n_subjects(results.size());
+    Rcpp::IntegerVector n_bank_subjects(results.size());
+    Rcpp::LogicalVector shared_template(results.size());
+    Rcpp::LogicalVector pooled(results.size());
+    Rcpp::LogicalVector structure_mismatch(results.size());
     Rcpp::NumericVector tolerance(results.size());
     Rcpp::NumericVector min_distance(results.size(), NA_REAL);
     Rcpp::NumericVector mean_distance(results.size(), NA_REAL);
@@ -65,9 +71,7 @@ Rcpp::List wrap_estimate_abc_result(
     Rcpp::List accepted_distances(results.size());
 
     for (std::size_t row = 0; row < results.size(); ++row) {
-        subid[static_cast<R_xlen_t>(row)] =
-            row < tasks.size() ? multiRL_r::task_subid(tasks[row])
-                               : results[row].subid;
+        subid[static_cast<R_xlen_t>(row)] = results[row].subid;
         status[static_cast<R_xlen_t>(row)] = results[row].status;
         n_simulations[static_cast<R_xlen_t>(row)] =
             results[row].n_simulations;
@@ -80,6 +84,15 @@ Rcpp::List wrap_estimate_abc_result(
         n_comp_requested[static_cast<R_xlen_t>(row)] =
             results[row].n_comp_requested;
         n_comp_used[static_cast<R_xlen_t>(row)] = results[row].n_comp_used;
+        n_tasks[static_cast<R_xlen_t>(row)] = results[row].n_tasks;
+        n_subjects[static_cast<R_xlen_t>(row)] = results[row].n_subjects;
+        n_bank_subjects[static_cast<R_xlen_t>(row)] =
+            results[row].n_bank_subjects;
+        shared_template[static_cast<R_xlen_t>(row)] =
+            results[row].shared_template;
+        pooled[static_cast<R_xlen_t>(row)] = results[row].pooled;
+        structure_mismatch[static_cast<R_xlen_t>(row)] =
+            results[row].structure_mismatch;
         tolerance[static_cast<R_xlen_t>(row)] = control.tol;
         result_message[static_cast<R_xlen_t>(row)] = results[row].message;
         observed_summary[static_cast<R_xlen_t>(row)] =
@@ -113,7 +126,8 @@ Rcpp::List wrap_estimate_abc_result(
         Rcpp::_["fake_block"] = control.fake_block,
         Rcpp::_["seed"] = control.seed,
         Rcpp::_["threads"] = control.threads,
-        Rcpp::_["print_level"] = control.print_level
+        Rcpp::_["print_level"] = control.print_level,
+        Rcpp::_["scope"] = control.scope
     );
 
     Rcpp::List out = Rcpp::List::create(
@@ -123,9 +137,19 @@ Rcpp::List wrap_estimate_abc_result(
             Rcpp::_["backend"] = "abcpp",
             Rcpp::_["method"] = control.method,
             Rcpp::_["reduction"] = control.reduction,
+            Rcpp::_["scope"] = control.scope,
             Rcpp::_["control"] = control_out
         ),
         Rcpp::_["diagnostics"] = Rcpp::List::create(
+            Rcpp::_["scope"] = Rcpp::List::create(
+                Rcpp::_["scope"] = control.scope,
+                Rcpp::_["n_tasks"] = n_tasks,
+                Rcpp::_["n_subjects"] = n_subjects,
+                Rcpp::_["n_bank_subjects"] = n_bank_subjects,
+                Rcpp::_["shared_template"] = shared_template,
+                Rcpp::_["pooled"] = pooled,
+                Rcpp::_["structure_mismatch"] = structure_mismatch
+            ),
             Rcpp::_["subjects"] = Rcpp::DataFrame::create(
                 Rcpp::_["subid"] = subid,
                 Rcpp::_["status"] = status,
@@ -186,6 +210,7 @@ Rcpp::List r_estimate_abc(
     std::string reduction,
     int n_comp,
     int fake_block,
+    std::string scope,
     int seed,
     int threads,
     int print_level,
@@ -224,6 +249,7 @@ Rcpp::List r_estimate_abc(
     control.reduce = reduction;
     control.n_comp = n_comp;
     control.fake_block = fake_block;
+    control.scope = scope;
     control.seed = static_cast<unsigned int>(seed);
     control.threads = threads;
     control.print_level = print_level;
@@ -233,5 +259,19 @@ Rcpp::List r_estimate_abc(
     const std::vector<multiRL::ABCSubjectResult> results =
         multiRL::estimate_abc(tasks, control);
 
-    return wrap_estimate_abc_result(tasks, results, control);
+    Rcpp::List out = wrap_estimate_abc_result(tasks, results, control);
+
+    bool structure_mismatch = false;
+    for (const multiRL::ABCSubjectResult& result : results) {
+        structure_mismatch = structure_mismatch || result.structure_mismatch;
+    }
+
+    if (structure_mismatch && control.scope == "shared") {
+        Rcpp::warning(
+            "scope = 'shared' found task-structure differences after the "
+            "row-count check. The shared template is still used."
+        );
+    }
+
+    return out;
 }

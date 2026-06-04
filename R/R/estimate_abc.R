@@ -91,6 +91,7 @@ estimate_abc <- function(
     reduction = control$reduction,
     n_comp = control$n_comp,
     fake_block = control$fake_block,
+    scope = control$scope,
     seed = control$seed,
     threads = control$threads,
     print_level = control$print_level,
@@ -129,6 +130,7 @@ estimate_abc <- function(
     reduction = "none",
     n_comp = 0L,
     fake_block = 0L,
+    scope = "individual",
     seed = 123L,
     threads = 0L,
     print_level = 1L
@@ -143,6 +145,18 @@ estimate_abc <- function(
   out$reduction <- base::as.character(out$reduction[[1L]])
   out$n_comp <- base::as.integer(out$n_comp[[1L]])
   out$fake_block <- base::as.integer(out$fake_block[[1L]])
+  out$scope <- base::tolower(base::as.character(out$scope[[1L]]))
+  supported_scope <- c("individual", "shared", "universal")
+  if (!out$scope %in% supported_scope) {
+    base::stop(
+      paste0(
+        "Unknown ABC scope. Supported scopes are: ",
+        base::paste(supported_scope, collapse = ", "),
+        "."
+      ),
+      call. = FALSE
+    )
+  }
   out$seed <- base::as.integer(out$seed[[1L]])
   out$threads <- base::as.integer(out$threads[[1L]])
   out$print_level <- base::as.integer(out$print_level[[1L]])
