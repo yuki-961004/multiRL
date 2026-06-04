@@ -250,6 +250,7 @@ set(
     Cpp/src/task_sampler.cpp
     Cpp/src/task_builder.cpp
     Cpp/src/shell_fit_p.cpp
+    Cpp/src/shell_rcv_d.cpp
     Cpp/src/shell_run_m.cpp
 )
 

@@ -22,4 +22,5 @@
 #include "cpp/task_sampler.cpp"
 #include "cpp/task_builder.cpp"
 #include "cpp/shell_fit_p.cpp"
+#include "cpp/shell_rcv_d.cpp"
 #include "cpp/shell_run_m.cpp"

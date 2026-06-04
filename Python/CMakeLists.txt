@@ -207,6 +207,7 @@ set(
     src/cpp/task_sampler.cpp
     src/cpp/task_builder.cpp
     src/cpp/shell_fit_p.cpp
+    src/cpp/shell_rcv_d.cpp
     src/cpp/shell_run_m.cpp
 )
 

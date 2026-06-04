@@ -14,7 +14,7 @@ fit_p <- function(
     ...
 ) {
   estimator <- .modify_fit_p_estimator(estimator)
-  control <- .modify_fit_p_control(control)
+  control <- .modify_fit_p_control(control, estimator)
 
   settings <- utils::modifyList(
     x = list(estimate = base::toupper(estimator)),
@@ -118,17 +118,22 @@ fit_p <- function(
   estimator
 }
 
-.modify_fit_p_control <- function(control) {
+.modify_fit_p_control <- function(control, estimator) {
   if (base::is.null(control)) {
     control <- list()
   }
 
+  default_scope <- if (estimator %in% c("abc", "rnn")) "individual" else NULL
   out <- utils::modifyList(
-    x = list(scope = "individual"),
-    val = control
+    x = list(scope = default_scope),
+    val = control,
+    keep.null = TRUE
   )
-  out$scope <- base::tolower(base::as.character(out$scope[[1L]]))
+  if (base::is.null(out$scope)) {
+    return(out)
+  }
 
+  out$scope <- base::tolower(base::as.character(out$scope[[1L]]))
   supported <- c("individual", "shared", "universal")
   if (!out$scope %in% supported) {
     base::stop(
@@ -145,8 +150,24 @@ fit_p <- function(
 
 .tag_fit_p_result <- function(result, estimator, scope) {
   result$estimator$shell <- "fit_p"
-  result$estimator$scope <- scope
-  result$input$control$scope <- scope
+  if (estimator %in% c("abc", "rnn")) {
+    result$estimator$scope <- scope
+    result$input$control$scope <- scope
+    scope_info <- result$diagnostics$scope
+    if (base::is.null(scope_info)) {
+      scope_info <- list(scope = scope)
+    }
+    scope_info$estimator <- estimator
+    scope_info$applies <- TRUE
+    result$diagnostics$scope <- scope_info
+  } else {
+    result$diagnostics$scope <- list(
+      estimator = estimator,
+      scope = scope,
+      applies = FALSE,
+      reason = "scope applies only to SBI estimators: abc and rnn"
+    )
+  }
   result$input$settings$estimate <- base::toupper(estimator)
   base::class(result) <- base::unique(c("multiRLcpp_fit_p", base::class(result)))
   result

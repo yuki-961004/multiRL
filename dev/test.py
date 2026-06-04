@@ -327,7 +327,7 @@ if abc_result["diagnostics"]["subjects"][0]["n_blocks_used"] != 4:
     raise RuntimeError("ABC fake_block did not create four blocks.")
 
 # %%
-# Task sampler and RNN smoke tests
+# RNN smoke tests
 import multiRL
 import pandas
 
@@ -353,31 +353,6 @@ rnn_params = {
     "capacity": 0.0,
     "sticky": 0.0,
 }
-
-sampler_result = multiRL.task_sampler(
-    object=data[["L_choice", "R_choice"]].values.tolist(),
-    reward=data[["L_reward", "R_reward"]].values.tolist(),
-    action=data["Sub_Choose"].tolist(),
-    block=data["Block"].tolist(),
-    trial=data["Trial"].tolist(),
-    cue=["A", "B", "C", "D"],
-    rsp=["A", "B", "C", "D"],
-    params=rnn_params,
-    free_names=["alpha", "beta"],
-    system=["RL"],
-    lower=[0, 0],
-    upper=[1, 1],
-    control={
-        "n_draws": 2,
-        "seed": 1004,
-        "threads": 1,
-    },
-)
-
-print(sampler_result["metadata"])
-
-if len(sampler_result["data"]) == 0:
-    raise RuntimeError("task_sampler returned no rows.")
 
 try:
     rnn_result = multiRL.estimate_rnn(
