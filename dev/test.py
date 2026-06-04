@@ -325,3 +325,90 @@ if abc_result["diagnostics"]["subjects"][0]["fake_block"] != 4:
 
 if abc_result["diagnostics"]["subjects"][0]["n_blocks_used"] != 4:
     raise RuntimeError("ABC fake_block did not create four blocks.")
+
+# %%
+# Task sampler and RNN smoke tests
+import multiRL
+import pandas
+
+data = pandas.read_csv("data/TAB.csv")
+data = data[data["Subject"] == 1]
+
+rnn_params = {
+    "alpha": 0.3,
+    "beta": 0.5,
+    "gamma": 1.0,
+    "delta": 0.1,
+    "epsilon": float("nan"),
+    "zeta": 0.0,
+    "seed": 123.0,
+    "L": float("nan"),
+    "penalty": 1.0,
+    "Q0": float("nan"),
+    "reset": float("nan"),
+    "lapse": 0.01,
+    "threshold": 20.0,
+    "bonus": 0.0,
+    "weight": 1.0,
+    "capacity": 0.0,
+    "sticky": 0.0,
+}
+
+sampler_result = multiRL.task_sampler(
+    object=data[["L_choice", "R_choice"]].values.tolist(),
+    reward=data[["L_reward", "R_reward"]].values.tolist(),
+    action=data["Sub_Choose"].tolist(),
+    block=data["Block"].tolist(),
+    trial=data["Trial"].tolist(),
+    cue=["A", "B", "C", "D"],
+    rsp=["A", "B", "C", "D"],
+    params=rnn_params,
+    free_names=["alpha", "beta"],
+    system=["RL"],
+    lower=[0, 0],
+    upper=[1, 1],
+    control={
+        "n_draws": 2,
+        "seed": 1004,
+        "threads": 1,
+    },
+)
+
+print(sampler_result["metadata"])
+
+if len(sampler_result["data"]) == 0:
+    raise RuntimeError("task_sampler returned no rows.")
+
+try:
+    rnn_result = multiRL.estimate_rnn(
+        object=data[["L_choice", "R_choice"]].values.tolist(),
+        reward=data[["L_reward", "R_reward"]].values.tolist(),
+        action=data["Sub_Choose"].tolist(),
+        block=data["Block"].tolist(),
+        trial=data["Trial"].tolist(),
+        cue=["A", "B", "C", "D"],
+        rsp=["A", "B", "C", "D"],
+        params=rnn_params,
+        free_names=["alpha", "beta"],
+        system=["RL"],
+        lower=[0, 0],
+        upper=[1, 1],
+        control={
+            "n_draws": 20,
+            "epochs": 1,
+            "batch_size": 8,
+            "units": 8,
+            "threads": 1,
+            "verbose": 0,
+        },
+    )
+    print(rnn_result["fit"])
+
+    if rnn_result["estimator"]["name"] != "RNN":
+        raise RuntimeError("RNN estimator name is not RNN.")
+
+    if "alpha" not in rnn_result["fit"]:
+        raise RuntimeError("RNN fit does not contain alpha.")
+
+except ImportError as error:
+    print("Skipping estimate_rnn smoke test:", error)

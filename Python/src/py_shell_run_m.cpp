@@ -16,6 +16,7 @@
 #include <multiRL/process_model_free.hpp>
 #include <multiRL/shell_run_m.hpp>
 #include <multiRL/task_builder.hpp>
+#include <multiRL/task_sampler.hpp>
 #include <multiRL/types.hpp>
 
 namespace {
@@ -186,6 +187,58 @@ pybind11::dict py_wrap_estimate_abc_result(
     out["fit"] = fit;
     out["estimator"] = estimator;
     out["diagnostics"] = diagnostics;
+    return out;
+}
+
+pybind11::dict py_wrap_task_sampler_result(
+    const multiRL::TaskSamplerResult& result
+) {
+    pybind11::list rows;
+    for (const multiRL::TaskSamplerRow& row : result.rows) {
+        pybind11::dict item;
+        item["draw"] = row.draw;
+        item["subid"] = row.subid;
+        item["block"] = row.block;
+        item["trial"] = row.trial;
+        item["action"] = row.action;
+        item["latent"] = row.latent;
+        item["simulation"] = row.simulation;
+        item["position"] = row.position;
+        item["reward"] = row.reward;
+
+        for (std::size_t index = 0; index < result.cue_names.size();
+             ++index) {
+            const std::string name = "prob_" + result.cue_names[index];
+            if (index < row.probability.size()) {
+                item[pybind11::str(name)] = row.probability[index];
+            } else {
+                item[pybind11::str(name)] = multiRL::missing_real();
+            }
+        }
+
+        for (std::size_t index = 0; index < result.parameter_names.size();
+             ++index) {
+            if (index < row.params.size()) {
+                item[pybind11::str(result.parameter_names[index])] =
+                    row.params[index];
+            } else {
+                item[pybind11::str(result.parameter_names[index])] =
+                    multiRL::missing_real();
+            }
+        }
+        rows.append(item);
+    }
+
+    pybind11::dict metadata;
+    metadata["n_draws"] = result.control.n_draws;
+    metadata["seed"] = result.control.seed;
+    metadata["threads"] = result.control.threads;
+    metadata["policy"] = result.policy;
+    metadata["parameter_names"] = result.parameter_names;
+
+    pybind11::dict out;
+    out["data"] = rows;
+    out["metadata"] = metadata;
     return out;
 }
 
@@ -563,6 +616,65 @@ pybind11::dict py_estimate_abc(
     return py_wrap_estimate_abc_result(result, control);
 }
 
+pybind11::dict py_task_sampler(
+    const multiRL::StringMatrix& object,
+    const multiRL::DoubleMatrix& reward,
+    const std::vector<std::string>& action,
+    const std::vector<int>& block,
+    const std::vector<int>& trial,
+    const std::vector<std::string>& cue,
+    const std::vector<std::string>& rsp,
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names,
+    const std::vector<std::string>& system,
+    const std::vector<std::string>& prior_names,
+    const std::vector<std::string>& prior_types,
+    const std::vector<double>& prior_param1,
+    const std::vector<double>& prior_param2,
+    bool prior_active,
+    const std::string& policy,
+    const std::string& name,
+    const std::string& mode,
+    const int n_draws,
+    const int seed,
+    const int threads,
+    const std::vector<double>& lower_bounds,
+    const std::vector<double>& upper_bounds
+) {
+    multiRL::RunTask task = py_make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        "SAMPLER"
+    );
+
+    multiRL::TaskSamplerControl control;
+    control.n_draws = n_draws;
+    control.seed = static_cast<unsigned int>(seed);
+    control.threads = threads;
+    control.lower_bounds = lower_bounds;
+    control.upper_bounds = upper_bounds;
+
+    const multiRL::TaskSamplerResult result =
+        multiRL::task_sampler(task, control);
+    return py_wrap_task_sampler_result(result);
+}
+
 #ifdef MULTIRL_HAS_STAN
 
 pybind11::dict py_estimate_mcmc(
@@ -761,6 +873,33 @@ PYBIND11_MODULE(_backend, module) {
         pybind11::arg("seed") = 123,
         pybind11::arg("threads") = 0,
         pybind11::arg("print_level") = 1,
+        pybind11::arg("lower_bounds") = std::vector<double>(),
+        pybind11::arg("upper_bounds") = std::vector<double>()
+    );
+    module.def(
+        "task_sampler",
+        &py_task_sampler,
+        pybind11::arg("object"),
+        pybind11::arg("reward"),
+        pybind11::arg("action"),
+        pybind11::arg("block"),
+        pybind11::arg("trial"),
+        pybind11::arg("cue"),
+        pybind11::arg("rsp"),
+        pybind11::arg("params"),
+        pybind11::arg("free_names"),
+        pybind11::arg("system"),
+        pybind11::arg("prior_names") = std::vector<std::string>(),
+        pybind11::arg("prior_types") = std::vector<std::string>(),
+        pybind11::arg("prior_param1") = std::vector<double>(),
+        pybind11::arg("prior_param2") = std::vector<double>(),
+        pybind11::arg("prior_active") = false,
+        pybind11::arg("policy") = "off",
+        pybind11::arg("name") = "TD",
+        pybind11::arg("mode") = "fitting",
+        pybind11::arg("n_draws") = 100,
+        pybind11::arg("seed") = 123,
+        pybind11::arg("threads") = 0,
         pybind11::arg("lower_bounds") = std::vector<double>(),
         pybind11::arg("upper_bounds") = std::vector<double>()
     );

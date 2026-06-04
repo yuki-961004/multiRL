@@ -21,3 +21,7 @@
     .Call(`_multiRLcpp_r_shell_run_m`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate)
 }
 
+.task_sampler <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, lower_bounds, upper_bounds) {
+    .Call(`_multiRLcpp_r_task_sampler`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, lower_bounds, upper_bounds)
+}
+

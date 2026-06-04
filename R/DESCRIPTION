@@ -25,6 +25,8 @@ Imports:
     StanHeaders,
     RcppParallel,
     abcpp
+Suggests:
+    reticulate
 LinkingTo:
     Rcpp,
     nloptr,

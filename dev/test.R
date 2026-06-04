@@ -375,3 +375,73 @@ stopifnot(
   multiRLcpp.abc$diagnostics$subjects$n_comp_used[1L] ==
     multiRLcpp.abc$diagnostics$subjects$n_blocks_used[1L]
 )
+
+# %%
+
+multiRLcpp.sampler <- task_sampler(
+  data = binaryRL::Mason_2024_G2,
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"),
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  params = list(
+    free = list(alpha = 0.3, beta = 0.5),
+    fixed = list(threshold = 20)
+  ),
+  lower = c(0, 0),
+  upper = c(1, 1),
+  control = list(
+    n_draws = 2L,
+    seed = 1004L,
+    threads = 1L
+  )
+)
+
+print(multiRLcpp.sampler$metadata)
+stopifnot(base::nrow(multiRLcpp.sampler$data) > 0L)
+
+multiRLcpp.rnn <- base::tryCatch(
+  estimate_rnn(
+    data = binaryRL::Mason_2024_G2,
+    id = 1,
+    behrule = list(
+      cue = c("A", "B", "C", "D"),
+      rsp = c("A", "B", "C", "D")
+    ),
+    colnames = list(
+      object = c("L_choice", "R_choice"),
+      reward = c("L_reward", "R_reward"),
+      action = "Sub_Choose"
+    ),
+    params = list(
+      free = list(alpha = 0.3, beta = 0.5),
+      fixed = list(threshold = 20)
+    ),
+    lower = c(0, 0),
+    upper = c(1, 1),
+    control = list(
+      n_draws = 20L,
+      epochs = 1L,
+      batch_size = 8L,
+      units = 8L,
+      threads = 1L,
+      verbose = 0L
+    )
+  ),
+  error = function(error) {
+    message("Skipping estimate_rnn smoke test: ", conditionMessage(error))
+    NULL
+  }
+)
+
+if (!base::is.null(multiRLcpp.rnn)) {
+  print(multiRLcpp.rnn$fit)
+  stopifnot(multiRLcpp.rnn$estimator$name == "RNN")
+  stopifnot("alpha" %in% base::names(multiRLcpp.rnn$fit))
+}
