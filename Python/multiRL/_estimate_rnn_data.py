@@ -1,11 +1,11 @@
-"""Task sampling helpers for the Python multiRL frontend."""
+"""RNN data preparation helpers for the Python multiRL frontend."""
 
-from . import _backend as _cpp_task_sampler
+from . import _backend
 from ._estimate_mle import _modify_bounds
 from ._shell_run_m import _modify_request
 
 
-def task_sampler(
+def _estimate_rnn_data(
     data=None,
     id=None,
     colnames=None,
@@ -54,14 +54,14 @@ def task_sampler(
         policy=policy,
         name=name,
         mode=mode,
-        estimate="SAMPLER",
+        estimate="RNN",
     )
 
     free_names_list = request["free_names"]
     lower_bounds = _modify_bounds(lower, free_names_list, -float("inf"))
     upper_bounds = _modify_bounds(upper, free_names_list, float("inf"))
 
-    cpp_result = _cpp_task_sampler.task_sampler(
+    cpp_result = _backend.estimate_rnn_data(
         object=request["object"],
         reward=request["reward"],
         action=request["action"],

@@ -10,6 +10,7 @@
 #include "cpp/estimate_map.cpp"
 #include "cpp/estimate_mcmc.cpp"
 #include "cpp/estimate_mle.cpp"
+#include "cpp/estimate_rnn.cpp"
 #include "cpp/info_nlopt.cpp"
 #include "cpp/modify_control.cpp"
 #include "cpp/modify_context.cpp"
@@ -20,4 +21,5 @@
 #include "cpp/modify_priors.cpp"
 #include "cpp/task_sampler.cpp"
 #include "cpp/task_builder.cpp"
+#include "cpp/shell_fit_p.cpp"
 #include "cpp/shell_run_m.cpp"

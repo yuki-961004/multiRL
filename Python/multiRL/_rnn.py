@@ -2,7 +2,7 @@
 
 import math
 
-from ._sampler import task_sampler
+from ._estimate_rnn_data import _estimate_rnn_data
 from ._shell_run_m import _modify_request
 
 
@@ -64,7 +64,7 @@ def estimate_rnn(
     numpy = _import_numpy()
     _set_seed(keras, rnn_control["seed"])
 
-    sampler = task_sampler(
+    sampler = _estimate_rnn_data(
         object=request["object"],
         reward=request["reward"],
         action=request["action"],

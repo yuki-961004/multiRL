@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 
-#include <multiRL/task_sampler.hpp>
+#include <multiRL/estimate_rnn.hpp>
 
 #include "r_wrapper_common.hpp"
 
@@ -102,8 +102,8 @@ Rcpp::DataFrame wrap_sampler_data(
 
 }  // namespace
 
-// [[Rcpp::export(name = ".task_sampler")]]
-Rcpp::List r_task_sampler(
+// [[Rcpp::export(name = ".estimate_rnn_data")]]
+Rcpp::List r_estimate_rnn_data(
     Rcpp::CharacterMatrix object,
     Rcpp::NumericMatrix reward,
     Rcpp::CharacterVector action,
@@ -151,7 +151,7 @@ Rcpp::List r_task_sampler(
         policy,
         name,
         mode,
-        "SAMPLER"
+        "RNN"
     );
 
     multiRL::TaskSamplerControl control;
@@ -162,7 +162,7 @@ Rcpp::List r_task_sampler(
     control.upper_bounds = multiRL_r::as_double_vector(upper_bounds);
 
     const std::vector<multiRL::TaskSamplerResult> results =
-        multiRL::task_sampler(tasks, control);
+        multiRL::estimate_rnn(tasks, control);
 
     Rcpp::List out = Rcpp::List::create(
         Rcpp::_["data"] = wrap_sampler_data(results),
@@ -175,7 +175,7 @@ Rcpp::List r_task_sampler(
         )
     );
     out.attr("class") = Rcpp::CharacterVector::create(
-        "multiRLcpp_task_sampler",
+        "multiRLcpp_estimate_rnn_data",
         "list"
     );
     return out;

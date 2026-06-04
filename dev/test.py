@@ -412,3 +412,62 @@ try:
 
 except ImportError as error:
     print("Skipping estimate_rnn smoke test:", error)
+
+# %%
+# fit_p dispatcher smoke tests
+import multiRL
+import pandas
+
+data = pandas.read_csv("data/TAB.csv")
+data = data[data["Subject"] == 1]
+
+fit_common = {
+    "object": data[["L_choice", "R_choice"]].values.tolist(),
+    "reward": data[["L_reward", "R_reward"]].values.tolist(),
+    "action": data["Sub_Choose"].tolist(),
+    "block": data["Block"].tolist(),
+    "trial": data["Trial"].tolist(),
+    "cue": ["A", "B", "C", "D"],
+    "rsp": ["A", "B", "C", "D"],
+    "params": rnn_params,
+    "free_names": ["alpha", "beta"],
+    "system": ["RL"],
+    "lower": [0, 0],
+    "upper": [1, 1],
+}
+
+fit_mle = multiRL.fit_p(
+    **fit_common,
+    estimator="mle",
+    control={
+        "scope": "individual",
+        "maxeval": 20,
+        "seed": 1004,
+    },
+)
+
+if fit_mle["estimator"]["name"].upper() != "MLE":
+    raise RuntimeError("fit_p did not dispatch to MLE.")
+
+if fit_mle["estimator"]["shell"] != "fit_p":
+    raise RuntimeError("fit_p did not tag the MLE result.")
+
+fit_abc = multiRL.fit_p(
+    **fit_common,
+    estimator="abc",
+    control={
+        "scope": "individual",
+        "samples": 20,
+        "tol": 0.2,
+        "method": "rejection",
+        "reduction": "none",
+        "threads": 1,
+        "print_level": 0,
+    },
+)
+
+if fit_abc["estimator"]["name"].upper() != "ABC":
+    raise RuntimeError("fit_p did not dispatch to ABC.")
+
+if fit_abc["estimator"]["shell"] != "fit_p":
+    raise RuntimeError("fit_p did not tag the ABC result.")

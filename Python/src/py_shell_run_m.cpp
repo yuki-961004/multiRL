@@ -9,6 +9,7 @@
 #include <multiRL/estimate_abc.hpp>
 #include <multiRL/estimate_mle.hpp>
 #include <multiRL/estimate_map.hpp>
+#include <multiRL/estimate_rnn.hpp>
 #ifdef MULTIRL_HAS_STAN
 #include <multiRL/estimate_mcmc.hpp>
 #endif
@@ -616,7 +617,7 @@ pybind11::dict py_estimate_abc(
     return py_wrap_estimate_abc_result(result, control);
 }
 
-pybind11::dict py_task_sampler(
+pybind11::dict py_estimate_rnn_data(
     const multiRL::StringMatrix& object,
     const multiRL::DoubleMatrix& reward,
     const std::vector<std::string>& action,
@@ -660,7 +661,7 @@ pybind11::dict py_task_sampler(
         policy,
         name,
         mode,
-        "SAMPLER"
+        "RNN"
     );
 
     multiRL::TaskSamplerControl control;
@@ -671,7 +672,10 @@ pybind11::dict py_task_sampler(
     control.upper_bounds = upper_bounds;
 
     const multiRL::TaskSamplerResult result =
-        multiRL::task_sampler(task, control);
+        multiRL::estimate_rnn(
+            std::vector<multiRL::RunTask>{task},
+            control
+        ).front();
     return py_wrap_task_sampler_result(result);
 }
 
@@ -877,8 +881,8 @@ PYBIND11_MODULE(_backend, module) {
         pybind11::arg("upper_bounds") = std::vector<double>()
     );
     module.def(
-        "task_sampler",
-        &py_task_sampler,
+        "estimate_rnn_data",
+        &py_estimate_rnn_data,
         pybind11::arg("object"),
         pybind11::arg("reward"),
         pybind11::arg("action"),

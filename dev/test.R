@@ -445,3 +445,79 @@ if (!base::is.null(multiRLcpp.rnn)) {
   stopifnot(multiRLcpp.rnn$estimator$name == "RNN")
   stopifnot("alpha" %in% base::names(multiRLcpp.rnn$fit))
 }
+
+# %%
+
+multiRLcpp.fit.mle <- fit_p(
+  data = binaryRL::Mason_2024_G2,
+  estimator = "mle",
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"),
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  params = list(
+    free = list(alpha = 0.3, beta = 0.5),
+    fixed = list(threshold = 20)
+  ),
+  lower = c(0, 0),
+  upper = c(1, 1),
+  settings = list(policy = "off"),
+  control = list(
+    scope = "individual",
+    maxeval = 20L,
+    seed = 1004L
+  )
+)
+
+stopifnot(base::is.list(multiRLcpp.fit.mle))
+stopifnot(
+  base::all(c("input", "fit", "estimator", "diagnostics") %in%
+    base::names(multiRLcpp.fit.mle))
+)
+stopifnot(base::toupper(multiRLcpp.fit.mle$estimator$name) == "MLE")
+stopifnot(multiRLcpp.fit.mle$estimator$shell == "fit_p")
+
+multiRLcpp.fit.abc <- fit_p(
+  data = binaryRL::Mason_2024_G2,
+  estimator = "abc",
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"),
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  params = list(
+    free = list(alpha = 0.3, beta = 0.5),
+    fixed = list(threshold = 20)
+  ),
+  lower = c(0, 0),
+  upper = c(1, 1),
+  settings = list(policy = "off"),
+  control = list(
+    scope = "individual",
+    samples = 20L,
+    tol = 0.2,
+    method = "rejection",
+    reduction = "none",
+    threads = 1L,
+    print_level = 0L
+  )
+)
+
+stopifnot(base::is.list(multiRLcpp.fit.abc))
+stopifnot(
+  base::all(c("input", "fit", "estimator", "diagnostics") %in%
+    base::names(multiRLcpp.fit.abc))
+)
+stopifnot(base::toupper(multiRLcpp.fit.abc$estimator$name) == "ABC")
+stopifnot(multiRLcpp.fit.abc$estimator$shell == "fit_p")

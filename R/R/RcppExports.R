@@ -17,11 +17,11 @@
     .Call(`_multiRLcpp_r_estimate_mle`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, maxeval, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds)
 }
 
-.shell_run_m <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate) {
-    .Call(`_multiRLcpp_r_shell_run_m`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate)
+.estimate_rnn_data <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, lower_bounds, upper_bounds) {
+    .Call(`_multiRLcpp_r_estimate_rnn_data`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, lower_bounds, upper_bounds)
 }
 
-.task_sampler <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, lower_bounds, upper_bounds) {
-    .Call(`_multiRLcpp_r_task_sampler`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, lower_bounds, upper_bounds)
+.shell_run_m <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate) {
+    .Call(`_multiRLcpp_r_shell_run_m`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate)
 }
 

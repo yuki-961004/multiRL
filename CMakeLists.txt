@@ -239,6 +239,7 @@ set(
     Cpp/src/estimate_abc.cpp
     Cpp/src/estimate_map.cpp
     Cpp/src/estimate_mle.cpp
+    Cpp/src/estimate_rnn.cpp
     Cpp/src/info_nlopt.cpp
     Cpp/src/modify_control.cpp
     Cpp/src/modify_context.cpp
@@ -248,6 +249,7 @@ set(
     Cpp/src/modify_priors.cpp
     Cpp/src/task_sampler.cpp
     Cpp/src/task_builder.cpp
+    Cpp/src/shell_fit_p.cpp
     Cpp/src/shell_run_m.cpp
 )
 
