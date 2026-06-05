@@ -31,11 +31,9 @@ mle <- multiRLcpp::rcv_d(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
   control = list(
-    n_draws = 1,
+    n_draws = 30,
     seed = 1004,
-    threads = 32
-  ),
-  fit_control = list(
+    threads = 32,
     algorithm = "LN_BOBYQA",
     local_algorithm = "LN_BOBYQA",
     maxeval = 10,
@@ -45,8 +43,8 @@ mle <- multiRLcpp::rcv_d(
 
 base::stopifnot(base::inherits(mle, "multiRLcpp_rcv_d"))
 base::stopifnot(base::nrow(mle$simulation) > 0L)
-base::stopifnot(base::nrow(mle$truth) == 3L)
-base::stopifnot(base::nrow(mle$model_recovery) == 9L)
+base::stopifnot(base::nrow(mle$truth) == 90L)
+base::stopifnot(base::nrow(mle$model_recovery) == 270L)
 base::stopifnot(base::all(
   c("TD", "RSTD", "Utility") %in% mle$truth$generating_model
 ))
@@ -87,12 +85,10 @@ abc <- multiRLcpp::rcv_d(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
   control = list(
-    n_draws = 1,
+    n_draws = 30,
     seed = 1004,
     threads = 32,
-    scope = "shared"
-  ),
-  fit_control = list(
+    scope = "shared",
     samples = 10,
     tol = 0.5,
     method = "rejection",
@@ -104,8 +100,8 @@ abc <- multiRLcpp::rcv_d(
 
 base::stopifnot(base::inherits(abc, "multiRLcpp_rcv_d"))
 base::stopifnot(base::nrow(abc$simulation) > 0L)
-base::stopifnot(base::nrow(abc$truth) == 3L)
-base::stopifnot(base::nrow(abc$model_recovery) == 9L)
+base::stopifnot(base::nrow(abc$truth) == 90L)
+base::stopifnot(base::nrow(abc$model_recovery) == 270L)
 base::stopifnot(abc$estimator$scope == "shared")
 
 print(abc$recovery)

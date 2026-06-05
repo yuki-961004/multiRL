@@ -4,6 +4,7 @@ fit_p <- function(
     id = NULL,
     colnames = list(),
     behrule = list(),
+    models = NULL,
     funcs = list(),
     params = list(),
     priors = list(),
@@ -15,6 +16,25 @@ fit_p <- function(
 ) {
   estimator <- .modify_fit_p_estimator(estimator)
   control <- .modify_fit_p_control(control, estimator)
+
+  if (!base::is.null(models)) {
+    return(.fit_p_models(
+      data = data,
+      estimator = estimator,
+      id = id,
+      colnames = colnames,
+      behrule = behrule,
+      models = models,
+      funcs = funcs,
+      params = params,
+      priors = priors,
+      settings = settings,
+      lower = lower,
+      upper = upper,
+      control = control,
+      extra = list(...)
+    ))
+  }
 
   settings <- utils::modifyList(
     x = list(estimate = base::toupper(estimator)),
@@ -171,4 +191,159 @@ fit_p <- function(
   result$input$settings$estimate <- base::toupper(estimator)
   base::class(result) <- base::unique(c("multiRLcpp_fit_p", base::class(result)))
   result
+}
+
+.fit_p_models <- function(
+    data,
+    estimator,
+    id,
+    colnames,
+    behrule,
+    models,
+    funcs,
+    params,
+    priors,
+    settings,
+    lower,
+    upper,
+    control,
+    extra
+) {
+  specs <- .modify_fit_p_models(
+    models = models,
+    funcs = funcs,
+    params = params,
+    priors = priors,
+    settings = settings,
+    lower = lower,
+    upper = upper
+  )
+
+  raw <- list()
+  fit_parts <- list()
+
+  for (index in seq_along(specs)) {
+    spec <- specs[[index]]
+    model <- .fit_p_model_name(spec, index)
+    model_id <- base::paste0(model, "_", index)
+
+    result <- fit_p(
+      data = data,
+      estimator = estimator,
+      id = id,
+      colnames = colnames,
+      behrule = behrule,
+      funcs = spec$funcs,
+      params = spec$params,
+      priors = spec$priors,
+      settings = utils::modifyList(
+        x = spec$settings,
+        val = list(name = model)
+      ),
+      lower = spec$lower,
+      upper = spec$upper,
+      control = control
+    )
+    result$fit$model <- model
+    result$fit$model_id <- model_id
+    result$fit <- result$fit[
+      c("model", "model_id", base::setdiff(
+        base::names(result$fit),
+        c("model", "model_id")
+      ))
+    ]
+    raw[[model_id]] <- result
+    fit_parts[[model_id]] <- result$fit
+  }
+
+  fit <- .fit_p_rbind(fit_parts)
+  out <- list(
+    input = list(
+      data = data,
+      colnames = colnames,
+      behrule = behrule,
+      models = specs,
+      estimator = estimator,
+      control = control,
+      extra = extra
+    ),
+    fit = fit,
+    raw = raw,
+    estimator = list(
+      name = base::toupper(estimator),
+      shell = "fit_p"
+    ),
+    diagnostics = list(
+      n_models = base::length(specs),
+      model_id = base::names(raw)
+    )
+  )
+  base::class(out) <- c("multiRLcpp_fit_p", "multiRLcpp_run", "list")
+  out
+}
+
+.modify_fit_p_models <- function(
+    models,
+    funcs,
+    params,
+    priors,
+    settings,
+    lower,
+    upper
+) {
+  if (!base::is.list(models)) {
+    models <- list(models)
+  }
+  base::lapply(seq_along(models), function(index) {
+    spec <- models[[index]]
+    if (base::is.function(spec)) {
+      spec <- spec()
+    }
+    if (!base::is.list(spec)) {
+      spec <- list(model = spec)
+    }
+    list(
+      model = spec$model,
+      process = spec$process,
+      funcs = .fit_p_value(spec, "funcs", funcs),
+      params = .fit_p_value(spec, "params", params),
+      priors = .fit_p_value(spec, "priors", priors),
+      settings = .fit_p_value(spec, "settings", settings),
+      lower = .fit_p_value(spec, "lower", lower),
+      upper = .fit_p_value(spec, "upper", upper)
+    )
+  })
+}
+
+.fit_p_value <- function(spec, key, fallback) {
+  if (!base::is.null(spec[[key]])) {
+    return(spec[[key]])
+  }
+  fallback
+}
+
+.fit_p_model_name <- function(spec, index) {
+  if (!base::is.null(spec$settings$name)) {
+    return(base::as.character(spec$settings$name[[1L]]))
+  }
+  if (!base::is.null(spec$model)) {
+    return(base::as.character(spec$model[[1L]]))
+  }
+  base::paste0("model_", index)
+}
+
+.fit_p_rbind <- function(parts) {
+  parts <- parts[base::vapply(parts, base::NROW, integer(1L)) > 0L]
+  if (base::length(parts) == 0L) {
+    return(data.frame())
+  }
+  names <- base::unique(base::unlist(base::lapply(parts, base::names)))
+  parts <- base::lapply(parts, function(part) {
+    missing <- base::setdiff(names, base::names(part))
+    for (name in missing) {
+      part[[name]] <- NA
+    }
+    part[names]
+  })
+  base::do.call(rbind, parts)
 }

@@ -446,3 +446,53 @@ if fit_abc["estimator"]["name"].upper() != "ABC":
 
 if fit_abc["estimator"]["shell"] != "fit_p":
     raise RuntimeError("fit_p did not tag the ABC result.")
+
+# %%
+# rpl_e replay smoke tests
+import multiRL
+import pandas
+
+data = pandas.read_csv("data/TAB.csv")
+data = data[data["Subject"] == 1]
+
+fit_models = multiRL.fit_p(
+    data=data,
+    estimator="mle",
+    id=1,
+    colnames={
+        "subid": "Subject",
+        "block": "Block",
+        "trial": "Trial",
+        "object": ["L_choice", "R_choice"],
+        "reward": ["L_reward", "R_reward"],
+        "action": "Sub_Choose",
+    },
+    behrule={
+        "cue": ["A", "B", "C", "D"],
+        "rsp": ["A", "B", "C", "D"],
+    },
+    models=[
+        multiRL.TD,
+        multiRL.Utility,
+    ],
+    control={
+        "algorithm": "LN_BOBYQA",
+        "local_algorithm": "LN_BOBYQA",
+        "maxeval": 10,
+        "seed": 1004,
+    },
+)
+
+if len({row["model"] for row in fit_models["fit"]}) != 2:
+    raise RuntimeError("fit_p did not fit two models.")
+
+replay = multiRL.rpl_e(fit_models, option={"plot": False})
+
+if "Human" not in {row["model"] for row in replay["plot_data"]}:
+    raise RuntimeError("rpl_e plot_data does not include Human.")
+
+if "model" not in {row["source"] for row in replay["plot_data"]}:
+    raise RuntimeError("rpl_e plot_data does not include model replay.")
+
+if not hasattr(multiRL, "rpl_e"):
+    raise RuntimeError("multiRL does not expose rpl_e.")

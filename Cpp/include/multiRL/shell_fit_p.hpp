@@ -26,8 +26,25 @@ struct ShellFitPResult {
     std::vector<ABCSubjectResult> abc;
 };
 
+struct ShellFitPModel {
+    std::string model;
+    std::string model_id;
+    std::vector<RunTask> tasks;
+};
+
+struct ShellFitPModelResult {
+    std::string model;
+    std::string model_id;
+    ShellFitPResult result;
+};
+
 ShellFitPResult shell_fit_p(
     const std::vector<RunTask>& tasks,
+    const ShellFitPControl& control = ShellFitPControl()
+);
+
+std::vector<ShellFitPModelResult> shell_fit_p(
+    const std::vector<ShellFitPModel>& models,
     const ShellFitPControl& control = ShellFitPControl()
 );
 

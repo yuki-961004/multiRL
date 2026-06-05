@@ -23,4 +23,5 @@
 #include "cpp/task_builder.cpp"
 #include "cpp/shell_fit_p.cpp"
 #include "cpp/shell_rcv_d.cpp"
+#include "cpp/shell_rpl_e.cpp"
 #include "cpp/shell_run_m.cpp"

@@ -7,8 +7,8 @@
   object <- base::as.matrix(data[, colnames$object, drop = FALSE])
   reward <- base::as.matrix(data[, colnames$reward, drop = FALSE])
   action <- base::as.character(data[[colnames$action]])
-  block <- base::as.integer(data[[colnames$block]])
-  trial <- base::as.integer(data[[colnames$trial]])
+  block <- .modify_features_integer(data[[colnames$block]], colnames$block)
+  trial <- .modify_features_integer(data[[colnames$trial]], colnames$trial)
   subid <- base::as.character(data[[colnames$subid]])
 
   object[] <- base::as.character(object)
@@ -41,4 +41,16 @@
     idinfo = idinfo,
     exinfo = exinfo
   )
+}
+
+.modify_features_integer <- function(value, name) {
+  out <- base::as.integer(base::as.character(value))
+  if (base::anyNA(out)) {
+    base::stop(
+      "Column '",
+      name,
+      "' must be coercible to integer without missing values."
+    )
+  }
+  out
 }

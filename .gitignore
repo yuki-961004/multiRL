@@ -37,8 +37,9 @@ R/src/*.o
 R/src/*.dll
 R/src/cpp/
 R/inst/include/
-.tmp-r/
-.tmp-python/
+
+# tmp
+*.tmp*/
 
 # IDE
 *.swp

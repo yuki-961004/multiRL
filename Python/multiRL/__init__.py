@@ -6,6 +6,7 @@ from ._estimate_mle import estimate_mle
 from ._estimate_map import estimate_map
 from ._shell_fit_p import fit_p
 from ._shell_rcv_d import rcv_d
+from ._shell_rpl_e import rpl_e
 from ._estimate_rnn import estimate_rnn
 from ._model_free_RSTD import RSTD
 from ._model_free_TD import TD
@@ -20,6 +21,7 @@ __all__ = [
     "estimate_rnn",
     "fit_p",
     "rcv_d",
+    "rpl_e",
     "run_m",
     "RSTD",
     "TD",

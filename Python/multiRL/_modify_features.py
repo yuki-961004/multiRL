@@ -11,11 +11,11 @@ def _modify_features(data, id, colnames):
         "reward": _numeric_matrix_to_list(data[colnames["reward"]]),
         "action": _vector_to_list(data[colnames["action"]]),
         "block": [
-            int(value)
+            _integer_value(value, colnames["block"])
             for value in _vector_to_list(data[colnames["block"]])
         ],
         "trial": [
-            int(value)
+            _integer_value(value, colnames["trial"])
             for value in _vector_to_list(data[colnames["trial"]])
         ],
     }
@@ -29,6 +29,26 @@ def _vector_to_list(value):
         value = value.tolist()
 
     return list(value)
+
+
+def _integer_value(value, name):
+    if value is None:
+        raise ValueError(f"Column '{name}' contains a missing value.")
+
+    try:
+        numeric = float(str(value))
+    except ValueError as error:
+        raise ValueError(
+            f"Column '{name}' must be coercible to integer."
+        ) from error
+
+    integer = int(numeric)
+    if numeric != integer:
+        raise ValueError(
+            f"Column '{name}' must contain integer-valued data."
+        )
+
+    return integer
 
 
 def _matrix_to_list(value):

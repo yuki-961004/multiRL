@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.15...3.27)
 
 project(multiRL VERSION 0.5.0 LANGUAGES CXX)
+# -- Workaround for CMake 4.3 RC detection bug with MSVC
+if(MSVC AND CMAKE_VERSION VERSION_GREATER_EQUAL "4.3")
+    enable_language(RC)
+endif()
 
 include(GNUInstallDirs)
 include(FetchContent)
@@ -8,6 +12,14 @@ include(FetchContent)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
+# -- Install to local directory (avoids admin permission issues)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Local install prefix" FORCE)
+endif()
+# -- CMake 4.3 workaround: enable C before FetchContent sub-builds need it
+if(MSVC)
+    enable_language(C)
+endif()
 
 set(CMAKE_DISABLE_FIND_PACKAGE_Java ON)
 set(CMAKE_DISABLE_FIND_PACKAGE_JNI ON)
@@ -80,6 +92,17 @@ if(MULTIRL_ENABLE_MCMC AND MULTIRL_STAN_MATH_TAG STREQUAL "latest")
 
     message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
 endif()
+# -- Validate Stan tag (shells may truncate v5.3.0 to v5)
+string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MATH_TAG}")
+if(NOT _stan_tag_ok AND NOT MULTIRL_STAN_MATH_TAG STREQUAL "latest")
+    message(WARNING "Stan Math tag '${MULTIRL_STAN_MATH_TAG}' may have been truncated by the shell. Use quotes: -DMULTIRL_STAN_MATH_TAG=\"v5.3.0\"")
+endif()
+# -- Validate Stan tag (shells may truncate v5.3.0 to v5)
+string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MATH_TAG}")
+if(NOT _stan_tag_ok AND NOT MULTIRL_STAN_MATH_TAG STREQUAL "latest")
+    message(WARNING "Stan Math tag '${MULTIRL_STAN_MATH_TAG}' may have been truncated by the shell. Use quotes: -DMULTIRL_STAN_MATH_TAG=\"v5.3.0\"")
+endif()
+
 
 if(MULTIRL_SYNC_PACKAGE_SOURCES)
     set(

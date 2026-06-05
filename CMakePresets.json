@@ -3,11 +3,13 @@
   "configurePresets": [
     {
       "name": "default",
-      "displayName": "Default",
-      "generator": "Ninja",
+      "displayName": "VS 2026 x64",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "x64",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "MULTIRL_STAN_MATH_TAG": "v5.3.0"
       }
     }
   ],
@@ -18,4 +20,3 @@
     }
   ]
 }
-

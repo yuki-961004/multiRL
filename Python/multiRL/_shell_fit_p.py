@@ -13,6 +13,7 @@ def fit_p(
     id=None,
     colnames=None,
     behrule=None,
+    models=None,
     funcs=None,
     params=None,
     priors=None,
@@ -35,6 +36,22 @@ def fit_p(
 ):
     estimator = _modify_fit_p_estimator(estimator)
     control = _modify_fit_p_control(control)
+    if models is not None:
+        return _fit_p_models(
+            data=data,
+            estimator=estimator,
+            id=id,
+            colnames=colnames,
+            behrule=behrule,
+            models=models,
+            funcs=funcs,
+            params=params,
+            priors=priors,
+            settings=settings,
+            lower=lower,
+            upper=upper,
+            control=control,
+        )
 
     dispatch = {
         "mle": estimate_mle,
@@ -69,6 +86,119 @@ def fit_p(
         mode=mode,
     )
     return _tag_fit_p_result(result, estimator, control["scope"])
+
+
+def _fit_p_models(
+    data,
+    estimator,
+    id,
+    colnames,
+    behrule,
+    models,
+    funcs,
+    params,
+    priors,
+    settings,
+    lower,
+    upper,
+    control,
+):
+    specs = _modify_fit_p_models(
+        models=models,
+        funcs=funcs,
+        params=params,
+        priors=priors,
+        settings=settings,
+        lower=lower,
+        upper=upper,
+    )
+    raw = {}
+    fit = []
+
+    for index, spec in enumerate(specs, start=1):
+        model = _fit_p_model_name(spec, index)
+        model_id = model + "_" + str(index)
+        local_settings = dict(spec.get("settings") or {})
+        local_settings["name"] = model
+        result = fit_p(
+            data=data,
+            estimator=estimator,
+            id=id,
+            colnames=colnames,
+            behrule=behrule,
+            funcs=spec.get("funcs"),
+            params=spec.get("params"),
+            priors=spec.get("priors"),
+            settings=local_settings,
+            lower=spec.get("lower"),
+            upper=spec.get("upper"),
+            control=control,
+        )
+        if isinstance(result["fit"], list):
+            rows = result["fit"]
+        else:
+            rows = [result["fit"]]
+        for row in rows:
+            row["model"] = model
+            row["model_id"] = model_id
+            fit.append(row)
+        raw[model_id] = result
+
+    return {
+        "input": {
+            "data": data,
+            "colnames": colnames,
+            "behrule": behrule,
+            "models": specs,
+            "estimator": estimator,
+            "control": control,
+        },
+        "fit": fit,
+        "raw": raw,
+        "estimator": {
+            "name": estimator.upper(),
+            "shell": "fit_p",
+        },
+        "diagnostics": {
+            "n_models": len(specs),
+            "model_id": list(raw.keys()),
+        },
+    }
+
+
+def _modify_fit_p_models(models, funcs, params, priors, settings, lower, upper):
+    if not isinstance(models, list):
+        models = [models]
+    out = []
+    for spec in models:
+        if callable(spec):
+            spec = spec()
+        if spec is None:
+            spec = {}
+        if not isinstance(spec, dict):
+            spec = {"model": spec}
+        out.append(
+            {
+                "model": spec.get("model"),
+                "process": spec.get("process"),
+                "funcs": spec.get("funcs", funcs),
+                "params": spec.get("params", params),
+                "priors": spec.get("priors", priors),
+                "settings": spec.get("settings", settings),
+                "lower": spec.get("lower", lower),
+                "upper": spec.get("upper", upper),
+            }
+        )
+    return out
+
+
+def _fit_p_model_name(spec, index):
+    settings = spec.get("settings") or {}
+    if settings.get("name") is not None:
+        return str(settings["name"])
+    if spec.get("model") is not None:
+        return str(spec["model"])
+    return "model_" + str(index)
 
 
 def _modify_fit_p_estimator(estimator):

@@ -18,6 +18,103 @@ double sampler_finite_or(double value, double fallback) {
     return std::isfinite(value) ? value : fallback;
 }
 
+double sampler_beta_param(
+    double shape1,
+    double shape2,
+    std::mt19937& rng
+) {
+    if (shape1 <= 0.0 || shape2 <= 0.0) {
+        return missing_real();
+    }
+
+    std::gamma_distribution<double> left(shape1, 1.0);
+    std::gamma_distribution<double> right(shape2, 1.0);
+    const double x = left(rng);
+    const double y = right(rng);
+    if (x + y <= 0.0) {
+        return missing_real();
+    }
+    return x / (x + y);
+}
+
+double sampler_prior_param(
+    const PriorSpec& prior,
+    std::mt19937& rng
+) {
+    switch (prior.type) {
+        case PriorType::NORMAL: {
+            if (prior.param2 <= 0.0) {
+                return missing_real();
+            }
+            std::normal_distribution<double> dist(
+                prior.param1,
+                prior.param2
+            );
+            return dist(rng);
+        }
+        case PriorType::UNIFORM: {
+            if (prior.param2 < prior.param1) {
+                return missing_real();
+            }
+            std::uniform_real_distribution<double> dist(
+                prior.param1,
+                prior.param2
+            );
+            return dist(rng);
+        }
+        case PriorType::LOGNORMAL: {
+            if (prior.param2 <= 0.0) {
+                return missing_real();
+            }
+            std::lognormal_distribution<double> dist(
+                prior.param1,
+                prior.param2
+            );
+            return dist(rng);
+        }
+        case PriorType::CAUCHY: {
+            if (prior.param2 <= 0.0) {
+                return missing_real();
+            }
+            std::cauchy_distribution<double> dist(
+                prior.param1,
+                prior.param2
+            );
+            return dist(rng);
+        }
+        case PriorType::BETA:
+            return sampler_beta_param(prior.param1, prior.param2, rng);
+        case PriorType::EXPONENTIAL: {
+            if (prior.param1 <= 0.0) {
+                return missing_real();
+            }
+            std::exponential_distribution<double> dist(prior.param1);
+            return dist(rng);
+        }
+        case PriorType::NONE:
+            return missing_real();
+    }
+
+    return missing_real();
+}
+
+bool sampler_in_bounds(
+    double value,
+    double lower,
+    double upper
+) {
+    if (!std::isfinite(value)) {
+        return false;
+    }
+    if (std::isfinite(lower) && value < lower) {
+        return false;
+    }
+    if (std::isfinite(upper) && value > upper) {
+        return false;
+    }
+    return true;
+}
+
 std::string sampler_task_subid(const RunTask& task) {
     if (!task.input.idinfo.empty() && !task.input.idinfo[0].empty()) {
         return task.input.idinfo[0][0];
@@ -30,8 +127,18 @@ double sampler_param(
     double initial,
     double lower,
     double upper,
+    const PriorSpec* prior,
     std::mt19937& rng
 ) {
+    if (prior != nullptr && prior->type != PriorType::NONE) {
+        for (int attempt = 0; attempt < 1000; ++attempt) {
+            const double value = sampler_prior_param(*prior, rng);
+            if (sampler_in_bounds(value, lower, upper)) {
+                return value;
+            }
+        }
+    }
+
     if (!std::isfinite(lower) || !std::isfinite(upper)) {
         if (name == "alpha" || name == "lapse" || name == "weight") {
             lower = 0.0;
@@ -81,11 +188,21 @@ RunTask sampled_task(
         const double upper = index < control.upper_bounds.size()
             ? control.upper_bounds[index]
             : std::numeric_limits<double>::infinity();
+
+        const PriorSpec* prior = nullptr;
+        if (out.priors.active) {
+            const auto found = out.priors.specs.find(name);
+            if (found != out.priors.specs.end()) {
+                prior = &found->second;
+            }
+        }
+
         out.params.values[name] = sampler_param(
             name,
             initial,
             lower,
             upper,
+            prior,
             rng
         );
     }

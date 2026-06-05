@@ -376,36 +376,6 @@ stopifnot(
     multiRLcpp.abc$diagnostics$subjects$n_blocks_used[1L]
 )
 
-# %%
-
-multiRLcpp.sampler <- task_sampler(
-  data = binaryRL::Mason_2024_G2,
-  id = 1,
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    object = c("L_choice", "R_choice"),
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  params = list(
-    free = list(alpha = 0.3, beta = 0.5),
-    fixed = list(threshold = 20)
-  ),
-  lower = c(0, 0),
-  upper = c(1, 1),
-  control = list(
-    n_draws = 2L,
-    seed = 1004L,
-    threads = 1L
-  )
-)
-
-print(multiRLcpp.sampler$metadata)
-stopifnot(base::nrow(multiRLcpp.sampler$data) > 0L)
-
 multiRLcpp.rnn <- base::tryCatch(
   estimate_rnn(
     data = binaryRL::Mason_2024_G2,
@@ -521,3 +491,54 @@ stopifnot(
 )
 stopifnot(base::toupper(multiRLcpp.fit.abc$estimator$name) == "ABC")
 stopifnot(multiRLcpp.fit.abc$estimator$shell == "fit_p")
+
+# %%
+
+multiRLcpp.fit.models <- fit_p(
+  data = binaryRL::Mason_2024_G2,
+  estimator = "mle",
+  id = 1,
+  behrule = list(
+    cue = c("A", "B", "C", "D"),
+    rsp = c("A", "B", "C", "D")
+  ),
+  colnames = list(
+    object = c("L_choice", "R_choice"),
+    reward = c("L_reward", "R_reward"),
+    action = "Sub_Choose"
+  ),
+  models = list(TD, Utility),
+  control = list(
+    algorithm = "LN_BOBYQA",
+    local_algorithm = "LN_BOBYQA",
+    maxeval = 10L,
+    seed = 1004L
+  )
+)
+
+stopifnot(base::is.list(multiRLcpp.fit.models))
+stopifnot("model" %in% base::names(multiRLcpp.fit.models$fit))
+stopifnot(base::length(base::unique(multiRLcpp.fit.models$fit$model)) == 2L)
+
+multiRLcpp.rpl <- rpl_e(
+  result = multiRLcpp.fit.models,
+  option = list(plot = FALSE)
+)
+
+stopifnot(base::is.list(multiRLcpp.rpl))
+stopifnot(base::all(c(
+  "input",
+  "replay",
+  "plot_data",
+  "diagnostics"
+) %in% base::names(multiRLcpp.rpl)))
+stopifnot("Human" %in% multiRLcpp.rpl$plot_data$model)
+stopifnot(base::any(multiRLcpp.rpl$plot_data$source == "model"))
+
+if (base::requireNamespace("ggplot2", quietly = TRUE)) {
+  multiRLcpp.rpl.plot <- rpl_e(
+    result = multiRLcpp.fit.models,
+    option = list(plot = TRUE)
+  )
+  stopifnot(!base::is.null(multiRLcpp.rpl.plot$plot))
+}

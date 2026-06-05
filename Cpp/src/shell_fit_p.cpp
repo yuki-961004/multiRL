@@ -61,4 +61,22 @@ ShellFitPResult shell_fit_p(
     );
 }
 
+std::vector<ShellFitPModelResult> shell_fit_p(
+    const std::vector<ShellFitPModel>& models,
+    const ShellFitPControl& control
+) {
+    std::vector<ShellFitPModelResult> out;
+    out.reserve(models.size());
+
+    for (const ShellFitPModel& model : models) {
+        ShellFitPModelResult result;
+        result.model = model.model;
+        result.model_id = model.model_id;
+        result.result = shell_fit_p(model.tasks, control);
+        out.push_back(std::move(result));
+    }
+
+    return out;
+}
+
 }  // namespace multiRL

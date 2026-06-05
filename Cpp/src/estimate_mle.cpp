@@ -5,7 +5,9 @@
 #include <multiRL/modify_control.hpp>
 #include <multiRL/process_model_free.hpp>
 
+#include <cctype>
 #include <stdexcept>
+#include <string>
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -18,6 +20,27 @@
 namespace multiRL {
 
 namespace {
+
+std::string upper_string(const std::string& value) {
+    std::string out = value;
+    for (char& item : out) {
+        item = static_cast<char>(
+            std::toupper(static_cast<unsigned char>(item))
+        );
+    }
+    return out;
+}
+
+bool uses_nlopt_global_rng(const std::string& algorithm) {
+    const std::string normalized = upper_string(
+        normalize_nlopt_algorithm_name(algorithm)
+    );
+
+    return normalized.find("MLSL") != std::string::npos ||
+           normalized.find("CRS") != std::string::npos ||
+           normalized.find("ISRES") != std::string::npos ||
+           normalized.find("ESCH") != std::string::npos;
+}
 
 EstimateMleResult estimate_mle_single(
     const RunTask& task,
@@ -112,6 +135,26 @@ std::vector<EstimateMleResult> estimate_mle(
 
     std::vector<EstimateMleResult> results(tasks.size());
     const int n_tasks = static_cast<int>(tasks.size());
+    const bool use_serial_rng =
+        n_tasks > 1 &&
+        nlopt_control.threads == 1 &&
+        uses_nlopt_global_rng(nlopt_control.algorithm);
+
+    if (use_serial_rng) {
+        for (int index = 0; index < n_tasks; ++index) {
+            const std::size_t row = static_cast<std::size_t>(index);
+            MLEControl local_control = control;
+            if (nlopt_control.seed >= 0) {
+                local_control.nlopt.seed = nlopt_control.seed + index;
+            }
+            results[row] = estimate_mle_single(
+                tasks[row],
+                local_control,
+                true
+            );
+        }
+        return results;
+    }
 
 #ifdef _OPENMP
 #pragma omp parallel for if(n_tasks > 1)

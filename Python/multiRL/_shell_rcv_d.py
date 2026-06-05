@@ -6,6 +6,7 @@ from ._shell_fit_p import fit_p
 from ._shell_fit_p import _modify_fit_p_estimator
 from ._shell_run_m import _modify_request
 import pandas
+import warnings
 
 
 def rcv_d(
@@ -26,9 +27,27 @@ def rcv_d(
     lowers=None,
     uppers=None,
     control=None,
-    fit_control=None,
-    sampler_control=None,
+    **kwargs,
 ):
+    if "fit_control" in kwargs and kwargs["fit_control"] is not None:
+        if control is None:
+            control = {}
+        control = dict(control)
+        control.update(kwargs["fit_control"])
+        warnings.warn(
+            "rcv_d() now uses control for both sampling and fitting settings.",
+            stacklevel=2,
+        )
+    if "sampler_control" in kwargs and kwargs["sampler_control"] is not None:
+        if control is None:
+            control = {}
+        control = dict(control)
+        control.update(kwargs["sampler_control"])
+        warnings.warn(
+            "rcv_d() now uses control for both sampling and fitting settings.",
+            stacklevel=2,
+        )
+
     if lowers is not None:
         lower = lowers
     if uppers is not None:
@@ -37,7 +56,6 @@ def rcv_d(
     estimator = _modify_fit_p_estimator(estimator)
     control = _modify_rcv_d_control(
         control=control,
-        sampler_control=sampler_control,
         estimator=estimator,
     )
 
@@ -100,7 +118,7 @@ def rcv_d(
             local_control = _rcv_d_fit_control(
                 estimator=estimator,
                 scope=control.get("scope"),
-                fit_control=fit_control,
+                control=control,
             )
             candidate_settings = dict(candidate_spec.get("settings") or {})
             candidate_settings["name"] = candidate_name
@@ -152,8 +170,6 @@ def rcv_d(
             "candidates": candidates,
             "estimator": estimator,
             "control": control,
-            "fit_control": fit_control,
-            "sampler_control": sampler_control,
         },
         "simulation": simulation_parts,
         "truth": truth_parts,
@@ -291,20 +307,17 @@ def _rcv_d_value_override(spec, key, fallback):
     return spec.get(key, fallback)
 
 
-def _modify_rcv_d_control(control, sampler_control, estimator):
+def _modify_rcv_d_control(control, estimator):
     if control is None:
         control = {}
-    if sampler_control is None:
-        sampler_control = {}
 
     out = {
-        "n_draws": 10,
+        "n_draws": 30,
         "seed": 123,
         "threads": 0,
         "scope": "shared" if estimator in ["abc", "rnn"] else None,
     }
     out.update(control)
-    out.update(sampler_control)
     out["n_draws"] = int(out["n_draws"])
     out["seed"] = int(out["seed"])
     out["threads"] = int(out["threads"])
@@ -424,12 +437,12 @@ def _rcv_d_colnames():
     }
 
 
-def _rcv_d_fit_control(estimator, scope, fit_control):
-    if fit_control is None:
-        fit_control = {}
-    out = dict(fit_control)
+def _rcv_d_fit_control(estimator, scope, control):
+    out = dict(control)
     if estimator in ["abc", "rnn"] and scope is not None:
         out["scope"] = scope
+    if out.get("scope") is None:
+        out.pop("scope", None)
     return out
 
 

@@ -40,11 +40,9 @@ mle = multiRL.rcv_d(
     lowers=[[0, 0], [0, 0, 0], [0, 0, 0]],
     uppers=[[1, 5], [1, 1, 5], [1, 5, 1]],
     control={
-        "n_draws": 1,
+        "n_draws": 30,
         "seed": 1004,
         "threads": 1,
-    },
-    fit_control={
         "algorithm": "LN_BOBYQA",
         "local_algorithm": "LN_BOBYQA",
         "maxeval": 10,
@@ -58,10 +56,10 @@ print(mle["model_recovery"])
 if len(mle["simulation"]) == 0:
     raise RuntimeError("Python rcv_d MLE returned no simulated rows.")
 
-if len(mle["truth"]) != 3:
+if len(mle["truth"]) != 90:
     raise RuntimeError("Python rcv_d MLE did not simulate three models.")
 
-if len(mle["model_recovery"]) != 9:
+if len(mle["model_recovery"]) != 270:
     raise RuntimeError("Python rcv_d MLE did not fit all model pairs.")
 
 # %%
@@ -103,12 +101,10 @@ abc = multiRL.rcv_d(
     lowers=[[0, 0], [0, 0, 0], [0, 0, 0]],
     uppers=[[1, 5], [1, 1, 5], [1, 5, 1]],
     control={
-        "n_draws": 1,
+        "n_draws": 30,
         "seed": 1004,
         "threads": 1,
         "scope": "shared",
-    },
-    fit_control={
         "samples": 10,
         "tol": 0.5,
         "method": "rejection",
@@ -124,10 +120,10 @@ print(abc["model_recovery"])
 if len(abc["simulation"]) == 0:
     raise RuntimeError("Python rcv_d ABC returned no simulated rows.")
 
-if len(abc["truth"]) != 3:
+if len(abc["truth"]) != 90:
     raise RuntimeError("Python rcv_d ABC did not simulate three models.")
 
-if len(abc["model_recovery"]) != 9:
+if len(abc["model_recovery"]) != 270:
     raise RuntimeError("Python rcv_d ABC did not fit all model pairs.")
 
 if abc["estimator"]["scope"] != "shared":

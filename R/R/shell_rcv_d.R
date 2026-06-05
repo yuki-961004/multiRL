@@ -16,10 +16,34 @@ rcv_d <- function(
     lowers = NULL,
     uppers = NULL,
     control = list(),
-    fit_control = list(),
-    sampler_control = list(),
     ...
 ) {
+  extra <- list(...)
+  if (!base::is.null(extra$fit_control)) {
+    control <- utils::modifyList(
+      x = control,
+      val = extra$fit_control,
+      keep.null = TRUE
+    )
+    extra$fit_control <- NULL
+    base::warning(
+      "rcv_d() now uses control for both sampling and fitting settings.",
+      call. = FALSE
+    )
+  }
+  if (!base::is.null(extra$sampler_control)) {
+    control <- utils::modifyList(
+      x = control,
+      val = extra$sampler_control,
+      keep.null = TRUE
+    )
+    extra$sampler_control <- NULL
+    base::warning(
+      "rcv_d() now uses control for both sampling and fitting settings.",
+      call. = FALSE
+    )
+  }
+
   if (!base::is.null(lowers)) {
     lower <- lowers
   }
@@ -63,7 +87,6 @@ rcv_d <- function(
 
   control <- .modify_rcv_d_control(
     control = control,
-    sampler_control = sampler_control,
     estimator = estimator
   )
 
@@ -97,7 +120,7 @@ rcv_d <- function(
       local_control <- .rcv_d_fit_control(
         estimator = estimator,
         scope = control$scope,
-        fit_control = fit_control
+        control = control
       )
 
       fit_result <- fit_p(
@@ -148,9 +171,7 @@ rcv_d <- function(
       candidates = candidates,
       estimator = estimator,
       control = control,
-      fit_control = fit_control,
-      sampler_control = sampler_control,
-      extra = list(...)
+      extra = extra
     ),
     simulation = simulation,
     truth = truth,
@@ -299,11 +320,11 @@ rcv_d <- function(
   paste0(prefix, "_", index)
 }
 
-.modify_rcv_d_control <- function(control, sampler_control, estimator) {
+.modify_rcv_d_control <- function(control, estimator) {
   default_scope <- if (estimator %in% c("abc", "rnn")) "shared" else NULL
   out <- utils::modifyList(
     x = list(
-      n_draws = 10L,
+      n_draws = 30L,
       seed = 123L,
       threads = 0L,
       scope = default_scope
@@ -311,7 +332,6 @@ rcv_d <- function(
     val = control,
     keep.null = TRUE
   )
-  out <- utils::modifyList(out, sampler_control, keep.null = TRUE)
   out$n_draws <- base::as.integer(out$n_draws[[1L]])
   out$seed <- base::as.integer(out$seed[[1L]])
   out$threads <- base::as.integer(out$threads[[1L]])
@@ -321,13 +341,13 @@ rcv_d <- function(
   out
 }
 
-.rcv_d_fit_control <- function(estimator, scope, fit_control) {
+.rcv_d_fit_control <- function(estimator, scope, control) {
   if (!estimator %in% c("abc", "rnn")) {
-    return(fit_control)
+    return(control)
   }
   utils::modifyList(
     x = list(scope = scope),
-    val = fit_control,
+    val = control,
     keep.null = TRUE
   )
 }

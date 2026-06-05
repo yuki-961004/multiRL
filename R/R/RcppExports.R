@@ -25,6 +25,10 @@
     .Call(`_multiRLcpp_r_shell_rcv_d`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, generating_model, n_draws, seed, threads, lower_bounds, upper_bounds)
 }
 
+.shell_rpl_e <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, fit, parameter_names) {
+    .Call(`_multiRLcpp_r_shell_rpl_e`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, fit, parameter_names)
+}
+
 .shell_run_m <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate) {
     .Call(`_multiRLcpp_r_shell_run_m`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimate)
 }

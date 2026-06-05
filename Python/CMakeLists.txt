@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.27)
+﻿cmake_minimum_required(VERSION 3.15...3.27)
 
 project(multiRL_Python_Wrapper VERSION 0.5.0 LANGUAGES CXX)
 
@@ -93,6 +93,11 @@ if(MULTIRL_ENABLE_MCMC AND MULTIRL_STAN_MATH_TAG STREQUAL "latest")
     )
 
     message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
+endif()
+# -- Validate Stan tag (shells may truncate v5.3.0 to v5)
+string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MATH_TAG}")
+if(NOT _stan_tag_ok AND NOT MULTIRL_STAN_MATH_TAG STREQUAL "latest")
+    message(WARNING "Stan Math tag '${MULTIRL_STAN_MATH_TAG}' may have been truncated by the shell. Use quotes: -DMULTIRL_STAN_MATH_TAG=\"v5.3.0\"")
 endif()
 
 if(MULTIRL_ENABLE_NLOPT)
