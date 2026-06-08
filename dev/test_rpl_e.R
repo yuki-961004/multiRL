@@ -61,9 +61,9 @@ models <- list(
 )
 
 settings <- list(
-  list(name = "TD"),
-  list(name = "RSTD"),
-  list(name = "Utility")
+  list(name = "TD", policy = "off"),
+  list(name = "RSTD", policy = "off"),
+  list(name = "Utility", policy = "off")
 )
 
 result.rcv <- multiRLcpp::rcv_d(
@@ -84,11 +84,11 @@ result.rcv <- multiRLcpp::rcv_d(
   lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
   uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
   control = list(
-    n_draws = 100L,
+    n_draws = 10L,
     threads = 32L,
     algorithm = "GN_MLSL",
     local_algorithm = "LN_BOBYQA",
-    maxeval = 100L,
+    maxeval = 10L,
     seed = 1004L
   )
 )

@@ -5,7 +5,6 @@
 #include <multiRL/modify_control.hpp>
 #include <multiRL/process_model_free.hpp>
 
-#include <cctype>
 #include <stdexcept>
 #include <string>
 
@@ -21,31 +20,18 @@ namespace multiRL {
 
 namespace {
 
-std::string upper_string(const std::string& value) {
-    std::string out = value;
-    for (char& item : out) {
-        item = static_cast<char>(
-            std::toupper(static_cast<unsigned char>(item))
-        );
-    }
-    return out;
-}
-
-bool uses_nlopt_global_rng(const std::string& algorithm) {
-    const std::string normalized = upper_string(
-        normalize_nlopt_algorithm_name(algorithm)
-    );
-
-    return normalized.find("MLSL") != std::string::npos ||
-           normalized.find("CRS") != std::string::npos ||
-           normalized.find("ISRES") != std::string::npos ||
-           normalized.find("ESCH") != std::string::npos;
-}
+/* ========================================================================== *
+ * Single-subject MLE evaluation                                              *
+ * ========================================================================== *
+ *                                                                             *
+ * When seed >= 0, delegates to Nlopt::deterministic_mle() for thread-safe     *
+ * reproducible optimization with random global algorithms.                     *
+ * When seed < 0, uses NLopt directly without setting any seed.                *
+ * ========================================================================== */
 
 EstimateMleResult estimate_mle_single(
     const RunTask& task,
-    const MLEControl& control,
-    const bool seed_nlopt
+    const MLEControl& control
 ) {
     const NLoptControl& nlopt_control = control.nlopt;
 
@@ -63,9 +49,20 @@ EstimateMleResult estimate_mle_single(
     }
 
 #ifdef MULTIRL_HAS_NLOPT
-    if (seed_nlopt && nlopt_control.seed >= 0) {
-        nlopt::srand(static_cast<unsigned long>(nlopt_control.seed));
+    /* ------------------------------------------------------------------ *
+     * seed >= 0: use Nlopt::deterministic_mle() for reproducibility.      *
+     * The deterministic path replaces random global algorithms (MLSL,     *
+     * CRS, ISRES, ESCH) with a deterministic multi-start approach.        *
+     * ------------------------------------------------------------------ */
+
+    if (nlopt_control.seed >= 0) {
+        return Nlopt::deterministic_mle(task, nlopt_control);
     }
+
+    /* ------------------------------------------------------------------ *
+     * seed < 0: directly call NLopt without setting a random seed.        *
+     * Results will not be reproducible between runs.                      *
+     * ------------------------------------------------------------------ */
 
     nlopt::opt opt = Nlopt::build(nlopt_control, x0.size());
     opt.set_min_objective(Nlopt::objective, const_cast<RunTask*>(&task));
@@ -79,7 +76,7 @@ EstimateMleResult estimate_mle_single(
         FreeValues::assign(result.params, x0);
         result.metric = Nlopt::evaluate(task, x0);
         result.status = static_cast<int>(status);
-        result.n_evals = opt.get_numevals();
+        result.n_evals = static_cast<int>(opt.get_numevals());
         result.result_message = error.what();
         result.stop_reason = "exception";
         result.optimum_value = minf;
@@ -89,7 +86,7 @@ EstimateMleResult estimate_mle_single(
     FreeValues::assign(result.params, x0);
     result.metric = Nlopt::evaluate(task, x0);
     result.status = static_cast<int>(status);
-    result.n_evals = opt.get_numevals();
+    result.n_evals = static_cast<int>(opt.get_numevals());
     result.optimum_value = minf;
     result.result_message = NloptInfo::message(status);
     result.stop_reason = NloptInfo::stop_reason(status);
@@ -106,13 +103,27 @@ EstimateMleResult estimate_mle_single(
 
 }  // namespace
 
+/* ========================================================================== *
+ * Public API: single-task MLE                                                *
+ * ========================================================================== */
+
 EstimateMleResult estimate_mle(
     const RunTask& task,
     const MLEControl& raw_control
 ) {
     const MLEControl control = modify_control(raw_control, "mle");
-    return estimate_mle_single(task, control, true);
+    return estimate_mle_single(task, control);
 }
+
+/* ========================================================================== *
+ * Public API: multi-subject parallel MLE                                     *
+ * ========================================================================== *
+ *                                                                             *
+ * Each subject gets its own control copy with seed offset by subject index.   *
+ * The deterministic path in Nlopt::deterministic_mle() uses std::mt19937      *
+ * seeded per-task, not NLopt global RNG, so 32-thread OpenMP is fully         *
+ * reproducible.                                                               *
+ * ========================================================================== */
 
 std::vector<EstimateMleResult> estimate_mle(
     const std::vector<RunTask>& tasks,
@@ -127,45 +138,37 @@ std::vector<EstimateMleResult> estimate_mle(
     }
 #endif
 
-#ifdef MULTIRL_HAS_NLOPT
-    if (nlopt_control.seed >= 0) {
-        nlopt::srand(static_cast<unsigned long>(nlopt_control.seed));
-    }
-#endif
-
     std::vector<EstimateMleResult> results(tasks.size());
     const int n_tasks = static_cast<int>(tasks.size());
-    const bool use_serial_rng =
-        n_tasks > 1 &&
-        nlopt_control.threads == 1 &&
-        uses_nlopt_global_rng(nlopt_control.algorithm);
-
-    if (use_serial_rng) {
-        for (int index = 0; index < n_tasks; ++index) {
-            const std::size_t row = static_cast<std::size_t>(index);
-            MLEControl local_control = control;
-            if (nlopt_control.seed >= 0) {
-                local_control.nlopt.seed = nlopt_control.seed + index;
-            }
-            results[row] = estimate_mle_single(
-                tasks[row],
-                local_control,
-                true
-            );
-        }
-        return results;
-    }
 
 #ifdef _OPENMP
 #pragma omp parallel for if(n_tasks > 1)
 #endif
     for (int index = 0; index < n_tasks; ++index) {
         const std::size_t row = static_cast<std::size_t>(index);
-        results[row] = estimate_mle_single(tasks[row], control, false);
+
+        /* -------------------------------------------------------------- *
+         * Each task uses its own control copy with seed + index to avoid  *
+         * competing for the same NLopt global RNG across threads.         *
+         * -------------------------------------------------------------- */
+
+        MLEControl local_control = control;
+        if (nlopt_control.seed >= 0) {
+            local_control.nlopt.seed = nlopt_control.seed + index;
+        }
+
+        results[row] = estimate_mle_single(
+            tasks[row],
+            local_control
+        );
     }
 
     return results;
 }
+
+/* ========================================================================== *
+ * Convenience overload: NLoptControl -> MLEControl                           *
+ * ========================================================================== */
 
 EstimateMleResult estimate_mle(
     const RunTask& task,

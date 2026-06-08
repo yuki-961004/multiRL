@@ -314,7 +314,32 @@ def _rpl_e_plot_recovery(result):
         beta,
         "plot_recovered",
     ].map(math.log)
-    recovery["panel"] = _rpl_e_parameter_panel(result, recovery)
+    ###########################
+    # Preserve input model order
+    ###########################
+    # Extract model names from generating specs while preserving input order
+    model_order = [
+        spec.get("settings", {}).get("name", spec.get("model", ""))
+        for spec in result.get("input", {}).get("generating", [])
+    ]
+    # Convert model columns to categorical with input order
+    model_recovery["generating_model"] = pandas.Categorical(
+        model_recovery["generating_model"],
+        categories=model_order,
+        ordered=True
+    )
+    model_recovery["candidate_model"] = pandas.Categorical(
+        model_recovery["candidate_model"],
+        categories=model_order,
+        ordered=True
+    )
+    recovery["generating_model"] = pandas.Categorical(
+        recovery["generating_model"],
+        categories=model_order,
+        ordered=True
+    )
+
+  recovery["panel"] = _rpl_e_parameter_panel(result, recovery)
     limits = _rpl_e_parameter_limits(result, recovery)
     priors = _rpl_e_parameter_prior_labels(result, recovery, limits)
     plots = {}

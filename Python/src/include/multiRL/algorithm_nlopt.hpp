@@ -41,6 +41,23 @@ namespace Nlopt {
         const NLoptControl& control,
         const std::size_t n_params
     );
+
+    /* ================================================================== *
+     * ?????? MLE                                                      *
+     * ================================================================== *
+     *                                                                       *
+     * GN_MLSL / GN_CRS2_LM / GN_ISRES / GN_ESCH ????????? NLopt    *
+     * ??? RNG. ??????????????????, ????????.      *
+     *                                                                       *
+     * ???? std::mt19937(seed) ??????????,                        *
+     * ??????????? (LN_BOBYQA ??????), ???.                 *
+     * ??? MLSL ???????, ?????????????.                   *
+     * ================================================================== */
+
+    EstimateMleResult deterministic_mle(
+        const RunTask& task,
+        const NLoptControl& control
+    );
 #endif
 }
 

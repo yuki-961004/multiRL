@@ -242,6 +242,31 @@ rpl_e <- function(
     )
   }
 
+  ###########################
+  # Preserve input model order
+  ###########################
+  # Extract model names from generating specs while preserving input order
+  model_order <- base::vapply(result$input$generating, function(spec) {
+    name <- spec$settings$name
+    if (base::is.null(name)) {
+      name <- spec$model
+    }
+    base::as.character(name[[1L]])
+  }, FUN.VALUE = character(1L))
+  # Convert model columns to factor with input order as levels
+  result$model_recovery$generating_model <- base::factor(
+    result$model_recovery$generating_model,
+    levels = model_order
+  )
+  result$model_recovery$candidate_model <- base::factor(
+    result$model_recovery$candidate_model,
+    levels = model_order
+  )
+  result$recovery$generating_model <- base::factor(
+    result$recovery$generating_model,
+    levels = model_order
+  )
+
   list(
     parameter = .rpl_e_plot_parameter_recovery(result),
     confusion = .rpl_e_plot_model_matrix(result$model_recovery, "confusion"),
