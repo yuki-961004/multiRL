@@ -252,7 +252,7 @@ RNNControl modify_control(
     RNNControl out = input;
 
     /* ---------------------------------------------------------------------- *
-     * RNN training control for keras and keras3 wrappers                      *
+     * RNN training control for the optional LibTorch backend                  *
      * ---------------------------------------------------------------------- */
 
     if (out.seed < 0) {
@@ -272,24 +272,58 @@ RNNControl modify_control(
     if (out.epoch <= 0) {
         out.epoch = 100;
     }
+    if (out.epochs <= 0) {
+        out.epochs = out.epoch;
+    }
+    if (out.epoch <= 0) {
+        out.epoch = out.epochs;
+    }
     if (out.batch_size <= 0) {
         out.batch_size = 32;
     }
     if (out.sample <= 0) {
         out.sample = 100;
     }
+    if (out.n_draws <= 0) {
+        out.n_draws = out.sample;
+    }
+    if (out.sample <= 0) {
+        out.sample = out.n_draws;
+    }
+    if (out.threads < 0) {
+        out.threads = 0;
+    }
+    if (out.units <= 0) {
+        out.units = 32;
+    }
+    if (out.layers <= 0) {
+        out.layers = 1;
+    }
+    if (out.learning_rate <= 0.0) {
+        out.learning_rate = 0.001;
+    }
+    if (out.dropout < 0.0 || out.dropout >= 1.0) {
+        out.dropout = 0.0;
+    }
     if (out.validation_split < 0.0 || out.validation_split >= 1.0) {
         out.validation_split = 0.0;
     }
     if (out.backend.empty()) {
-        out.backend = "keras3";
+        out.backend = "torch";
     }
+    out.backend = to_lower(out.backend);
     if (out.optimizer.empty()) {
         out.optimizer = "adam";
     }
+    out.optimizer = to_lower(out.optimizer);
     if (out.loss.empty()) {
-        out.loss = "categorical_crossentropy";
+        out.loss = "mse";
     }
+    out.loss = to_lower(out.loss);
+    if (out.model_type.empty()) {
+        out.model_type = "gru";
+    }
+    out.model_type = to_lower(out.model_type);
 
     return out;
 }

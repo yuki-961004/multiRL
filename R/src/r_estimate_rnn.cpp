@@ -6,98 +6,105 @@
 
 namespace {
 
-Rcpp::DataFrame wrap_sampler_data(
-    const std::vector<multiRL::TaskSamplerResult>& results
+Rcpp::DataFrame wrap_rnn_fit(
+    const std::vector<multiRL::EstimateRnnSubjectResult>& results
 ) {
-    std::size_t n_rows = 0;
-    std::size_t n_prob = 0;
-    std::size_t n_params = 0;
-    std::vector<std::string> cue_names;
+    std::size_t n_rows = results.size();
     std::vector<std::string> param_names;
-
     for (const auto& result : results) {
-        n_rows += result.rows.size();
-        if (!result.cue_names.empty()) {
-            cue_names = result.cue_names;
-            n_prob = cue_names.size();
-        }
         if (!result.parameter_names.empty()) {
             param_names = result.parameter_names;
-            n_params = param_names.size();
+            break;
         }
     }
 
-    Rcpp::IntegerVector draw(n_rows);
     Rcpp::CharacterVector subid(n_rows);
-    Rcpp::IntegerVector block(n_rows);
-    Rcpp::IntegerVector trial(n_rows);
-    Rcpp::CharacterVector action(n_rows);
-    Rcpp::CharacterVector latent(n_rows);
-    Rcpp::CharacterVector simulation(n_rows);
-    Rcpp::CharacterVector position(n_rows);
-    Rcpp::NumericVector reward(n_rows);
-    Rcpp::List prob_columns(n_prob);
-    Rcpp::List param_columns(n_params);
+    Rcpp::IntegerVector status(n_rows);
+    Rcpp::IntegerVector n_draws(n_rows);
+    Rcpp::IntegerVector n_trials(n_rows);
+    Rcpp::IntegerVector n_features(n_rows);
+    Rcpp::NumericVector loss(n_rows);
+    Rcpp::CharacterVector message(n_rows);
+    Rcpp::List param_columns(param_names.size());
 
-    for (std::size_t index = 0; index < n_prob; ++index) {
-        prob_columns[index] = Rcpp::NumericVector(n_rows, NA_REAL);
-    }
-    for (std::size_t index = 0; index < n_params; ++index) {
+    for (std::size_t index = 0; index < param_names.size(); ++index) {
         param_columns[index] = Rcpp::NumericVector(n_rows, NA_REAL);
     }
 
-    std::size_t out_row = 0;
-    for (const auto& result : results) {
-        for (const auto& row : result.rows) {
-            draw[static_cast<R_xlen_t>(out_row)] = row.draw;
-            subid[static_cast<R_xlen_t>(out_row)] = row.subid;
-            block[static_cast<R_xlen_t>(out_row)] = row.block;
-            trial[static_cast<R_xlen_t>(out_row)] = row.trial;
-            action[static_cast<R_xlen_t>(out_row)] = row.action;
-            latent[static_cast<R_xlen_t>(out_row)] = row.latent;
-            simulation[static_cast<R_xlen_t>(out_row)] = row.simulation;
-            position[static_cast<R_xlen_t>(out_row)] = row.position;
-            reward[static_cast<R_xlen_t>(out_row)] = row.reward;
+    for (std::size_t row = 0; row < n_rows; ++row) {
+        const auto& result = results[row];
+        subid[static_cast<R_xlen_t>(row)] = result.subid;
+        status[static_cast<R_xlen_t>(row)] = result.status;
+        n_draws[static_cast<R_xlen_t>(row)] = result.n_draws;
+        n_trials[static_cast<R_xlen_t>(row)] = result.n_trials;
+        n_features[static_cast<R_xlen_t>(row)] = result.n_features;
+        loss[static_cast<R_xlen_t>(row)] = result.loss;
+        message[static_cast<R_xlen_t>(row)] = result.message;
 
-            for (std::size_t index = 0; index < n_prob; ++index) {
-                Rcpp::NumericVector col = prob_columns[index];
-                if (index < row.probability.size()) {
-                    col[static_cast<R_xlen_t>(out_row)] =
-                        row.probability[index];
-                }
+        for (std::size_t index = 0; index < param_names.size(); ++index) {
+            Rcpp::NumericVector col = param_columns[index];
+            if (index < result.estimates.size()) {
+                col[static_cast<R_xlen_t>(row)] = result.estimates[index];
             }
-            for (std::size_t index = 0; index < n_params; ++index) {
-                Rcpp::NumericVector col = param_columns[index];
-                if (index < row.params.size()) {
-                    col[static_cast<R_xlen_t>(out_row)] = row.params[index];
-                }
-            }
-
-            ++out_row;
         }
     }
 
     Rcpp::List columns = Rcpp::List::create(
-        Rcpp::_["draw"] = draw,
-        Rcpp::_["subid"] = subid,
-        Rcpp::_["block"] = block,
-        Rcpp::_["trial"] = trial,
-        Rcpp::_["action"] = action,
-        Rcpp::_["latent"] = latent,
-        Rcpp::_["simulation"] = simulation,
-        Rcpp::_["position"] = position,
-        Rcpp::_["reward"] = reward
+        Rcpp::_["subid"] = subid
     );
 
-    for (std::size_t index = 0; index < n_prob; ++index) {
-        const std::string name = "prob_" + cue_names[index];
-        columns.push_back(prob_columns[index], name);
-    }
-    for (std::size_t index = 0; index < n_params; ++index) {
+    for (std::size_t index = 0; index < param_names.size(); ++index) {
         columns.push_back(param_columns[index], param_names[index]);
     }
 
+    columns.push_back(status, "status");
+    columns.push_back(n_draws, "n_draws");
+    columns.push_back(n_trials, "n_trials");
+    columns.push_back(n_features, "n_features");
+    columns.push_back(loss, "loss");
+    columns.push_back(message, "message");
+
     return Rcpp::DataFrame(columns);
+}
+
+Rcpp::DataFrame wrap_rnn_diagnostics(
+    const std::vector<multiRL::EstimateRnnSubjectResult>& results
+) {
+    std::size_t n_rows = results.size();
+    Rcpp::CharacterVector subid(n_rows);
+    Rcpp::IntegerVector status(n_rows);
+    Rcpp::IntegerVector n_draws(n_rows);
+    Rcpp::IntegerVector n_trials(n_rows);
+    Rcpp::IntegerVector n_features(n_rows);
+    Rcpp::IntegerVector epochs(n_rows);
+    Rcpp::NumericVector loss(n_rows);
+    Rcpp::CharacterVector architecture(n_rows);
+    Rcpp::CharacterVector message(n_rows);
+
+    for (std::size_t row = 0; row < n_rows; ++row) {
+        const auto& result = results[row];
+        subid[static_cast<R_xlen_t>(row)] = result.subid;
+        status[static_cast<R_xlen_t>(row)] = result.status;
+        n_draws[static_cast<R_xlen_t>(row)] = result.n_draws;
+        n_trials[static_cast<R_xlen_t>(row)] = result.n_trials;
+        n_features[static_cast<R_xlen_t>(row)] = result.n_features;
+        epochs[static_cast<R_xlen_t>(row)] = result.epochs;
+        loss[static_cast<R_xlen_t>(row)] = result.loss;
+        architecture[static_cast<R_xlen_t>(row)] = result.architecture;
+        message[static_cast<R_xlen_t>(row)] = result.message;
+    }
+
+    return Rcpp::DataFrame::create(
+        Rcpp::_["subid"] = subid,
+        Rcpp::_["status"] = status,
+        Rcpp::_["n_draws"] = n_draws,
+        Rcpp::_["n_trials"] = n_trials,
+        Rcpp::_["n_features"] = n_features,
+        Rcpp::_["epochs"] = epochs,
+        Rcpp::_["loss"] = loss,
+        Rcpp::_["architecture"] = architecture,
+        Rcpp::_["message"] = message
+    );
 }
 
 }  // namespace
@@ -127,6 +134,14 @@ Rcpp::List r_estimate_rnn_data(
     int n_draws,
     int seed,
     int threads,
+    int epochs,
+    int batch_size,
+    int units,
+    int layers,
+    double dropout,
+    double learning_rate,
+    std::string model_type,
+    int verbose,
     Rcpp::NumericVector lower_bounds,
     Rcpp::NumericVector upper_bounds
 ) {
@@ -154,23 +169,41 @@ Rcpp::List r_estimate_rnn_data(
         "RNN"
     );
 
-    multiRL::TaskSamplerControl control;
+    multiRL::RNNControl control;
     control.n_draws = n_draws;
-    control.seed = static_cast<unsigned int>(seed);
+    control.sample = n_draws;
+    control.seed = seed;
     control.threads = threads;
+    control.epoch = epochs;
+    control.epochs = epochs;
+    control.batch_size = batch_size;
+    control.units = units;
+    control.layers = layers;
+    control.dropout = dropout;
+    control.learning_rate = learning_rate;
+    control.model_type = model_type;
+    control.verbose = verbose;
     control.lower_bounds = multiRL_r::as_double_vector(lower_bounds);
     control.upper_bounds = multiRL_r::as_double_vector(upper_bounds);
 
-    const std::vector<multiRL::TaskSamplerResult> results =
+    const std::vector<multiRL::EstimateRnnSubjectResult> results =
         multiRL::estimate_rnn(tasks, control);
 
     Rcpp::List out = Rcpp::List::create(
-        Rcpp::_["data"] = wrap_sampler_data(results),
+        Rcpp::_["fit"] = wrap_rnn_fit(results),
+        Rcpp::_["estimator"] = Rcpp::List::create(
+            Rcpp::_["name"] = "RNN",
+            Rcpp::_["backend"] = "torch",
+            Rcpp::_["architecture"] = model_type
+        ),
+        Rcpp::_["diagnostics"] = Rcpp::List::create(
+            Rcpp::_["subjects"] = wrap_rnn_diagnostics(results)
+        ),
         Rcpp::_["metadata"] = Rcpp::List::create(
             Rcpp::_["n_draws"] = control.n_draws,
             Rcpp::_["seed"] = control.seed,
             Rcpp::_["threads"] = control.threads,
-            Rcpp::_["policy"] = "on",
+            Rcpp::_["backend"] = "torch",
             Rcpp::_["parameter_names"] = free_names
         )
     );

@@ -1,8 +1,11 @@
 #pragma once
 
-#include <multiRL/algorithm_stan.hpp>
 #include <multiRL/modify_control.hpp>
 #include <multiRL/task_builder.hpp>
+
+#ifdef MULTIRL_HAS_STAN
+#include <multiRL/algorithm_stan.hpp>
+#endif
 
 #include <string>
 #include <vector>

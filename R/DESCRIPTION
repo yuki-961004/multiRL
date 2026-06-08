@@ -21,18 +21,13 @@ Imports:
     stats,
     utils,
     nloptr,
-    RcppEigen,
-    StanHeaders,
-    RcppParallel,
     abcpp
 Suggests:
-    reticulate
+    StanHeaders,
+    RcppEigen,
+    RcppParallel
 LinkingTo:
     Rcpp,
     nloptr,
-    RcppEigen,
-    StanHeaders,
-    BH,
-    RcppParallel,
     abcpp
-SystemRequirements: C++17
+SystemRequirements: C++17, NLopt, abcpp; Stan Math and LibTorch optional

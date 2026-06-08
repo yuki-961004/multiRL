@@ -12,13 +12,6 @@ estimate_rnn <- function(
     control = list(),
     ...
 ) {
-  if (!base::requireNamespace("reticulate", quietly = TRUE)) {
-    base::stop(
-      "estimate_rnn requires the R package reticulate and Python Keras.",
-      call. = FALSE
-    )
-  }
-
   colnames <- .modify_colnames(data = data, colnames = colnames)
   data <- .modify_data_id(
     data = data,
@@ -36,49 +29,42 @@ estimate_rnn <- function(
   features <- .modify_features(data = data, colnames = colnames)
   control <- .modify_estimate_rnn_control(control = control)
 
-  if (!base::is.null(control$python)) {
-    reticulate::use_python(control$python, required = TRUE)
-  }
-  if (!base::is.null(control$condaenv)) {
-    reticulate::use_condaenv(control$condaenv, required = TRUE)
-  }
-
-  py_result <- base::tryCatch(
-    {
-      py <- reticulate::import("multiRL", convert = TRUE)
-      py$estimate_rnn(
-        object = .matrix_to_row_list(features$object),
-        reward = .numeric_matrix_to_row_list(features$reward),
-        action = base::as.list(features$action),
-        block = base::as.list(features$block),
-        trial = base::as.list(features$trial),
-        cue = base::as.list(behrule$cue),
-        rsp = base::as.list(behrule$rsp),
-        params = base::as.list(params$flat),
-        free_names = base::as.list(base::names(params$free)),
-        system = base::as.list(settings$system),
-        policy = settings$policy,
-        name = settings$name,
-        mode = settings$mode,
-        lower = base::as.list(lower),
-        upper = base::as.list(upper),
-        control = control
-      )
-    },
-    error = function(error) {
-      base::stop(
-        paste0(
-          "estimate_rnn requires a Python environment with multiRL, ",
-          "numpy, and Keras/keras3. Use control$python or ",
-          "control$condaenv to select that environment. Original error: ",
-          base::conditionMessage(error)
-        ),
-        call. = FALSE
-      )
-    }
+  cpp_result <- .estimate_rnn_data(
+    object = features$object,
+    reward = features$reward,
+    action = features$action,
+    block = features$block,
+    trial = features$trial,
+    idinfo = features$idinfo,
+    exinfo = features$exinfo,
+    cue = behrule$cue,
+    rsp = behrule$rsp,
+    params = params$flat,
+    free_names = base::names(params$free),
+    system = settings$system,
+    prior_names = priors$name,
+    prior_types = priors$type,
+    prior_param1 = priors$param1,
+    prior_param2 = priors$param2,
+    prior_active = priors$active,
+    policy = settings$policy,
+    name = settings$name,
+    mode = settings$mode,
+    n_draws = control$n_draws,
+    seed = control$seed,
+    threads = control$threads,
+    epochs = control$epochs,
+    batch_size = control$batch_size,
+    units = control$units,
+    layers = control$layers,
+    dropout = control$dropout,
+    learning_rate = control$learning_rate,
+    model_type = control$model_type,
+    verbose = control$verbose,
+    lower_bounds = .modify_bound_vector(lower, base::names(params$free)),
+    upper_bounds = .modify_bound_vector(upper, base::names(params$free))
   )
 
-  fit <- base::as.data.frame(py_result$fit, stringsAsFactors = FALSE)
   out <- list(
     input = list(
       data = data,
@@ -94,9 +80,9 @@ estimate_rnn <- function(
       features = features,
       extra = list(...)
     ),
-    fit = fit,
-    estimator = py_result$estimator,
-    diagnostics = py_result$diagnostics
+    fit = cpp_result$fit,
+    estimator = cpp_result$estimator,
+    diagnostics = cpp_result$diagnostics
   )
   base::class(out) <- c("multiRLcpp_estimate_rnn", "multiRLcpp_run", "list")
   out
@@ -107,17 +93,16 @@ estimate_rnn <- function(
     n_draws = 1000L,
     epochs = 20L,
     batch_size = 32L,
-    validation_split = 0.2,
+    validation_split = 0,
     units = 32L,
     layers = 1L,
     dropout = 0,
     learning_rate = 0.001,
     seed = 123L,
     threads = 0L,
+    backend = "torch",
     model_type = "gru",
-    verbose = 0L,
-    python = NULL,
-    condaenv = NULL
+    verbose = 0L
   )
   out <- utils::modifyList(default_control, control)
   out$n_draws <- base::as.integer(out$n_draws[[1L]])
@@ -130,21 +115,27 @@ estimate_rnn <- function(
   out$learning_rate <- base::as.numeric(out$learning_rate[[1L]])
   out$seed <- base::as.integer(out$seed[[1L]])
   out$threads <- base::as.integer(out$threads[[1L]])
-  out$model_type <- base::as.character(out$model_type[[1L]])
+  out$backend <- base::tolower(base::as.character(out$backend[[1L]]))
+  out$model_type <- base::tolower(base::as.character(out$model_type[[1L]]))
   out$verbose <- base::as.integer(out$verbose[[1L]])
   out
 }
 
-.matrix_to_row_list <- function(x) {
-  base::lapply(
-    seq_len(base::nrow(x)),
-    function(row) base::as.list(base::as.character(x[row, ]))
-  )
-}
-
-.numeric_matrix_to_row_list <- function(x) {
-  base::lapply(
-    seq_len(base::nrow(x)),
-    function(row) base::as.list(base::as.numeric(x[row, ]))
+.modify_bound_vector <- function(bound, free_names) {
+  if (base::is.null(bound)) {
+    return(base::rep(NA_real_, base::length(free_names)))
+  }
+  if (base::is.null(base::names(bound))) {
+    return(base::as.numeric(bound))
+  }
+  base::vapply(
+    free_names,
+    function(name) {
+      if (name %in% base::names(bound)) {
+        return(base::as.numeric(bound[[name]][[1L]]))
+      }
+      NA_real_
+    },
+    FUN.VALUE = numeric(1L)
   )
 }

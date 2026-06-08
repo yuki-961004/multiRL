@@ -1,16 +1,37 @@
 CXX_STD = CXX17
 
 R_SCRIPT = "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript"
+
+MULTIRL_USE_STAN = $(shell $(R_SCRIPT) -e \
+	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_MCMC', 'FALSE')))")
+MULTIRL_TORCH_DIR = $(shell $(R_SCRIPT) -e \
+	"cat(Sys.getenv('TORCH_DIR', Sys.getenv('LIBTORCH_DIR', '')))")
+
+PKG_CPPFLAGS = -I../inst/include -DMULTIRL_HAS_NLOPT \
+	$(SHLIB_OPENMP_CXXFLAGS)
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) \
+	-Wno-ignored-attributes \
+	-Wno-deprecated-declarations
+PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) \
+	-lnlopt
+
+ifeq ($(MULTIRL_USE_STAN),TRUE)
 STAN_CXXFLAGS = $(shell $(R_SCRIPT) -e "StanHeaders:::CxxFlags()")
 STAN_LIBS = $(shell $(R_SCRIPT) -e "StanHeaders:::LdFlags()")
 STANHEADERS_SRC = $(shell $(R_SCRIPT) \
 	-e "cat(system.file('include','src',package='StanHeaders',mustWork=TRUE))")
 
-PKG_CPPFLAGS = -I../inst/include -I"$(STANHEADERS_SRC)" -DMULTIRL_HAS_NLOPT -DMULTIRL_HAS_STAN $(SHLIB_OPENMP_CXXFLAGS)
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) \
-	$(STAN_CXXFLAGS) \
-	-Wno-ignored-attributes \
-	-Wno-deprecated-declarations
-PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) \
-	$(STAN_LIBS) \
-	-lnlopt
+PKG_CPPFLAGS += -I"$(STANHEADERS_SRC)" -DMULTIRL_HAS_STAN
+PKG_CXXFLAGS += $(STAN_CXXFLAGS)
+PKG_LIBS += $(STAN_LIBS)
+endif
+
+ifneq ($(MULTIRL_TORCH_DIR),)
+PKG_CPPFLAGS += -DMULTIRL_HAS_TORCH \
+	-I"$(MULTIRL_TORCH_DIR)/include" \
+	-I"$(MULTIRL_TORCH_DIR)/include/torch/csrc/api/include"
+PKG_LIBS += -L"$(MULTIRL_TORCH_DIR)/lib" \
+	-ltorch \
+	-ltorch_cpu \
+	-lc10
+endif

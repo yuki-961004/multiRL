@@ -11,7 +11,11 @@
 
 namespace multiRL {
 
+namespace {
 
+std::vector<std::string> split_object(const std::string& object);
+
+}  // namespace
 
 /* ========================================================================== *
  *                               Input Builder                                *

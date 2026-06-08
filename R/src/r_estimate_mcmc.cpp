@@ -9,6 +9,8 @@
 
 namespace {
 
+#ifdef MULTIRL_HAS_STAN
+
 Rcpp::List wrap_estimator(const multiRL::modify_outputs::OutputEstimator& est) {
     Rcpp::List out = Rcpp::List::create(
         Rcpp::_["name"] = est.name,
@@ -19,8 +21,6 @@ Rcpp::List wrap_estimator(const multiRL::modify_outputs::OutputEstimator& est) {
     );
     return out;
 }
-
-#ifdef MULTIRL_HAS_STAN
 
 Rcpp::List wrap_estimate_mcmc_result(
     const std::vector<multiRL::RunTask>& tasks,

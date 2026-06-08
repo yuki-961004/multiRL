@@ -9,6 +9,114 @@ endif()
 include(GNUInstallDirs)
 include(FetchContent)
 
+function(multirl_read_define out_var file_path define_name)
+    set(version_value "unknown")
+
+    if(EXISTS "${file_path}")
+        file(
+            STRINGS "${file_path}" version_line
+            REGEX "#define[ \t]+${define_name}[ \t]+"
+            LIMIT_COUNT 1
+        )
+
+        if(version_line)
+            string(
+                REGEX REPLACE
+                ".*#define[ \t]+${define_name}[ \t]+\"?([^\" \t]+)\"?.*"
+                "\\1"
+                version_value
+                "${version_line}"
+            )
+        endif()
+    endif()
+
+    set(${out_var} "${version_value}" PARENT_SCOPE)
+endfunction()
+
+function(multirl_read_package_version out_var file_path)
+    set(version_value "unknown")
+
+    if(EXISTS "${file_path}")
+        file(
+            STRINGS "${file_path}" version_line
+            REGEX "PACKAGE_VERSION"
+            LIMIT_COUNT 1
+        )
+
+        if(version_line)
+            string(
+                REGEX REPLACE
+                ".*\"([^\"]+)\".*"
+                "\\1"
+                version_value
+                "${version_line}"
+            )
+        endif()
+    endif()
+
+    set(${out_var} "${version_value}" PARENT_SCOPE)
+endfunction()
+
+function(multirl_read_project_version out_var file_path)
+    set(version_value "unknown")
+
+    if(EXISTS "${file_path}")
+        file(
+            STRINGS "${file_path}" version_line
+            REGEX "project\\([^)]*VERSION[ \t]+"
+            LIMIT_COUNT 1
+        )
+
+        if(version_line)
+            string(
+                REGEX REPLACE
+                ".*VERSION[ \t]+([^ \t\\)]+).*"
+                "\\1"
+                version_value
+                "${version_line}"
+            )
+        endif()
+    endif()
+
+    set(${out_var} "${version_value}" PARENT_SCOPE)
+endfunction()
+
+function(multirl_read_nlopt_version out_var source_dir)
+    set(version_value "unknown")
+    set(version_file "${source_dir}/CMakeLists.txt")
+
+    if(EXISTS "${version_file}")
+        foreach(version_part MAJOR MINOR BUGFIX)
+            file(
+                STRINGS "${version_file}" version_line
+                REGEX "set[ \t]*\\([ \t]*NLOPT_${version_part}_VERSION"
+                LIMIT_COUNT 1
+            )
+
+            if(version_line)
+                string(
+                    REGEX REPLACE
+                    ".*\"([0-9]+)\".*"
+                    "\\1"
+                    "version_${version_part}"
+                    "${version_line}"
+                )
+            endif()
+        endforeach()
+
+        if(DEFINED version_MAJOR
+                AND DEFINED version_MINOR
+                AND DEFINED version_BUGFIX)
+            set(
+                version_value
+                "${version_MAJOR}.${version_MINOR}.${version_BUGFIX}"
+            )
+        endif()
+    endif()
+
+    set(${out_var} "${version_value}" PARENT_SCOPE)
+endfunction()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -56,6 +164,25 @@ option(
     ON
 )
 
+option(
+    MULTIRL_ENABLE_RNN_TORCH
+    "Build RNN estimator with LibTorch support"
+    ON
+)
+
+option(
+    MULTIRL_FETCH_LIBTORCH
+    "Fetch LibTorch when MULTIRL_ENABLE_RNN_TORCH is ON"
+    ON
+)
+
+set(
+    MULTIRL_LIBTORCH_URL
+    ""
+    CACHE STRING
+    "Optional LibTorch archive URL. Empty uses a platform default."
+)
+
 set(
     MULTIRL_STAN_MATH_TAG
     "latest"
@@ -97,11 +224,6 @@ string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MA
 if(NOT _stan_tag_ok AND NOT MULTIRL_STAN_MATH_TAG STREQUAL "latest")
     message(WARNING "Stan Math tag '${MULTIRL_STAN_MATH_TAG}' may have been truncated by the shell. Use quotes: -DMULTIRL_STAN_MATH_TAG=\"v5.3.0\"")
 endif()
-# -- Validate Stan tag (shells may truncate v5.3.0 to v5)
-string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MATH_TAG}")
-if(NOT _stan_tag_ok AND NOT MULTIRL_STAN_MATH_TAG STREQUAL "latest")
-    message(WARNING "Stan Math tag '${MULTIRL_STAN_MATH_TAG}' may have been truncated by the shell. Use quotes: -DMULTIRL_STAN_MATH_TAG=\"v5.3.0\"")
-endif()
 
 
 if(MULTIRL_SYNC_PACKAGE_SOURCES)
@@ -137,24 +259,6 @@ endif()
 
 if(MSVC)
     add_compile_options(/utf-8 /wd4819 /wd4267 /wd4101)
-endif()
-
-set(MULTIRL_EIGEN_SOURCE_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-src")
-set(MULTIRL_EIGEN_BINARY_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-build")
-set(MULTIRL_EIGEN_SUBBUILD_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-subbuild")
-
-if(NOT EXISTS "${MULTIRL_EIGEN_SOURCE_DIR}/Eigen")
-    FetchContent_Populate(
-        eigen
-        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-        GIT_TAG master
-        GIT_SHALLOW TRUE
-        SOURCE_DIR "${MULTIRL_EIGEN_SOURCE_DIR}"
-        BINARY_DIR "${MULTIRL_EIGEN_BINARY_DIR}"
-        SUBBUILD_DIR "${MULTIRL_EIGEN_SUBBUILD_DIR}"
-    )
-else()
-    set(eigen_SOURCE_DIR "${MULTIRL_EIGEN_SOURCE_DIR}")
 endif()
 
 set(MULTIRL_STAN_MATH_INCLUDE_DIRS "")
@@ -209,8 +313,94 @@ if(MULTIRL_ENABLE_MCMC)
     endforeach()
 endif()
 
+if(MULTIRL_ENABLE_RNN_TORCH)
+    if(MULTIRL_FETCH_LIBTORCH)
+        if(MULTIRL_LIBTORCH_URL STREQUAL "")
+            if(WIN32)
+                set(
+                    MULTIRL_LIBTORCH_URL
+                    "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.5.1%2Bcpu.zip"
+                    CACHE STRING
+                    "Optional LibTorch archive URL. Empty uses a platform default."
+                    FORCE
+                )
+            elseif(APPLE)
+                set(
+                    MULTIRL_LIBTORCH_URL
+                    "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.5.1.zip"
+                    CACHE STRING
+                    "Optional LibTorch archive URL. Empty uses a platform default."
+                    FORCE
+                )
+            else()
+                set(
+                    MULTIRL_LIBTORCH_URL
+                    "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.5.1%2Bcpu.zip"
+                    CACHE STRING
+                    "Optional LibTorch archive URL. Empty uses a platform default."
+                    FORCE
+                )
+            endif()
+        endif()
+
+        FetchContent_Declare(
+            libtorch
+            URL ${MULTIRL_LIBTORCH_URL}
+        )
+
+        FetchContent_MakeAvailable(libtorch)
+        FetchContent_GetProperties(libtorch)
+        list(APPEND CMAKE_PREFIX_PATH "${libtorch_SOURCE_DIR}")
+    endif()
+
+    find_package(Torch CONFIG REQUIRED)
+
+    set(MULTIRL_TORCH_VERSION "unknown")
+
+    if(DEFINED Torch_VERSION)
+        set(MULTIRL_TORCH_VERSION "${Torch_VERSION}")
+    elseif(DEFINED TORCH_VERSION)
+        set(MULTIRL_TORCH_VERSION "${TORCH_VERSION}")
+    elseif(DEFINED libtorch_SOURCE_DIR)
+        multirl_read_package_version(
+            MULTIRL_TORCH_VERSION
+            "${libtorch_SOURCE_DIR}/share/cmake/Torch/TorchConfigVersion.cmake"
+        )
+    endif()
+endif()
+
+set(MULTIRL_EIGEN_SOURCE_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-src")
+set(MULTIRL_EIGEN_BINARY_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-build")
+set(MULTIRL_EIGEN_SUBBUILD_DIR "${CMAKE_BINARY_DIR}/_deps/eigen-subbuild")
+
+if(NOT EXISTS "${MULTIRL_EIGEN_SOURCE_DIR}/Eigen")
+    FetchContent_Populate(
+        eigen
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+        GIT_TAG master
+        GIT_SHALLOW TRUE
+        SOURCE_DIR "${MULTIRL_EIGEN_SOURCE_DIR}"
+        BINARY_DIR "${MULTIRL_EIGEN_BINARY_DIR}"
+        SUBBUILD_DIR "${MULTIRL_EIGEN_SUBBUILD_DIR}"
+    )
+else()
+    set(eigen_SOURCE_DIR "${MULTIRL_EIGEN_SOURCE_DIR}")
+endif()
+
+multirl_read_define(
+    MULTIRL_EIGEN_VERSION
+    "${eigen_SOURCE_DIR}/Eigen/Version"
+    "EIGEN_VERSION_STRING"
+)
+
+multirl_read_project_version(
+    MULTIRL_ABCPP_VERSION
+    "${CMAKE_CURRENT_SOURCE_DIR}/abcpp/CMakeLists.txt"
+)
+
 set(MULTIRL_NLOPT_TARGET "")
 set(MULTIRL_NLOPT_INCLUDE_DIRS "")
+set(MULTIRL_NLOPT_VERSION "unknown")
 
 if(MULTIRL_ENABLE_NLOPT)
     if(MULTIRL_FETCH_NLOPT)
@@ -232,11 +422,35 @@ if(MULTIRL_ENABLE_NLOPT)
             GIT_TAG master
             GIT_SHALLOW TRUE
         )
+
+        set(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL "${CMAKE_MESSAGE_LOG_LEVEL}")
+        set(CMAKE_MESSAGE_LOG_LEVEL WARNING)
         FetchContent_MakeAvailable(nlopt)
+
+        if(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL STREQUAL "")
+            unset(CMAKE_MESSAGE_LOG_LEVEL)
+        else()
+            set(
+                CMAKE_MESSAGE_LOG_LEVEL
+                "${MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL}"
+            )
+        endif()
+        unset(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL)
 
         set(MULTIRL_NLOPT_TARGET nlopt)
         list(APPEND MULTIRL_NLOPT_INCLUDE_DIRS "${nlopt_BINARY_DIR}")
         list(APPEND MULTIRL_NLOPT_INCLUDE_DIRS "${nlopt_SOURCE_DIR}/src/api")
+
+        if(DEFINED NLOPT_VERSION_STRING)
+            set(MULTIRL_NLOPT_VERSION "${NLOPT_VERSION_STRING}")
+        endif()
+
+        if(MULTIRL_NLOPT_VERSION STREQUAL "unknown")
+            multirl_read_nlopt_version(
+                MULTIRL_NLOPT_VERSION
+                "${nlopt_SOURCE_DIR}"
+            )
+        endif()
     else()
         find_package(NLopt REQUIRED)
 
@@ -246,6 +460,12 @@ if(MULTIRL_ENABLE_NLOPT)
             set(MULTIRL_NLOPT_TARGET nlopt)
         else()
             message(FATAL_ERROR "NLopt has no usable CMake target.")
+        endif()
+
+        if(DEFINED NLopt_VERSION)
+            set(MULTIRL_NLOPT_VERSION "${NLopt_VERSION}")
+        elseif(DEFINED NLOPT_VERSION)
+            set(MULTIRL_NLOPT_VERSION "${NLOPT_VERSION}")
         endif()
     endif()
 endif()
@@ -331,6 +551,12 @@ if(MULTIRL_ENABLE_MCMC)
     target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_STAN)
 endif()
 
+if(MULTIRL_ENABLE_RNN_TORCH)
+    target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_TORCH)
+    target_link_libraries(multiRL PUBLIC "${TORCH_LIBRARIES}")
+    target_compile_options(multiRL PUBLIC ${TORCH_CXX_FLAGS})
+endif()
+
 if(MULTIRL_BUILD_PYTHON)
     find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 
@@ -387,6 +613,12 @@ if(MULTIRL_BUILD_PYTHON)
                 ${MULTIRL_STAN_MATH_INCLUDE_DIRS}
         )
     endif()
+
+    if(MULTIRL_ENABLE_RNN_TORCH)
+        target_compile_definitions(_shell_run_m PRIVATE MULTIRL_HAS_TORCH)
+        target_link_libraries(_shell_run_m PRIVATE "${TORCH_LIBRARIES}")
+        target_compile_options(_shell_run_m PRIVATE ${TORCH_CXX_FLAGS})
+    endif()
 endif()
 
 install(
@@ -400,4 +632,14 @@ install(
 install(DIRECTORY Cpp/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY ${eigen_SOURCE_DIR}/Eigen DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-message(STATUS "Stan Math tag ${MULTIRL_STAN_MATH_TAG}")
+message(STATUS "multiRL dependency: NLopt ${MULTIRL_NLOPT_VERSION}")
+message(STATUS "multiRL dependency: abcpp ${MULTIRL_ABCPP_VERSION}")
+message(STATUS "multiRL dependency: Eigen ${MULTIRL_EIGEN_VERSION}")
+
+if(MULTIRL_ENABLE_MCMC)
+    message(STATUS "multiRL dependency: Stan Math ${MULTIRL_STAN_MATH_TAG}")
+endif()
+
+if(MULTIRL_ENABLE_RNN_TORCH)
+    message(STATUS "multiRL dependency: LibTorch ${MULTIRL_TORCH_VERSION}")
+endif()

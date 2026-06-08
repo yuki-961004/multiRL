@@ -118,8 +118,7 @@ base::cat("MAP rcv_d reproducibility test PASSED.\n")
 control_abc <- list(
   n_draws = 10L,
   seed = 1004L,
-  threads = 32L,
-  algorithm = "LN_BOBYQA"
+  threads = 32L
 )
 
 abc_1 <- multiRLcpp::rcv_d(

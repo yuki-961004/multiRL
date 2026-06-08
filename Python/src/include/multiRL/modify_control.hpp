@@ -65,13 +65,23 @@ struct RNNControl {
     std::string scope = "individual";
     int seed = 123;
     int epoch = 100;
+    int epochs = 100;
     int batch_size = 32;
     int sample = 100;
+    int n_draws = 100;
+    int threads = 0;
+    int units = 32;
+    int layers = 1;
     int verbose = 0;
     double validation_split = 0.0;
-    std::string backend = "keras3";
+    double learning_rate = 0.001;
+    double dropout = 0.0;
+    std::string backend = "torch";
     std::string optimizer = "adam";
-    std::string loss = "categorical_crossentropy";
+    std::string loss = "mse";
+    std::string model_type = "gru";
+    std::vector<double> lower_bounds;
+    std::vector<double> upper_bounds;
 };
 
 MLEControl modify_control(

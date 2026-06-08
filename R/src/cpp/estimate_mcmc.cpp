@@ -267,4 +267,27 @@ std::vector<SubjectMCMCResult> estimate_mcmc(
 
 }  // namespace multiRL
 
+#else
+
+#include <multiRL/estimate_mcmc.hpp>
+
+#include <stdexcept>
+
+namespace multiRL {
+
+std::vector<SubjectMCMCResult> estimate_mcmc(
+    const std::vector<RunTask>& tasks,
+    const MCMCControl& raw_control
+) {
+    (void) tasks;
+    (void) raw_control;
+    throw std::runtime_error(
+        "estimate_mcmc requires Stan Math support. Rebuild multiRL with "
+        "MULTIRL_ENABLE_MCMC=TRUE for R packages or "
+        "MULTIRL_ENABLE_MCMC=ON for CMake builds."
+    );
+}
+
+}  // namespace multiRL
+
 #endif // MULTIRL_HAS_STAN

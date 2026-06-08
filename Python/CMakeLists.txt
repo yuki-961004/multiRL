@@ -55,7 +55,20 @@ option(
 option(
     MULTIRL_ENABLE_MCMC
     "Build MCMC estimator with Stan Math support"
-    ON
+    OFF
+)
+
+option(
+    MULTIRL_ENABLE_RNN_TORCH
+    "Build RNN estimator with LibTorch support"
+    OFF
+)
+
+set(
+    MULTIRL_LIBTORCH_DIR
+    ""
+    CACHE PATH
+    "Optional LibTorch root directory for Python package builds"
 )
 
 set(
@@ -188,6 +201,13 @@ if(MULTIRL_ENABLE_MCMC)
     endforeach()
 endif()
 
+if(MULTIRL_ENABLE_RNN_TORCH)
+    if(NOT MULTIRL_LIBTORCH_DIR STREQUAL "")
+        list(APPEND CMAKE_PREFIX_PATH "${MULTIRL_LIBTORCH_DIR}")
+    endif()
+    find_package(Torch CONFIG REQUIRED)
+endif()
+
 set(
     MULTIRL_PY_BASE_SOURCES
     src/cpp/func_alpha.cpp
@@ -266,6 +286,20 @@ if(MULTIRL_ENABLE_MCMC)
     )
 endif()
 
+if(MULTIRL_ENABLE_RNN_TORCH)
+    target_compile_definitions(multiRL_python_core PUBLIC MULTIRL_HAS_TORCH)
+    target_link_libraries(
+        multiRL_python_core
+        PUBLIC
+            "${TORCH_LIBRARIES}"
+    )
+    target_compile_options(
+        multiRL_python_core
+        PUBLIC
+            ${TORCH_CXX_FLAGS}
+    )
+endif()
+
 function(add_multiRL_module module_name source_file)
     pybind11_add_module(${module_name} MODULE ${source_file})
 
@@ -290,6 +324,12 @@ function(add_multiRL_module module_name source_file)
             PRIVATE
                 ${MULTIRL_STAN_MATH_INCLUDE_DIRS}
         )
+    endif()
+
+    if(MULTIRL_ENABLE_RNN_TORCH)
+        target_compile_definitions(${module_name} PRIVATE MULTIRL_HAS_TORCH)
+        target_link_libraries(${module_name} PRIVATE "${TORCH_LIBRARIES}")
+        target_compile_options(${module_name} PRIVATE ${TORCH_CXX_FLAGS})
     endif()
 
     install(TARGETS ${module_name} DESTINATION ${MULTIRL_PY_PACKAGE_NAME})
