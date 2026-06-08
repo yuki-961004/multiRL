@@ -128,3 +128,112 @@ if len(abc["model_recovery"]) != 270:
 
 if abc["estimator"]["scope"] != "shared":
     raise RuntimeError("Python rcv_d ABC did not keep shared scope.")
+
+# %%
+import multiRL
+import pandas
+
+data = pandas.read_csv("data/TAB.csv")
+
+models = [
+    multiRL.TD,
+]
+
+settings = [
+    {"name": "TD"},
+]
+
+base_control = {
+    "n_draws": 5,
+    "seed": 1004,
+    "threads": 1,
+    "epochs": 1,
+    "batch_size": 8,
+    "units": 8,
+    "layers": 1,
+    "dropout": 0.0,
+    "learning_rate": 0.001,
+    "model_type": "gru",
+    "verbose": 0,
+    "scope": "shared",
+}
+
+control_cpu = dict(base_control)
+control_cpu["device"] = "cpu"
+
+control_gpu = dict(base_control)
+control_gpu["threads"] = 0
+control_gpu["device"] = "cuda"
+
+rnn_cpu = multiRL.rcv_d(
+    estimator="rnn",
+    data=data,
+    id=1,
+    behrule={
+        "cue": ["A", "B", "C", "D"],
+        "rsp": ["A", "B", "C", "D"],
+    },
+    colnames={
+        "subid": "Subject",
+        "block": "Block",
+        "trial": "Trial",
+        "object": ["L_choice", "R_choice"],
+        "reward": ["L_reward", "R_reward"],
+        "action": "Sub_Choose",
+    },
+    models=models,
+    settings=settings,
+    lowers=[[0, 0]],
+    uppers=[[1, 5]],
+    control=control_cpu,
+)
+
+rnn_gpu = multiRL.rcv_d(
+    estimator="rnn",
+    data=data,
+    id=1,
+    behrule={
+        "cue": ["A", "B", "C", "D"],
+        "rsp": ["A", "B", "C", "D"],
+    },
+    colnames={
+        "subid": "Subject",
+        "block": "Block",
+        "trial": "Trial",
+        "object": ["L_choice", "R_choice"],
+        "reward": ["L_reward", "R_reward"],
+        "action": "Sub_Choose",
+    },
+    models=models,
+    settings=settings,
+    lowers=[[0, 0]],
+    uppers=[[1, 5]],
+    control=control_gpu,
+)
+
+print(rnn_cpu["recovery"])
+print(rnn_gpu["recovery"])
+
+if len(rnn_cpu["simulation"]) == 0:
+    raise RuntimeError("Python rcv_d RNN CPU returned no simulated rows.")
+
+if len(rnn_gpu["simulation"]) == 0:
+    raise RuntimeError("Python rcv_d RNN GPU returned no simulated rows.")
+
+if len(rnn_cpu["truth"]) != len(rnn_gpu["truth"]):
+    raise RuntimeError("Python rcv_d RNN CPU/GPU truth lengths differ.")
+
+if len(rnn_cpu["recovery"]) != len(rnn_gpu["recovery"]):
+    raise RuntimeError("Python rcv_d RNN CPU/GPU recovery lengths differ.")
+
+for cpu_row, gpu_row in zip(rnn_cpu["recovery"], rnn_gpu["recovery"]):
+    if cpu_row["parameter"] != gpu_row["parameter"]:
+        raise RuntimeError("Python rcv_d RNN CPU/GPU parameters differ.")
+    if abs(float(cpu_row["true"]) - float(gpu_row["true"])) > 1e-10:
+        raise RuntimeError("Python rcv_d RNN CPU/GPU truth values differ.")
+    if not float(cpu_row["recovered"]) == float(cpu_row["recovered"]):
+        raise RuntimeError("Python rcv_d RNN CPU returned NaN.")
+    if not float(gpu_row["recovered"]) == float(gpu_row["recovered"]):
+        raise RuntimeError("Python rcv_d RNN GPU returned NaN.")
+
+print("Python rcv_d RNN CPU/GPU device test passed.")

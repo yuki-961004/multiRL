@@ -52,20 +52,28 @@ pybind11::dict py_shell_fit_p(
     }
 
     if (result.estimator == "abc" && !result.abc.empty()) {
+        multiRL::ABCControl abc_control;
         pybind11::list out;
         for (const auto& r : result.abc) {
-            out.append(py_wrap_estimate_abc_result(r));
+            out.append(py_wrap_estimate_abc_result(r, abc_control));
         }
         return out;
     }
 
+#ifdef MULTIRL_HAS_STAN
     if (result.estimator == "mcmc" && !result.mcmc.empty()) {
+        multiRL::MCMCControl mcmc_control;
         pybind11::list out;
         for (const auto& r : result.mcmc) {
-            out.append(py_wrap_estimate_mcmc_result(r));
+            out.append(py_wrap_estimate_mcmc_result(
+                r,
+                free_names,
+                mcmc_control
+            ));
         }
         return out;
     }
+#endif
 
     throw std::invalid_argument(
         "shell_fit_p: unsupported estimator " + result.estimator

@@ -4,7 +4,7 @@ project(multiRL_Python_Wrapper VERSION 0.5.0 LANGUAGES CXX)
 
 include(FetchContent)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -205,6 +205,13 @@ if(MULTIRL_ENABLE_RNN_TORCH)
     if(NOT MULTIRL_LIBTORCH_DIR STREQUAL "")
         list(APPEND CMAKE_PREFIX_PATH "${MULTIRL_LIBTORCH_DIR}")
     endif()
+
+    if(WIN32)
+        set(TORCH_CUDA_ARCH_LIST "8.6" CACHE STRING "" FORCE)
+        unset(CMAKE_CUDA_ARCHITECTURES)
+        unset(CMAKE_CUDA_ARCHITECTURES CACHE)
+    endif()
+
     find_package(Torch CONFIG REQUIRED)
 endif()
 
@@ -219,6 +226,7 @@ set(
     src/cpp/algorithm_nlopt.cpp
     src/cpp/estimate_abc.cpp
     src/cpp/estimate_map.cpp
+    src/cpp/estimate_mcmc.cpp
     src/cpp/estimate_mle.cpp
     src/cpp/estimate_rnn.cpp
     src/cpp/info_nlopt.cpp
@@ -233,6 +241,7 @@ set(
     src/cpp/task_builder.cpp
     src/cpp/shell_fit_p.cpp
     src/cpp/shell_rcv_d.cpp
+    src/cpp/shell_rpl_e.cpp
     src/cpp/shell_run_m.cpp
 )
 
@@ -245,7 +254,6 @@ if(MULTIRL_ENABLE_MCMC)
     list(
         APPEND MULTIRL_PY_BACKEND_SOURCES
         src/cpp/algorithm_stan.cpp
-        src/cpp/estimate_mcmc.cpp
     )
 endif()
 
@@ -300,8 +308,8 @@ if(MULTIRL_ENABLE_RNN_TORCH)
     )
 endif()
 
-function(add_multiRL_module module_name source_file)
-    pybind11_add_module(${module_name} MODULE ${source_file})
+function(add_multiRL_module module_name)
+    pybind11_add_module(${module_name} MODULE ${ARGN})
 
     target_link_libraries(
         ${module_name}
@@ -330,11 +338,37 @@ function(add_multiRL_module module_name source_file)
         target_compile_definitions(${module_name} PRIVATE MULTIRL_HAS_TORCH)
         target_link_libraries(${module_name} PRIVATE "${TORCH_LIBRARIES}")
         target_compile_options(${module_name} PRIVATE ${TORCH_CXX_FLAGS})
+
+        if(MSVC)
+            file(GLOB MULTIRL_TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
+            add_custom_command(
+                TARGET ${module_name}
+                POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    ${MULTIRL_TORCH_DLLS}
+                    $<TARGET_FILE_DIR:${module_name}>
+            )
+            install(
+                FILES ${MULTIRL_TORCH_DLLS}
+                DESTINATION ${MULTIRL_PY_PACKAGE_NAME}
+            )
+        endif()
     endif()
 
     install(TARGETS ${module_name} DESTINATION ${MULTIRL_PY_PACKAGE_NAME})
 endfunction()
 
-add_multiRL_module(_backend src/py_shell_run_m.cpp)
+add_multiRL_module(
+    _backend
+    src/py_shell_run_m.cpp
+    src/py_estimate_mle.cpp
+    src/py_estimate_map.cpp
+    src/py_estimate_abc.cpp
+    src/py_estimate_mcmc.cpp
+    src/py_estimate_rnn.cpp
+    src/py_shell_fit_p.cpp
+    src/py_shell_rcv_d.cpp
+    src/py_shell_rpl_e.cpp
+)
 
 message(STATUS "Stan Math tag ${MULTIRL_STAN_MATH_TAG}")

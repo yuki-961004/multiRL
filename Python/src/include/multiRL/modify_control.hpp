@@ -64,6 +64,7 @@ struct ABCControl {
 struct RNNControl {
     std::string scope = "individual";
     int seed = 123;
+    std::string device = "cpu";
     int epoch = 100;
     int epochs = 100;
     int batch_size = 32;

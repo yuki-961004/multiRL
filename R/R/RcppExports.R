@@ -17,8 +17,8 @@
     .Call(`_multiRLcpp_r_estimate_mle`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, maxeval, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds)
 }
 
-.estimate_rnn_data <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, epochs, batch_size, units, layers, dropout, learning_rate, model_type, verbose, lower_bounds, upper_bounds) {
-    .Call(`_multiRLcpp_r_estimate_rnn_data`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, epochs, batch_size, units, layers, dropout, learning_rate, model_type, verbose, lower_bounds, upper_bounds)
+.estimate_rnn_data <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, epochs, batch_size, units, layers, dropout, learning_rate, model_type, verbose, device, lower_bounds, upper_bounds) {
+    .Call(`_multiRLcpp_r_estimate_rnn_data`, object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, epochs, batch_size, units, layers, dropout, learning_rate, model_type, verbose, device, lower_bounds, upper_bounds)
 }
 
 .shell_rcv_d <- function(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, generating_model, n_draws, seed, threads, lower_bounds, upper_bounds) {

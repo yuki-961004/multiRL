@@ -9,6 +9,7 @@
 #include <vector>
 
 #ifdef MULTIRL_HAS_TORCH
+#include <ATen/Context.h>
 #include <torch/torch.h>
 #endif
 
@@ -310,6 +311,22 @@ EstimateRnnSubjectResult estimate_rnn_subject(
     }
     torch::manual_seed(static_cast<uint64_t>(control.seed));
 
+    // Determine computation device: cpu or cuda
+    torch::Device torch_device(torch::kCPU);
+    bool use_cuda = (control.device == "cuda" || control.device == "gpu");
+    if (use_cuda) {
+        if (torch::cuda::is_available()) {
+            torch_device = torch::Device(torch::kCUDA);
+        } else {
+            throw std::runtime_error(
+                "RNN device='cuda' but no CUDA device is available."
+            );
+        }
+
+        // Prefer deterministic CUDA kernels when they are available.
+        at::globalContext().setDeterministicAlgorithms(true, true);
+    }
+
     const int n_params = static_cast<int>(out.parameter_names.size());
     torch::Tensor x_train = rnn_training_x(
         sampler,
@@ -317,18 +334,24 @@ EstimateRnnSubjectResult estimate_rnn_subject(
         out.n_trials,
         out.n_features
     );
+    x_train = x_train.to(torch_device);
+
     torch::Tensor y_train = rnn_training_y(
         sampler,
         out.n_draws,
         n_params
     );
+    y_train = y_train.to(torch_device);
+
     torch::Tensor x_observed = rnn_observed_x(
         task,
         out.n_trials,
         out.n_features
     );
+    x_observed = x_observed.to(torch_device);
 
     TorchRnnNet model(out.n_features, n_params, control);
+    model->to(torch_device);
     torch::optim::Adam optimizer(
         model->parameters(),
         torch::optim::AdamOptions(control.learning_rate)
@@ -337,7 +360,7 @@ EstimateRnnSubjectResult estimate_rnn_subject(
     const int batch_size = std::min(control.batch_size, out.n_draws);
     for (int epoch = 0; epoch < control.epochs; ++epoch) {
         model->train();
-        torch::Tensor order = torch::randperm(out.n_draws, torch::kLong);
+        torch::Tensor order = torch::randperm(out.n_draws, torch::kLong).to(torch_device);
 
         for (int start = 0; start < out.n_draws; start += batch_size) {
             const int stop = std::min(start + batch_size, out.n_draws);
@@ -409,3 +432,5 @@ std::vector<EstimateRnnSubjectResult> estimate_rnn(
 }
 
 }  // namespace multiRL
+
+

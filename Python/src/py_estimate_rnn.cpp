@@ -89,6 +89,7 @@ pybind11::dict py_estimate_rnn_data(
     const double learning_rate,
     const std::string& model_type,
     const int verbose,
+    const std::string& device,
     const std::vector<double>& lower_bounds,
     const std::vector<double>& upper_bounds
 ) {
@@ -128,6 +129,7 @@ pybind11::dict py_estimate_rnn_data(
     control.learning_rate = learning_rate;
     control.model_type = model_type;
     control.verbose = verbose;
+    control.device = device;
     control.lower_bounds = lower_bounds;
     control.upper_bounds = upper_bounds;
 
@@ -164,6 +166,7 @@ void register_py_estimate_rnn(pybind11::module& module) {
         pybind11::arg("learning_rate") = 0.001,
         pybind11::arg("model_type") = "gru",
         pybind11::arg("verbose") = 0,
+        pybind11::arg("device") = "cpu",
         pybind11::arg("lower_bounds") = std::vector<double>(),
         pybind11::arg("upper_bounds") = std::vector<double>()
     );

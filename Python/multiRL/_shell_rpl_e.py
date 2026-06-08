@@ -339,7 +339,7 @@ def _rpl_e_plot_recovery(result):
         ordered=True
     )
 
-  recovery["panel"] = _rpl_e_parameter_panel(result, recovery)
+    recovery["panel"] = _rpl_e_parameter_panel(result, recovery)
     limits = _rpl_e_parameter_limits(result, recovery)
     priors = _rpl_e_parameter_prior_labels(result, recovery, limits)
     plots = {}

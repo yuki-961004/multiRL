@@ -1,45 +1,71 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
-#include <stdexcept>
-#include <string>
-#include <unordered_map>
-#include <vector>
-
-#include <multiRL/estimate_abc.hpp>
-#include <multiRL/estimate_mle.hpp>
-#include <multiRL/estimate_map.hpp>
-#include <multiRL/estimate_rnn.hpp>
-#ifdef MULTIRL_HAS_STAN
-#include <multiRL/estimate_mcmc.hpp>
-#endif
-#include <multiRL/modify_priors.hpp>
-#include <multiRL/process_model_free.hpp>
-#include <multiRL/shell_rcv_d.hpp>
-#include <multiRL/shell_rpl_e.hpp>
-#include <multiRL/shell_run_m.hpp>
-#include <multiRL/task_builder.hpp>
-#include <multiRL/task_sampler.hpp>
-#include <multiRL/types.hpp>
-
-namespace {
-
-multiRL::Params py_params_to_cpp(
-    const std::unordered_map<std::string, double>& params,
-    const std::vector<std::string>& free_names
-) {
-    multiRL::Params out;
-    out.values = params;
-    out.free_names = free_names;
-    return out;
-}
-
-pybind11::dict py_wrap_result(
 #include "py_wrapper_common.hpp"
 
-#endif
+pybind11::dict py_shell_run_m(
+    const multiRL::StringMatrix& object,
+    const multiRL::DoubleMatrix& reward,
+    const std::vector<std::string>& action,
+    const std::vector<int>& block,
+    const std::vector<int>& trial,
+    const std::vector<std::string>& cue,
+    const std::vector<std::string>& rsp,
+    const std::unordered_map<std::string, double>& params,
+    const std::vector<std::string>& free_names,
+    const std::vector<std::string>& system,
+    const std::vector<std::string>& prior_names,
+    const std::vector<std::string>& prior_types,
+    const std::vector<double>& prior_param1,
+    const std::vector<double>& prior_param2,
+    bool prior_active,
+    const std::string& policy,
+    const std::string& name,
+    const std::string& mode,
+    const std::string& estimate
+) {
+    multiRL::RunTask task = py_make_task(
+        object,
+        reward,
+        action,
+        block,
+        trial,
+        cue,
+        rsp,
+        params,
+        free_names,
+        system,
+        prior_names,
+        prior_types,
+        prior_param1,
+        prior_param2,
+        prior_active,
+        policy,
+        name,
+        mode,
+        estimate
+    );
 
-// Auto-generated module registration
+    return py_wrap_result(multiRL::shell_run_m(task), system);
+}
+
+void register_py_shell_run_m(pybind11::module& module) {
+    module.def(
+        "shell_run_m", &py_shell_run_m,
+        pybind11::arg("object"), pybind11::arg("reward"),
+        pybind11::arg("action"), pybind11::arg("block"),
+        pybind11::arg("trial"), pybind11::arg("cue"),
+        pybind11::arg("rsp"), pybind11::arg("params"),
+        pybind11::arg("free_names"), pybind11::arg("system"),
+        pybind11::arg("prior_names") = std::vector<std::string>(),
+        pybind11::arg("prior_types") = std::vector<std::string>(),
+        pybind11::arg("prior_param1") = std::vector<double>(),
+        pybind11::arg("prior_param2") = std::vector<double>(),
+        pybind11::arg("prior_active") = false,
+        pybind11::arg("policy") = "off",
+        pybind11::arg("name") = "TD",
+        pybind11::arg("mode") = "fitting",
+        pybind11::arg("estimate") = "MLE"
+    );
+}
+
 void register_py_estimate_mle(pybind11::module&);
 void register_py_estimate_map(pybind11::module&);
 void register_py_estimate_abc(pybind11::module&);

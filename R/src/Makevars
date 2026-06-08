@@ -3,7 +3,11 @@ CXX_STD = CXX17
 R_SCRIPT = "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript"
 
 MULTIRL_USE_STAN = $(shell $(R_SCRIPT) -e \
-	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_MCMC', 'FALSE')))")
+	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_STAN', 'FALSE')))")
+MULTIRL_USE_EIGEN = $(shell $(R_SCRIPT) -e \
+	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_EIGEN', 'FALSE')))")
+MULTIRL_USE_TORCH = $(shell $(R_SCRIPT) -e \
+	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_TORCH', 'FALSE')))")
 MULTIRL_TORCH_DIR = $(shell $(R_SCRIPT) -e \
 	"cat(Sys.getenv('TORCH_DIR', Sys.getenv('LIBTORCH_DIR', '')))")
 
@@ -15,18 +19,39 @@ PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) \
 PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) \
 	-lnlopt
 
+ifeq ($(MULTIRL_USE_EIGEN),TRUE)
+EIGEN_INCLUDE = $(shell $(R_SCRIPT) -e \
+	"cat(system.file('include', package='RcppEigen', mustWork=TRUE))")
+PKG_CPPFLAGS += -I"$(EIGEN_INCLUDE)" -DMULTIRL_HAS_EIGEN
+endif
+
 ifeq ($(MULTIRL_USE_STAN),TRUE)
 STAN_CXXFLAGS = $(shell $(R_SCRIPT) -e "StanHeaders:::CxxFlags()")
 STAN_LIBS = $(shell $(R_SCRIPT) -e "StanHeaders:::LdFlags()")
+STANHEADERS_INCLUDE = $(shell $(R_SCRIPT) \
+	-e "cat(system.file('include',package='StanHeaders',mustWork=TRUE))")
 STANHEADERS_SRC = $(shell $(R_SCRIPT) \
 	-e "cat(system.file('include','src',package='StanHeaders',mustWork=TRUE))")
 
-PKG_CPPFLAGS += -I"$(STANHEADERS_SRC)" -DMULTIRL_HAS_STAN
+PKG_CPPFLAGS += -I"$(STANHEADERS_INCLUDE)" \
+	-I"$(STANHEADERS_SRC)" \
+	-DMULTIRL_HAS_STAN
 PKG_CXXFLAGS += $(STAN_CXXFLAGS)
 PKG_LIBS += $(STAN_LIBS)
 endif
 
-ifneq ($(MULTIRL_TORCH_DIR),)
+ifeq ($(MULTIRL_USE_TORCH),TRUE)
+ifeq ($(OS),Windows_NT)
+$(error MULTIRL_ENABLE_TORCH=TRUE is not supported by Rtools/GCC on Windows. Use the root CMake MSVC build for LibTorch)
+endif
+ifeq ($(MULTIRL_TORCH_DIR),)
+$(error MULTIRL_ENABLE_TORCH=TRUE requires TORCH_DIR or LIBTORCH_DIR)
+endif
+endif
+
+ifeq ($(MULTIRL_USE_TORCH),TRUE)
+CXX_STD = CXX20
+PKG_CXXFLAGS += -std=gnu++20
 PKG_CPPFLAGS += -DMULTIRL_HAS_TORCH \
 	-I"$(MULTIRL_TORCH_DIR)/include" \
 	-I"$(MULTIRL_TORCH_DIR)/include/torch/csrc/api/include"
@@ -34,4 +59,8 @@ PKG_LIBS += -L"$(MULTIRL_TORCH_DIR)/lib" \
 	-ltorch \
 	-ltorch_cpu \
 	-lc10
+TORCH_CUDA_LIB = $(wildcard $(MULTIRL_TORCH_DIR)/lib/*torch_cuda*)
+ifneq ($(TORCH_CUDA_LIB),)
+PKG_LIBS += -ltorch_cuda -lc10_cuda
+endif
 endif

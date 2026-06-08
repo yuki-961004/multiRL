@@ -78,6 +78,7 @@ pybind11::dict py_estimate_mcmc(
     return py_wrap_estimate_mcmc_result(results[0], free_names, control);
 }
 
+#endif
 
 #ifdef MULTIRL_HAS_STAN
 void register_py_estimate_mcmc(pybind11::module& module) {

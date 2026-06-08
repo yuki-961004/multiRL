@@ -142,6 +142,7 @@ Rcpp::List r_estimate_rnn_data(
     double learning_rate,
     std::string model_type,
     int verbose,
+    std::string device,
     Rcpp::NumericVector lower_bounds,
     Rcpp::NumericVector upper_bounds
 ) {
@@ -183,6 +184,7 @@ Rcpp::List r_estimate_rnn_data(
     control.learning_rate = learning_rate;
     control.model_type = model_type;
     control.verbose = verbose;
+    control.device = device;
     control.lower_bounds = multiRL_r::as_double_vector(lower_bounds);
     control.upper_bounds = multiRL_r::as_double_vector(upper_bounds);
 

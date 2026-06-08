@@ -117,7 +117,7 @@ function(multirl_read_nlopt_version out_var source_dir)
     set(${out_var} "${version_value}" PARENT_SCOPE)
 endfunction()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
 # -- Install to local directory (avoids admin permission issues)
@@ -184,6 +184,13 @@ set(
 )
 
 set(
+    MULTIRL_LIBTORCH_CUDA
+    "auto"
+    CACHE STRING
+    "LibTorch CUDA variant: auto, cpu, cu132, cu130, cu128, etc."
+)
+
+set(
     MULTIRL_STAN_MATH_TAG
     "latest"
     CACHE STRING
@@ -204,20 +211,20 @@ if(MULTIRL_ENABLE_MCMC AND MULTIRL_STAN_MATH_TAG STREQUAL "latest")
 
     if(NOT MULTIRL_STAN_RELEASE_CODE EQUAL 0)
         message(
-            FATAL_ERROR
+            WARNING
             "Failed to resolve latest Stan Math release: "
             "${MULTIRL_STAN_RELEASE_MESSAGE}. "
-            "Set -DMULTIRL_STAN_MATH_TAG=v5.3.0 for an offline build."
+            "Falling back to v5.3.0."
         )
+        set(MULTIRL_STAN_MATH_TAG "v5.3.0")
+    else()
+        file(READ "${CMAKE_BINARY_DIR}/stan_release.json" MULTIRL_STAN_RELEASE)
+        string(
+            JSON MULTIRL_STAN_MATH_TAG
+            GET "${MULTIRL_STAN_RELEASE}" "tag_name"
+        )
+        message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
     endif()
-
-    file(READ "${CMAKE_BINARY_DIR}/stan_release.json" MULTIRL_STAN_RELEASE)
-    string(
-        JSON MULTIRL_STAN_MATH_TAG
-        GET "${MULTIRL_STAN_RELEASE}" "tag_name"
-    )
-
-    message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
 endif()
 # -- Validate Stan tag (shells may truncate v5.3.0 to v5)
 string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MATH_TAG}")
@@ -255,6 +262,15 @@ if(MULTIRL_SYNC_PACKAGE_SOURCES)
             -P "${MULTIRL_SYNC_SCRIPT}"
         COMMENT "Syncing multiRL package C++ sources"
     )
+
+    if(MSVC)
+        set_target_properties(
+            multiRL_sync_package_sources
+            PROPERTIES
+                VS_GLOBAL_IntDir
+                    "$(Platform)\\$(Configuration)\\multiRL_sync_package_sources\\"
+        )
+    endif()
 endif()
 
 if(MSVC)
@@ -316,32 +332,91 @@ endif()
 if(MULTIRL_ENABLE_RNN_TORCH)
     if(MULTIRL_FETCH_LIBTORCH)
         if(MULTIRL_LIBTORCH_URL STREQUAL "")
+            set(MULTIRL_EFFECTIVE_LIBTORCH_CUDA "${MULTIRL_LIBTORCH_CUDA}")
+
+            if(MULTIRL_EFFECTIVE_LIBTORCH_CUDA STREQUAL "auto")
+                find_program(MULTIRL_NVCC nvcc)
+
+                if(MULTIRL_NVCC)
+                    execute_process(
+                        COMMAND "${MULTIRL_NVCC}" --version
+                        OUTPUT_VARIABLE MULTIRL_NVCC_OUTPUT
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                    )
+                    string(
+                        REGEX MATCH
+                        "release [0-9]+\\.[0-9]+"
+                        MULTIRL_CUDA_RELEASE
+                        "${MULTIRL_NVCC_OUTPUT}"
+                    )
+                    string(
+                        REGEX REPLACE
+                        "release "
+                        ""
+                        MULTIRL_CUDA_VERSION
+                        "${MULTIRL_CUDA_RELEASE}"
+                    )
+                    string(
+                        REPLACE
+                        "."
+                        ""
+                        MULTIRL_CUDA_SHORT
+                        "${MULTIRL_CUDA_VERSION}"
+                    )
+                    set(MULTIRL_EFFECTIVE_LIBTORCH_CUDA "cu${MULTIRL_CUDA_SHORT}")
+                else()
+                    set(MULTIRL_EFFECTIVE_LIBTORCH_CUDA "cpu")
+                endif()
+            endif()
+
             if(WIN32)
-                set(
-                    MULTIRL_LIBTORCH_URL
-                    "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.5.1%2Bcpu.zip"
-                    CACHE STRING
-                    "Optional LibTorch archive URL. Empty uses a platform default."
-                    FORCE
-                )
+                if(MULTIRL_EFFECTIVE_LIBTORCH_CUDA STREQUAL "cpu")
+                    set(
+                        MULTIRL_LIBTORCH_URL
+                        "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-latest.zip"
+                        CACHE STRING
+                        "Optional LibTorch archive URL. Empty uses a platform default."
+                        FORCE
+                    )
+                else()
+                    set(
+                        MULTIRL_LIBTORCH_URL
+                        "https://download.pytorch.org/libtorch/nightly/${MULTIRL_EFFECTIVE_LIBTORCH_CUDA}/libtorch-win-shared-with-deps-latest.zip"
+                        CACHE STRING
+                        "Optional LibTorch archive URL. Empty uses a platform default."
+                        FORCE
+                    )
+                endif()
             elseif(APPLE)
                 set(
                     MULTIRL_LIBTORCH_URL
-                    "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-2.5.1.zip"
+                    "https://download.pytorch.org/libtorch/cpu/libtorch-macos-arm64-latest.zip"
                     CACHE STRING
                     "Optional LibTorch archive URL. Empty uses a platform default."
                     FORCE
                 )
             else()
-                set(
-                    MULTIRL_LIBTORCH_URL
-                    "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-2.5.1%2Bcpu.zip"
-                    CACHE STRING
-                    "Optional LibTorch archive URL. Empty uses a platform default."
-                    FORCE
-                )
+                if(MULTIRL_EFFECTIVE_LIBTORCH_CUDA STREQUAL "cpu")
+                    set(
+                        MULTIRL_LIBTORCH_URL
+                        "https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-latest.zip"
+                        CACHE STRING
+                        "Optional LibTorch archive URL. Empty uses a platform default."
+                        FORCE
+                    )
+                else()
+                    set(
+                        MULTIRL_LIBTORCH_URL
+                        "https://download.pytorch.org/libtorch/nightly/${MULTIRL_EFFECTIVE_LIBTORCH_CUDA}/libtorch-shared-with-deps-latest.zip"
+                        CACHE STRING
+                        "Optional LibTorch archive URL. Empty uses a platform default."
+                        FORCE
+                    )
+                endif()
             endif()
         endif()
+
+        message(STATUS "LibTorch URL: ${MULTIRL_LIBTORCH_URL}")
 
         FetchContent_Declare(
             libtorch
@@ -353,7 +428,24 @@ if(MULTIRL_ENABLE_RNN_TORCH)
         list(APPEND CMAKE_PREFIX_PATH "${libtorch_SOURCE_DIR}")
     endif()
 
+    if(WIN32 AND NOT MULTIRL_EFFECTIVE_LIBTORCH_CUDA STREQUAL "cpu")
+        set(TORCH_CUDA_ARCH_LIST "8.6" CACHE STRING "" FORCE)
+        unset(CMAKE_CUDA_ARCHITECTURES)
+        unset(CMAKE_CUDA_ARCHITECTURES CACHE)
+    endif()
+
+    set(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL "${CMAKE_MESSAGE_LOG_LEVEL}")
+    set(CMAKE_MESSAGE_LOG_LEVEL ERROR)
     find_package(Torch CONFIG REQUIRED)
+    if(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL STREQUAL "")
+        unset(CMAKE_MESSAGE_LOG_LEVEL)
+    else()
+        set(
+            CMAKE_MESSAGE_LOG_LEVEL
+            "${MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL}"
+        )
+    endif()
+    unset(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL)
 
     set(MULTIRL_TORCH_VERSION "unknown")
 

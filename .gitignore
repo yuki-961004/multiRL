@@ -15,6 +15,7 @@ desktop.ini
 
 # build
 *build*/
+*.dll
 
 # demo
 raw/
@@ -34,7 +35,6 @@ Python/src/include/
 
 # R build artifacts
 R/src/*.o
-R/src/*.dll
 R/src/cpp/
 R/inst/include/
 

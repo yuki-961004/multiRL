@@ -61,6 +61,7 @@ estimate_rnn <- function(
     learning_rate = control$learning_rate,
     model_type = control$model_type,
     verbose = control$verbose,
+    device = control$device,
     lower_bounds = .modify_bound_vector(lower, base::names(params$free)),
     upper_bounds = .modify_bound_vector(upper, base::names(params$free))
   )
@@ -102,6 +103,7 @@ estimate_rnn <- function(
     threads = 0L,
     backend = "torch",
     model_type = "gru",
+    device = "cpu",
     verbose = 0L
   )
   out <- utils::modifyList(default_control, control)
@@ -118,6 +120,7 @@ estimate_rnn <- function(
   out$backend <- base::tolower(base::as.character(out$backend[[1L]]))
   out$model_type <- base::tolower(base::as.character(out$model_type[[1L]]))
   out$verbose <- base::as.integer(out$verbose[[1L]])
+  out$device <- base::tolower(base::as.character(out$device[[1L]]))
   out
 }
 

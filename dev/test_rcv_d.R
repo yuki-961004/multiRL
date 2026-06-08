@@ -1,4 +1,23 @@
 # %%
+Sys.setenv(MULTIRL_ENABLE_STAN = "TRUE")
+Sys.setenv(MULTIRL_ENABLE_EIGEN = "TRUE")
+Sys.setenv(MULTIRL_ENABLE_TORCH = "TRUE")
+Sys.setenv(
+  TORCH_DIR = "E:/YuKi_Project/Software/RL/multiRL/build/_deps/libtorch-src"
+)
+
+Sys.setenv(
+  PATH = paste(
+    "E:/YuKi_Project/Software/RL/multiRL/build/_deps/libtorch-src/lib",
+    Sys.getenv("PATH"),
+    sep = ";"
+  )
+)
+
+devtools::clean_dll("./R")
+devtools::load_all("./R", quiet = FALSE)
+
+# %%
 # Common setup for all rcv_d reproducibility tests
 
 data <- binaryRL::Mason_2024_G2
@@ -198,3 +217,70 @@ base::cat("  true values match:", recovery_match, "\n")
 base::cat("  recovered values match:", recovered_match, "\n")
 base::stopifnot(recovery_match, recovered_match)
 base::cat("MCMC rcv_d reproducibility test PASSED.\n")
+
+# %%
+# rcv_d device test: RNN (LibTorch CPU vs GPU)
+# The same seed is used for both devices. CPU and GPU floating-point
+# kernels can still differ slightly, so this chunk reports the difference
+# instead of requiring bit-identical recovery estimates.
+
+control_rnn_cpu <- list(
+  n_draws = 20L,
+  epochs = 3L,
+  batch_size = 32L,
+  units = 32L,
+  layers = 1L,
+  dropout = 0,
+  learning_rate = 0.001,
+  seed = 1004L,
+  threads = 32L,
+  model_type = "gru",
+  verbose = 0L,
+  device = "cpu"
+)
+
+control_rnn_gpu <- utils::modifyList(
+  x = control_rnn_cpu,
+  val = list(
+    threads = 0L,
+    device = "cuda"
+  )
+)
+
+rnn_cpu <- multiRLcpp::rcv_d(
+  estimator = "rnn",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_rnn_cpu
+)
+
+rnn_gpu <- multiRLcpp::rcv_d(
+  estimator = "rnn",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_rnn_gpu
+)
+
+recovery_1 <- rnn_cpu$recovery
+recovery_2 <- rnn_gpu$recovery
+recovery_match <- base::all(
+  base::abs(recovery_1$true - recovery_2$true) < 1e-10
+)
+recovered_diff <- base::max(
+  base::abs(recovery_1$recovered - recovery_2$recovered),
+  na.rm = TRUE
+)
+recovered_finite <- base::all(base::is.finite(recovery_1$recovered)) &&
+  base::all(base::is.finite(recovery_2$recovered))
+
+base::cat("RNN rcv_d CPU/GPU device test:\n")
+base::cat("  true values match:", recovery_match, "\n")
+base::cat("  max recovered difference:", recovered_diff, "\n")
+base::cat("  recovered values are finite:", recovered_finite, "\n")
+base::stopifnot(recovery_match, recovered_finite)
+base::cat("RNN rcv_d CPU/GPU device test PASSED.\n")
+

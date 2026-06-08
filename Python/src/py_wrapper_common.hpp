@@ -28,7 +28,7 @@
 namespace {
 
 multiRL::Params py_params_to_cpp(
-    const inline std::unordered_map<std::string, double>& params,
+    const std::unordered_map<std::string, double>& params,
     const std::vector<std::string>& free_names
 ) {
     multiRL::Params out;
@@ -460,7 +460,7 @@ inline multiRL::RunTask py_make_task(
     const std::vector<int>& trial,
     const std::vector<std::string>& cue,
     const std::vector<std::string>& rsp,
-    const inline std::unordered_map<std::string, double>& params,
+    const std::unordered_map<std::string, double>& params,
     const std::vector<std::string>& free_names,
     const std::vector<std::string>& system,
     const std::vector<std::string>& prior_names,

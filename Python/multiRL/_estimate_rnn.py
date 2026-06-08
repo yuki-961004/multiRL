@@ -98,6 +98,7 @@ def estimate_rnn(
         learning_rate=float(rnn_control["learning_rate"]),
         model_type=str(rnn_control["model_type"]),
         verbose=int(rnn_control["verbose"]),
+        device=str(rnn_control["device"]),
         lower_bounds=lower_bounds,
         upper_bounds=upper_bounds,
     )
@@ -144,6 +145,7 @@ def _modify_rnn_control(control):
         "model_type": "gru",
         "loss": "mse",
         "verbose": 0,
+        "device": "cpu",
     }
     out.update(control)
     out["n_draws"] = int(out["n_draws"])
@@ -160,4 +162,5 @@ def _modify_rnn_control(control):
     out["model_type"] = str(out["model_type"]).lower()
     out["loss"] = str(out["loss"]).lower()
     out["verbose"] = int(out["verbose"])
+    out["device"] = str(out["device"]).lower()
     return out
