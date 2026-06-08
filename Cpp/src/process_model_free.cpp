@@ -11,26 +11,7 @@
 
 namespace multiRL {
 
-namespace {
 
-std::vector<std::string> split_object(const std::string& object) {
-    std::vector<std::string> out;
-    std::string current;
-
-    for (char value : object) {
-        if (value == '_') {
-            out.push_back(current);
-            current.clear();
-        } else {
-            current.push_back(value);
-        }
-    }
-
-    out.push_back(current);
-    return out;
-}
-
-}  // namespace
 
 /* ========================================================================== *
  *                               Input Builder                                *
@@ -113,6 +94,27 @@ Process2Behrule process_2_behrule(
 }
 
 namespace {
+
+/* ========================================================================== *
+ *                             String Utilities                               *
+ * ========================================================================== */
+
+std::vector<std::string> split_object(const std::string& object) {
+    std::vector<std::string> out;
+    std::string current;
+
+    for (char value : object) {
+        if (value == '_') {
+            out.push_back(current);
+            current.clear();
+        } else {
+            current.push_back(value);
+        }
+    }
+
+    out.push_back(current);
+    return out;
+}
 
 /* ========================================================================== *
  *                            Record Initialization                           *

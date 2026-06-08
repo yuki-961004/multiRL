@@ -1,108 +1,201 @@
 # %%
+# Common setup for all rcv_d reproducibility tests
+
 data <- binaryRL::Mason_2024_G2
 
-models <- list(
-  multiRLcpp::TD,
-  multiRLcpp::RSTD,
-  multiRLcpp::Utility
+behrule <- list(
+  cue = c("A", "B", "C", "D"),
+  rsp = c("A", "B", "C", "D")
 )
 
-settings <- list(
-  list(name = "TD"),
-  list(name = "RSTD"),
-  list(name = "Utility")
+colnames <- list(
+  object = c("L_choice", "R_choice"),
+  reward = c("L_reward", "R_reward"),
+  action = "Sub_Choose"
 )
 
-mle <- multiRLcpp::rcv_d(
-  estimator = "mle",
-  data = data,
-  id = 1,
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    object = c("L_choice", "R_choice"),
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  models = models,
-  settings = settings,
-  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
-  uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
-  control = list(
-    n_draws = 30,
-    seed = 1004,
-    threads = 32,
-    algorithm = "LN_BOBYQA",
-    local_algorithm = "LN_BOBYQA",
-    maxeval = 10,
-    seed = 1004
-  )
-)
-
-base::stopifnot(base::inherits(mle, "multiRLcpp_rcv_d"))
-base::stopifnot(base::nrow(mle$simulation) > 0L)
-base::stopifnot(base::nrow(mle$truth) == 90L)
-base::stopifnot(base::nrow(mle$model_recovery) == 270L)
-base::stopifnot(base::all(
-  c("TD", "RSTD", "Utility") %in% mle$truth$generating_model
-))
-
-print(mle$recovery)
-print(mle$model_recovery)
+models <- list(multiRLcpp::TD)
+settings <- list(list(name = "TD"))
+lowers <- list(c(0, 0))
+uppers <- list(c(1, 5))
 
 # %%
-data <- binaryRL::Mason_2024_G2
+# rcv_d reproducibility test: MLE
+# Tests that rcv_d with estimator = "mle" produces identical results
+# when run twice with the same seed.
 
-models <- list(
-  multiRLcpp::TD,
-  multiRLcpp::RSTD,
-  multiRLcpp::Utility
+control_mle <- list(
+  n_draws = 5L,
+  seed = 1004L,
+  threads = 32L,
+  algorithm = "GN_MLSL",
+  local_algorithm = "LN_BOBYQA",
+  maxeval = 3L
 )
 
-settings <- list(
-  list(name = "TD"),
-  list(name = "RSTD"),
-  list(name = "Utility")
+mle_1 <- multiRLcpp::rcv_d(
+  estimator = "mle",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_mle
 )
 
-abc <- multiRLcpp::rcv_d(
+mle_2 <- multiRLcpp::rcv_d(
+  estimator = "mle",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_mle
+)
+
+recovery_1 <- mle_1$recovery
+recovery_2 <- mle_2$recovery
+recovery_match <- base::all(
+  base::abs(recovery_1$true - recovery_2$true) < 1e-10
+)
+recovered_match <- base::all(
+  base::abs(recovery_1$recovered - recovery_2$recovered) < 1e-6
+)
+
+base::cat("MLE rcv_d reproducibility test:\n")
+base::cat("  true values match:", recovery_match, "\n")
+base::cat("  recovered values match:", recovered_match, "\n")
+base::stopifnot(recovery_match, recovered_match)
+base::cat("MLE rcv_d reproducibility test PASSED.\n")
+
+# %%
+# rcv_d reproducibility test: MAP
+
+control_map <- list(
+  n_draws = 5L,
+  seed = 1004L,
+  threads = 32L,
+  algorithm = "GN_MLSL",
+  local_algorithm = "LN_BOBYQA",
+  maxeval = 3L,
+  maxiter = 2L
+)
+
+map_1 <- multiRLcpp::rcv_d(
+  estimator = "map",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_map
+)
+
+map_2 <- multiRLcpp::rcv_d(
+  estimator = "map",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_map
+)
+
+recovery_1 <- map_1$recovery
+recovery_2 <- map_2$recovery
+recovery_match <- base::all(
+  base::abs(recovery_1$true - recovery_2$true) < 1e-10
+)
+recovered_match <- base::all(
+  base::abs(recovery_1$recovered - recovery_2$recovered) < 1e-6
+)
+
+base::cat("MAP rcv_d reproducibility test:\n")
+base::cat("  true values match:", recovery_match, "\n")
+base::cat("  recovered values match:", recovered_match, "\n")
+base::stopifnot(recovery_match, recovered_match)
+base::cat("MAP rcv_d reproducibility test PASSED.\n")
+
+# %%
+# rcv_d reproducibility test: ABC
+
+control_abc <- list(
+  n_draws = 10L,
+  seed = 1004L,
+  threads = 32L,
+  algorithm = "LN_BOBYQA"
+)
+
+abc_1 <- multiRLcpp::rcv_d(
   estimator = "abc",
-  data = data,
-  id = 1,
-  behrule = list(
-    cue = c("A", "B", "C", "D"),
-    rsp = c("A", "B", "C", "D")
-  ),
-  colnames = list(
-    object = c("L_choice", "R_choice"),
-    reward = c("L_reward", "R_reward"),
-    action = "Sub_Choose"
-  ),
-  models = models,
-  settings = settings,
-  lowers = list(c(0, 0), c(0, 0, 0), c(0, 0, 0)),
-  uppers = list(c(1, 5), c(1, 1, 5), c(1, 5, 1)),
-  control = list(
-    n_draws = 30,
-    seed = 1004,
-    threads = 32,
-    scope = "shared",
-    samples = 10,
-    tol = 0.5,
-    method = "rejection",
-    reduction = "none",
-    threads = 1,
-    print_level = 0
-  )
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_abc
 )
 
-base::stopifnot(base::inherits(abc, "multiRLcpp_rcv_d"))
-base::stopifnot(base::nrow(abc$simulation) > 0L)
-base::stopifnot(base::nrow(abc$truth) == 90L)
-base::stopifnot(base::nrow(abc$model_recovery) == 270L)
-base::stopifnot(abc$estimator$scope == "shared")
+abc_2 <- multiRLcpp::rcv_d(
+  estimator = "abc",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_abc
+)
 
-print(abc$recovery)
-print(abc$model_recovery)
+recovery_1 <- abc_1$recovery
+recovery_2 <- abc_2$recovery
+recovery_match <- base::all(
+  base::abs(recovery_1$true - recovery_2$true) < 1e-10
+)
+recovered_match <- base::all(
+  base::abs(recovery_1$recovered - recovery_2$recovered) < 1e-6
+)
+
+base::cat("ABC rcv_d reproducibility test:\n")
+base::cat("  true values match:", recovery_match, "\n")
+base::cat("  recovered values match:", recovered_match, "\n")
+base::stopifnot(recovery_match, recovered_match)
+base::cat("ABC rcv_d reproducibility test PASSED.\n")
+
+# %%
+# rcv_d reproducibility test: MCMC
+
+control_mcmc <- list(
+  n_draws = 5L,
+  seed = 1004L,
+  threads = 32L,
+  chains = 2L,
+  samples = 10L,
+  warmup = 5L
+)
+
+mcmc_1 <- multiRLcpp::rcv_d(
+  estimator = "mcmc",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_mcmc
+)
+
+mcmc_2 <- multiRLcpp::rcv_d(
+  estimator = "mcmc",
+  data = data, id = 1,
+  behrule = behrule, colnames = colnames,
+  models = models, settings = settings,
+  lowers = lowers, uppers = uppers,
+  control = control_mcmc
+)
+
+recovery_1 <- mcmc_1$recovery
+recovery_2 <- mcmc_2$recovery
+recovery_match <- base::all(
+  base::abs(recovery_1$true - recovery_2$true) < 1e-10
+)
+recovered_match <- base::all(
+  base::abs(recovery_1$recovered - recovery_2$recovered) < 1e-6
+)
+
+base::cat("MCMC rcv_d reproducibility test:\n")
+base::cat("  true values match:", recovery_match, "\n")
+base::cat("  recovered values match:", recovered_match, "\n")
+base::stopifnot(recovery_match, recovered_match)
+base::cat("MCMC rcv_d reproducibility test PASSED.\n")

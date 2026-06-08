@@ -516,11 +516,13 @@ RunTask pooled_task(const std::vector<RunTask>& tasks) {
     return out;
 }
 
-}  // namespace
-
-ABCSubjectResult estimate_abc(
+// Seed-aware estimate_abc for a single subject. Used by the public function
+// (with seed_offset = 0) and by the OpenMP parallel loop (with a unique
+// seed_offset per subject so each subject gets a distinct, reproducible bank).
+ABCSubjectResult estimate_abc_seeded(
     const RunTask& raw_task,
-    const ABCControl& raw_control
+    const ABCControl& raw_control,
+    unsigned int seed_offset
 ) {
     const ABCControl control = modify_control(raw_control, "abc");
 
@@ -530,10 +532,28 @@ ABCSubjectResult estimate_abc(
         );
     }
 
-    const std::vector<int> block = summary_blocks(raw_task, control.fake_block);
-    const ABCBank bank = simulate_bank(raw_task, control, block, 0U);
+    const std::vector<int> block = summary_blocks(
+        raw_task,
+        control.fake_block
+    );
+    const ABCBank bank = simulate_bank(
+        raw_task,
+        control,
+        block,
+        seed_offset
+    );
     ABCSubjectResult out = fit_with_bank(raw_task, control, bank, block);
     return out;
+}
+
+}  // namespace
+
+ABCSubjectResult estimate_abc(
+    const RunTask& raw_task,
+    const ABCControl& raw_control
+) {
+    // seed_offset = 0U ensures backward-compatible single-subject behavior
+    return estimate_abc_seeded(raw_task, raw_control, 0U);
 }
 
 std::vector<ABCSubjectResult> estimate_abc(
@@ -610,14 +630,51 @@ std::vector<ABCSubjectResult> estimate_abc(
 #pragma omp parallel for schedule(dynamic) if(tasks.size() > 1)
 #endif
     for (int index = 0; index < static_cast<int>(tasks.size()); ++index) {
-        out[static_cast<std::size_t>(index)] =
-            estimate_abc(tasks[static_cast<std::size_t>(index)], control);
+        // Each subject gets a unique seed offset so the bank of simulated
+        // data is distinct per subject and reproducible across runs.
+        const unsigned int seed_offset = static_cast<unsigned int>(index)
+            * static_cast<unsigned int>(control.samples);
+        out[static_cast<std::size_t>(index)] = estimate_abc_seeded(
+            tasks[static_cast<std::size_t>(index)],
+            control,
+            seed_offset
+        );
         out[static_cast<std::size_t>(index)].n_tasks =
             static_cast<int>(tasks.size());
         out[static_cast<std::size_t>(index)].n_subjects =
             static_cast<int>(tasks.size());
     }
 
+    return out;
+}
+
+// Seed-aware estimate_abc for a single subject. Used by the public function
+// (with seed_offset = 0) and by the OpenMP parallel loop (with a unique
+// seed_offset per subject so each subject gets a distinct, reproducible bank).
+ABCSubjectResult estimate_abc_seeded(
+    const RunTask& raw_task,
+    const ABCControl& raw_control,
+    unsigned int seed_offset
+) {
+    const ABCControl control = modify_control(raw_control, "abc");
+
+    if (raw_task.params.free_names.empty()) {
+        throw std::invalid_argument(
+            "estimate_abc requires at least one free parameter."
+        );
+    }
+
+    const std::vector<int> block = summary_blocks(
+        raw_task,
+        control.fake_block
+    );
+    const ABCBank bank = simulate_bank(
+        raw_task,
+        control,
+        block,
+        seed_offset
+    );
+    ABCSubjectResult out = fit_with_bank(raw_task, control, bank, block);
     return out;
 }
 
