@@ -4,6 +4,12 @@ project(multiRL_Python_Wrapper VERSION 0.5.0 LANGUAGES CXX)
 
 include(FetchContent)
 
+get_filename_component(
+    MULTIRL_REPO_ROOT
+    "${CMAKE_CURRENT_SOURCE_DIR}/.."
+    ABSOLUTE
+)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -52,24 +58,69 @@ option(
     ON
 )
 
-option(
-    MULTIRL_ENABLE_MCMC
-    "Build MCMC estimator with Stan Math support"
-    OFF
-)
+if(DEFINED ENV{MULTIRL_ENABLE_MCMC})
+    set(
+        MULTIRL_ENABLE_MCMC
+        "$ENV{MULTIRL_ENABLE_MCMC}"
+        CACHE BOOL
+        "Build MCMC estimator with Stan Math and Eigen support"
+        FORCE
+    )
+else()
+    option(
+        MULTIRL_ENABLE_MCMC
+        "Build MCMC estimator with Stan Math and Eigen support"
+        OFF
+    )
+endif()
 
-option(
-    MULTIRL_ENABLE_RNN_TORCH
-    "Build RNN estimator with LibTorch support"
-    OFF
-)
+if(DEFINED ENV{MULTIRL_ENABLE_RNN})
+    set(
+        MULTIRL_ENABLE_RNN
+        "$ENV{MULTIRL_ENABLE_RNN}"
+        CACHE BOOL
+        "Build RNN estimator with LibTorch support"
+        FORCE
+    )
+else()
+    option(
+        MULTIRL_ENABLE_RNN
+        "Build RNN estimator with LibTorch support"
+        OFF
+    )
+endif()
 
-set(
-    MULTIRL_LIBTORCH_DIR
-    ""
-    CACHE PATH
-    "Optional LibTorch root directory for Python package builds"
-)
+if(DEFINED ENV{MULTIRL_LIBTORCH_DIR})
+    set(MULTIRL_LIBTORCH_DIR_VALUE "$ENV{MULTIRL_LIBTORCH_DIR}")
+else()
+    set(MULTIRL_LIBTORCH_DIR_VALUE "")
+endif()
+
+if(NOT MULTIRL_LIBTORCH_DIR_VALUE STREQUAL "" AND
+   NOT IS_ABSOLUTE "${MULTIRL_LIBTORCH_DIR_VALUE}")
+    get_filename_component(
+        MULTIRL_LIBTORCH_DIR_VALUE
+        "${MULTIRL_REPO_ROOT}/${MULTIRL_LIBTORCH_DIR_VALUE}"
+        ABSOLUTE
+    )
+endif()
+
+if(DEFINED ENV{MULTIRL_LIBTORCH_DIR})
+    set(
+        MULTIRL_LIBTORCH_DIR
+        "${MULTIRL_LIBTORCH_DIR_VALUE}"
+        CACHE PATH
+        "Optional LibTorch root directory for Python package builds"
+        FORCE
+    )
+else()
+    set(
+        MULTIRL_LIBTORCH_DIR
+        ""
+        CACHE PATH
+        "Optional LibTorch root directory for Python package builds"
+    )
+endif()
 
 set(
     MULTIRL_STAN_MATH_TAG
@@ -92,20 +143,21 @@ if(MULTIRL_ENABLE_MCMC AND MULTIRL_STAN_MATH_TAG STREQUAL "latest")
 
     if(NOT MULTIRL_STAN_RELEASE_CODE EQUAL 0)
         message(
-            FATAL_ERROR
+            WARNING
             "Failed to resolve latest Stan Math release: "
             "${MULTIRL_STAN_RELEASE_MESSAGE}. "
-            "Set -DMULTIRL_STAN_MATH_TAG=v5.3.0 for an offline build."
+            "Falling back to v5.3.0."
         )
+        set(MULTIRL_STAN_MATH_TAG "v5.3.0")
+    else()
+        file(READ "${CMAKE_BINARY_DIR}/stan_release.json" MULTIRL_STAN_RELEASE)
+        string(
+            JSON MULTIRL_STAN_MATH_TAG
+            GET "${MULTIRL_STAN_RELEASE}" "tag_name"
+        )
+
+        message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
     endif()
-
-    file(READ "${CMAKE_BINARY_DIR}/stan_release.json" MULTIRL_STAN_RELEASE)
-    string(
-        JSON MULTIRL_STAN_MATH_TAG
-        GET "${MULTIRL_STAN_RELEASE}" "tag_name"
-    )
-
-    message(STATUS "Stan Math auto-resolved tag: ${MULTIRL_STAN_MATH_TAG}")
 endif()
 # -- Validate Stan tag (shells may truncate v5.3.0 to v5)
 string(REGEX MATCH "^v[0-9]+\\.[0-9]+\\.[0-9]+$" _stan_tag_ok "${MULTIRL_STAN_MATH_TAG}")
@@ -133,7 +185,20 @@ if(MULTIRL_ENABLE_NLOPT)
             GIT_TAG master
             GIT_SHALLOW TRUE
         )
+
+        set(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL "${CMAKE_MESSAGE_LOG_LEVEL}")
+        set(CMAKE_MESSAGE_LOG_LEVEL WARNING)
         FetchContent_MakeAvailable(nlopt)
+
+        if(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL STREQUAL "")
+            unset(CMAKE_MESSAGE_LOG_LEVEL)
+        else()
+            set(
+                CMAKE_MESSAGE_LOG_LEVEL
+                "${MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL}"
+            )
+        endif()
+        unset(MULTIRL_PREVIOUS_MESSAGE_LOG_LEVEL)
 
         set(MULTIRL_NLOPT_TARGET nlopt)
     else()
@@ -201,7 +266,7 @@ if(MULTIRL_ENABLE_MCMC)
     endforeach()
 endif()
 
-if(MULTIRL_ENABLE_RNN_TORCH)
+if(MULTIRL_ENABLE_RNN)
     if(NOT MULTIRL_LIBTORCH_DIR STREQUAL "")
         list(APPEND CMAKE_PREFIX_PATH "${MULTIRL_LIBTORCH_DIR}")
     endif()
@@ -294,7 +359,7 @@ if(MULTIRL_ENABLE_MCMC)
     )
 endif()
 
-if(MULTIRL_ENABLE_RNN_TORCH)
+if(MULTIRL_ENABLE_RNN)
     target_compile_definitions(multiRL_python_core PUBLIC MULTIRL_HAS_TORCH)
     target_link_libraries(
         multiRL_python_core
@@ -334,7 +399,7 @@ function(add_multiRL_module module_name)
         )
     endif()
 
-    if(MULTIRL_ENABLE_RNN_TORCH)
+    if(MULTIRL_ENABLE_RNN)
         target_compile_definitions(${module_name} PRIVATE MULTIRL_HAS_TORCH)
         target_link_libraries(${module_name} PRIVATE "${TORCH_LIBRARIES}")
         target_compile_options(${module_name} PRIVATE ${TORCH_CXX_FLAGS})

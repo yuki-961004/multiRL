@@ -165,14 +165,14 @@ option(
 )
 
 option(
-    MULTIRL_ENABLE_RNN_TORCH
+    MULTIRL_ENABLE_RNN
     "Build RNN estimator with LibTorch support"
     ON
 )
 
 option(
     MULTIRL_FETCH_LIBTORCH
-    "Fetch LibTorch when MULTIRL_ENABLE_RNN_TORCH is ON"
+    "Fetch LibTorch when MULTIRL_ENABLE_RNN is ON"
     ON
 )
 
@@ -329,7 +329,7 @@ if(MULTIRL_ENABLE_MCMC)
     endforeach()
 endif()
 
-if(MULTIRL_ENABLE_RNN_TORCH)
+if(MULTIRL_ENABLE_RNN)
     if(MULTIRL_FETCH_LIBTORCH)
         if(MULTIRL_LIBTORCH_URL STREQUAL "")
             set(MULTIRL_EFFECTIVE_LIBTORCH_CUDA "${MULTIRL_LIBTORCH_CUDA}")
@@ -643,7 +643,7 @@ if(MULTIRL_ENABLE_MCMC)
     target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_STAN)
 endif()
 
-if(MULTIRL_ENABLE_RNN_TORCH)
+if(MULTIRL_ENABLE_RNN)
     target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_TORCH)
     target_link_libraries(multiRL PUBLIC "${TORCH_LIBRARIES}")
     target_compile_options(multiRL PUBLIC ${TORCH_CXX_FLAGS})
@@ -706,7 +706,7 @@ if(MULTIRL_BUILD_PYTHON)
         )
     endif()
 
-    if(MULTIRL_ENABLE_RNN_TORCH)
+    if(MULTIRL_ENABLE_RNN)
         target_compile_definitions(_shell_run_m PRIVATE MULTIRL_HAS_TORCH)
         target_link_libraries(_shell_run_m PRIVATE "${TORCH_LIBRARIES}")
         target_compile_options(_shell_run_m PRIVATE ${TORCH_CXX_FLAGS})
@@ -732,6 +732,6 @@ if(MULTIRL_ENABLE_MCMC)
     message(STATUS "multiRL dependency: Stan Math ${MULTIRL_STAN_MATH_TAG}")
 endif()
 
-if(MULTIRL_ENABLE_RNN_TORCH)
+if(MULTIRL_ENABLE_RNN)
     message(STATUS "multiRL dependency: LibTorch ${MULTIRL_TORCH_VERSION}")
 endif()

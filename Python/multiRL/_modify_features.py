@@ -7,6 +7,7 @@ def _modify_features(data, id, colnames):
         data = data[data[colnames["subid"]].isin(ids)]
 
     return {
+        "subid": [str(x) for x in _vector_to_list(data[colnames["subid"]])],
         "object": _matrix_to_list(data[colnames["object"]]),
         "reward": _numeric_matrix_to_list(data[colnames["reward"]]),
         "action": _vector_to_list(data[colnames["action"]]),

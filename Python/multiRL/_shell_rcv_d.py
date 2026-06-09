@@ -107,8 +107,6 @@ def rcv_d(
         truth_parts.extend(simulated["truth"])
 
         fit_data = _rcv_d_fit_data(simulated["simulation"])
-        fit_draws = sorted(set(fit_data["Subject"].tolist()))
-
         for candidate_index, candidate_spec in enumerate(candidates, start=1):
             candidate_name = _rcv_d_model_name(
                 spec=candidate_spec,
@@ -123,40 +121,35 @@ def rcv_d(
             candidate_settings = dict(candidate_spec.get("settings") or {})
             candidate_settings["name"] = candidate_name
 
-            for draw in fit_draws:
-                subject_data = fit_data[fit_data["Subject"] == draw]
-                fit_result = fit_p(
-                    data=subject_data,
-                    estimator=estimator,
-                    id=None,
-                    colnames=_rcv_d_colnames(),
-                    behrule=behrule,
-                    funcs=candidate_spec.get("funcs"),
-                    params=candidate_spec.get("params"),
-                    priors=candidate_spec.get("priors"),
-                    settings=candidate_settings,
-                    lower=candidate_spec.get("lower"),
-                    upper=candidate_spec.get("upper"),
-                    control=local_control,
-                )
-                _rcv_d_tag_draw(fit_result, draw)
+            fit_result = fit_p(
+                data=fit_data,
+                estimator=estimator,
+                id=None,
+                colnames=_rcv_d_colnames(),
+                behrule=behrule,
+                funcs=candidate_spec.get("funcs"),
+                params=candidate_spec.get("params"),
+                priors=candidate_spec.get("priors"),
+                settings=candidate_settings,
+                lower=candidate_spec.get("lower"),
+                upper=candidate_spec.get("upper"),
+                control=local_control,
+            )
 
-                key = (
-                    generating_name
-                    + "::"
-                    + candidate_name
-                    + "::"
-                    + str(draw)
+            key = (
+                generating_name
+                + "::"
+                + candidate_name
+            )
+            raw_fits[key] = fit_result
+            fit_parts.extend(
+                _rcv_d_fit_table(
+                    fit=fit_result.get("fit", {}),
+                    generating_model=generating_name,
+                    candidate_model=candidate_name,
+                    estimator=estimator,
                 )
-                raw_fits[key] = fit_result
-                fit_parts.extend(
-                    _rcv_d_fit_table(
-                        fit=fit_result.get("fit", {}),
-                        generating_model=generating_name,
-                        candidate_model=candidate_name,
-                        estimator=estimator,
-                    )
-                )
+            )
 
     recovery = _rcv_d_recovery_table(truth_parts, fit_parts, estimator)
     model_recovery = _rcv_d_model_recovery_table(fit_parts)
@@ -388,6 +381,7 @@ def _rcv_d_simulate_model(
         action=request["action"],
         block=request["block"],
         trial=request["trial"],
+        subid=request["subid"],
         cue=request["behrule"]["cue"],
         rsp=request["behrule"]["rsp"],
         params=request["params"],

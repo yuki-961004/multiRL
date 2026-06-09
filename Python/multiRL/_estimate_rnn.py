@@ -74,6 +74,7 @@ def estimate_rnn(
         action=request["action"],
         block=request["block"],
         trial=request["trial"],
+        subid=request["subid"],
         cue=request["behrule"]["cue"],
         rsp=request["behrule"]["rsp"],
         params=request["params"],
@@ -99,6 +100,7 @@ def estimate_rnn(
         model_type=str(rnn_control["model_type"]),
         verbose=int(rnn_control["verbose"]),
         device=str(rnn_control["device"]),
+        scope=str(rnn_control["scope"]),
         lower_bounds=lower_bounds,
         upper_bounds=upper_bounds,
     )
@@ -121,6 +123,7 @@ def estimate_rnn(
                 "action": request["action"],
                 "block": request["block"],
                 "trial": request["trial"],
+                "subid": request["subid"],
             },
         },
         "fit": cpp_result["fit"],
@@ -146,6 +149,7 @@ def _modify_rnn_control(control):
         "loss": "mse",
         "verbose": 0,
         "device": "cpu",
+        "scope": "individual",
     }
     out.update(control)
     out["n_draws"] = int(out["n_draws"])
@@ -163,4 +167,5 @@ def _modify_rnn_control(control):
     out["loss"] = str(out["loss"]).lower()
     out["verbose"] = int(out["verbose"])
     out["device"] = str(out["device"]).lower()
+    out["scope"] = str(out["scope"]).lower()
     return out

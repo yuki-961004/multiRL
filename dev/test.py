@@ -1,5 +1,12 @@
-# Install from the Python package directory before running:
-# python -m pip install -e Python
+﻿# Optional dependency install from the repository root:
+# $env:MULTIRL_ENABLE_RNN = "ON"
+# $env:MULTIRL_ENABLE_MCMC = "ON"
+# $env:MULTIRL_LIBTORCH_DIR = "./build/_deps/libtorch-src"
+# 
+# python -m pip uninstall -y multiRL
+# python -m pip install -e Python --no-build-isolation --verbose
+#
+# Restart the Python kernel after reinstalling.
 
 # %%
 import time

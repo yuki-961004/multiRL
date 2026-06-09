@@ -75,6 +75,7 @@ def estimate_mle(
         action=request["action"],
         block=request["block"],
         trial=request["trial"],
+        subid=request["subid"],
         cue=request["behrule"]["cue"],
         rsp=request["behrule"]["rsp"],
         params=request["params"],
@@ -96,6 +97,7 @@ def estimate_mle(
         xtol_rel=float(control.get("xtol_rel", 1e-6)),
         local_xtol_rel=float(control.get("local_xtol_rel", 1e-8)),
         seed=int(control.get("seed", 1004)),
+        threads=int(control.get("threads", 0)),
         lower_bounds=lower_bounds,
         upper_bounds=upper_bounds,
     )
@@ -117,7 +119,8 @@ def estimate_mle(
                 "reward": request["reward"],
                 "action": request["action"],
                 "block": request["block"],
-                "trial": request["trial"]
+                "trial": request["trial"],
+                "subid": request["subid"],
             }
         },
         "fit": cpp_result["fit"],

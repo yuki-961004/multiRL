@@ -8,6 +8,7 @@ pybind11::dict py_estimate_mcmc(
     const std::vector<std::string>& action,
     const std::vector<int>& block,
     const std::vector<int>& trial,
+    const std::vector<std::string>& subid,
     const std::vector<std::string>& cue,
     const std::vector<std::string>& rsp,
     const std::unordered_map<std::string, double>& params,
@@ -39,6 +40,7 @@ pybind11::dict py_estimate_mcmc(
         action,
         block,
         trial,
+        subid,
         cue,
         rsp,
         params,
@@ -68,14 +70,12 @@ pybind11::dict py_estimate_mcmc(
     control.lower_bounds = lower_bounds;
     control.upper_bounds = upper_bounds;
 
+    std::vector<multiRL::RunTask> tasks =
+        multiRL::split_task_by_subject(task);
     std::vector<multiRL::SubjectMCMCResult> results =
-        multiRL::estimate_mcmc(std::vector<multiRL::RunTask>{task}, control);
+        multiRL::estimate_mcmc(tasks, control);
 
-    if (results.empty()) {
-        throw std::runtime_error("MCMC returned no subject results.");
-    }
-
-    return py_wrap_estimate_mcmc_result(results[0], free_names, control);
+    return py_wrap_estimate_mcmc_results(results, free_names, control);
 }
 
 #endif
@@ -86,9 +86,10 @@ void register_py_estimate_mcmc(pybind11::module& module) {
         "estimate_mcmc", &py_estimate_mcmc,
         pybind11::arg("object"), pybind11::arg("reward"),
         pybind11::arg("action"), pybind11::arg("block"),
-        pybind11::arg("trial"), pybind11::arg("cue"),
-        pybind11::arg("rsp"), pybind11::arg("params"),
-        pybind11::arg("free_names"), pybind11::arg("system"),
+        pybind11::arg("trial"), pybind11::arg("subid"),
+        pybind11::arg("cue"), pybind11::arg("rsp"),
+        pybind11::arg("params"), pybind11::arg("free_names"),
+        pybind11::arg("system"),
         pybind11::arg("prior_names") = std::vector<std::string>(),
         pybind11::arg("prior_types") = std::vector<std::string>(),
         pybind11::arg("prior_param1") = std::vector<double>(),

@@ -151,6 +151,7 @@ def _rpl_e_call_cpp(item, fit_rows):
         action=features["action"],
         block=features["block"],
         trial=features["trial"],
+        subid=features.get("subid", ["1"] * len(features["action"])),
         cue=request["behrule"]["cue"],
         rsp=request["behrule"]["rsp"],
         params=_rpl_e_params(params),

@@ -11,6 +11,7 @@ requires-python = ">=3.9"
 [tool.scikit-build]
 wheel.packages = ["multiRL"]
 cmake.source-dir = "."
+build-dir = "build/{wheel_tag}"
 
 [tool.pyright]
 extraPaths = ["."]

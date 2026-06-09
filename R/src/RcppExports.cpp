@@ -173,8 +173,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // r_estimate_rnn_data
-Rcpp::List r_estimate_rnn_data(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, int n_draws, int seed, int threads, int epochs, int batch_size, int units, int layers, double dropout, double learning_rate, std::string model_type, int verbose, std::string device, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
-RcppExport SEXP _multiRLcpp_r_estimate_rnn_data(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP n_drawsSEXP, SEXP seedSEXP, SEXP threadsSEXP, SEXP epochsSEXP, SEXP batch_sizeSEXP, SEXP unitsSEXP, SEXP layersSEXP, SEXP dropoutSEXP, SEXP learning_rateSEXP, SEXP model_typeSEXP, SEXP verboseSEXP, SEXP deviceSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
+Rcpp::List r_estimate_rnn_data(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, int n_draws, int seed, int threads, int epochs, int batch_size, int units, int layers, double dropout, double learning_rate, std::string model_type, int verbose, std::string device, std::string scope, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
+RcppExport SEXP _multiRLcpp_r_estimate_rnn_data(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP n_drawsSEXP, SEXP seedSEXP, SEXP threadsSEXP, SEXP epochsSEXP, SEXP batch_sizeSEXP, SEXP unitsSEXP, SEXP layersSEXP, SEXP dropoutSEXP, SEXP learning_rateSEXP, SEXP model_typeSEXP, SEXP verboseSEXP, SEXP deviceSEXP, SEXP scopeSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -210,9 +210,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type model_type(model_typeSEXP);
     Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< std::string >::type device(deviceSEXP);
+    Rcpp::traits::input_parameter< std::string >::type scope(scopeSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lower_bounds(lower_boundsSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type upper_bounds(upper_boundsSEXP);
-    rcpp_result_gen = Rcpp::wrap(r_estimate_rnn_data(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, epochs, batch_size, units, layers, dropout, learning_rate, model_type, verbose, device, lower_bounds, upper_bounds));
+    rcpp_result_gen = Rcpp::wrap(r_estimate_rnn_data(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, n_draws, seed, threads, epochs, batch_size, units, layers, dropout, learning_rate, model_type, verbose, device, scope, lower_bounds, upper_bounds));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -321,7 +322,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_multiRLcpp_r_estimate_map", (DL_FUNC) &_multiRLcpp_r_estimate_map, 31},
     {"_multiRLcpp_r_estimate_mcmc", (DL_FUNC) &_multiRLcpp_r_estimate_mcmc, 31},
     {"_multiRLcpp_r_estimate_mle", (DL_FUNC) &_multiRLcpp_r_estimate_mle, 28},
-    {"_multiRLcpp_r_estimate_rnn_data", (DL_FUNC) &_multiRLcpp_r_estimate_rnn_data, 34},
+    {"_multiRLcpp_r_estimate_rnn_data", (DL_FUNC) &_multiRLcpp_r_estimate_rnn_data, 35},
     {"_multiRLcpp_r_shell_rcv_d", (DL_FUNC) &_multiRLcpp_r_shell_rcv_d, 26},
     {"_multiRLcpp_r_shell_rpl_e", (DL_FUNC) &_multiRLcpp_r_shell_rpl_e, 22},
     {"_multiRLcpp_r_shell_run_m", (DL_FUNC) &_multiRLcpp_r_shell_run_m, 21},

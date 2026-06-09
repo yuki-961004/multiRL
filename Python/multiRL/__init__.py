@@ -1,5 +1,29 @@
 """Python frontend for the multiRL C++ backend."""
 
+import os
+
+
+def _add_torch_dll_directories():
+    candidates = []
+    package_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates.append(package_dir)
+
+    torch_root = os.environ.get("MULTIRL_LIBTORCH_DIR", "")
+    if torch_root:
+        torch_root = os.path.abspath(torch_root)
+        candidates.append(torch_root)
+        candidates.append(os.path.join(torch_root, "lib"))
+
+    for candidate in candidates:
+        if not os.path.isdir(candidate):
+            continue
+        if hasattr(os, "add_dll_directory"):
+            os.add_dll_directory(candidate)
+        os.environ["PATH"] = candidate + os.pathsep + os.environ.get("PATH", "")
+
+
+_add_torch_dll_directories()
+
 from ._estimate_abc import estimate_abc
 from ._estimate_mcmc import estimate_mcmc
 from ._estimate_mle import estimate_mle

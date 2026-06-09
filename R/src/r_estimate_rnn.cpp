@@ -143,6 +143,7 @@ Rcpp::List r_estimate_rnn_data(
     std::string model_type,
     int verbose,
     std::string device,
+    std::string scope,
     Rcpp::NumericVector lower_bounds,
     Rcpp::NumericVector upper_bounds
 ) {
@@ -185,6 +186,7 @@ Rcpp::List r_estimate_rnn_data(
     control.model_type = model_type;
     control.verbose = verbose;
     control.device = device;
+    control.scope = scope;
     control.lower_bounds = multiRL_r::as_double_vector(lower_bounds);
     control.upper_bounds = multiRL_r::as_double_vector(upper_bounds);
 

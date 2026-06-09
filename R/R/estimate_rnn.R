@@ -62,6 +62,7 @@ estimate_rnn <- function(
     model_type = control$model_type,
     verbose = control$verbose,
     device = control$device,
+    scope = control$scope,
     lower_bounds = .modify_bound_vector(lower, base::names(params$free)),
     upper_bounds = .modify_bound_vector(upper, base::names(params$free))
   )
@@ -104,6 +105,7 @@ estimate_rnn <- function(
     backend = "torch",
     model_type = "gru",
     device = "cpu",
+    scope = "individual",
     verbose = 0L
   )
   out <- utils::modifyList(default_control, control)
@@ -119,6 +121,7 @@ estimate_rnn <- function(
   out$threads <- base::as.integer(out$threads[[1L]])
   out$backend <- base::tolower(base::as.character(out$backend[[1L]]))
   out$model_type <- base::tolower(base::as.character(out$model_type[[1L]]))
+  out$scope <- base::tolower(base::as.character(out$scope[[1L]]))
   out$verbose <- base::as.integer(out$verbose[[1L]])
   out$device <- base::tolower(base::as.character(out$device[[1L]]))
   out

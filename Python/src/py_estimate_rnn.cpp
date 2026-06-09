@@ -51,7 +51,11 @@ pybind11::dict py_wrap_estimate_rnn_results(
     diagnostics["subjects"] = subject_rows;
 
     pybind11::dict out;
-    out["fit"] = fit_rows;
+    if (results.size() == 1) {
+        out["fit"] = fit_rows[0];
+    } else {
+        out["fit"] = fit_rows;
+    }
     out["estimator"] = estimator;
     out["diagnostics"] = diagnostics;
     return out;
@@ -65,6 +69,7 @@ pybind11::dict py_estimate_rnn_data(
     const std::vector<std::string>& action,
     const std::vector<int>& block,
     const std::vector<int>& trial,
+    const std::vector<std::string>& subid,
     const std::vector<std::string>& cue,
     const std::vector<std::string>& rsp,
     const std::unordered_map<std::string, double>& params,
@@ -90,6 +95,7 @@ pybind11::dict py_estimate_rnn_data(
     const std::string& model_type,
     const int verbose,
     const std::string& device,
+    const std::string& scope,
     const std::vector<double>& lower_bounds,
     const std::vector<double>& upper_bounds
 ) {
@@ -99,6 +105,7 @@ pybind11::dict py_estimate_rnn_data(
         action,
         block,
         trial,
+        subid,
         cue,
         rsp,
         params,
@@ -130,11 +137,14 @@ pybind11::dict py_estimate_rnn_data(
     control.model_type = model_type;
     control.verbose = verbose;
     control.device = device;
+    control.scope = scope;
     control.lower_bounds = lower_bounds;
     control.upper_bounds = upper_bounds;
 
+    std::vector<multiRL::RunTask> tasks =
+        multiRL::split_task_by_subject(task);
     const std::vector<multiRL::EstimateRnnSubjectResult> result =
-        multiRL::estimate_rnn(std::vector<multiRL::RunTask>{task}, control);
+        multiRL::estimate_rnn(tasks, control);
     return py_wrap_estimate_rnn_results(result, control);
 }
 
@@ -144,9 +154,10 @@ void register_py_estimate_rnn(pybind11::module& module) {
         "estimate_rnn_data", &py_estimate_rnn_data,
         pybind11::arg("object"), pybind11::arg("reward"),
         pybind11::arg("action"), pybind11::arg("block"),
-        pybind11::arg("trial"), pybind11::arg("cue"),
-        pybind11::arg("rsp"), pybind11::arg("params"),
-        pybind11::arg("free_names"), pybind11::arg("system"),
+        pybind11::arg("trial"), pybind11::arg("subid"),
+        pybind11::arg("cue"), pybind11::arg("rsp"),
+        pybind11::arg("params"), pybind11::arg("free_names"),
+        pybind11::arg("system"),
         pybind11::arg("prior_names") = std::vector<std::string>(),
         pybind11::arg("prior_types") = std::vector<std::string>(),
         pybind11::arg("prior_param1") = std::vector<double>(),
@@ -167,6 +178,7 @@ void register_py_estimate_rnn(pybind11::module& module) {
         pybind11::arg("model_type") = "gru",
         pybind11::arg("verbose") = 0,
         pybind11::arg("device") = "cpu",
+        pybind11::arg("scope") = "individual",
         pybind11::arg("lower_bounds") = std::vector<double>(),
         pybind11::arg("upper_bounds") = std::vector<double>()
     );

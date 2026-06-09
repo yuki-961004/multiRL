@@ -31,6 +31,7 @@ def run_m(
     name="TD",
     mode="fitting",
     estimate="MLE",
+    subid=None,
 ):
     return _shell_run_m(
         data=data,
@@ -54,6 +55,7 @@ def run_m(
         name=name,
         mode=mode,
         estimate=estimate,
+        subid=subid,
     )
 
 
@@ -79,6 +81,7 @@ def _shell_run_m(
     name,
     mode,
     estimate,
+    subid,
 ):
     request = _modify_request(
         data=data,
@@ -102,6 +105,7 @@ def _shell_run_m(
         name=name,
         mode=mode,
         estimate=estimate,
+        subid=subid,
     )
 
     return _cpp_shell_run_m.shell_run_m(
@@ -110,6 +114,7 @@ def _shell_run_m(
         action=request["action"],
         block=request["block"],
         trial=request["trial"],
+        subid=request["subid"],
         cue=request["behrule"]["cue"],
         rsp=request["behrule"]["rsp"],
         params=request["params"],
@@ -149,6 +154,7 @@ def _modify_request(
     name,
     mode,
     estimate,
+    subid=None,
 ):
     settings = _modify_settings(
         settings=settings,
@@ -179,13 +185,21 @@ def _modify_request(
             id=id,
             colnames=colnames,
         )
+        subid = features["subid"]
         object = features["object"]
         reward = features["reward"]
         action = features["action"]
         block = features["block"]
         trial = features["trial"]
+    else:
+        if subid is None:
+            if action is not None:
+                subid = ["1"] * len(action)
+            else:
+                subid = []
 
     return {
+        "subid": subid,
         "object": object,
         "reward": reward,
         "action": action,

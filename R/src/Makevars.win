@@ -3,13 +3,13 @@ CXX_STD = CXX17
 R_SCRIPT = "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript"
 
 MULTIRL_USE_STAN = $(shell $(R_SCRIPT) -e \
-	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_STAN', 'FALSE')))")
+	"x<-toupper(Sys.getenv('MULTIRL_ENABLE_MCMC','FALSE'));cat(ifelse(x%in%c('ON','TRUE','1'),'TRUE','FALSE'))")
 MULTIRL_USE_EIGEN = $(shell $(R_SCRIPT) -e \
-	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_EIGEN', 'FALSE')))")
+	"x<-toupper(Sys.getenv('MULTIRL_ENABLE_MCMC','FALSE'));cat(ifelse(x%in%c('ON','TRUE','1'),'TRUE','FALSE'))")
 MULTIRL_USE_TORCH = $(shell $(R_SCRIPT) -e \
-	"cat(toupper(Sys.getenv('MULTIRL_ENABLE_TORCH', 'FALSE')))")
+	"x<-toupper(Sys.getenv('MULTIRL_ENABLE_RNN','FALSE'));cat(ifelse(x%in%c('ON','TRUE','1'),'TRUE','FALSE'))")
 MULTIRL_TORCH_DIR = $(shell $(R_SCRIPT) -e \
-	"cat(Sys.getenv('TORCH_DIR', Sys.getenv('LIBTORCH_DIR', '')))")
+	"cat(Sys.getenv('MULTIRL_LIBTORCH_DIR', ''))")
 
 PKG_CPPFLAGS = -I../inst/include -DMULTIRL_HAS_NLOPT \
 	$(SHLIB_OPENMP_CXXFLAGS)
@@ -41,7 +41,7 @@ PKG_LIBS += $(STAN_LIBS)
 endif
 
 ifeq ($(MULTIRL_USE_TORCH),TRUE)
-$(error MULTIRL_ENABLE_TORCH=TRUE is not supported by Rtools/GCC on Windows. Use the root CMake MSVC build for LibTorch)
+$(error MULTIRL_ENABLE_RNN=ON is not supported by Rtools/GCC on Windows. Use the root CMake MSVC build for LibTorch)
 endif
 
 ifeq ($(MULTIRL_USE_TORCH),TRUE)

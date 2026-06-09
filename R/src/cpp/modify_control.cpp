@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <thread>
 
 namespace multiRL {
 
@@ -290,8 +291,11 @@ RNNControl modify_control(
     if (out.sample <= 0) {
         out.sample = out.n_draws;
     }
-    if (out.threads < 0) {
-        out.threads = 0;
+    if (out.threads <= 0) {
+        const unsigned int hardware_threads =
+            std::thread::hardware_concurrency();
+        out.threads = hardware_threads > 0U ?
+            static_cast<int>(hardware_threads) : 1;
     }
     if (out.units <= 0) {
         out.units = 32;
@@ -324,6 +328,16 @@ RNNControl modify_control(
         out.model_type = "gru";
     }
     out.model_type = to_lower(out.model_type);
+    if (out.device.empty()) {
+        out.device = "cpu";
+    }
+    out.device = to_lower(out.device);
+    if (out.device == "cuda") {
+        out.device = "gpu";
+    }
+    if (out.device != "cpu" && out.device != "gpu") {
+        out.device = "cpu";
+    }
 
     return out;
 }

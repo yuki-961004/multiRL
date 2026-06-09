@@ -6,6 +6,7 @@ pybind11::dict py_estimate_map(
     const std::vector<std::string>& action,
     const std::vector<int>& block,
     const std::vector<int>& trial,
+    const std::vector<std::string>& subid,
     const std::vector<std::string>& cue,
     const std::vector<std::string>& rsp,
     const std::unordered_map<std::string, double>& params,
@@ -28,6 +29,7 @@ pybind11::dict py_estimate_map(
     const double xtol_rel,
     const double local_xtol_rel,
     const int seed,
+    const int threads,
     const std::vector<double>& lower_bounds,
     const std::vector<double>& upper_bounds
 ) {
@@ -37,6 +39,7 @@ pybind11::dict py_estimate_map(
         action,
         block,
         trial,
+        subid,
         cue,
         rsp,
         params,
@@ -60,14 +63,18 @@ pybind11::dict py_estimate_map(
     control.mle.nlopt.xtol_rel = xtol_rel;
     control.mle.nlopt.local_xtol_rel = local_xtol_rel;
     control.mle.nlopt.seed = seed;
+    control.mle.nlopt.threads = threads;
     control.mle.nlopt.lower_bounds = lower_bounds;
     control.mle.nlopt.upper_bounds = upper_bounds;
     control.map_maxiter = map_maxiter;
     control.map_tol = map_tol;
     control.map_patience = map_patience;
 
-    multiRL::EstimateMapResult result = multiRL::estimate_map(task, control);
-    return py_wrap_estimate_map_result(result);
+    std::vector<multiRL::RunTask> tasks =
+        multiRL::split_task_by_subject(task);
+    multiRL::EstimateMapResult result =
+        multiRL::estimate_map(tasks, control);
+    return py_wrap_estimate_map_results(tasks, result);
 }
 
 
@@ -76,9 +83,10 @@ void register_py_estimate_map(pybind11::module& module) {
         "estimate_map", &py_estimate_map,
         pybind11::arg("object"), pybind11::arg("reward"),
         pybind11::arg("action"), pybind11::arg("block"),
-        pybind11::arg("trial"), pybind11::arg("cue"),
-        pybind11::arg("rsp"), pybind11::arg("params"),
-        pybind11::arg("free_names"), pybind11::arg("system"),
+        pybind11::arg("trial"), pybind11::arg("subid"),
+        pybind11::arg("cue"), pybind11::arg("rsp"),
+        pybind11::arg("params"), pybind11::arg("free_names"),
+        pybind11::arg("system"),
         pybind11::arg("prior_names") = std::vector<std::string>(),
         pybind11::arg("prior_types") = std::vector<std::string>(),
         pybind11::arg("prior_param1") = std::vector<double>(),
@@ -96,6 +104,7 @@ void register_py_estimate_map(pybind11::module& module) {
         pybind11::arg("xtol_rel") = 1e-6,
         pybind11::arg("local_xtol_rel") = 1e-8,
         pybind11::arg("seed") = 1004,
+        pybind11::arg("threads") = 0,
         pybind11::arg("lower_bounds") = std::vector<double>(),
         pybind11::arg("upper_bounds") = std::vector<double>()
     );

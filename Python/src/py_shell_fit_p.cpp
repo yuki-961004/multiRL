@@ -7,6 +7,7 @@ pybind11::dict py_shell_fit_p(
     const std::vector<std::string>& action,
     const std::vector<int>& block,
     const std::vector<int>& trial,
+    const std::vector<std::string>& subid,
     const std::vector<std::string>& cue,
     const std::vector<std::string>& rsp,
     const std::unordered_map<std::string, double>& params,
@@ -25,7 +26,7 @@ pybind11::dict py_shell_fit_p(
 ) {
     std::vector<multiRL::RunTask> tasks;
     tasks.push_back(py_make_task(
-        object, reward, action, block, trial, cue, rsp,
+        object, reward, action, block, trial, subid, cue, rsp,
         params, free_names, system,
         prior_names, prior_types, prior_param1, prior_param2,
         prior_active, policy, name, mode, estimator_name
@@ -85,9 +86,10 @@ void register_py_shell_fit_p(pybind11::module& module) {
         "shell_fit_p", &py_shell_fit_p,
         pybind11::arg("object"), pybind11::arg("reward"),
         pybind11::arg("action"), pybind11::arg("block"),
-        pybind11::arg("trial"), pybind11::arg("cue"),
-        pybind11::arg("rsp"), pybind11::arg("params"),
-        pybind11::arg("free_names"), pybind11::arg("system"),
+        pybind11::arg("trial"), pybind11::arg("subid"),
+        pybind11::arg("cue"), pybind11::arg("rsp"),
+        pybind11::arg("params"), pybind11::arg("free_names"),
+        pybind11::arg("system"),
         pybind11::arg("prior_names") = std::vector<std::string>(),
         pybind11::arg("prior_types") = std::vector<std::string>(),
         pybind11::arg("prior_param1") = std::vector<double>(),

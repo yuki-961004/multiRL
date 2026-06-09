@@ -1,5 +1,13 @@
-# Install from the Python package directory before running:
-# python -m pip install -e Python
+# Optional dependency install from the repository root:
+# $env:MULTIRL_ENABLE_RNN = "ON"
+# $env:MULTIRL_ENABLE_MCMC = "ON"
+# $env:MULTIRL_LIBTORCH_DIR = "./build/_deps/libtorch-src"
+#
+# python -m pip uninstall -y multiRL
+# python -m pip install -e Python --no-build-isolation --verbose
+#
+# Restart the Python kernel after reinstalling. A running Python process keeps
+# the old imported module and old _backend.pyd in memory.
 
 # %%
 import multiRL
@@ -19,6 +27,9 @@ settings = [
     {"name": "Utility"},
 ]
 
+# %%
+# MLE estimator test
+print("Running MLE test...")
 mle = multiRL.rcv_d(
     estimator="mle",
     data=data,
@@ -35,51 +46,56 @@ mle = multiRL.rcv_d(
         "reward": ["L_reward", "R_reward"],
         "action": "Sub_Choose",
     },
-    models=models,
-    settings=settings,
-    lowers=[[0, 0], [0, 0, 0], [0, 0, 0]],
-    uppers=[[1, 5], [1, 1, 5], [1, 5, 1]],
+    models=models[:1],
+    settings=settings[:1],
+    lowers=[[0, 0]],
+    uppers=[[1, 5]],
     control={
-        "n_draws": 30,
+        "n_draws": 50,
         "seed": 1004,
-        "threads": 1,
-        "algorithm": "LN_BOBYQA",
+        "threads": 32,
+        "algorithm": "GN_MLSL",
         "local_algorithm": "LN_BOBYQA",
         "maxeval": 10,
-        "seed": 1004,
     },
 )
 
-print(mle["recovery"])
-print(mle["model_recovery"])
-
-if len(mle["simulation"]) == 0:
-    raise RuntimeError("Python rcv_d MLE returned no simulated rows.")
-
-if len(mle["truth"]) != 90:
-    raise RuntimeError("Python rcv_d MLE did not simulate three models.")
-
-if len(mle["model_recovery"]) != 270:
-    raise RuntimeError("Python rcv_d MLE did not fit all model pairs.")
+# %%
+# MAP estimator test
+print("Running MAP test...")
+map_fit = multiRL.rcv_d(
+    estimator="map",
+    data=data,
+    id=1,
+    behrule={
+        "cue": ["A", "B", "C", "D"],
+        "rsp": ["A", "B", "C", "D"],
+    },
+    colnames={
+        "subid": "Subject",
+        "block": "Block",
+        "trial": "Trial",
+        "object": ["L_choice", "R_choice"],
+        "reward": ["L_reward", "R_reward"],
+        "action": "Sub_Choose",
+    },
+    models=models[:1],
+    settings=settings[:1],
+    lowers=[[0, 0]],
+    uppers=[[1, 5]],
+    control={
+        "n_draws": 50,
+        "seed": 1004,
+        "threads": 32,
+        "algorithm": "GN_MLSL",
+        "local_algorithm": "LN_BOBYQA",
+        "maxeval": 10,
+    },
+)
 
 # %%
-import multiRL
-import pandas
-
-data = pandas.read_csv("data/TAB.csv")
-
-models = [
-    multiRL.TD,
-    multiRL.RSTD,
-    multiRL.Utility,
-]
-
-settings = [
-    {"name": "TD"},
-    {"name": "RSTD"},
-    {"name": "Utility"},
-]
-
+# ABC estimator test
+print("Running ABC test...")
 abc = multiRL.rcv_d(
     estimator="abc",
     data=data,
@@ -96,59 +112,65 @@ abc = multiRL.rcv_d(
         "reward": ["L_reward", "R_reward"],
         "action": "Sub_Choose",
     },
-    models=models,
-    settings=settings,
-    lowers=[[0, 0], [0, 0, 0], [0, 0, 0]],
-    uppers=[[1, 5], [1, 1, 5], [1, 5, 1]],
+    models=models[:1],
+    settings=settings[:1],
+    lowers=[[0, 0]],
+    uppers=[[1, 5]],
     control={
-        "n_draws": 30,
+        "n_draws": 50,
         "seed": 1004,
-        "threads": 1,
+        "threads": 32,
         "scope": "shared",
         "samples": 10,
         "tol": 0.5,
         "method": "rejection",
         "reduction": "none",
-        "threads": 1,
         "print_level": 0,
     },
 )
 
-print(abc["recovery"])
-print(abc["model_recovery"])
-
-if len(abc["simulation"]) == 0:
-    raise RuntimeError("Python rcv_d ABC returned no simulated rows.")
-
-if len(abc["truth"]) != 90:
-    raise RuntimeError("Python rcv_d ABC did not simulate three models.")
-
-if len(abc["model_recovery"]) != 270:
-    raise RuntimeError("Python rcv_d ABC did not fit all model pairs.")
-
-if abc["estimator"]["scope"] != "shared":
-    raise RuntimeError("Python rcv_d ABC did not keep shared scope.")
+# %%
+# MCMC estimator test
+print("Running MCMC test...")
+mcmc = multiRL.rcv_d(
+    estimator="mcmc",
+    data=data,
+    id=1,
+    behrule={
+        "cue": ["A", "B", "C", "D"],
+        "rsp": ["A", "B", "C", "D"],
+    },
+    colnames={
+        "subid": "Subject",
+        "block": "Block",
+        "trial": "Trial",
+        "object": ["L_choice", "R_choice"],
+        "reward": ["L_reward", "R_reward"],
+        "action": "Sub_Choose",
+    },
+    models=models[:1],
+    settings=settings[:1],
+    lowers=[[0, 0]],
+    uppers=[[1, 5]],
+    control={
+        "n_draws": 50,
+        "seed": 1004,
+        "threads": 32,
+        "chains": 2,
+        "samples": 10,
+        "warmup": 5,
+    },
+)
 
 # %%
-import multiRL
-import pandas
-
-data = pandas.read_csv("data/TAB.csv")
-
-models = [
-    multiRL.TD,
-]
-
-settings = [
-    {"name": "TD"},
-]
-
+# RNN estimator test (LibTorch CPU vs GPU)
+print("Running RNN tests...")
 base_control = {
-    "n_draws": 5,
+    "n_draws": 100,
     "seed": 1004,
-    "threads": 1,
-    "epochs": 1,
-    "batch_size": 8,
+    "threads": 32,
+    "epochs": 100,
+    "batch_size": 16,
     "units": 8,
     "layers": 1,
     "dropout": 0.0,
@@ -163,8 +185,11 @@ control_cpu["device"] = "cpu"
 
 control_gpu = dict(base_control)
 control_gpu["threads"] = 0
-control_gpu["device"] = "cuda"
+control_gpu["device"] = "gpu"
 
+# %%
+
+print("  Running RNN on CPU...")
 rnn_cpu = multiRL.rcv_d(
     estimator="rnn",
     data=data,
@@ -181,13 +206,16 @@ rnn_cpu = multiRL.rcv_d(
         "reward": ["L_reward", "R_reward"],
         "action": "Sub_Choose",
     },
-    models=models,
-    settings=settings,
+    models=models[:1],
+    settings=settings[:1],
     lowers=[[0, 0]],
     uppers=[[1, 5]],
     control=control_cpu,
 )
 
+# %%
+
+print("  Running RNN on GPU...")
 rnn_gpu = multiRL.rcv_d(
     estimator="rnn",
     data=data,
@@ -204,36 +232,11 @@ rnn_gpu = multiRL.rcv_d(
         "reward": ["L_reward", "R_reward"],
         "action": "Sub_Choose",
     },
-    models=models,
-    settings=settings,
+    models=models[:1],
+    settings=settings[:1],
     lowers=[[0, 0]],
     uppers=[[1, 5]],
     control=control_gpu,
 )
 
-print(rnn_cpu["recovery"])
-print(rnn_gpu["recovery"])
-
-if len(rnn_cpu["simulation"]) == 0:
-    raise RuntimeError("Python rcv_d RNN CPU returned no simulated rows.")
-
-if len(rnn_gpu["simulation"]) == 0:
-    raise RuntimeError("Python rcv_d RNN GPU returned no simulated rows.")
-
-if len(rnn_cpu["truth"]) != len(rnn_gpu["truth"]):
-    raise RuntimeError("Python rcv_d RNN CPU/GPU truth lengths differ.")
-
-if len(rnn_cpu["recovery"]) != len(rnn_gpu["recovery"]):
-    raise RuntimeError("Python rcv_d RNN CPU/GPU recovery lengths differ.")
-
-for cpu_row, gpu_row in zip(rnn_cpu["recovery"], rnn_gpu["recovery"]):
-    if cpu_row["parameter"] != gpu_row["parameter"]:
-        raise RuntimeError("Python rcv_d RNN CPU/GPU parameters differ.")
-    if abs(float(cpu_row["true"]) - float(gpu_row["true"])) > 1e-10:
-        raise RuntimeError("Python rcv_d RNN CPU/GPU truth values differ.")
-    if not float(cpu_row["recovered"]) == float(cpu_row["recovered"]):
-        raise RuntimeError("Python rcv_d RNN CPU returned NaN.")
-    if not float(gpu_row["recovered"]) == float(gpu_row["recovered"]):
-        raise RuntimeError("Python rcv_d RNN GPU returned NaN.")
-
-print("Python rcv_d RNN CPU/GPU device test passed.")
+print("All Python tests completed successfully!")

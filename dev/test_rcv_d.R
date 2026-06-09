@@ -1,21 +1,15 @@
-# %%
-Sys.setenv(MULTIRL_ENABLE_STAN = "TRUE")
-Sys.setenv(MULTIRL_ENABLE_EIGEN = "TRUE")
-Sys.setenv(MULTIRL_ENABLE_TORCH = "TRUE")
-Sys.setenv(
-  TORCH_DIR = "E:/YuKi_Project/Software/RL/multiRL/build/_deps/libtorch-src"
-)
+# Optional dependency install from the repository root:
+# $env:MULTIRL_ENABLE_RNN = "OFF"
+# $env:MULTIRL_ENABLE_MCMC = "ON"
+# $env:MULTIRL_LIBTORCH_DIR = "./build/_deps/libtorch-src"
+#
+# Windows Rtools/GCC cannot compile the official Windows LibTorch package.
+# Use the root CMake MSVC build or Python package for RNN on Windows.
 
-Sys.setenv(
-  PATH = paste(
-    "E:/YuKi_Project/Software/RL/multiRL/build/_deps/libtorch-src/lib",
-    Sys.getenv("PATH"),
-    sep = ";"
-  )
-)
+# %%
 
 devtools::clean_dll("./R")
-devtools::load_all("./R", quiet = FALSE)
+devtools::load_all("./R")
 
 # %%
 # Common setup for all rcv_d reproducibility tests
@@ -44,12 +38,12 @@ uppers <- list(c(1, 5))
 # when run twice with the same seed.
 
 control_mle <- list(
-  n_draws = 5L,
+  n_draws = 50L,
   seed = 1004L,
   threads = 32L,
   algorithm = "GN_MLSL",
   local_algorithm = "LN_BOBYQA",
-  maxeval = 3L
+  maxeval = 10L
 )
 
 mle_1 <- multiRLcpp::rcv_d(
@@ -89,13 +83,13 @@ base::cat("MLE rcv_d reproducibility test PASSED.\n")
 # rcv_d reproducibility test: MAP
 
 control_map <- list(
-  n_draws = 5L,
+  n_draws = 50L,
   seed = 1004L,
   threads = 32L,
   algorithm = "GN_MLSL",
   local_algorithm = "LN_BOBYQA",
-  maxeval = 3L,
-  maxiter = 2L
+  maxeval = 10L,
+  maxiter = 10L
 )
 
 map_1 <- multiRLcpp::rcv_d(
@@ -135,7 +129,7 @@ base::cat("MAP rcv_d reproducibility test PASSED.\n")
 # rcv_d reproducibility test: ABC
 
 control_abc <- list(
-  n_draws = 10L,
+  n_draws = 50L,
   seed = 1004L,
   threads = 32L
 )
@@ -177,7 +171,7 @@ base::cat("ABC rcv_d reproducibility test PASSED.\n")
 # rcv_d reproducibility test: MCMC
 
 control_mcmc <- list(
-  n_draws = 5L,
+  n_draws = 50L,
   seed = 1004L,
   threads = 32L,
   chains = 2L,
@@ -225,7 +219,7 @@ base::cat("MCMC rcv_d reproducibility test PASSED.\n")
 # instead of requiring bit-identical recovery estimates.
 
 control_rnn_cpu <- list(
-  n_draws = 20L,
+  n_draws = 50L,
   epochs = 3L,
   batch_size = 32L,
   units = 32L,
@@ -243,7 +237,7 @@ control_rnn_gpu <- utils::modifyList(
   x = control_rnn_cpu,
   val = list(
     threads = 0L,
-    device = "cuda"
+    device = "gpu"
   )
 )
 
@@ -283,4 +277,3 @@ base::cat("  max recovered difference:", recovered_diff, "\n")
 base::cat("  recovered values are finite:", recovered_finite, "\n")
 base::stopifnot(recovery_match, recovered_finite)
 base::cat("RNN rcv_d CPU/GPU device test PASSED.\n")
-

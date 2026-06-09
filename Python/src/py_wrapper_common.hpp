@@ -115,6 +115,68 @@ inline pybind11::dict py_wrap_estimate_mle_result(
     return out;
 }
 
+inline std::string py_task_subid(const multiRL::RunTask& task) {
+    if (!task.input.idinfo.empty() && !task.input.idinfo[0].empty()) {
+        return task.input.idinfo[0][0];
+    }
+    return "1";
+}
+
+inline pybind11::dict py_wrap_single_mle_result(
+    const std::string& subid,
+    const multiRL::EstimateMleResult& result
+) {
+    pybind11::dict fit;
+    fit["subid"] = subid;
+    for (const std::string& name : result.params.free_names) {
+        fit[pybind11::str(name)] = result.params.get(name);
+    }
+    fit["ACC"] = result.metric.acc;
+    fit["LogL"] = result.metric.log_likelihood;
+    fit["LogPr"] = result.metric.log_prior;
+    fit["LogPo"] = result.metric.log_posterior;
+    fit["NLL"] = result.metric.nll;
+    fit["AIC"] = result.metric.aic;
+    fit["BIC"] = result.metric.bic;
+    fit["status"] = result.status;
+    fit["n_evals"] = result.n_evals;
+    fit["optimum_value"] = result.optimum_value;
+    return fit;
+}
+
+inline pybind11::dict py_wrap_estimate_mle_results(
+    const std::vector<multiRL::RunTask>& tasks,
+    const std::vector<multiRL::EstimateMleResult>& results
+) {
+    pybind11::list fit_list;
+    pybind11::list subjects_list;
+    for (std::size_t i = 0; i < results.size(); ++i) {
+        std::string subid = py_task_subid(tasks[i]);
+        fit_list.append(py_wrap_single_mle_result(subid, results[i]));
+
+        pybind11::dict subject;
+        subject["subid"] = subid;
+        subject["status"] = results[i].status;
+        subject["n_evals"] = results[i].n_evals;
+        subject["optimum_value"] = results[i].optimum_value;
+        subject["result_message"] = results[i].result_message;
+        subject["stop_reason"] = results[i].stop_reason;
+        subjects_list.append(subject);
+    }
+
+    pybind11::dict diagnostics;
+    diagnostics["subjects"] = subjects_list;
+
+    pybind11::dict out;
+    if (results.size() == 1) {
+        out["fit"] = fit_list[0];
+    } else {
+        out["fit"] = fit_list;
+    }
+    out["diagnostics"] = diagnostics;
+    return out;
+}
+
 inline pybind11::dict py_wrap_estimate_map_result(
     const multiRL::EstimateMapResult& result
 ) {
@@ -125,6 +187,27 @@ inline pybind11::dict py_wrap_estimate_map_result(
     em["delta"] = result.delta;
     em["best_log_posterior"] = result.best_log_posterior;
     em["stop_reason"] = result.stop_reason;
+    diagnostics["em"] = em;
+    out["diagnostics"] = diagnostics;
+    return out;
+}
+
+inline pybind11::dict py_wrap_estimate_map_results(
+    const std::vector<multiRL::RunTask>& tasks,
+    const multiRL::EstimateMapResult& result
+) {
+    pybind11::dict out = py_wrap_estimate_mle_results(
+        tasks, result.subjects
+    );
+    pybind11::dict diagnostics =
+        out["diagnostics"].cast<pybind11::dict>();
+
+    pybind11::dict em;
+    em["iterations"] = result.iterations;
+    em["delta"] = result.delta;
+    em["best_log_posterior"] = result.best_log_posterior;
+    em["stop_reason"] = result.stop_reason;
+
     diagnostics["em"] = em;
     out["diagnostics"] = diagnostics;
     return out;
@@ -191,6 +274,87 @@ inline pybind11::dict py_wrap_estimate_abc_result(
 
     pybind11::dict out;
     out["fit"] = fit;
+    out["estimator"] = estimator;
+    out["diagnostics"] = diagnostics;
+    return out;
+}
+
+inline pybind11::dict py_wrap_single_abc_fit(
+    const multiRL::ABCSubjectResult& result
+) {
+    pybind11::dict fit;
+    fit["subid"] = result.subid;
+    for (std::size_t index = 0;
+         index < result.parameter_names.size();
+         ++index) {
+        if (index < result.estimates.size()) {
+            fit[pybind11::str(result.parameter_names[index])] =
+                result.estimates[index];
+        } else {
+            fit[pybind11::str(result.parameter_names[index])] =
+                multiRL::missing_real();
+        }
+    }
+    fit["status"] = result.status;
+    return fit;
+}
+
+inline pybind11::dict py_wrap_estimate_abc_results(
+    const std::vector<multiRL::ABCSubjectResult>& results,
+    const multiRL::ABCControl& control
+) {
+    pybind11::list fit_list;
+    pybind11::list subjects_list;
+    for (const auto& res : results) {
+        fit_list.append(py_wrap_single_abc_fit(res));
+
+        pybind11::dict subject;
+        subject["subid"] = res.subid;
+        subject["status"] = res.status;
+        subject["n_simulations"] = res.n_simulations;
+        subject["n_accepted"] = res.n_accepted;
+        subject["n_blocks_real"] = res.n_blocks_real;
+        subject["n_blocks_used"] = res.n_blocks_used;
+        subject["fake_block"] = res.fake_block;
+        subject["n_comp_requested"] = res.n_comp_requested;
+        subject["n_comp_used"] = res.n_comp_used;
+        subject["reduction"] = control.reduction;
+        subject["tolerance"] = control.tol;
+        subject["result_message"] = res.message;
+        subjects_list.append(subject);
+    }
+
+    pybind11::dict control_dict;
+    control_dict["samples"] = control.samples;
+    control_dict["tol"] = control.tol;
+    control_dict["method"] = control.method;
+    control_dict["reduction"] = control.reduction;
+    control_dict["n_comp"] = control.n_comp;
+    control_dict["fake_block"] = control.fake_block;
+    control_dict["seed"] = control.seed;
+    control_dict["threads"] = control.threads;
+    control_dict["print_level"] = control.print_level;
+
+    pybind11::dict estimator;
+    estimator["name"] = "ABC";
+    estimator["backend"] = "abcpp";
+    estimator["method"] = control.method;
+    estimator["reduction"] = control.reduction;
+    estimator["control"] = control_dict;
+
+    pybind11::dict diagnostics;
+    diagnostics["subjects"] = subjects_list;
+    if (!results.empty()) {
+        diagnostics["observed_summary"] = results[0].observed_summary;
+        diagnostics["accepted_distances"] = results[0].accepted_distances;
+    }
+
+    pybind11::dict out;
+    if (results.size() == 1) {
+        out["fit"] = fit_list[0];
+    } else {
+        out["fit"] = fit_list;
+    }
     out["estimator"] = estimator;
     out["diagnostics"] = diagnostics;
     return out;
@@ -448,6 +612,75 @@ inline pybind11::dict py_wrap_estimate_mcmc_result(
     return out;
 }
 
+inline pybind11::dict py_wrap_single_mcmc_fit(
+    const multiRL::SubjectMCMCResult& result,
+    const std::vector<std::string>& free_names
+) {
+    pybind11::dict fit;
+    fit["subid"] = result.subid;
+    for (std::size_t index = 0; index < free_names.size(); ++index) {
+        if (!result.best_params.empty() &&
+            index < result.best_params[0].size()) {
+            fit[pybind11::str(free_names[index])] =
+                result.best_params[0][index];
+        } else {
+            fit[pybind11::str(free_names[index])] =
+                multiRL::missing_real();
+        }
+    }
+    fit["LogL"] = result.logL;
+    fit["LogPr"] = result.logPrior;
+    fit["LogPo"] = result.logPost;
+    fit["AIC"] = result.aic;
+    fit["BIC"] = result.bic;
+    fit["status"] = result.status;
+    fit["n_evals"] = result.n_evals;
+    fit["n_draws"] = result.n_draws;
+    return fit;
+}
+
+inline pybind11::dict py_wrap_estimate_mcmc_results(
+    const std::vector<multiRL::SubjectMCMCResult>& results,
+    const std::vector<std::string>& free_names,
+    const multiRL::MCMCControl& control
+) {
+    pybind11::list fit_list;
+    pybind11::list subjects_list;
+    for (const auto& res : results) {
+        fit_list.append(py_wrap_single_mcmc_fit(res, free_names));
+
+        pybind11::dict subject;
+        subject["subid"] = res.subid;
+        subject["status"] = res.status;
+        subject["n_evals"] = res.n_evals;
+        subject["n_draws"] = res.n_draws;
+        subject["result_message"] = res.result_message;
+        subject["stop_reason"] = res.stop_reason;
+        subjects_list.append(subject);
+    }
+
+    pybind11::dict estimator;
+    estimator["name"] = "MCMC";
+    estimator["backend"] = "stan";
+    estimator["algorithm"] =
+        (control.algorithm == "nuts") ? "NUTS" : "Static HMC";
+    estimator["global_algorithm"] = estimator["algorithm"];
+    estimator["local_algorithm"] = "";
+
+    pybind11::dict diagnostics;
+    diagnostics["subjects"] = subjects_list;
+
+    pybind11::dict out;
+    if (results.size() == 1) {
+        out["fit"] = fit_list[0];
+    } else {
+        out["fit"] = fit_list;
+    }
+    out["estimator"] = estimator;
+    out["diagnostics"] = diagnostics;
+    return out;
+}
+
 #endif
 
 }  // namespace
@@ -458,6 +691,7 @@ inline multiRL::RunTask py_make_task(
     const std::vector<std::string>& action,
     const std::vector<int>& block,
     const std::vector<int>& trial,
+    const std::vector<std::string>& subid,
     const std::vector<std::string>& cue,
     const std::vector<std::string>& rsp,
     const std::unordered_map<std::string, double>& params,
@@ -473,13 +707,22 @@ inline multiRL::RunTask py_make_task(
     const std::string& mode,
     const std::string& estimate
 ) {
+    multiRL::StringMatrix idinfo(action.size());
+    for (std::size_t i = 0; i < action.size(); ++i) {
+        idinfo[i] = {
+            i < subid.size() ? subid[i] : "1",
+            std::to_string(block[i]),
+            std::to_string(trial[i])
+        };
+    }
+
     multiRL::Process1Input input = multiRL::process_1_input(
         object,
         reward,
         action,
         block,
         trial,
-        multiRL::StringMatrix(action.size()),
+        idinfo,
         multiRL::StringMatrix(action.size())
     );
 
