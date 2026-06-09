@@ -42,4 +42,5 @@ R/src/*.o
 
 # codex/antigravity
 .codex/
+.agents/
 .antigravity/

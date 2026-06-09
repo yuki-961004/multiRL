@@ -71,6 +71,7 @@ struct RNNControl {
     int sample = 100;
     int n_draws = 100;
     int threads = 0;
+    int interop_threads = 0;
     int units = 32;
     int layers = 1;
     int verbose = 0;
@@ -80,7 +81,9 @@ struct RNNControl {
     std::string backend = "torch";
     std::string optimizer = "adam";
     std::string loss = "mse";
-    std::string model_type = "gru";
+    std::string architecture = "gru";
+    std::string regularization = "none";
+    double penalty = 0.0;
     std::vector<double> lower_bounds;
     std::vector<double> upper_bounds;
 };

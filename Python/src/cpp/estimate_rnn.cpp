@@ -11,12 +11,20 @@
 #ifdef MULTIRL_HAS_TORCH
 #include <ATen/Context.h>
 #include <torch/torch.h>
+#include <multiRL/algorithm_torch.hpp>
 #endif
 
 namespace multiRL {
 namespace {
 
 #ifdef MULTIRL_HAS_TORCH
+
+std::string to_lower_str(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](char item) {
+        return static_cast<char>(std::tolower(static_cast<unsigned char>(item)));
+    });
+    return value;
+}
 
 double rnn_safe_value(double value) {
     return std::isfinite(value) ? value : 0.0;
@@ -134,41 +142,7 @@ double rnn_clamp_estimate(
     return value;
 }
 
-struct TorchRnnNetImpl : torch::nn::Module {
-    torch::nn::GRU recurrent{nullptr};
-    torch::nn::Dropout dropout{nullptr};
-    torch::nn::Linear output{nullptr};
 
-    TorchRnnNetImpl(
-        int n_features,
-        int n_params,
-        const RNNControl& control
-    ) {
-        recurrent = register_module(
-            "recurrent",
-            torch::nn::GRU(torch::nn::GRUOptions(
-                n_features,
-                control.units
-            ).batch_first(true).num_layers(control.layers))
-        );
-        dropout = register_module(
-            "dropout",
-            torch::nn::Dropout(torch::nn::DropoutOptions(control.dropout))
-        );
-        output = register_module(
-            "output",
-            torch::nn::Linear(control.units, n_params)
-        );
-    }
-
-    torch::Tensor forward(torch::Tensor x) {
-        torch::Tensor sequence = std::get<0>(recurrent->forward(x));
-        torch::Tensor last = sequence.select(1, sequence.size(1) - 1);
-        return output->forward(dropout->forward(last));
-    }
-};
-
-TORCH_MODULE(TorchRnnNet);
 
 torch::Tensor rnn_training_x(
     const TaskSamplerResult& sampler,
@@ -276,16 +250,7 @@ torch::Tensor rnn_observed_x(
     ).clone();
 }
 
-// ---------------------------------------------------------------------------
-// Train a TorchRnnNet from pre-built X/Y tensors and return the trained model.
-// ---------------------------------------------------------------------------
-struct TrainedRnnModel {
-    TorchRnnNet model{nullptr};
-    torch::Device device{torch::kCPU};
-    double final_loss = 0.0;
-    int n_features = 0;
-    int n_params = 0;
-};
+// TrainedRnnModel is now defined in algorithm_torch.hpp
 
 TrainedRnnModel train_rnn_model(
     const TaskSamplerResult& sampler,
@@ -297,6 +262,9 @@ TrainedRnnModel train_rnn_model(
 ) {
     if (control.threads > 0) {
         torch::set_num_threads(control.threads);
+    }
+    if (control.interop_threads > 0) {
+        torch::set_num_interop_threads(control.interop_threads);
     }
     torch::manual_seed(static_cast<uint64_t>(control.seed));
 
@@ -321,7 +289,7 @@ TrainedRnnModel train_rnn_model(
         sampler, n_draws, n_params
     ).to(torch_device);
 
-    TorchRnnNet model(n_features, n_params, control);
+    TorchSequenceNet model(n_features, n_params, control);
     model->to(torch_device);
     torch::optim::Adam optimizer(
         model->parameters(),
@@ -344,10 +312,12 @@ TrainedRnnModel train_rnn_model(
 
             optimizer.zero_grad();
             torch::Tensor pred = model->forward(xb);
-            torch::Tensor loss = torch::mse_loss(pred, yb);
-            loss.backward();
+            torch::Tensor loss = compute_rnn_loss(pred, yb, control.loss, n_params);
+            torch::Tensor reg_loss = model->get_regularization_loss(control.regularization, control.penalty);
+            torch::Tensor total_loss = loss + reg_loss;
+            total_loss.backward();
             optimizer.step();
-            final_loss = loss.item<double>();
+            final_loss = total_loss.item<double>();
         }
     }
 
@@ -375,7 +345,7 @@ EstimateRnnSubjectResult predict_rnn_subject(
     out.n_features = trained.n_features;
     out.epochs = control.epochs;
     out.backend = "torch";
-    out.architecture = control.model_type;
+    out.architecture = control.architecture;
     out.loss = trained.final_loss;
 
     if (out.parameter_names.empty()) {
@@ -394,10 +364,52 @@ EstimateRnnSubjectResult predict_rnn_subject(
         trained.model->forward(x_observed).squeeze(0);
 
     out.estimates.resize(out.parameter_names.size(), missing_real());
-    for (std::size_t index = 0; index < out.estimates.size(); ++index) {
-        const double value =
-            prediction[static_cast<long>(index)].item<double>();
-        out.estimates[index] = rnn_clamp_estimate(value, index, control);
+    const int n_params = static_cast<int>(out.parameter_names.size());
+    std::string loss_lower = to_lower_str(control.loss);
+
+    if (loss_lower == "qrl") {
+        for (std::size_t index = 0; index < out.estimates.size(); ++index) {
+            const double value =
+                prediction[static_cast<long>(n_params + index)].item<double>();
+            out.estimates[index] = rnn_clamp_estimate(value, index, control);
+        }
+    } else if (loss_lower == "mdn") {
+        int K = 3;
+        for (std::size_t index = 0; index < out.estimates.size(); ++index) {
+            // Extract K logits
+            std::vector<double> logits(K);
+            double max_logit = -std::numeric_limits<double>::infinity();
+            for (int k = 0; k < K; ++k) {
+                logits[k] = prediction[static_cast<long>(index * K + k)].item<double>();
+                if (logits[k] > max_logit) {
+                    max_logit = logits[k];
+                }
+            }
+            // Softmax
+            double sum_exp = 0.0;
+            std::vector<double> pi(K);
+            for (int k = 0; k < K; ++k) {
+                pi[k] = std::exp(logits[k] - max_logit);
+                sum_exp += pi[k];
+            }
+            for (int k = 0; k < K; ++k) {
+                pi[k] /= sum_exp;
+            }
+            // Weighted sum of mus
+            double value = 0.0;
+            for (int k = 0; k < K; ++k) {
+                double mu_val = prediction[static_cast<long>(n_params * K + index * K + k)].item<double>();
+                value += pi[k] * mu_val;
+            }
+            out.estimates[index] = rnn_clamp_estimate(value, index, control);
+        }
+    } else {
+        // mse, mae, huber, nll
+        for (std::size_t index = 0; index < out.estimates.size(); ++index) {
+            const double value =
+                prediction[static_cast<long>(index)].item<double>();
+            out.estimates[index] = rnn_clamp_estimate(value, index, control);
+        }
     }
 
     out.status = 1;
@@ -425,17 +437,12 @@ EstimateRnnSubjectResult estimate_rnn_subject(
     out.n_features = static_cast<int>(4U + task.behrule.cue.size());
     out.epochs = control.epochs;
     out.backend = "torch";
-    out.architecture = control.model_type;
+    out.architecture = control.architecture;
 
     if (out.parameter_names.empty()) {
         out.status = -1;
         out.message = "estimate_rnn requires at least one free parameter.";
         return out;
-    }
-
-    if (control.model_type != "gru") {
-        out.message = "Only model_type = 'gru' is currently implemented.";
-        out.architecture = "gru";
     }
 
     const int n_params = static_cast<int>(out.parameter_names.size());
@@ -461,10 +468,51 @@ EstimateRnnSubjectResult estimate_rnn_subject(
         trained.model->forward(x_observed).squeeze(0);
 
     out.estimates.resize(out.parameter_names.size(), missing_real());
-    for (std::size_t index = 0; index < out.estimates.size(); ++index) {
-        const double value =
-            prediction[static_cast<long>(index)].item<double>();
-        out.estimates[index] = rnn_clamp_estimate(value, index, control);
+    std::string loss_lower = to_lower_str(control.loss);
+
+    if (loss_lower == "qrl") {
+        for (std::size_t index = 0; index < out.estimates.size(); ++index) {
+            const double value =
+                prediction[static_cast<long>(n_params + index)].item<double>();
+            out.estimates[index] = rnn_clamp_estimate(value, index, control);
+        }
+    } else if (loss_lower == "mdn") {
+        int K = 3;
+        for (std::size_t index = 0; index < out.estimates.size(); ++index) {
+            // Extract K logits
+            std::vector<double> logits(K);
+            double max_logit = -std::numeric_limits<double>::infinity();
+            for (int k = 0; k < K; ++k) {
+                logits[k] = prediction[static_cast<long>(index * K + k)].item<double>();
+                if (logits[k] > max_logit) {
+                    max_logit = logits[k];
+                }
+            }
+            // Softmax
+            double sum_exp = 0.0;
+            std::vector<double> pi(K);
+            for (int k = 0; k < K; ++k) {
+                pi[k] = std::exp(logits[k] - max_logit);
+                sum_exp += pi[k];
+            }
+            for (int k = 0; k < K; ++k) {
+                pi[k] /= sum_exp;
+            }
+            // Weighted sum of mus
+            double value = 0.0;
+            for (int k = 0; k < K; ++k) {
+                double mu_val = prediction[static_cast<long>(n_params * K + index * K + k)].item<double>();
+                value += pi[k] * mu_val;
+            }
+            out.estimates[index] = rnn_clamp_estimate(value, index, control);
+        }
+    } else {
+        // mse, mae, huber, nll
+        for (std::size_t index = 0; index < out.estimates.size(); ++index) {
+            const double value =
+                prediction[static_cast<long>(index)].item<double>();
+            out.estimates[index] = rnn_clamp_estimate(value, index, control);
+        }
     }
 
     out.status = 1;
@@ -535,6 +583,15 @@ std::vector<EstimateRnnSubjectResult> estimate_rnn(
     if (tasks.empty()) {
         return std::vector<EstimateRnnSubjectResult>();
     }
+
+    validate_rnn_control(control);
+
+    // TODO: Future Double DLL Division
+    // On Windows R packages using Rtools/GCC, we cannot link against MSVC LibTorch.
+    // In the future, this C++ file will reside in a separate MSVC DLL (multiRL_torch_backend.dll),
+    // and this function will be called from Rtools using a flat C ABI boundary.
+    // The C ABI boundary will only pass primitive types (double*, int*, char*, length, error code).
+    // STL structures (std::vector, std::string) and Torch structures (torch::Tensor) will NOT cross the DLL boundary.
 
     // ---- scope = "shared" ------------------------------------------------
     // Train one RNN on the first subject's simulated data,

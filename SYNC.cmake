@@ -33,6 +33,7 @@ file(
 file(
     GLOB MULTIRL_BACKEND_HEADERS
     "${MULTIRL_BACKEND_INCLUDE_DIR}/*.hpp"
+    "${MULTIRL_BACKEND_INCLUDE_DIR}/*.h"
 )
 
 foreach(source_file ${MULTIRL_BACKEND_SOURCES})

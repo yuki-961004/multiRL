@@ -97,7 +97,9 @@ def estimate_rnn(
         layers=int(rnn_control["layers"]),
         dropout=float(rnn_control["dropout"]),
         learning_rate=float(rnn_control["learning_rate"]),
-        model_type=str(rnn_control["model_type"]),
+        layer=str(rnn_control["layer"]),
+        loss=str(rnn_control["loss"]),
+        interop_threads=int(rnn_control["interop_threads"]),
         verbose=int(rnn_control["verbose"]),
         device=str(rnn_control["device"]),
         scope=str(rnn_control["scope"]),
@@ -144,8 +146,9 @@ def _modify_rnn_control(control):
         "learning_rate": 0.001,
         "seed": 123,
         "threads": 0,
+        "interop_threads": 0,
         "backend": "torch",
-        "model_type": "gru",
+        "layer": "gru",
         "loss": "mse",
         "verbose": 0,
         "device": "cpu",
@@ -162,8 +165,9 @@ def _modify_rnn_control(control):
     out["learning_rate"] = float(out["learning_rate"])
     out["seed"] = int(out["seed"])
     out["threads"] = int(out["threads"])
+    out["interop_threads"] = int(out["interop_threads"])
     out["backend"] = str(out["backend"]).lower()
-    out["model_type"] = str(out["model_type"]).lower()
+    out["layer"] = str(out["layer"]).lower()
     out["loss"] = str(out["loss"]).lower()
     out["verbose"] = int(out["verbose"])
     out["device"] = str(out["device"]).lower()

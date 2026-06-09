@@ -571,6 +571,7 @@ set(
     Cpp/src/func_epsilon.cpp
     Cpp/src/func_zeta.cpp
     Cpp/src/algorithm_nlopt.cpp
+    Cpp/src/algorithm_torch.cpp
     Cpp/src/estimate_abc.cpp
     Cpp/src/estimate_map.cpp
     Cpp/src/estimate_mle.cpp
@@ -647,6 +648,58 @@ if(MULTIRL_ENABLE_RNN)
     target_compile_definitions(multiRL PUBLIC MULTIRL_HAS_TORCH)
     target_link_libraries(multiRL PUBLIC "${TORCH_LIBRARIES}")
     target_compile_options(multiRL PUBLIC ${TORCH_CXX_FLAGS})
+
+    # -------------------------------------------------------------------------
+    # multiRL_torch_backend: Standalone shared DLL exposing a flat C ABI.
+    # Built with MSVC + LibTorch; loaded at runtime by R's Rtools/GCC package.
+    # -------------------------------------------------------------------------
+    add_library(
+        multiRL_torch_backend
+        SHARED
+            Cpp/src/rnn_backend_dll.cpp
+    )
+
+    target_compile_definitions(
+        multiRL_torch_backend
+        PRIVATE
+            MULTIRL_HAS_TORCH
+    )
+
+    target_include_directories(
+        multiRL_torch_backend
+        PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/Cpp/include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/abcpp/Cpp/include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/abcpp/R/inst/include"
+            "${eigen_SOURCE_DIR}"
+            ${MULTIRL_NLOPT_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(
+        multiRL_torch_backend
+        PRIVATE
+            multiRL
+            "${TORCH_LIBRARIES}"
+            ${MULTIRL_NLOPT_TARGET}
+    )
+
+    if(OpenMP_CXX_FOUND)
+        target_link_libraries(multiRL_torch_backend PRIVATE OpenMP::OpenMP_CXX)
+    endif()
+
+    target_compile_options(multiRL_torch_backend PRIVATE ${TORCH_CXX_FLAGS})
+
+    set_target_properties(
+        multiRL_torch_backend
+        PROPERTIES
+            WINDOWS_EXPORT_ALL_SYMBOLS OFF
+    )
+
+    install(
+        TARGETS multiRL_torch_backend
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
 endif()
 
 if(MULTIRL_BUILD_PYTHON)

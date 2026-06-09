@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.15...3.27)
+cmake_minimum_required(VERSION 3.15...3.27)
 
 project(multiRL_Python_Wrapper VERSION 0.5.0 LANGUAGES CXX)
 
@@ -289,6 +289,7 @@ set(
     src/cpp/func_epsilon.cpp
     src/cpp/func_zeta.cpp
     src/cpp/algorithm_nlopt.cpp
+    src/cpp/algorithm_torch.cpp
     src/cpp/estimate_abc.cpp
     src/cpp/estimate_map.cpp
     src/cpp/estimate_mcmc.cpp

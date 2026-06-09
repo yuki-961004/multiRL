@@ -297,6 +297,9 @@ RNNControl modify_control(
         out.threads = hardware_threads > 0U ?
             static_cast<int>(hardware_threads) : 1;
     }
+    if (out.interop_threads < 0) {
+        out.interop_threads = 0;
+    }
     if (out.units <= 0) {
         out.units = 32;
     }
@@ -324,10 +327,17 @@ RNNControl modify_control(
         out.loss = "mse";
     }
     out.loss = to_lower(out.loss);
-    if (out.model_type.empty()) {
-        out.model_type = "gru";
+    if (out.architecture.empty()) {
+        out.architecture = "gru";
     }
-    out.model_type = to_lower(out.model_type);
+    out.architecture = to_lower(out.architecture);
+    if (out.regularization.empty()) {
+        out.regularization = "none";
+    }
+    out.regularization = to_lower(out.regularization);
+    if (out.penalty < 0.0) {
+        out.penalty = 0.0;
+    }
     if (out.device.empty()) {
         out.device = "cpu";
     }

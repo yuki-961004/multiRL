@@ -228,7 +228,7 @@ control_rnn_cpu <- list(
   learning_rate = 0.001,
   seed = 1004L,
   threads = 32L,
-  model_type = "gru",
+  layer = "gru",
   verbose = 0L,
   device = "cpu"
 )
@@ -241,39 +241,47 @@ control_rnn_gpu <- utils::modifyList(
   )
 )
 
-rnn_cpu <- multiRLcpp::rcv_d(
-  estimator = "rnn",
-  data = data, id = 1,
-  behrule = behrule, colnames = colnames,
-  models = models, settings = settings,
-  lowers = lowers, uppers = uppers,
-  control = control_rnn_cpu
-)
+tryCatch({
+  rnn_cpu <- multiRLcpp::rcv_d(
+    estimator = "rnn",
+    data = data, id = 1,
+    behrule = behrule, colnames = colnames,
+    models = models, settings = settings,
+    lowers = lowers, uppers = uppers,
+    control = control_rnn_cpu
+  )
 
-rnn_gpu <- multiRLcpp::rcv_d(
-  estimator = "rnn",
-  data = data, id = 1,
-  behrule = behrule, colnames = colnames,
-  models = models, settings = settings,
-  lowers = lowers, uppers = uppers,
-  control = control_rnn_gpu
-)
+  rnn_gpu <- multiRLcpp::rcv_d(
+    estimator = "rnn",
+    data = data, id = 1,
+    behrule = behrule, colnames = colnames,
+    models = models, settings = settings,
+    lowers = lowers, uppers = uppers,
+    control = control_rnn_gpu
+  )
 
-recovery_1 <- rnn_cpu$recovery
-recovery_2 <- rnn_gpu$recovery
-recovery_match <- base::all(
-  base::abs(recovery_1$true - recovery_2$true) < 1e-10
-)
-recovered_diff <- base::max(
-  base::abs(recovery_1$recovered - recovery_2$recovered),
-  na.rm = TRUE
-)
-recovered_finite <- base::all(base::is.finite(recovery_1$recovered)) &&
-  base::all(base::is.finite(recovery_2$recovered))
+  recovery_1 <- rnn_cpu$recovery
+  recovery_2 <- rnn_gpu$recovery
+  recovery_match <- base::all(
+    base::abs(recovery_1$true - recovery_2$true) < 1e-10
+  )
+  recovered_diff <- base::max(
+    base::abs(recovery_1$recovered - recovery_2$recovered),
+    na.rm = TRUE
+  )
+  recovered_finite <- base::all(base::is.finite(recovery_1$recovered)) &&
+    base::all(base::is.finite(recovery_2$recovered))
 
-base::cat("RNN rcv_d CPU/GPU device test:\n")
-base::cat("  true values match:", recovery_match, "\n")
-base::cat("  max recovered difference:", recovered_diff, "\n")
-base::cat("  recovered values are finite:", recovered_finite, "\n")
-base::stopifnot(recovery_match, recovered_finite)
-base::cat("RNN rcv_d CPU/GPU device test PASSED.\n")
+  base::cat("RNN rcv_d CPU/GPU device test:\n")
+  base::cat("  true values match:", recovery_match, "\n")
+  base::cat("  max recovered difference:", recovered_diff, "\n")
+  base::cat("  recovered values are finite:", recovered_finite, "\n")
+  base::stopifnot(recovery_match, recovered_finite)
+  base::cat("RNN rcv_d CPU/GPU device test PASSED.\n")
+}, error = function(e) {
+  if (grepl("requires LibTorch support", e$message)) {
+    base::cat("Skipping RNN CPU/GPU device tests because RNN backend is not enabled in this build.\n")
+  } else {
+    stop(e)
+  }
+})

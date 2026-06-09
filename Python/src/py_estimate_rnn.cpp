@@ -45,7 +45,15 @@ pybind11::dict py_wrap_estimate_rnn_results(
     pybind11::dict estimator;
     estimator["name"] = "RNN";
     estimator["backend"] = "torch";
-    estimator["architecture"] = control.model_type;
+    estimator["architecture"] = control.layer;
+    estimator["loss_name"] = control.loss;
+    estimator["units"] = control.units;
+    estimator["layers"] = control.layers;
+    estimator["dropout"] = control.dropout;
+    estimator["bidirectional"] = (control.layer.rfind("bi", 0) == 0);
+    estimator["device"] = control.device;
+    estimator["threads"] = control.threads;
+    estimator["interop_threads"] = control.interop_threads;
 
     pybind11::dict diagnostics;
     diagnostics["subjects"] = subject_rows;
@@ -86,13 +94,15 @@ pybind11::dict py_estimate_rnn_data(
     const int n_draws,
     const int seed,
     const int threads,
+    const int interop_threads,
     const int epochs,
     const int batch_size,
     const int units,
     const int layers,
     const double dropout,
     const double learning_rate,
-    const std::string& model_type,
+    const std::string& layer,
+    const std::string& loss,
     const int verbose,
     const std::string& device,
     const std::string& scope,
@@ -127,6 +137,7 @@ pybind11::dict py_estimate_rnn_data(
     control.sample = n_draws;
     control.seed = seed;
     control.threads = threads;
+    control.interop_threads = interop_threads;
     control.epoch = epochs;
     control.epochs = epochs;
     control.batch_size = batch_size;
@@ -134,7 +145,8 @@ pybind11::dict py_estimate_rnn_data(
     control.layers = layers;
     control.dropout = dropout;
     control.learning_rate = learning_rate;
-    control.model_type = model_type;
+    control.layer = layer;
+    control.loss = loss;
     control.verbose = verbose;
     control.device = device;
     control.scope = scope;
@@ -169,13 +181,15 @@ void register_py_estimate_rnn(pybind11::module& module) {
         pybind11::arg("n_draws") = 100,
         pybind11::arg("seed") = 123,
         pybind11::arg("threads") = 0,
+        pybind11::arg("interop_threads") = 0,
         pybind11::arg("epochs") = 20,
         pybind11::arg("batch_size") = 32,
         pybind11::arg("units") = 32,
         pybind11::arg("layers") = 1,
         pybind11::arg("dropout") = 0.0,
         pybind11::arg("learning_rate") = 0.001,
-        pybind11::arg("model_type") = "gru",
+        pybind11::arg("layer") = "gru",
+        pybind11::arg("loss") = "mse",
         pybind11::arg("verbose") = 0,
         pybind11::arg("device") = "cpu",
         pybind11::arg("scope") = "individual",

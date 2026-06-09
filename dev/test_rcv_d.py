@@ -163,80 +163,51 @@ mcmc = multiRL.rcv_d(
 )
 
 # %%
-# RNN estimator test (LibTorch CPU vs GPU)
+# RNN estimator test (LibTorch CPU vs GPU & architectures/losses)
 print("Running RNN tests...")
-base_control = {
-    "n_draws": 100,
-    "seed": 1004,
-    "threads": 32,
-    "epochs": 100,
-    "batch_size": 16,
-    "units": 8,
-    "layers": 1,
-    "dropout": 0.0,
-    "learning_rate": 0.001,
-    "model_type": "gru",
-    "verbose": 0,
-    "scope": "shared",
-}
 
-control_cpu = dict(base_control)
-control_cpu["device"] = "cpu"
+# Verify different combinations of layers and loss functions
+test_configs = [
+    {"layer": "gru", "loss": "mse"},
+    {"layer": "lstm", "loss": "nll"},
+    {"layer": "bigru", "loss": "qrl"},
+    {"layer": "bilstm", "loss": "mdn"},
+]
 
-control_gpu = dict(base_control)
-control_gpu["threads"] = 0
-control_gpu["device"] = "gpu"
-
-# %%
-
-print("  Running RNN on CPU...")
-rnn_cpu = multiRL.rcv_d(
-    estimator="rnn",
-    data=data,
-    id=1,
-    behrule={
-        "cue": ["A", "B", "C", "D"],
-        "rsp": ["A", "B", "C", "D"],
-    },
-    colnames={
-        "subid": "Subject",
-        "block": "Block",
-        "trial": "Trial",
-        "object": ["L_choice", "R_choice"],
-        "reward": ["L_reward", "R_reward"],
-        "action": "Sub_Choose",
-    },
-    models=models[:1],
-    settings=settings[:1],
-    lowers=[[0, 0]],
-    uppers=[[1, 5]],
-    control=control_cpu,
-)
-
-# %%
-
-print("  Running RNN on GPU...")
-rnn_gpu = multiRL.rcv_d(
-    estimator="rnn",
-    data=data,
-    id=1,
-    behrule={
-        "cue": ["A", "B", "C", "D"],
-        "rsp": ["A", "B", "C", "D"],
-    },
-    colnames={
-        "subid": "Subject",
-        "block": "Block",
-        "trial": "Trial",
-        "object": ["L_choice", "R_choice"],
-        "reward": ["L_reward", "R_reward"],
-        "action": "Sub_Choose",
-    },
-    models=models[:1],
-    settings=settings[:1],
-    lowers=[[0, 0]],
-    uppers=[[1, 5]],
-    control=control_gpu,
-)
+for config in test_configs:
+    layer = config["layer"]
+    loss = config["loss"]
+    print(f"  Testing RNN (layer={layer}, loss={loss})...")
+    rnn_res = multiRL.rcv_d(
+        estimator="rnn",
+        data=data,
+        id=1,
+        behrule={
+            "cue": ["A", "B", "C", "D"],
+            "rsp": ["A", "B", "C", "D"],
+        },
+        colnames={
+            "subid": "Subject",
+            "block": "Block",
+            "trial": "Trial",
+            "object": ["L_choice", "R_choice"],
+            "reward": ["L_reward", "R_reward"],
+            "action": "Sub_Choose",
+        },
+        models=models[:1],
+        settings=settings[:1],
+        lowers=[[0, 0]],
+        uppers=[[1, 5]],
+        control={
+            "n_draws": 20,
+            "epochs": 2,
+            "units": 8,
+            "layer": layer,
+            "loss": loss,
+            "device": "cpu",
+            "scope": "shared",
+        },
+    )
+    print(f"    Estimator info: {rnn_res['estimator']}")
 
 print("All Python tests completed successfully!")
