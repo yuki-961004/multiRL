@@ -1,6 +1,6 @@
 """Model-free Utility built-in model specification."""
 
-from ._model_free_base import _model_free_builtin
+from ._model_free_list import _model_free_builtin
 
 
 def Utility(params=None, priors=None, lower=None, upper=None, settings=None):

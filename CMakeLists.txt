@@ -263,14 +263,7 @@ if(MULTIRL_SYNC_PACKAGE_SOURCES)
         COMMENT "Syncing multiRL package C++ sources"
     )
 
-    if(MSVC)
-        set_target_properties(
-            multiRL_sync_package_sources
-            PROPERTIES
-                VS_GLOBAL_IntDir
-                    "$(Platform)\\$(Configuration)\\multiRL_sync_package_sources\\"
-        )
-    endif()
+
 endif()
 
 if(MSVC)
@@ -576,7 +569,6 @@ set(
     Cpp/src/estimate_map.cpp
     Cpp/src/estimate_mle.cpp
     Cpp/src/estimate_rnn.cpp
-    Cpp/src/info_nlopt.cpp
     Cpp/src/modify_control.cpp
     Cpp/src/modify_context.cpp
     Cpp/src/modify_funcs.cpp
@@ -656,7 +648,7 @@ if(MULTIRL_ENABLE_RNN)
     add_library(
         multiRL_torch_backend
         SHARED
-            Cpp/src/rnn_backend_dll.cpp
+            Cpp/src/c_backend.cpp
     )
 
     target_compile_definitions(
@@ -693,6 +685,13 @@ if(MULTIRL_ENABLE_RNN)
         multiRL_torch_backend
         PROPERTIES
             WINDOWS_EXPORT_ALL_SYMBOLS OFF
+    )
+
+    add_custom_command(
+        TARGET multiRL_torch_backend POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/R/inst/libs/x64"
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:multiRL_torch_backend> "${CMAKE_CURRENT_SOURCE_DIR}/R/inst/libs/x64/"
+        COMMENT "Copying multiRL_torch_backend.dll to R inst/libs/x64"
     )
 
     install(

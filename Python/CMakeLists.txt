@@ -295,7 +295,6 @@ set(
     src/cpp/estimate_mcmc.cpp
     src/cpp/estimate_mle.cpp
     src/cpp/estimate_rnn.cpp
-    src/cpp/info_nlopt.cpp
     src/cpp/modify_control.cpp
     src/cpp/modify_context.cpp
     src/cpp/modify_funcs.cpp

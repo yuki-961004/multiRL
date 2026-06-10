@@ -40,7 +40,5 @@ R/src/*.o
 *.swp
 *.swo
 
-# codex/antigravity
-.codex/
+# skill
 .agents/
-.antigravity/

@@ -1,14 +1,22 @@
 # Optional dependency install from the repository root:
-# $env:MULTIRL_ENABLE_RNN = "OFF"
+# $env:MULTIRL_ENABLE_RNN = "ON"
 # $env:MULTIRL_ENABLE_MCMC = "ON"
 # $env:MULTIRL_LIBTORCH_DIR = "./build/_deps/libtorch-src"
 #
+# cmake -S . -B build
+# cmake --build build --config Release
 # Windows Rtools/GCC cannot compile the official Windows LibTorch package.
 # Use the root CMake MSVC build or Python package for RNN on Windows.
 
 # %%
-
-devtools::clean_dll("./R")
+Sys.setenv(MULTIRL_ENABLE_RNN = "OFF")   # 必须为 OFF，不让 Rtools 去链接 LibTorch
+Sys.setenv(MULTIRL_ENABLE_MCMC = "ON")   # 开启 MCMC 编译支持
+# 1. 使用 normalizePath 自动将斜杠转换为 Windows 规范的反斜杠
+libtorch_path <- normalizePath("E:/YuKi_Project/Software/RL/multiRL-remake/build/_deps/libtorch-src/lib", mustWork = TRUE)
+libs_x64_path <- normalizePath("E:/YuKi_Project/Software/RL/multiRL-remake/R/inst/libs/x64", mustWork = TRUE)
+# 2. 将它们加入 PATH
+Sys.setenv(PATH = paste(libs_x64_path, libtorch_path, Sys.getenv("PATH"), sep = ";"))
+#devtools::clean_dll("./R")
 devtools::load_all("./R")
 
 # %%

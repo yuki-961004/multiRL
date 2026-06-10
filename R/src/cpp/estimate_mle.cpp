@@ -1,7 +1,6 @@
 #include <multiRL/estimate_mle.hpp>
 
 #include <multiRL/algorithm_nlopt.hpp>
-#include <multiRL/info_nlopt.hpp>
 #include <multiRL/modify_control.hpp>
 #include <multiRL/process_model_free.hpp>
 

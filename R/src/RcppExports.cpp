@@ -221,6 +221,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// r_shell_fit_p
+Rcpp::List r_shell_fit_p(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, std::string estimator, Rcpp::List control);
+RcppExport SEXP _multiRLcpp_r_shell_fit_p(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP estimatorSEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type object(objectSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type reward(rewardSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type action(actionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type block(blockSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type trial(trialSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type idinfo(idinfoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterMatrix >::type exinfo(exinfoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type cue(cueSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type rsp(rspSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type params(paramsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type free_names(free_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type system(systemSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_names(prior_namesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type prior_types(prior_typesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param1(prior_param1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type prior_param2(prior_param2SEXP);
+    Rcpp::traits::input_parameter< bool >::type prior_active(prior_activeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type policy(policySEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type estimator(estimatorSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(r_shell_fit_p(object, reward, action, block, trial, idinfo, exinfo, cue, rsp, params, free_names, system, prior_names, prior_types, prior_param1, prior_param2, prior_active, policy, name, mode, estimator, control));
+    return rcpp_result_gen;
+END_RCPP
+}
 // r_shell_rcv_d
 Rcpp::List r_shell_rcv_d(Rcpp::CharacterMatrix object, Rcpp::NumericMatrix reward, Rcpp::CharacterVector action, Rcpp::IntegerVector block, Rcpp::IntegerVector trial, Rcpp::CharacterMatrix idinfo, Rcpp::CharacterMatrix exinfo, Rcpp::CharacterVector cue, Rcpp::CharacterVector rsp, Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system, Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types, Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2, bool prior_active, std::string policy, std::string name, std::string mode, std::string generating_model, int n_draws, int seed, int threads, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds);
 RcppExport SEXP _multiRLcpp_r_shell_rcv_d(SEXP objectSEXP, SEXP rewardSEXP, SEXP actionSEXP, SEXP blockSEXP, SEXP trialSEXP, SEXP idinfoSEXP, SEXP exinfoSEXP, SEXP cueSEXP, SEXP rspSEXP, SEXP paramsSEXP, SEXP free_namesSEXP, SEXP systemSEXP, SEXP prior_namesSEXP, SEXP prior_typesSEXP, SEXP prior_param1SEXP, SEXP prior_param2SEXP, SEXP prior_activeSEXP, SEXP policySEXP, SEXP nameSEXP, SEXP modeSEXP, SEXP generating_modelSEXP, SEXP n_drawsSEXP, SEXP seedSEXP, SEXP threadsSEXP, SEXP lower_boundsSEXP, SEXP upper_boundsSEXP) {
@@ -327,6 +359,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_multiRLcpp_r_estimate_mcmc", (DL_FUNC) &_multiRLcpp_r_estimate_mcmc, 31},
     {"_multiRLcpp_r_estimate_mle", (DL_FUNC) &_multiRLcpp_r_estimate_mle, 28},
     {"_multiRLcpp_r_estimate_rnn_data", (DL_FUNC) &_multiRLcpp_r_estimate_rnn_data, 39},
+    {"_multiRLcpp_r_shell_fit_p", (DL_FUNC) &_multiRLcpp_r_shell_fit_p, 22},
     {"_multiRLcpp_r_shell_rcv_d", (DL_FUNC) &_multiRLcpp_r_shell_rcv_d, 26},
     {"_multiRLcpp_r_shell_rpl_e", (DL_FUNC) &_multiRLcpp_r_shell_rpl_e, 22},
     {"_multiRLcpp_r_shell_run_m", (DL_FUNC) &_multiRLcpp_r_shell_run_m, 21},

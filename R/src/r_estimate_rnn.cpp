@@ -128,7 +128,7 @@ Rcpp::DataFrame wrap_rnn_diagnostics(
 // ===========================================================================
 #ifdef MULTIRL_USE_DLL_LOADING
 
-// Function pointer types matching rnn_backend_dll.h
+// Function pointer types matching c_backend.h
 typedef int  (*fn_rnn_train)   (const double*, int, int, int,
                                  const double*, int,
                                  const char*, const char*, const char*, double,

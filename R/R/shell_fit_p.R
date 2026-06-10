@@ -36,90 +36,85 @@ fit_p <- function(
     ))
   }
 
-  settings <- utils::modifyList(
-    x = list(estimate = base::toupper(estimator)),
-    val = settings
+  colnames <- .modify_colnames(data = data, colnames = colnames)
+  data <- .modify_data_id(
+    data = data,
+    id = id,
+    subid = colnames$subid
   )
+  params <- .modify_params(params = params)
+  priors <- .modify_priors(
+    priors = priors,
+    params = params$free
+  )
+  behrule <- .modify_behrule(behrule = behrule)
+  settings <- .modify_settings(settings = settings)
+  features <- .modify_features(data = data, colnames = colnames)
 
-  result <- switch(
+  control <- switch(
     estimator,
-    "mle" = estimate_mle(
-      data = data,
-      id = id,
-      colnames = colnames,
-      behrule = behrule,
-      funcs = funcs,
-      params = params,
-      priors = priors,
-      settings = settings,
-      lower = lower,
-      upper = upper,
-      control = control,
-      ...
-    ),
-    "map" = estimate_map(
-      data = data,
-      id = id,
-      colnames = colnames,
-      behrule = behrule,
-      funcs = funcs,
-      params = params,
-      priors = priors,
-      settings = settings,
-      lower = lower,
-      upper = upper,
-      control = control,
-      ...
-    ),
-    "mcmc" = estimate_mcmc(
-      data = data,
-      id = id,
-      colnames = colnames,
-      behrule = behrule,
-      funcs = funcs,
-      params = params,
-      priors = priors,
-      settings = settings,
-      lower = lower,
-      upper = upper,
-      control = control,
-      ...
-    ),
-    "abc" = estimate_abc(
-      data = data,
-      id = id,
-      colnames = colnames,
-      behrule = behrule,
-      funcs = funcs,
-      params = params,
-      priors = priors,
-      settings = settings,
-      lower = lower,
-      upper = upper,
-      control = control,
-      ...
-    ),
-    "rnn" = estimate_rnn(
-      data = data,
-      id = id,
-      colnames = colnames,
-      behrule = behrule,
-      funcs = funcs,
-      params = params,
-      priors = priors,
-      settings = settings,
-      lower = lower,
-      upper = upper,
-      control = control,
-      ...
-    )
+    "mle" = .modify_estimate_mle_control(control, lower, upper, base::names(params$free)),
+    "map" = .modify_estimate_map_control(control, lower, upper, base::names(params$free)),
+    "mcmc" = .modify_estimate_mcmc_control(control, lower, upper, base::names(params$free)),
+    "abc" = .modify_estimate_abc_control(control, lower, upper, base::names(params$free)),
+    "rnn" = {
+      rnn_ctrl <- .modify_estimate_rnn_control(control)
+      rnn_ctrl$lower_bounds <- .modify_bound_vector(lower, base::names(params$free))
+      rnn_ctrl$upper_bounds <- .modify_bound_vector(upper, base::names(params$free))
+      rnn_ctrl
+    }
   )
 
-  .tag_fit_p_result(
-    result = result,
+  settings$estimate <- base::toupper(estimator)
+
+  cpp_result <- .shell_fit_p(
+    object = features$object,
+    reward = features$reward,
+    action = features$action,
+    block = features$block,
+    trial = features$trial,
+    idinfo = features$idinfo,
+    exinfo = features$exinfo,
+    cue = behrule$cue,
+    rsp = behrule$rsp,
+    params = params$flat,
+    free_names = base::names(params$free),
+    system = settings$system,
+    prior_names = priors$name,
+    prior_types = priors$type,
+    prior_param1 = priors$param1,
+    prior_param2 = priors$param2,
+    prior_active = priors$active,
+    policy = settings$policy,
+    name = settings$name,
+    mode = settings$mode,
     estimator = estimator,
-    scope = control$scope
+    control = control
   )
+
+  out <- list(
+    input = list(
+      data = data,
+      colnames = colnames,
+      behrule = behrule,
+      funcs = funcs,
+      params = params,
+      priors = priors,
+      settings = settings,
+      lower = lower,
+      upper = upper,
+      control = control,
+      features = features,
+      extra = list(...)
+    ),
+    fit = cpp_result$fit,
+    estimator = cpp_result$estimator,
+    diagnostics = cpp_result$diagnostics,
+    metadata = cpp_result$metadata
+  )
+
+  base::class(out) <- base::class(cpp_result)
+  out
 }
 
 .modify_fit_p_estimator <- function(estimator) {

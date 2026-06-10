@@ -1,4 +1,4 @@
-// rnn_backend_dll.cpp
+// c_backend.cpp
 // Flat C ABI wrapper around the LibTorch RNN backend.
 // Compiled as a separate SHARED library (multiRL_torch_backend.dll on Windows)
 // using MSVC, so R's Rtools/GCC can dynamically load it at runtime.
@@ -7,10 +7,11 @@
 //   double*, int, char*, void*
 // No STL, no Torch types, no Eigen cross the boundary.
 
-#include <multiRL/rnn_backend_dll.h>
+#include <multiRL/c_backend.h>
 #include <multiRL/algorithm_torch.hpp>
 #include <multiRL/modify_control.hpp>
 
+#include <algorithm>
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -35,27 +36,32 @@ void set_error(char* buf, int buf_len, const char* msg) {
 
 #ifdef MULTIRL_HAS_TORCH
 
+// Helper for uniform sizes computation
+std::size_t product(std::initializer_list<int64_t> sizes) {
+    std::size_t n = 1;
+    for (int64_t s : sizes) { n *= static_cast<std::size_t>(s); }
+    return n;
+}
+
 // Build a torch::Tensor from a raw double* array.
 // The caller owns the source data; we clone to detach from it.
 torch::Tensor make_tensor(
     const double* data,
     std::initializer_list<int64_t> sizes
 ) {
-    std::vector<float> f(data, data + [&]() {
-        std::size_t n = 1;
-        for (int64_t s : sizes) { n *= static_cast<std::size_t>(s); }
-        return n;
-    }());
+    const std::size_t n = product(sizes);
+    std::vector<float> f(n);
+    std::transform(
+        data,
+        data + n,
+        f.begin(),
+        [](double value) {
+            return static_cast<float>(value);
+        }
+    );
     return torch::from_blob(
         f.data(), sizes, torch::kFloat32
     ).clone();
-}
-
-// Helper for uniform sizes computation
-std::size_t product(std::initializer_list<int64_t> sizes) {
-    std::size_t n = 1;
-    for (int64_t s : sizes) { n *= static_cast<std::size_t>(s); }
-    return n;
 }
 
 #endif  // MULTIRL_HAS_TORCH

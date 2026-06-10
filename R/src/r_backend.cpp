@@ -11,7 +11,6 @@
 #include "cpp/estimate_mcmc.cpp"
 #include "cpp/estimate_mle.cpp"
 #include "cpp/estimate_rnn.cpp"
-#include "cpp/info_nlopt.cpp"
 #include "cpp/modify_control.cpp"
 #include "cpp/modify_context.cpp"
 #include "cpp/modify_funcs.cpp"
