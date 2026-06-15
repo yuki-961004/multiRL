@@ -4,7 +4,10 @@
 #include <multiRL/modify_context.hpp>
 #include <multiRL/modify_funcs.hpp>
 
+#include <algorithm>
 #include <cmath>
+#include <limits>
+#include <numeric>
 #include <random>
 #include <stdexcept>
 #include <unordered_set>
@@ -288,6 +291,245 @@ std::string sample_choice(
     return cue.back();
 }
 
+/* ========================================================================== *
+ *                              Hidden Features                               *
+ * ========================================================================== */
+
+double finite_or_zero(double value) {
+    return std::isnan(value) ? 0.0 : value;
+}
+
+double finite_or_missing(double value) {
+    return std::isnan(value) ? missing_real() : value;
+}
+
+double progress_fraction(int value, int maximum) {
+    if (maximum <= 1) {
+        return 0.0;
+    }
+    return static_cast<double>(value - 1) / static_cast<double>(maximum - 1);
+}
+
+std::vector<double> first_qvalue_row(
+    const std::vector<std::vector<double>>& qvalue
+) {
+    if (qvalue.empty()) {
+        return {};
+    }
+    return qvalue[0];
+}
+
+std::vector<double> finite_qvalues(const std::vector<double>& values) {
+    std::vector<double> out;
+    for (double value : values) {
+        if (!std::isnan(value)) {
+            out.push_back(value);
+        }
+    }
+    return out;
+}
+
+double entropy_from_qvalues(const std::vector<double>& values) {
+    const std::vector<double> finite = finite_qvalues(values);
+    if (finite.size() <= 1) {
+        return 0.0;
+    }
+
+    const double max_value =
+        *std::max_element(finite.begin(), finite.end());
+    double denominator = 0.0;
+    for (double value : finite) {
+        denominator += std::exp(value - max_value);
+    }
+    if (denominator <= 0.0) {
+        return 0.0;
+    }
+
+    double entropy = 0.0;
+    for (double value : finite) {
+        const double prob = std::exp(value - max_value) / denominator;
+        entropy -= prob * std::log(prob + 1e-12);
+    }
+    return entropy / std::log(static_cast<double>(finite.size()));
+}
+
+double previous_chosen_q(
+    const std::vector<double>& qvalue,
+    int previous_choice
+) {
+    if (previous_choice < 0) {
+        return 0.0;
+    }
+    const std::size_t index = static_cast<std::size_t>(previous_choice);
+    if (index >= qvalue.size()) {
+        return 0.0;
+    }
+    return finite_or_zero(qvalue[index]);
+}
+
+double previous_unchosen_q(
+    const std::vector<double>& qvalue,
+    int previous_choice
+) {
+    if (previous_choice < 0 || qvalue.size() <= 1) {
+        return 0.0;
+    }
+
+    if (qvalue.size() == 2) {
+        const std::size_t index =
+            static_cast<std::size_t>(1 - previous_choice);
+        return index < qvalue.size() ? finite_or_zero(qvalue[index]) : 0.0;
+    }
+
+    double best = -std::numeric_limits<double>::infinity();
+    for (std::size_t index = 0; index < qvalue.size(); ++index) {
+        if (static_cast<int>(index) == previous_choice) {
+            continue;
+        }
+        if (!std::isnan(qvalue[index])) {
+            best = std::max(best, qvalue[index]);
+        }
+    }
+    return std::isfinite(best) ? best : 0.0;
+}
+
+HiddenFeatures base_hidden_features(
+    const RunTask& task,
+    const Process3Loop& output,
+    const HiddenState& state,
+    std::size_t row,
+    int max_block,
+    int max_trial
+) {
+    HiddenFeatures features;
+    features.progress = progress_fraction(
+        static_cast<int>(row + 1),
+        static_cast<int>(task.input.n_rows)
+    );
+    features.block_progress =
+        progress_fraction(task.input.block[row], max_block);
+    features.session_progress = features.progress;
+    if (max_trial > 0) {
+        features.log_trial_block =
+            std::log(static_cast<double>(task.input.trial[row] + 1)) /
+            std::log(static_cast<double>(max_trial + 1));
+    }
+
+    features.prev_reward = state.prev_reward;
+    features.prev_repeat_sign = state.prev_repeat_sign;
+    features.prev_switch = state.prev_switch;
+    features.choice_streak = state.choice_streak;
+    features.pe_prev = state.pe_prev;
+    features.abs_pe_prev = std::abs(state.pe_prev);
+    features.first_trial_in_block = task.input.trial[row] == 1 ? 1.0 : 0.0;
+    features.alpha_prev = state.alpha_prev;
+    features.beta_prev = state.beta_prev;
+    features.kappa_prev = state.kappa_prev;
+
+    const std::vector<double>& count = output.count[row];
+    features.valid_count_total = 0.0;
+    for (double value : count) {
+        if (!std::isnan(value)) {
+            features.valid_count_total += value;
+        }
+    }
+
+    if (count.size() >= 2) {
+        const double scale = std::sqrt(features.valid_count_total + 1.0);
+        const double diff = finite_or_zero(count[0]) - finite_or_zero(count[1]);
+        features.count_imbalance = diff / scale;
+        features.count_imbalance_abs = std::abs(diff) / scale;
+    }
+
+    return features;
+}
+
+HiddenFeatures qvalue_hidden_features(
+    HiddenFeatures features,
+    const HiddenState& state,
+    const std::vector<std::vector<double>>& qvalue
+) {
+    const std::vector<double> q = first_qvalue_row(qvalue);
+    const std::vector<double> finite = finite_qvalues(q);
+
+    if (!q.empty()) {
+        features.qvalue1 = finite_or_missing(q[0]);
+    }
+    if (q.size() >= 2) {
+        features.qvalue2 = finite_or_missing(q[1]);
+    }
+    if (!finite.empty()) {
+        features.q_max = *std::max_element(finite.begin(), finite.end());
+        features.q_mean =
+            std::accumulate(finite.begin(), finite.end(), 0.0) /
+            static_cast<double>(finite.size());
+    }
+    if (q.size() >= 2 && !std::isnan(q[0]) && !std::isnan(q[1])) {
+        features.q_abs_diff = std::abs(q[0] - q[1]);
+    }
+
+    features.decision_entropy = entropy_from_qvalues(q);
+    features.q_chosen_prev = previous_chosen_q(
+        q,
+        state.prev_choice_index
+    );
+    features.q_unchosen_prev = previous_unchosen_q(
+        q,
+        state.prev_choice_index
+    );
+    return features;
+}
+
+void reset_hidden_state(HiddenState& state) {
+    state.prev_choice_index = -1;
+    state.prev_reward = 0.0;
+    state.prev_switch = 0.0;
+    state.prev_repeat_sign = 0.0;
+    state.choice_streak = 0.0;
+    state.pe_prev = 0.0;
+    state.alpha_prev = 0.0;
+    state.beta_prev = 0.0;
+    state.kappa_prev = 0.0;
+}
+
+double parameter_or_zero(const Params& params, const std::string& name) {
+    if (!params.has(name)) {
+        return 0.0;
+    }
+    return finite_or_zero(params.get(name));
+}
+
+void update_hidden_state(
+    HiddenState& state,
+    const RunTask& task,
+    const Process3Loop& output,
+    std::size_t row,
+    std::size_t cue_index
+) {
+    const int previous_choice = state.prev_choice_index;
+    const bool had_previous = previous_choice >= 0;
+    const bool repeated =
+        had_previous && previous_choice == static_cast<int>(cue_index);
+
+    state.prev_switch = had_previous && !repeated ? 1.0 : 0.0;
+    state.prev_repeat_sign = had_previous
+        ? (repeated ? 1.0 : -1.0)
+        : 0.0;
+    state.choice_streak = repeated ? state.choice_streak + 1.0 : 1.0;
+    state.prev_choice_index = static_cast<int>(cue_index);
+    state.prev_reward = output.reward[row];
+
+    const double q_before = output.value[0][row][cue_index];
+    state.pe_prev = output.utility[row] - q_before;
+    state.alpha_prev = parameter_or_zero(task.params, "alpha");
+    state.beta_prev = parameter_or_zero(task.params, "beta");
+    if (task.params.has("kappa")) {
+        state.kappa_prev = finite_or_zero(task.params.get("kappa"));
+    } else {
+        state.kappa_prev = parameter_or_zero(task.params, "sticky");
+    }
+}
+
 }  // namespace
 
 /* ========================================================================== *
@@ -315,10 +557,28 @@ Process3Loop process_3_loop(const RunTask& task) {
         static_cast<std::mt19937::result_type>(params.get("seed"))
     );
 
+    const int max_block =
+        *std::max_element(input.block.begin(), input.block.end());
+    const int max_trial =
+        *std::max_element(input.trial.begin(), input.trial.end());
+    HiddenState hidden;
+
     for (std::size_t row = 0; row < input.n_rows; ++row) {
+        if (input.trial[row] == 1) {
+            reset_hidden_state(hidden);
+        }
+
         const auto& state_row = input.state[row];
         output.shown[row] = record_shown(state_row, behrule.cue);
-        TrialContext context = modify_context(task, output, row);
+        HiddenFeatures features = base_hidden_features(
+            task,
+            output,
+            hidden,
+            row,
+            max_block,
+            max_trial
+        );
+        TrialContext context = modify_context(task, output, row, features);
 
         /* ------------------------------------------------------------------ *
          * Bias function: bias_func                                            *
@@ -365,7 +625,8 @@ Process3Loop process_3_loop(const RunTask& task) {
             context,
             qvalue,
             output.exploration[row],
-            settings.system
+            settings.system,
+            qvalue_hidden_features(features, hidden, qvalue)
         );
 
         output.prob[row] = funcs.prob_func(
@@ -480,6 +741,14 @@ Process3Loop process_3_loop(const RunTask& task) {
                     next_values[cue_index];
             }
         }
+
+        update_hidden_state(
+            hidden,
+            task,
+            output,
+            row,
+            cue_index
+        );
 
         const double reset = params.get("reset");
         if (is_nb && !std::isnan(reset)) {

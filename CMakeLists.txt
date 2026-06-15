@@ -159,6 +159,19 @@ option(
 )
 
 option(
+    MULTIRL_FETCH_ABCPP
+    "Fetch abcpp instead of using a repository-local copy"
+    ON
+)
+
+set(
+    MULTIRL_ABCPP_TAG
+    "main"
+    CACHE STRING
+    "abcpp Git tag, branch, or commit to fetch"
+)
+
+option(
     MULTIRL_ENABLE_MCMC
     "Build MCMC estimator with Stan Math support"
     ON
@@ -478,9 +491,27 @@ multirl_read_define(
     "EIGEN_VERSION_STRING"
 )
 
+if(MULTIRL_FETCH_ABCPP)
+    FetchContent_Declare(
+        abcpp
+        GIT_REPOSITORY https://github.com/yuki-961004/abcpp.git
+        GIT_TAG ${MULTIRL_ABCPP_TAG}
+        GIT_SHALLOW TRUE
+    )
+    FetchContent_MakeAvailable(abcpp)
+else()
+    set(abcpp_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/abcpp")
+endif()
+
+set(
+    MULTIRL_ABCPP_INCLUDE_DIRS
+    "${abcpp_SOURCE_DIR}/Cpp/include"
+    "${abcpp_SOURCE_DIR}/R/inst/include"
+)
+
 multirl_read_project_version(
     MULTIRL_ABCPP_VERSION
-    "${CMAKE_CURRENT_SOURCE_DIR}/abcpp/CMakeLists.txt"
+    "${abcpp_SOURCE_DIR}/CMakeLists.txt"
 )
 
 set(MULTIRL_NLOPT_TARGET "")
@@ -603,11 +634,18 @@ target_include_directories(
     multiRL
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Cpp/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/abcpp/Cpp/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/abcpp/R/inst/include>
+        $<BUILD_INTERFACE:${abcpp_SOURCE_DIR}/Cpp/include>
+        $<BUILD_INTERFACE:${abcpp_SOURCE_DIR}/R/inst/include>
         $<BUILD_INTERFACE:${eigen_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include>
 )
+
+if(TARGET abcpp::abcpp)
+    target_link_libraries(multiRL PUBLIC abcpp::abcpp)
+    if(MSVC)
+        target_compile_options(abcpp PRIVATE /EHsc)
+    endif()
+endif()
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(multiRL PUBLIC OpenMP::OpenMP_CXX)
@@ -661,8 +699,7 @@ if(MULTIRL_ENABLE_RNN)
         multiRL_torch_backend
         PRIVATE
             "${CMAKE_CURRENT_SOURCE_DIR}/Cpp/include"
-            "${CMAKE_CURRENT_SOURCE_DIR}/abcpp/Cpp/include"
-            "${CMAKE_CURRENT_SOURCE_DIR}/abcpp/R/inst/include"
+            ${MULTIRL_ABCPP_INCLUDE_DIRS}
             "${eigen_SOURCE_DIR}"
             ${MULTIRL_NLOPT_INCLUDE_DIRS}
     )

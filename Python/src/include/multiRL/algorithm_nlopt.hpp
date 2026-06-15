@@ -66,15 +66,16 @@ namespace Nlopt {
     );
 
     /* ================================================================== *
-     * ?????? MLE                                                      *
+     * Deterministic MLE                                                   *
      * ================================================================== *
-     *                                                                       *
-     * GN_MLSL / GN_CRS2_LM / GN_ISRES / GN_ESCH ????????? NLopt    *
-     * ??? RNG. ??????????????????, ????????.      *
-     *                                                                       *
-     * ???? std::mt19937(seed) ??????????,                        *
-     * ??????????? (LN_BOBYQA ??????), ???.                 *
-     * ??? MLSL ???????, ?????????????.                   *
+     * NLopt global algorithms such as GN_MLSL, GN_CRS2_LM, GN_ISRES, and  *
+     * GN_ESCH use internal global random state. That makes parallel       *
+     * recovery diagnostics hard to reproduce exactly.                     *
+     *                                                                     *
+     * This helper builds deterministic multi-start candidates with         *
+     * std::mt19937(seed), then runs a local optimizer for each candidate.  *
+     * It preserves the practical MLSL search pattern while keeping all     *
+     * random draws under multiRL control.                                 *
      * ================================================================== */
 
     EstimateMleResult deterministic_mle(

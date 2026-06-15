@@ -49,9 +49,55 @@ struct Process3Loop {
     std::vector<std::string> position;
 };
 
+struct HiddenFeatures {
+    double progress = 0.0;
+    double block_progress = 0.0;
+    double session_progress = 0.0;
+    double log_trial_block = 0.0;
+    double qvalue1 = missing_real();
+    double qvalue2 = missing_real();
+    double q_max = missing_real();
+    double q_abs_diff = missing_real();
+    double q_mean = missing_real();
+    double decision_entropy = missing_real();
+    double prev_reward = 0.0;
+    double prev_repeat_sign = 0.0;
+    double prev_switch = 0.0;
+    double choice_streak = 0.0;
+    double pe_prev = 0.0;
+    double abs_pe_prev = 0.0;
+    double count_imbalance = 0.0;
+    double count_imbalance_abs = 0.0;
+    double valid_count_total = 0.0;
+    double first_trial_in_block = 0.0;
+    double q_chosen_prev = 0.0;
+    double q_unchosen_prev = 0.0;
+    double reward = missing_real();
+    double utility = missing_real();
+    double pe = missing_real();
+    double abs_pe = missing_real();
+    double q_chosen = missing_real();
+    double alpha_prev = 0.0;
+    double beta_prev = 0.0;
+    double kappa_prev = 0.0;
+};
+
+struct HiddenState {
+    int prev_choice_index = -1;
+    double prev_reward = 0.0;
+    double prev_switch = 0.0;
+    double prev_repeat_sign = 0.0;
+    double choice_streak = 0.0;
+    double pe_prev = 0.0;
+    double alpha_prev = 0.0;
+    double beta_prev = 0.0;
+    double kappa_prev = 0.0;
+};
+
 struct TrialContext {
     std::size_t row = 0;
     int rownum = 0;
+    HiddenFeatures features;
     std::vector<double> shown;
     std::vector<double> count;
     std::vector<std::string> idinfo;

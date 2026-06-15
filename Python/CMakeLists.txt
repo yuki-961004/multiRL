@@ -58,6 +58,19 @@ option(
     ON
 )
 
+option(
+    MULTIRL_FETCH_ABCPP
+    "Fetch abcpp instead of using a repository-local copy"
+    ON
+)
+
+set(
+    MULTIRL_ABCPP_TAG
+    "main"
+    CACHE STRING
+    "abcpp Git tag, branch, or commit to fetch"
+)
+
 if(DEFINED ENV{MULTIRL_ENABLE_MCMC})
     set(
         MULTIRL_ENABLE_MCMC
@@ -214,6 +227,24 @@ if(MULTIRL_ENABLE_NLOPT)
     endif()
 endif()
 
+if(MULTIRL_FETCH_ABCPP)
+    FetchContent_Declare(
+        abcpp
+        GIT_REPOSITORY https://github.com/yuki-961004/abcpp.git
+        GIT_TAG ${MULTIRL_ABCPP_TAG}
+        GIT_SHALLOW TRUE
+    )
+    FetchContent_MakeAvailable(abcpp)
+else()
+    set(abcpp_SOURCE_DIR "${MULTIRL_REPO_ROOT}/abcpp")
+endif()
+
+set(
+    MULTIRL_ABCPP_INCLUDE_DIRS
+    "${abcpp_SOURCE_DIR}/Cpp/include"
+    "${abcpp_SOURCE_DIR}/R/inst/include"
+)
+
 set(MULTIRL_STAN_MATH_INCLUDE_DIRS "")
 
 if(MULTIRL_ENABLE_MCMC)
@@ -329,9 +360,20 @@ target_include_directories(
     multiRL_python_core
     PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/src/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/Cpp/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/R/inst/include"
+        ${MULTIRL_ABCPP_INCLUDE_DIRS}
 )
+
+if(TARGET abcpp::abcpp)
+    if(MSVC)
+        target_compile_options(abcpp PRIVATE /EHsc)
+    endif()
+
+    target_link_libraries(
+        multiRL_python_core
+        PUBLIC
+            abcpp::abcpp
+    )
+endif()
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(
@@ -386,8 +428,7 @@ function(add_multiRL_module module_name)
         ${module_name}
         PRIVATE
             "${CMAKE_CURRENT_SOURCE_DIR}/src/include"
-            "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/Cpp/include"
-            "${CMAKE_CURRENT_SOURCE_DIR}/../abcpp/R/inst/include"
+            ${MULTIRL_ABCPP_INCLUDE_DIRS}
     )
 
     if(MULTIRL_ENABLE_MCMC)

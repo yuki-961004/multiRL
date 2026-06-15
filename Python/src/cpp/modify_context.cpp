@@ -1,15 +1,19 @@
 #include <multiRL/modify_context.hpp>
 
+#include <cmath>
+
 namespace multiRL {
 
 TrialContext modify_context(
     const RunTask& task,
     const Process3Loop& output,
-    std::size_t row
+    std::size_t row,
+    const HiddenFeatures& features
 ) {
     TrialContext context;
     context.row = row;
     context.rownum = static_cast<int>(row + 1);
+    context.features = features;
     context.shown = output.shown[row];
     context.count = output.count[row];
     context.idinfo = task.input.idinfo[row];
@@ -34,11 +38,13 @@ void modify_context_qvalue(
     TrialContext& context,
     const std::vector<std::vector<double>>& qvalue,
     double exploration,
-    const std::vector<std::string>& systems
+    const std::vector<std::string>& systems,
+    const HiddenFeatures& features
 ) {
     context.qvalue = qvalue;
     context.exploration = exploration;
     context.systems = systems;
+    context.features = features;
 }
 
 void modify_context_outcome(
@@ -52,6 +58,8 @@ void modify_context_outcome(
     context.utility = utility;
     context.is_nb = is_nb;
     context.is_fp = is_fp;
+    context.features.reward = reward;
+    context.features.utility = utility;
 }
 
 void modify_context_system(
@@ -65,6 +73,9 @@ void modify_context_system(
     context.values = values;
     context.qi = qi;
     context.system = system;
+    context.features.q_chosen = qi;
+    context.features.pe = context.utility - qi;
+    context.features.abs_pe = std::abs(context.features.pe);
 }
 
 }  // namespace multiRL

@@ -45,12 +45,12 @@ pybind11::dict py_wrap_estimate_rnn_results(
     pybind11::dict estimator;
     estimator["name"] = "RNN";
     estimator["backend"] = "torch";
-    estimator["architecture"] = control.layer;
+    estimator["architecture"] = control.architecture;
     estimator["loss_name"] = control.loss;
     estimator["units"] = control.units;
     estimator["layers"] = control.layers;
     estimator["dropout"] = control.dropout;
-    estimator["bidirectional"] = (control.layer.rfind("bi", 0) == 0);
+    estimator["bidirectional"] = (control.architecture.rfind("bi", 0) == 0);
     estimator["device"] = control.device;
     estimator["threads"] = control.threads;
     estimator["interop_threads"] = control.interop_threads;
@@ -145,7 +145,7 @@ pybind11::dict py_estimate_rnn_data(
     control.layers = layers;
     control.dropout = dropout;
     control.learning_rate = learning_rate;
-    control.layer = layer;
+    control.architecture = layer;
     control.loss = loss;
     control.verbose = verbose;
     control.device = device;
