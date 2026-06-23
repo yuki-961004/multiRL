@@ -65,3 +65,27 @@ file(
 )
 
 message(STATUS "multiRL: synchronized backend C++ sources and headers.")
+
+# Synchronize R tests from root tests/testthat to R/tests/testthat
+set(MULTIRL_R_TEST_SRC "${REPO_ROOT}/tests/testthat")
+set(MULTIRL_R_TEST_DEST "${REPO_ROOT}/R/tests/testthat")
+
+file(REMOVE_RECURSE "${MULTIRL_R_TEST_DEST}")
+file(MAKE_DIRECTORY "${MULTIRL_R_TEST_DEST}")
+
+file(
+    GLOB R_TEST_SOURCES
+    "${MULTIRL_R_TEST_SRC}/test-*.R"
+)
+
+foreach(test_file ${R_TEST_SOURCES})
+    file(COPY "${test_file}" DESTINATION "${MULTIRL_R_TEST_DEST}")
+endforeach()
+
+file(WRITE "${MULTIRL_R_TEST_DEST}/README.md"
+"Do not edit files in this directory directly.
+Edit root tests/testthat, then run CMake to synchronize.
+")
+
+message(STATUS "multiRL: synchronized R tests from root tests/testthat.")
+

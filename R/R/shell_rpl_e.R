@@ -862,3 +862,16 @@ rpl_e <- function(
   }
   adapted_theme
 }
+
+#' Plot Method for multiRLcpp Replay Results
+#'
+#' @param x An object of class \code{multiRLcpp_rpl_e}.
+#' @param ... Additional arguments.
+#' @export
+plot.multiRLcpp_rpl_e <- function(x, ...) {
+  if (base::is.null(x$plot)) {
+    base::stop("No plot data available in this replay result.", call. = FALSE)
+  }
+  .rpl_e_print_plot(x$plot)
+  base::invisible(x$plot)
+}

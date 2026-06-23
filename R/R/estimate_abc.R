@@ -139,6 +139,9 @@ estimate_abc <- function(
   if (!base::is.null(out$reduce)) {
     out$reduction <- out$reduce
   }
+  if (base::is.null(out$reduction) || base::length(out$reduction) == 0L) {
+    out$reduction <- "none"
+  }
   out$samples <- base::as.integer(out$samples[[1L]])
   out$tol <- base::as.numeric(out$tol[[1L]])
   out$method <- base::as.character(out$method[[1L]])

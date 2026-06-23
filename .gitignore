@@ -36,6 +36,8 @@ dist/
 *.RData
 .Ruserdata
 R/src/*.o
+*.gcda
+*.gcno
 
 # IDE
 *.swp

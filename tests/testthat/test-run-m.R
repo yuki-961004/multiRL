@@ -27,6 +27,38 @@ extract_cpp_metric <- function(model) {
   )
 }
 
+convert_legacy_prior <- function(prior) {
+  if (base::is.list(prior)) {
+    return(prior)
+  }
+  if (base::is.function(prior)) {
+    body_call <- base::body(prior)
+    call_list <- base::as.list(body_call)
+    func_name <- base::deparse(call_list[[1L]])
+    
+    if (base::grepl("dbeta", func_name)) {
+      matched <- base::match.call(stats::dbeta, body_call)
+      shape1 <- if (!base::is.null(matched[["shape1"]])) base::eval(matched[["shape1"]]) else 1
+      shape2 <- if (!base::is.null(matched[["shape2"]])) base::eval(matched[["shape2"]]) else 1
+      return(base::list(type = "beta", shape1 = shape1, shape2 = shape2))
+    } else if (base::grepl("dexp", func_name)) {
+      matched <- base::match.call(stats::dexp, body_call)
+      rate <- if (!base::is.null(matched[["rate"]])) base::eval(matched[["rate"]]) else 1
+      return(base::list(type = "exponential", rate = rate))
+    } else if (base::grepl("dnorm", func_name)) {
+      matched <- base::match.call(stats::dnorm, body_call)
+      mean <- if (!base::is.null(matched[["mean"]])) base::eval(matched[["mean"]]) else 0
+      sd <- if (!base::is.null(matched[["sd"]])) base::eval(matched[["sd"]]) else 1
+      return(base::list(type = "normal", mean = mean, sd = sd))
+    }
+  }
+  base::stop("Unsupported prior format")
+}
+
+convert_legacy_priors <- function(priors) {
+  base::lapply(priors, convert_legacy_prior)
+}
+
 tab_subject_one <- function() {
   multiRL::TAB[multiRL::TAB[, "Subject"] == 1, ]
 }
@@ -63,7 +95,7 @@ cpp_tab_run <- function(params, priors, settings) {
       action = "Sub_Choose"
     ),
     params = params,
-    priors = priors,
+    priors = convert_legacy_priors(priors),
     settings = settings
   )
 }
@@ -147,13 +179,8 @@ testthat::test_that("0_Benchmark first chunk stays aligned", {
       fixed = list(threshold = 20)
     ),
     priors = list(
-      alpha = function(x) stats::dbeta(
-        x,
-        shape1 = 2,
-        shape2 = 2,
-        log = TRUE
-      ),
-      beta = function(x) stats::dexp(x, rate = 1, log = TRUE)
+      alpha = list(type = "beta", shape1 = 2, shape2 = 2),
+      beta = list(type = "exponential", rate = 1)
     ),
     settings = list(
       name = "TD",
