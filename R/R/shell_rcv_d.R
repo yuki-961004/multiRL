@@ -361,7 +361,7 @@ rcv_d <- function(
   settings <- .modify_settings(spec$settings)
   settings$name <- name
   settings$mode <- "simulating"
-  settings$policy <- "on"
+  settings$generate <- TRUE
   features <- .modify_features(data = data, colnames = colnames)
 
   lower_bounds <- .modify_estimate_mle_bounds(
@@ -393,7 +393,7 @@ rcv_d <- function(
     prior_param1 = priors$param1,
     prior_param2 = priors$param2,
     prior_active = priors$active,
-    policy = settings$policy,
+    generate = settings$generate,
     name = settings$name,
     mode = settings$mode,
     generating_model = name,

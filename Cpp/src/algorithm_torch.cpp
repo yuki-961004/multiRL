@@ -61,7 +61,8 @@ void validate_rnn_control(const RNNControl& control) {
 TorchSequenceNetImpl::TorchSequenceNetImpl(
     int n_features,
     int n_params,
-    const RNNControl& control
+    const RNNControl& control,
+    int n_subjects
 ) {
     arch_type = to_lower_str(control.architecture);
     is_bidirectional = (arch_type.rfind("bi", 0) == 0);
@@ -69,6 +70,9 @@ TorchSequenceNetImpl::TorchSequenceNetImpl(
     int recurrent_output_dim = is_bidirectional ? control.units * 2 : control.units;
     int hidden_nodes = std::max(1, control.units / 2);
     int output_nodes = get_rnn_output_size(control.loss, n_params);
+    subject_embedding_size = n_subjects > 1
+        ? control.subject_embedding_size
+        : 0;
 
     double drop_rate = (control.layers > 1) ? control.dropout : 0.0;
 
@@ -111,13 +115,45 @@ TorchSequenceNetImpl::TorchSequenceNetImpl(
         torch::nn::Dropout(torch::nn::DropoutOptions(control.dropout))
     );
 
+    if (subject_embedding_size > 0) {
+        subject_embedding = register_module(
+            "subject_embedding",
+            torch::nn::Embedding(
+                torch::nn::EmbeddingOptions(
+                    std::max(1, n_subjects),
+                    subject_embedding_size
+                )
+            )
+        );
+    }
+
     output = register_module(
         "output",
-        torch::nn::Linear(hidden_nodes, output_nodes)
+        torch::nn::Linear(
+            hidden_nodes + subject_embedding_size,
+            output_nodes
+        )
     );
 }
 
 torch::Tensor TorchSequenceNetImpl::forward(torch::Tensor x) {
+    const torch::Tensor lengths = torch::full(
+        {x.size(0)},
+        x.size(1),
+        torch::TensorOptions().dtype(torch::kLong).device(x.device())
+    );
+    const torch::Tensor subject_indices = torch::zeros(
+        {x.size(0)},
+        torch::TensorOptions().dtype(torch::kLong).device(x.device())
+    );
+    return forward(x, lengths, subject_indices);
+}
+
+torch::Tensor TorchSequenceNetImpl::forward(
+    torch::Tensor x,
+    torch::Tensor lengths,
+    torch::Tensor subject_indices
+) {
     torch::Tensor sequence;
     if (rnn) {
         sequence = std::get<0>(rnn->forward(x));
@@ -129,8 +165,24 @@ torch::Tensor TorchSequenceNetImpl::forward(torch::Tensor x) {
         throw std::runtime_error("No recurrent module initialized in TorchSequenceNet");
     }
 
-    torch::Tensor last = sequence.select(1, sequence.size(1) - 1);
+    torch::Tensor last_index = torch::clamp(
+        lengths.to(torch::kLong) - 1,
+        0,
+        sequence.size(1) - 1
+    );
+    torch::Tensor last = sequence.gather(
+        1,
+        last_index.view({-1, 1, 1}).expand(
+            {-1, 1, sequence.size(2)}
+        )
+    ).squeeze(1);
     torch::Tensor h = torch::relu(hidden->forward(last));
+    if (subject_embedding) {
+        h = torch::cat(
+            {h, subject_embedding->forward(subject_indices.to(torch::kLong))},
+            1
+        );
+    }
     return output->forward(dropout->forward(h));
 }
 

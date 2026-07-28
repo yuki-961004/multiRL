@@ -17,7 +17,7 @@ pybind11::dict py_shell_run_m(
     const std::vector<double>& prior_param1,
     const std::vector<double>& prior_param2,
     bool prior_active,
-    const std::string& policy,
+    bool generate,
     const std::string& name,
     const std::string& mode,
     const std::string& estimate
@@ -39,7 +39,7 @@ pybind11::dict py_shell_run_m(
         prior_param1,
         prior_param2,
         prior_active,
-        policy,
+        generate,
         name,
         mode,
         estimate
@@ -62,7 +62,7 @@ void register_py_shell_run_m(pybind11::module& module) {
         pybind11::arg("prior_param1") = std::vector<double>(),
         pybind11::arg("prior_param2") = std::vector<double>(),
         pybind11::arg("prior_active") = false,
-        pybind11::arg("policy") = "off",
+        pybind11::arg("generate") = false,
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "fitting",
         pybind11::arg("estimate") = "MLE"

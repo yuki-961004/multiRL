@@ -69,19 +69,11 @@ std::vector<double> rnn_row_features(
     const std::vector<std::string>& cue
 ) {
     std::vector<double> out;
-    out.reserve(4U + cue.size());
+    out.reserve(4U);
     out.push_back(rnn_action_code(row.simulation, cue));
     out.push_back(rnn_safe_value(row.reward));
     out.push_back(static_cast<double>(row.block));
     out.push_back(static_cast<double>(row.trial));
-
-    for (std::size_t index = 0; index < cue.size(); ++index) {
-        if (index < row.probability.size()) {
-            out.push_back(rnn_safe_value(row.probability[index]));
-        } else {
-            out.push_back(0.0);
-        }
-    }
 
     return out;
 }
@@ -91,7 +83,7 @@ std::vector<double> rnn_observed_features(
     std::size_t row
 ) {
     std::vector<double> out;
-    out.reserve(4U + task.behrule.cue.size());
+    out.reserve(4U);
     out.push_back(rnn_action_code(task.input.action[row], task.behrule.cue));
     out.push_back(rnn_chosen_reward(
         task.input.state[row],
@@ -100,10 +92,6 @@ std::vector<double> rnn_observed_features(
     ));
     out.push_back(static_cast<double>(task.input.block[row]));
     out.push_back(static_cast<double>(task.input.trial[row]));
-
-    for (std::size_t index = 0; index < task.behrule.cue.size(); ++index) {
-        out.push_back(0.0);
-    }
 
     return out;
 }
@@ -161,7 +149,7 @@ torch::Tensor rnn_training_x(
             continue;
         }
 
-        const int trial = row.trial - 1;
+        const int trial = row.sequence;
         if (trial < 0 || trial >= n_trials) {
             continue;
         }
@@ -184,6 +172,45 @@ torch::Tensor rnn_training_x(
         values.data(),
         {n_draws, n_trials, n_features},
         torch::kFloat32
+    ).clone();
+}
+
+torch::Tensor rnn_training_lengths(
+    const TaskSamplerResult& sampler,
+    int n_draws
+) {
+    std::vector<int64_t> values(static_cast<std::size_t>(n_draws), 1);
+    for (const TaskSamplerRow& row : sampler.rows) {
+        const int draw = row.draw - 1;
+        if (draw >= 0 && draw < n_draws) {
+            values[static_cast<std::size_t>(draw)] = std::max(
+                values[static_cast<std::size_t>(draw)],
+                static_cast<int64_t>(row.sequence + 1)
+            );
+        }
+    }
+    return torch::from_blob(
+        values.data(),
+        {n_draws},
+        torch::kInt64
+    ).clone();
+}
+
+torch::Tensor rnn_training_subjects(
+    const TaskSamplerResult& sampler,
+    int n_draws
+) {
+    std::vector<int64_t> values(static_cast<std::size_t>(n_draws), 0);
+    for (const TaskSamplerRow& row : sampler.rows) {
+        const int draw = row.draw - 1;
+        if (draw >= 0 && draw < n_draws) {
+            values[static_cast<std::size_t>(draw)] = row.subject_index;
+        }
+    }
+    return torch::from_blob(
+        values.data(),
+        {n_draws},
+        torch::kInt64
     ).clone();
 }
 
@@ -258,7 +285,8 @@ TrainedRnnModel train_rnn_model(
     int n_trials,
     int n_features,
     int n_params,
-    const RNNControl& control
+    const RNNControl& control,
+    int n_subjects
 ) {
     if (control.threads > 0) {
         torch::set_num_threads(control.threads);
@@ -288,8 +316,14 @@ TrainedRnnModel train_rnn_model(
     torch::Tensor y_train = rnn_training_y(
         sampler, n_draws, n_params
     ).to(torch_device);
+    torch::Tensor lengths = rnn_training_lengths(
+        sampler, n_draws
+    ).to(torch_device);
+    torch::Tensor subjects = rnn_training_subjects(
+        sampler, n_draws
+    ).to(torch_device);
 
-    TorchSequenceNet model(n_features, n_params, control);
+    TorchSequenceNet model(n_features, n_params, control, n_subjects);
     model->to(torch_device);
     torch::optim::Adam optimizer(
         model->parameters(),
@@ -309,9 +343,11 @@ TrainedRnnModel train_rnn_model(
             torch::Tensor index = order.slice(0, start, stop);
             torch::Tensor xb = x_train.index_select(0, index);
             torch::Tensor yb = y_train.index_select(0, index);
+            torch::Tensor lb = lengths.index_select(0, index);
+            torch::Tensor sb = subjects.index_select(0, index);
 
             optimizer.zero_grad();
-            torch::Tensor pred = model->forward(xb);
+            torch::Tensor pred = model->forward(xb, lb, sb);
             torch::Tensor loss = compute_rnn_loss(pred, yb, control.loss, n_params);
             torch::Tensor reg_loss = model->get_regularization_loss(control.regularization, control.penalty);
             torch::Tensor total_loss = loss + reg_loss;
@@ -327,6 +363,7 @@ TrainedRnnModel train_rnn_model(
     out.final_loss = final_loss;
     out.n_features = n_features;
     out.n_params = n_params;
+    out.n_subjects = n_subjects;
     return out;
 }
 
@@ -336,7 +373,8 @@ TrainedRnnModel train_rnn_model(
 EstimateRnnSubjectResult predict_rnn_subject(
     const RunTask& task,
     const RNNControl& control,
-    TrainedRnnModel& trained
+    TrainedRnnModel& trained,
+    int subject_index
 ) {
     EstimateRnnSubjectResult out;
     out.subid = rnn_task_subid(task);
@@ -360,8 +398,19 @@ EstimateRnnSubjectResult predict_rnn_subject(
 
     trained.model->eval();
     torch::NoGradGuard guard;
-    torch::Tensor prediction =
-        trained.model->forward(x_observed).squeeze(0);
+    torch::Tensor lengths = torch::tensor(
+        {out.n_trials},
+        torch::TensorOptions().dtype(torch::kLong).device(trained.device)
+    );
+    torch::Tensor subjects = torch::tensor(
+        {std::clamp(subject_index, 0, trained.n_subjects - 1)},
+        torch::TensorOptions().dtype(torch::kLong).device(trained.device)
+    );
+    torch::Tensor prediction = trained.model->forward(
+        x_observed,
+        lengths,
+        subjects
+    ).squeeze(0);
 
     out.estimates.resize(out.parameter_names.size(), missing_real());
     const int n_params = static_cast<int>(out.parameter_names.size());
@@ -434,7 +483,7 @@ EstimateRnnSubjectResult estimate_rnn_subject(
     out.parameter_names = task.params.free_names;
     out.n_draws = sampler.control.n_draws;
     out.n_trials = static_cast<int>(task.input.n_rows);
-    out.n_features = static_cast<int>(4U + task.behrule.cue.size());
+    out.n_features = 4;
     out.epochs = control.epochs;
     out.backend = "torch";
     out.architecture = control.architecture;
@@ -453,7 +502,8 @@ EstimateRnnSubjectResult estimate_rnn_subject(
         out.n_trials,
         out.n_features,
         n_params,
-        control
+        control,
+        1
     );
 
     out.loss = trained.final_loss;
@@ -538,11 +588,15 @@ TaskSamplerResult concat_sampler_results(
 
     // Re-number draws across subjects so they are contiguous.
     int draw_offset = 0;
-    for (const TaskSamplerResult& result : results) {
+    for (std::size_t subject_index = 0;
+         subject_index < results.size();
+         ++subject_index) {
+        const TaskSamplerResult& result = results[subject_index];
         int max_draw = 0;
         for (const TaskSamplerRow& row : result.rows) {
             TaskSamplerRow new_row = row;
             new_row.draw += draw_offset;
+            new_row.subject_index = static_cast<int>(subject_index);
             out.rows.push_back(new_row);
             if (row.draw > max_draw) {
                 max_draw = row.draw;
@@ -604,7 +658,7 @@ std::vector<EstimateRnnSubjectResult> estimate_rnn(
 
         const int n_trials = static_cast<int>(templ.input.n_rows);
         const int n_features = static_cast<int>(
-            4U + templ.behrule.cue.size()
+            4
         );
         const int n_params = static_cast<int>(
             templ.params.free_names.size()
@@ -612,14 +666,14 @@ std::vector<EstimateRnnSubjectResult> estimate_rnn(
         const int n_draws = sampler.control.n_draws;
 
         TrainedRnnModel trained = train_rnn_model(
-            sampler, n_draws, n_trials, n_features, n_params, control
+            sampler, n_draws, n_trials, n_features, n_params, control, 1
         );
 
         std::vector<EstimateRnnSubjectResult> out;
         out.reserve(tasks.size());
         for (const RunTask& task : tasks) {
             EstimateRnnSubjectResult result =
-                predict_rnn_subject(task, control, trained);
+                predict_rnn_subject(task, control, trained, 0);
             result.n_draws = n_draws;
             out.push_back(result);
         }
@@ -643,10 +697,15 @@ std::vector<EstimateRnnSubjectResult> estimate_rnn(
 
         TaskSamplerResult combined = concat_sampler_results(all_samplers);
 
-        // Use the first task's structure for dimensions
-        const int n_trials = static_cast<int>(tasks.front().input.n_rows);
+        int n_trials = 1;
+        for (const RunTask& task : tasks) {
+            n_trials = std::max(
+                n_trials,
+                static_cast<int>(task.input.n_rows)
+            );
+        }
         const int n_features = static_cast<int>(
-            4U + tasks.front().behrule.cue.size()
+            4
         );
         const int n_params = static_cast<int>(
             tasks.front().params.free_names.size()
@@ -654,14 +713,28 @@ std::vector<EstimateRnnSubjectResult> estimate_rnn(
         const int total_draws = combined.control.n_draws;
 
         TrainedRnnModel trained = train_rnn_model(
-            combined, total_draws, n_trials, n_features, n_params, control
+            combined,
+            total_draws,
+            n_trials,
+            n_features,
+            n_params,
+            control,
+            static_cast<int>(tasks.size())
         );
 
         std::vector<EstimateRnnSubjectResult> out;
         out.reserve(tasks.size());
-        for (const RunTask& task : tasks) {
+        for (std::size_t subject_index = 0;
+             subject_index < tasks.size();
+             ++subject_index) {
+            const RunTask& task = tasks[subject_index];
             EstimateRnnSubjectResult result =
-                predict_rnn_subject(task, control, trained);
+                predict_rnn_subject(
+                    task,
+                    control,
+                    trained,
+                    static_cast<int>(subject_index)
+                );
             result.n_draws = total_draws;
             out.push_back(result);
         }

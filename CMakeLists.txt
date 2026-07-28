@@ -603,6 +603,7 @@ set(
     Cpp/src/modify_control.cpp
     Cpp/src/modify_context.cpp
     Cpp/src/modify_funcs.cpp
+    Cpp/src/modify_outputs.cpp
     Cpp/src/process_model_free.cpp
     Cpp/src/modify_params.cpp
     Cpp/src/modify_priors.cpp
@@ -610,6 +611,7 @@ set(
     Cpp/src/task_builder.cpp
     Cpp/src/shell_fit_p.cpp
     Cpp/src/shell_rcv_d.cpp
+    Cpp/src/shell_rpl_e.cpp
     Cpp/src/shell_run_m.cpp
 )
 

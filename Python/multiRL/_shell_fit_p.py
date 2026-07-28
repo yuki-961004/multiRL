@@ -30,7 +30,7 @@ def fit_p(
     rsp=None,
     free_names=None,
     system=None,
-    policy="off",
+    generate=False,
     name="TD",
     mode="fitting",
 ):
@@ -81,7 +81,7 @@ def fit_p(
         rsp=rsp,
         free_names=free_names,
         system=system,
-        policy=policy,
+        generate=generate,
         name=name,
         mode=mode,
     )

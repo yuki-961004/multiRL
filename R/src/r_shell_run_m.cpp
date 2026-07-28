@@ -23,7 +23,7 @@ Rcpp::List r_shell_run_m(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     std::string estimate
@@ -46,7 +46,7 @@ Rcpp::List r_shell_run_m(
         prior_param1,
         prior_param2,
         prior_active,
-        policy,
+        generate,
         name,
         mode,
         estimate

@@ -66,6 +66,9 @@ fit_p <- function(
   )
 
   settings$estimate <- base::toupper(estimator)
+  if (estimator %in% c("abc", "rnn")) {
+    settings$generate <- TRUE
+  }
 
   cpp_result <- .shell_fit_p(
     object = features$object,
@@ -85,7 +88,7 @@ fit_p <- function(
     prior_param1 = priors$param1,
     prior_param2 = priors$param2,
     prior_active = priors$active,
-    policy = settings$policy,
+    generate = settings$generate,
     name = settings$name,
     mode = settings$mode,
     estimator = estimator,

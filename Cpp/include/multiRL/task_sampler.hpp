@@ -17,6 +17,8 @@ struct TaskSamplerControl {
 
 struct TaskSamplerRow {
     int draw = 0;
+    int sequence = 0;
+    int subject_index = 0;
     std::string subid;
     int block = 0;
     int trial = 0;
@@ -34,7 +36,7 @@ struct TaskSamplerResult {
     std::vector<std::string> cue_names;
     std::vector<TaskSamplerRow> rows;
     TaskSamplerControl control;
-    std::string policy = "on";
+    bool generate = true;
 };
 
 TaskSamplerResult task_sampler(

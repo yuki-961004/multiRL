@@ -27,7 +27,7 @@ def estimate_rnn(
     rsp=None,
     free_names=None,
     system=None,
-    policy="off",
+    generate=False,
     name="TD",
     mode="fitting",
 ):
@@ -57,11 +57,12 @@ def estimate_rnn(
         rsp=rsp,
         free_names=free_names,
         system=system,
-        policy=policy,
+        generate=generate,
         name=name,
         mode=mode,
         estimate="RNN",
     )
+    request["settings"]["generate"] = True
 
     rnn_control = _modify_rnn_control(control)
     free_names_list = request["free_names"]
@@ -85,7 +86,7 @@ def estimate_rnn(
         prior_param1=request["priors"]["param1"],
         prior_param2=request["priors"]["param2"],
         prior_active=request["priors"]["active"],
-        policy=request["settings"]["policy"],
+        generate=request["settings"]["generate"],
         name=request["settings"]["name"],
         mode=request["settings"]["mode"],
         n_draws=int(rnn_control["n_draws"]),
@@ -103,6 +104,7 @@ def estimate_rnn(
         verbose=int(rnn_control["verbose"]),
         device=str(rnn_control["device"]),
         scope=str(rnn_control["scope"]),
+        subject_embedding_size=int(rnn_control["subject_embedding_size"]),
         lower_bounds=lower_bounds,
         upper_bounds=upper_bounds,
     )
@@ -153,6 +155,7 @@ def _modify_rnn_control(control):
         "verbose": 0,
         "device": "cpu",
         "scope": "individual",
+        "subject_embedding_size": 8,
     }
     out.update(control)
     out["n_draws"] = int(out["n_draws"])
@@ -172,4 +175,5 @@ def _modify_rnn_control(control):
     out["verbose"] = int(out["verbose"])
     out["device"] = str(out["device"]).lower()
     out["scope"] = str(out["scope"]).lower()
+    out["subject_embedding_size"] = int(out["subject_embedding_size"])
     return out

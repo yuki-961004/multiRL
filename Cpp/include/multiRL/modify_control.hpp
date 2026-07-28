@@ -74,6 +74,7 @@ struct RNNControl {
     int interop_threads = 0;
     int units = 32;
     int layers = 1;
+    int subject_embedding_size = 8;
     int verbose = 0;
     double validation_split = 0.0;
     double learning_rate = 0.001;

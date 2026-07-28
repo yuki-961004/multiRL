@@ -56,6 +56,7 @@ estimate_abc <- function(
   behrule <- .modify_behrule(behrule = behrule)
   settings <- .modify_settings(settings = settings)
   settings$estimate <- "ABC"
+  settings$generate <- TRUE
   features <- .modify_features(data = data, colnames = colnames)
   control <- .modify_estimate_abc_control(
     control = control,
@@ -82,7 +83,7 @@ estimate_abc <- function(
     prior_param1 = priors$param1,
     prior_param2 = priors$param2,
     prior_active = priors$active,
-    policy = settings$policy,
+    generate = settings$generate,
     name = settings$name,
     mode = settings$mode,
     samples = control$samples,

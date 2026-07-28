@@ -18,7 +18,7 @@ pybind11::dict py_shell_fit_p(
     const std::vector<double>& prior_param1,
     const std::vector<double>& prior_param2,
     bool prior_active,
-    const std::string& policy,
+    bool generate,
     const std::string& name,
     const std::string& mode,
     const std::string& estimator_name,
@@ -29,7 +29,7 @@ pybind11::dict py_shell_fit_p(
         object, reward, action, block, trial, subid, cue, rsp,
         params, free_names, system,
         prior_names, prior_types, prior_param1, prior_param2,
-        prior_active, policy, name, mode, estimator_name
+        prior_active, generate, name, mode, estimator_name
     ));
 
     multiRL::ShellFitPControl fit_control;
@@ -95,7 +95,7 @@ void register_py_shell_fit_p(pybind11::module& module) {
         pybind11::arg("prior_param1") = std::vector<double>(),
         pybind11::arg("prior_param2") = std::vector<double>(),
         pybind11::arg("prior_active") = false,
-        pybind11::arg("policy") = "off",
+        pybind11::arg("generate") = false,
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "fitting",
         pybind11::arg("estimator") = "mle",

@@ -127,7 +127,7 @@ testthat::test_that("0_Benchmark first chunk stays aligned", {
       ),
       tau = function(x) stats::dexp(x, rate = 1, log = TRUE)
     ),
-    policy = "off"
+    generate = FALSE
   )
 
   legacy_model <- multiRL::run_m(
@@ -159,7 +159,7 @@ testthat::test_that("0_Benchmark first chunk stays aligned", {
       name = "TD",
       mode = "fitting",
       estimate = "MLE",
-      policy = "off"
+      generate = FALSE
     )
   )
 
@@ -186,7 +186,7 @@ testthat::test_that("0_Benchmark first chunk stays aligned", {
       name = "TD",
       mode = "fitting",
       estimate = "MLE",
-      policy = "off"
+      generate = FALSE
     )
   )
 
@@ -198,7 +198,7 @@ testthat::test_that("0_Benchmark first chunk stays aligned", {
   testthat::expect_equal(cpp_metric, binary_metric, tolerance = 1e-4)
 })
 
-testthat::test_that("policy-off deterministic model paths match legacy run_m", {
+testthat::test_that("generate-false model paths match legacy run_m", {
   testthat::skip_if_not_installed("multiRL")
 
   scenarios <- list(
@@ -215,7 +215,7 @@ testthat::test_that("policy-off deterministic model paths match legacy run_m", {
         name = "TD",
         mode = "fitting",
         estimate = "MLE",
-        policy = "off"
+        generate = FALSE
       )
     ),
     RSTD_RL = list(
@@ -232,7 +232,7 @@ testthat::test_that("policy-off deterministic model paths match legacy run_m", {
         name = "RSTD",
         mode = "fitting",
         estimate = "MLE",
-        policy = "off",
+        generate = FALSE,
         system = "RL"
       )
     ),
@@ -251,7 +251,7 @@ testthat::test_that("policy-off deterministic model paths match legacy run_m", {
         name = "RSTD",
         mode = "fitting",
         estimate = "MLE",
-        policy = "off",
+        generate = FALSE,
         system = "WM"
       )
     ),
@@ -269,7 +269,7 @@ testthat::test_that("policy-off deterministic model paths match legacy run_m", {
         name = "Utility",
         mode = "fitting",
         estimate = "MLE",
-        policy = "off"
+        generate = FALSE
       )
     )
   )

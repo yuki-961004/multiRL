@@ -325,7 +325,7 @@ ABCBank simulate_bank(
 
     for (int sample = 0; sample < control.samples; ++sample) {
         RunTask sim_task = raw_task;
-        sim_task.settings.policy = "on";
+        sim_task.settings.generate = true;
         sim_task.params.values["seed"] =
             static_cast<double>(control.seed + seed_offset + sample + 1);
 

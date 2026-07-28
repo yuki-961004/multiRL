@@ -306,6 +306,9 @@ RNNControl modify_control(
     if (out.layers <= 0) {
         out.layers = 1;
     }
+    if (out.subject_embedding_size < 0) {
+        out.subject_embedding_size = 0;
+    }
     if (out.learning_rate <= 0.0) {
         out.learning_rate = 0.001;
     }

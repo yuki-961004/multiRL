@@ -4,7 +4,7 @@
 def _modify_settings(
     settings,
     system=None,
-    policy="off",
+    generate=False,
     name="TD",
     mode="fitting",
     estimate="MLE",
@@ -14,7 +14,7 @@ def _modify_settings(
 
     out = {
         "system": system,
-        "policy": policy,
+        "generate": bool(generate),
         "name": name,
         "mode": mode,
         "estimate": estimate,

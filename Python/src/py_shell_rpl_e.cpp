@@ -19,7 +19,7 @@ pybind11::dict py_shell_rpl_e(
     const std::vector<double>& prior_param1,
     const std::vector<double>& prior_param2,
     bool prior_active,
-    const std::string& policy,
+    bool generate,
     const std::string& name,
     const std::string& mode
 ) {
@@ -40,7 +40,7 @@ pybind11::dict py_shell_rpl_e(
         prior_param1,
         prior_param2,
         prior_active,
-        policy,
+        generate,
         name,
         mode,
         "RPL_E"
@@ -71,7 +71,7 @@ void register_py_shell_rpl_e(pybind11::module& module) {
         pybind11::arg("prior_param1") = std::vector<double>(),
         pybind11::arg("prior_param2") = std::vector<double>(),
         pybind11::arg("prior_active") = false,
-        pybind11::arg("policy") = "off",
+        pybind11::arg("generate") = false,
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "fitting"
     );

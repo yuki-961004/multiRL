@@ -10,7 +10,7 @@ Rcpp::List r_estimate_mle(
     Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system,
     Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types,
     Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2,
-    bool prior_active, std::string policy, std::string name, std::string mode,
+    bool prior_active, bool generate, std::string name, std::string mode,
     int maxeval, std::string algorithm, std::string local_algorithm,
     double xtol_rel, double local_xtol_rel, int seed,
     Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds
@@ -23,7 +23,7 @@ Rcpp::List r_estimate_map(
     Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system,
     Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types,
     Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2,
-    bool prior_active, std::string policy, std::string name, std::string mode,
+    bool prior_active, bool generate, std::string name, std::string mode,
     int mle_maxeval, int map_maxiter, double map_tol, int map_patience,
     std::string algorithm, std::string local_algorithm, double xtol_rel, double local_xtol_rel,
     int seed, Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds
@@ -36,7 +36,7 @@ Rcpp::List r_estimate_mcmc(
     Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system,
     Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types,
     Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2,
-    bool prior_active, std::string policy, std::string name, std::string mode,
+    bool prior_active, bool generate, std::string name, std::string mode,
     int warmup, int samples, int chains, int thin, double step_size, double target_accept,
     int max_tree_depth, long seed, std::string algorithm,
     Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds
@@ -49,7 +49,7 @@ Rcpp::List r_estimate_abc(
     Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system,
     Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types,
     Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2,
-    bool prior_active, std::string policy, std::string name, std::string mode,
+    bool prior_active, bool generate, std::string name, std::string mode,
     int samples, double tol, std::string method, std::string reduction, int n_comp,
     int fake_block, std::string scope, int seed, int threads, int print_level,
     Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds
@@ -62,11 +62,11 @@ Rcpp::List r_estimate_rnn_data(
     Rcpp::NumericVector params, Rcpp::CharacterVector free_names, Rcpp::CharacterVector system,
     Rcpp::CharacterVector prior_names, Rcpp::CharacterVector prior_types,
     Rcpp::NumericVector prior_param1, Rcpp::NumericVector prior_param2,
-    bool prior_active, std::string policy, std::string name, std::string mode,
+    bool prior_active, bool generate, std::string name, std::string mode,
     int n_draws, int seed, int threads, int interop_threads,
     int epochs, int batch_size, int units, int layers, double dropout, double learning_rate,
     std::string architecture, std::string loss, std::string regularization, double penalty,
-    int verbose, std::string device, std::string scope,
+    int verbose, std::string device, std::string scope, int subject_embedding_size,
     Rcpp::NumericVector lower_bounds, Rcpp::NumericVector upper_bounds
 );
 
@@ -89,7 +89,7 @@ Rcpp::List r_shell_fit_p(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     std::string estimator,
@@ -107,7 +107,7 @@ Rcpp::List r_shell_fit_p(
         return r_estimate_mle(
             object, reward, action, block, trial, idinfo, exinfo, cue, rsp,
             params, free_names, system, prior_names, prior_types, prior_param1, prior_param2,
-            prior_active, policy, name, mode,
+            prior_active, generate, name, mode,
             maxeval, algorithm, local_algorithm, xtol_rel, local_xtol_rel, seed, lower_bounds, upper_bounds
         );
     }
@@ -126,7 +126,7 @@ Rcpp::List r_shell_fit_p(
         return r_estimate_map(
             object, reward, action, block, trial, idinfo, exinfo, cue, rsp,
             params, free_names, system, prior_names, prior_types, prior_param1, prior_param2,
-            prior_active, policy, name, mode,
+            prior_active, generate, name, mode,
             maxeval, map_maxiter, map_tol, map_patience, algorithm, local_algorithm, xtol_rel, local_xtol_rel,
             seed, lower_bounds, upper_bounds
         );
@@ -146,7 +146,7 @@ Rcpp::List r_shell_fit_p(
         return r_estimate_mcmc(
             object, reward, action, block, trial, idinfo, exinfo, cue, rsp,
             params, free_names, system, prior_names, prior_types, prior_param1, prior_param2,
-            prior_active, policy, name, mode,
+            prior_active, generate, name, mode,
             warmup, samples, chains, thin, step_size, target_accept, max_tree_depth, seed, algorithm,
             lower_bounds, upper_bounds
         );
@@ -167,7 +167,7 @@ Rcpp::List r_shell_fit_p(
         return r_estimate_abc(
             object, reward, action, block, trial, idinfo, exinfo, cue, rsp,
             params, free_names, system, prior_names, prior_types, prior_param1, prior_param2,
-            prior_active, policy, name, mode,
+            prior_active, generate, name, mode,
             samples, tol, method, reduction, n_comp, fake_block, scope, seed, threads, print_level,
             lower_bounds, upper_bounds
         );
@@ -190,14 +190,18 @@ Rcpp::List r_shell_fit_p(
         int verbose = control["verbose"];
         std::string device = control["device"];
         std::string scope = control["scope"];
+        int subject_embedding_size = control.containsElementNamed(
+            "subject_embedding_size"
+        ) ? Rcpp::as<int>(control["subject_embedding_size"]) : 8;
         Rcpp::NumericVector lower_bounds = control["lower_bounds"];
         Rcpp::NumericVector upper_bounds = control["upper_bounds"];
         return r_estimate_rnn_data(
             object, reward, action, block, trial, idinfo, exinfo, cue, rsp,
             params, free_names, system, prior_names, prior_types, prior_param1, prior_param2,
-            prior_active, policy, name, mode,
+            prior_active, generate, name, mode,
             n_draws, seed, threads, interop_threads, epochs, batch_size, units, layers, dropout, learning_rate,
-            architecture, loss, regularization, penalty, verbose, device, scope, lower_bounds, upper_bounds
+            architecture, loss, regularization, penalty, verbose, device, scope,
+            subject_embedding_size, lower_bounds, upper_bounds
         );
     }
     Rcpp::stop("Unknown estimator: " + estimator);

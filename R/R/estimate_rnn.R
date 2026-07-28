@@ -26,6 +26,7 @@ estimate_rnn <- function(
   behrule  <- .modify_behrule(behrule = behrule)
   settings <- .modify_settings(settings = settings)
   settings$estimate <- "RNN"
+  settings$generate <- TRUE
   features <- .modify_features(data = data, colnames = colnames)
   control  <- .modify_estimate_rnn_control(control = control)
 
@@ -47,7 +48,7 @@ estimate_rnn <- function(
     prior_param1   = priors$param1,
     prior_param2   = priors$param2,
     prior_active   = priors$active,
-    policy         = settings$policy,
+    generate         = settings$generate,
     name           = settings$name,
     mode           = settings$mode,
     n_draws        = control$n_draws,
@@ -67,6 +68,7 @@ estimate_rnn <- function(
     verbose        = control$verbose,
     device         = control$device,
     scope          = control$scope,
+    subject_embedding_size = control$subject_embedding_size,
     lower_bounds   = .modify_bound_vector(lower, base::names(params$free)),
     upper_bounds   = .modify_bound_vector(upper, base::names(params$free))
   )
@@ -114,6 +116,7 @@ estimate_rnn <- function(
     penalty        = 0.0,
     device         = "cpu",
     scope          = "individual",
+    subject_embedding_size = 8L,
     verbose        = 0L
   )
   out <- utils::modifyList(default_control, control)
@@ -134,6 +137,9 @@ estimate_rnn <- function(
   out$regularization  <- base::tolower(base::as.character(out$regularization[[1L]]))
   out$penalty         <- base::as.numeric(out$penalty[[1L]])
   out$scope           <- base::tolower(base::as.character(out$scope[[1L]]))
+  out$subject_embedding_size <- base::as.integer(
+    out$subject_embedding_size[[1L]]
+  )
   out$verbose         <- base::as.integer(out$verbose[[1L]])
   out$device          <- base::tolower(base::as.character(out$device[[1L]]))
   out

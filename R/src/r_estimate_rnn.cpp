@@ -131,11 +131,13 @@ Rcpp::DataFrame wrap_rnn_diagnostics(
 // Function pointer types matching c_backend.h
 typedef int  (*fn_rnn_train)   (const double*, int, int, int,
                                  const double*, int,
+                                 const int*, const int*, int, int,
                                  const char*, const char*, const char*, double,
                                  int, int, int, int, double, double,
                                  int, int, int, const char*,
                                  void**, char*, int);
 typedef int  (*fn_rnn_predict) (void*, const double*, int, int, int,
+                                 int, int,
                                  const char*, double*, char*, int);
 typedef void (*fn_rnn_free)    (void*);
 
@@ -219,13 +221,7 @@ Rcpp::List run_via_dll(
     const int n_params = static_cast<int>(
         tasks.empty() ? 0 : tasks.front().params.free_names.size()
     );
-    const int n_trials = static_cast<int>(
-        tasks.empty() ? 0 : tasks.front().input.n_rows
-    );
-    // n_features = action + reward + block + trial + n_cues
-    const int n_features = static_cast<int>(
-        4U + (tasks.empty() ? 0U : tasks.front().behrule.cue.size())
-    );
+    const int n_features = 4;
 
     if (n_params == 0) {
         throw std::runtime_error(
@@ -235,7 +231,7 @@ Rcpp::List run_via_dll(
 
     // -------------------------------------------------------------------------
     // Collect training data from the task sampler
-    // (we call the core C++ sampler directly — it doesn't need LibTorch)
+    // (we call the core C++ sampler directly 閳?it doesn't need LibTorch)
     // -------------------------------------------------------------------------
     multiRL::TaskSamplerControl sctl;
     sctl.n_draws       = ctrl.n_draws > 0 ? ctrl.n_draws : ctrl.sample;
@@ -253,24 +249,27 @@ Rcpp::List run_via_dll(
     results.reserve(tasks.size());
 
     // Helper: flatten sampler rows into training arrays
-    auto flatten_xy = [&](
-        const multiRL::TaskSamplerResult& sampler,
-        int nd, int nt, int nf, int np
-    ) -> std::pair<std::vector<double>, std::vector<double>>
-    {
-        std::vector<double> x(static_cast<std::size_t>(nd * nt * nf), 0.0);
-        std::vector<double> y(static_cast<std::size_t>(nd * np), 0.0);
+    struct FlatRnnData {
+        std::vector<double> x;
+        std::vector<double> y;
+        std::vector<int> lengths;
+        std::vector<int> subjects;
+    };
+
+    auto flatten_xy = [&](const multiRL::TaskSamplerResult& sampler,
+                          int nd, int nt, int subject_index) -> FlatRnnData {
+        FlatRnnData result;
+        result.x.assign(static_cast<std::size_t>(nd * nt * n_features), 0.0);
+        result.y.assign(static_cast<std::size_t>(nd * n_params), 0.0);
+        result.lengths.assign(static_cast<std::size_t>(nd), 0);
+        result.subjects.assign(static_cast<std::size_t>(nd), subject_index);
         std::vector<bool> seen(static_cast<std::size_t>(nd), false);
 
         for (const auto& row : sampler.rows) {
             int draw  = row.draw - 1;
-            int trial = row.trial - 1;
+            int trial = row.sequence;
             if (draw < 0 || draw >= nd || trial < 0 || trial >= nt) { continue; }
 
-            // Features: action_code, reward, block, trial, cue_probs...
-            std::vector<double> feat;
-            feat.reserve(static_cast<std::size_t>(nf));
-            // action code
             double ac = 0.0;
             for (std::size_t ci = 0; ci < sampler.cue_names.size(); ++ci) {
                 if (sampler.cue_names[ci] == row.simulation) {
@@ -278,34 +277,29 @@ Rcpp::List run_via_dll(
                     break;
                 }
             }
-            feat.push_back(ac);
-            feat.push_back(std::isfinite(row.reward) ? row.reward : 0.0);
-            feat.push_back(static_cast<double>(row.block));
-            feat.push_back(static_cast<double>(row.trial));
-            for (std::size_t ci = 0; ci < sampler.cue_names.size(); ++ci) {
-                if (ci < row.probability.size()) {
-                    double p = row.probability[ci];
-                    feat.push_back(std::isfinite(p) ? p : 0.0);
-                } else {
-                    feat.push_back(0.0);
-                }
-            }
-
-            for (int f = 0; f < nf && f < static_cast<int>(feat.size()); ++f) {
-                x[static_cast<std::size_t>((draw * nt + trial) * nf + f)] =
-                    feat[static_cast<std::size_t>(f)];
-            }
+            const std::size_t base = static_cast<std::size_t>(
+                (draw * nt + trial) * n_features
+            );
+            result.x[base] = ac;
+            result.x[base + 1] = std::isfinite(row.reward) ? row.reward : 0.0;
+            result.x[base + 2] = static_cast<double>(row.block);
+            result.x[base + 3] = static_cast<double>(row.trial);
+            result.lengths[static_cast<std::size_t>(draw)] = std::max(
+                result.lengths[static_cast<std::size_t>(draw)], trial + 1
+            );
 
             if (!seen[static_cast<std::size_t>(draw)]) {
                 seen[static_cast<std::size_t>(draw)] = true;
-                for (int p = 0; p < np; ++p) {
+                for (int p = 0; p < n_params; ++p) {
                     if (static_cast<std::size_t>(p) < row.params.size()) {
-                        y[static_cast<std::size_t>(draw * np + p)] = row.params[p];
+                        result.y[static_cast<std::size_t>(
+                            draw * n_params + p
+                        )] = row.params[p];
                     }
                 }
             }
         }
-        return {x, y};
+        return result;
     };
 
     // Helper: predict one subject
@@ -313,7 +307,8 @@ Rcpp::List run_via_dll(
         const multiRL::RunTask& task,
         void* model_handle,
         const std::string& subid,
-        int nd
+        int nd,
+        int subject_index
     ) -> multiRL::EstimateRnnSubjectResult
     {
         multiRL::EstimateRnnSubjectResult res;
@@ -327,8 +322,11 @@ Rcpp::List run_via_dll(
         res.architecture    = ctrl.architecture;
 
         // Build observed x
-        std::vector<double> x_obs(static_cast<std::size_t>(n_trials * n_features), 0.0);
-        for (std::size_t row = 0; row < task.input.n_rows && row < static_cast<std::size_t>(n_trials); ++row) {
+        const int n_trials = static_cast<int>(task.input.n_rows);
+        std::vector<double> x_obs(
+            static_cast<std::size_t>(n_trials * n_features), 0.0
+        );
+        for (std::size_t row = 0; row < task.input.n_rows; ++row) {
             // action code: find cue index matching the chosen action
             double ac = 0.0;
             const std::string& act = task.input.action[row];
@@ -351,9 +349,6 @@ Rcpp::List run_via_dll(
             x_obs[base + 1] = std::isfinite(rew) ? rew : 0.0;
             x_obs[base + 2] = static_cast<double>(task.input.block[row]);
             x_obs[base + 3] = static_cast<double>(task.input.trial[row]);
-            for (std::size_t ci = 0; ci < task.behrule.cue.size(); ++ci) {
-                x_obs[base + 4 + ci] = 0.0; // probabilities not stored in observed
-            }
         }
 
         std::vector<double> preds(static_cast<std::size_t>(n_params), 0.0);
@@ -364,6 +359,8 @@ Rcpp::List run_via_dll(
             n_trials,
             n_features,
             n_params,
+            n_trials,
+            subject_index,
             ctrl.loss.c_str(),
             preds.data(),
             err_buf, sizeof(err_buf)
@@ -397,16 +394,17 @@ Rcpp::List run_via_dll(
 
     // Helper: train via DLL
     auto train_via_dll = [&](
-        const std::vector<double>& x,
-        const std::vector<double>& y,
-        int nd, int nt, int nf, int np
+        const FlatRnnData& data,
+        int nd, int nt, int n_subjects, int embedding_size
     ) -> void*
     {
         void* handle = nullptr;
         char err_buf[512] = {};
         int rc = dll->train(
-            x.data(), nd, nt, nf,
-            y.data(), np,
+            data.x.data(), nd, nt, n_features,
+            data.y.data(), n_params,
+            data.lengths.data(), data.subjects.data(),
+            n_subjects, embedding_size,
             ctrl.architecture.c_str(),
             ctrl.loss.c_str(),
             ctrl.regularization.c_str(),
@@ -433,14 +431,15 @@ Rcpp::List run_via_dll(
         multiRL::TaskSamplerControl sc = sctl;
         const multiRL::TaskSamplerResult sampler = multiRL::task_sampler(templ, sc);
         const int nd = sampler.control.n_draws;
+        const int n_trials = static_cast<int>(templ.input.n_rows);
 
-        auto [x, y] = flatten_xy(sampler, nd, n_trials, n_features, n_params);
-        void* handle = train_via_dll(x, y, nd, n_trials, n_features, n_params);
+        FlatRnnData data = flatten_xy(sampler, nd, n_trials, 0);
+        void* handle = train_via_dll(data, nd, n_trials, 1, 0);
 
         for (const auto& task : tasks) {
             std::string subid = (!task.input.idinfo.empty() && !task.input.idinfo[0].empty())
                 ? task.input.idinfo[0][0] : "1";
-            auto res = predict_subject(task, handle, subid, nd);
+            auto res = predict_subject(task, handle, subid, nd, 0);
             results.push_back(std::move(res));
         }
         if (dll->free_m) { dll->free_m(handle); }
@@ -448,7 +447,11 @@ Rcpp::List run_via_dll(
     // ---- scope = "universal" ------------------------------------------------
     else if (ctrl.scope == "universal") {
         // Concatenate sampler results across subjects
-        std::vector<double> x_all, y_all;
+        int n_trials = 0;
+        for (const auto& task : tasks) {
+            n_trials = std::max(n_trials, static_cast<int>(task.input.n_rows));
+        }
+        FlatRnnData data;
         int total_draws = 0;
 
         for (std::size_t si = 0; si < tasks.size(); ++si) {
@@ -456,20 +459,34 @@ Rcpp::List run_via_dll(
             sc.seed = sctl.seed + static_cast<unsigned int>(si * sctl.n_draws);
             const multiRL::TaskSamplerResult sampler = multiRL::task_sampler(tasks[si], sc);
             const int nd = sampler.control.n_draws;
-            auto [x, y] = flatten_xy(sampler, nd, n_trials, n_features, n_params);
-            // Re-index draws
-            for (auto& v : x) { (void)v; } // x layout already correct
-            x_all.insert(x_all.end(), x.begin(), x.end());
-            y_all.insert(y_all.end(), y.begin(), y.end());
+            FlatRnnData subject_data = flatten_xy(
+                sampler, nd, n_trials, static_cast<int>(si)
+            );
+            data.x.insert(data.x.end(), subject_data.x.begin(), subject_data.x.end());
+            data.y.insert(data.y.end(), subject_data.y.begin(), subject_data.y.end());
+            data.lengths.insert(
+                data.lengths.end(), subject_data.lengths.begin(),
+                subject_data.lengths.end()
+            );
+            data.subjects.insert(
+                data.subjects.end(), subject_data.subjects.begin(),
+                subject_data.subjects.end()
+            );
             total_draws += nd;
         }
 
-        void* handle = train_via_dll(x_all, y_all, total_draws, n_trials, n_features, n_params);
+        void* handle = train_via_dll(
+            data, total_draws, n_trials, static_cast<int>(tasks.size()),
+            ctrl.subject_embedding_size
+        );
 
-        for (const auto& task : tasks) {
+        for (std::size_t si = 0; si < tasks.size(); ++si) {
+            const auto& task = tasks[si];
             std::string subid = (!task.input.idinfo.empty() && !task.input.idinfo[0].empty())
                 ? task.input.idinfo[0][0] : "1";
-            auto res = predict_subject(task, handle, subid, total_draws);
+            auto res = predict_subject(
+                task, handle, subid, total_draws, static_cast<int>(si)
+            );
             results.push_back(std::move(res));
         }
         if (dll->free_m) { dll->free_m(handle); }
@@ -482,24 +499,10 @@ Rcpp::List run_via_dll(
 
             const multiRL::TaskSamplerResult sampler = multiRL::task_sampler(task, sctl);
             const int nd = sampler.control.n_draws;
-            auto [x, y] = flatten_xy(sampler, nd, n_trials, n_features, n_params);
+            const int n_trials = static_cast<int>(task.input.n_rows);
+            FlatRnnData data = flatten_xy(sampler, nd, n_trials, 0);
 
             void* handle = nullptr;
-            char err_buf[512] = {};
-            int rc = dll->train(
-                x.data(), nd, n_trials, n_features,
-                y.data(), n_params,
-                ctrl.architecture.c_str(),
-                ctrl.loss.c_str(),
-                ctrl.regularization.c_str(),
-                ctrl.penalty,
-                ctrl.epochs, ctrl.batch_size,
-                ctrl.units, ctrl.layers,
-                ctrl.dropout, ctrl.learning_rate,
-                ctrl.seed, ctrl.threads, ctrl.interop_threads,
-                ctrl.device.c_str(),
-                &handle, err_buf, sizeof(err_buf)
-            );
 
             multiRL::EstimateRnnSubjectResult res;
             res.subid           = subid;
@@ -511,14 +514,16 @@ Rcpp::List run_via_dll(
             res.backend         = "torch";
             res.architecture    = ctrl.architecture;
 
-            if (rc != 0 || !handle) {
+            try {
+                handle = train_via_dll(data, nd, n_trials, 1, 0);
+            } catch (const std::exception& ex) {
                 res.status  = -1;
-                res.message = std::string("train failed: ") + err_buf;
+                res.message = ex.what();
                 results.push_back(std::move(res));
                 continue;
             }
 
-            auto pred_res = predict_subject(task, handle, subid, nd);
+            auto pred_res = predict_subject(task, handle, subid, nd, 0);
             pred_res.n_draws = nd;
             if (dll->free_m) { dll->free_m(handle); }
             results.push_back(std::move(pred_res));
@@ -587,7 +592,7 @@ Rcpp::List r_estimate_rnn_data(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     int n_draws,
@@ -607,6 +612,7 @@ Rcpp::List r_estimate_rnn_data(
     int verbose,
     std::string device,
     std::string scope,
+    int subject_embedding_size,
     Rcpp::NumericVector lower_bounds,
     Rcpp::NumericVector upper_bounds
 ) {
@@ -615,7 +621,7 @@ Rcpp::List r_estimate_rnn_data(
         idinfo, exinfo, cue, rsp,
         params, free_names, system,
         prior_names, prior_types, prior_param1, prior_param2,
-        prior_active, policy, name, mode, "RNN"
+        prior_active, generate, name, mode, "RNN"
     );
 
     multiRL::RNNControl control;
@@ -638,6 +644,7 @@ Rcpp::List r_estimate_rnn_data(
     control.verbose          = verbose;
     control.device           = device;
     control.scope            = scope;
+    control.subject_embedding_size = subject_embedding_size;
     control.lower_bounds     = multiRL_r::as_double_vector(lower_bounds);
     control.upper_bounds     = multiRL_r::as_double_vector(upper_bounds);
 

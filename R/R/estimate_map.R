@@ -82,7 +82,7 @@ estimate_map <- function(
     prior_param1 = priors$param1,
     prior_param2 = priors$param2,
     prior_active = priors$active,
-    policy = settings$policy,
+    generate = settings$generate,
     name = settings$name,
     mode = settings$mode,
     mle_maxeval = control$mle_maxeval,

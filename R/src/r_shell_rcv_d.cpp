@@ -178,7 +178,7 @@ Rcpp::List r_shell_rcv_d(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     std::string generating_model,
@@ -207,7 +207,7 @@ Rcpp::List r_shell_rcv_d(
             prior_param1,
             prior_param2,
             prior_active,
-            policy,
+            generate,
             name,
             mode,
             "RCV_D"

@@ -43,7 +43,7 @@ struct ReplayResult {
     std::vector<ReplayPlotRow> plot_data;
     int n_models = 0;
     int n_subjects = 0;
-    std::string policy = "on";
+    bool generate = true;
     bool replay_success = true;
 };
 

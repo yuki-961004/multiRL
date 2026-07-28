@@ -239,7 +239,7 @@ inline multiRL::RunTask make_task(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     std::string estimate
@@ -260,7 +260,7 @@ inline multiRL::RunTask make_task(
     );
 
     multiRL::Settings settings;
-    settings.policy = policy;
+    settings.generate = generate;
     settings.name = name;
     settings.mode = mode;
     settings.estimate = estimate;
@@ -300,7 +300,7 @@ inline std::vector<multiRL::RunTask> make_subject_tasks(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     std::string estimate
@@ -324,7 +324,7 @@ inline std::vector<multiRL::RunTask> make_subject_tasks(
             prior_param1,
             prior_param2,
             prior_active,
-            policy,
+            generate,
             name,
             mode,
             estimate

@@ -46,7 +46,7 @@ def rpl_e(result_fit, option=None):
         "diagnostics": {
             "n_models": len(raw),
             "n_subjects": len({row["subid"] for row in plot_data}),
-            "policy": "on",
+            "generate": True,
             "replay_success": True,
         },
     }
@@ -164,7 +164,7 @@ def _rpl_e_call_cpp(item, fit_rows):
         prior_param1=modified_priors["param1"],
         prior_param2=modified_priors["param2"],
         prior_active=modified_priors["active"],
-        policy=settings["policy"],
+        generate=True,
         name=settings["name"],
         mode=settings["mode"],
     )

@@ -26,7 +26,7 @@ def estimate_abc(
     rsp=None,
     free_names=None,
     system=None,
-    policy="off",
+    generate=False,
     name="TD",
     mode="fitting",
 ):
@@ -51,11 +51,12 @@ def estimate_abc(
         rsp=rsp,
         free_names=free_names,
         system=system,
-        policy=policy,
+        generate=generate,
         name=name,
         mode=mode,
         estimate="ABC",
     )
+    request["settings"]["generate"] = True
 
     free_names_list = request["free_names"]
     lower_bounds = _modify_bounds(lower, free_names_list, -float("inf"))
@@ -79,7 +80,7 @@ def estimate_abc(
         prior_param1=request["priors"]["param1"],
         prior_param2=request["priors"]["param2"],
         prior_active=request["priors"]["active"],
-        policy=request["settings"]["policy"],
+        generate=request["settings"]["generate"],
         name=request["settings"]["name"],
         mode=request["settings"]["mode"],
         samples=int(control.get("samples", 1000)),

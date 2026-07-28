@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import multiRL
 
-def test_run_m_td_policy_off():
+def test_run_m_td_generate_false():
     data = pd.DataFrame({
         "Subject": [1, 1, 1],
         "Block": [1, 1, 1],
@@ -44,7 +44,7 @@ def test_run_m_td_policy_off():
             "name": "TD",
             "mode": "fitting",
             "estimate": "MLE",
-            "policy": "off"
+            "generate": False
         }
     )
 

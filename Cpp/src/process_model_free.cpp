@@ -299,24 +299,11 @@ double finite_or_zero(double value) {
     return std::isnan(value) ? 0.0 : value;
 }
 
-double finite_or_missing(double value) {
-    return std::isnan(value) ? missing_real() : value;
-}
-
 double progress_fraction(int value, int maximum) {
     if (maximum <= 1) {
         return 0.0;
     }
     return static_cast<double>(value - 1) / static_cast<double>(maximum - 1);
-}
-
-std::vector<double> first_qvalue_row(
-    const std::vector<std::vector<double>>& qvalue
-) {
-    if (qvalue.empty()) {
-        return {};
-    }
-    return qvalue[0];
 }
 
 std::vector<double> finite_qvalues(const std::vector<double>& values) {
@@ -406,6 +393,8 @@ HiddenFeatures base_hidden_features(
         static_cast<int>(row + 1),
         static_cast<int>(task.input.n_rows)
     );
+    features.block = static_cast<double>(task.input.block[row]);
+    features.trial = static_cast<double>(task.input.trial[row]);
     features.block_progress =
         progress_fraction(task.input.block[row], max_block);
     features.session_progress = features.progress;
@@ -422,11 +411,22 @@ HiddenFeatures base_hidden_features(
     features.pe_prev = state.pe_prev;
     features.abs_pe_prev = std::abs(state.pe_prev);
     features.first_trial_in_block = task.input.trial[row] == 1 ? 1.0 : 0.0;
-    features.alpha_prev = state.alpha_prev;
-    features.beta_prev = state.beta_prev;
-    features.kappa_prev = state.kappa_prev;
+    features.prev_alpha = state.alpha_prev;
+    features.prev_beta = state.beta_prev;
+    features.prev_gamma = state.gamma_prev;
+    features.prev_delta = state.delta_prev;
+    features.prev_epsilon = state.epsilon_prev;
+    features.prev_zeta = state.zeta_prev;
+    features.prev_q0 = state.q0_prev;
+    features.prev_lapse = state.lapse_prev;
+    features.prev_sticky = state.sticky_prev;
+    features.prev_weight = state.weight_prev;
+    features.prev_threshold = state.threshold_prev;
+    features.prev_bonus = state.bonus_prev;
+    features.prev_reset = state.reset_prev;
 
     const std::vector<double>& count = output.count[row];
+    features.before_count = count;
     features.valid_count_total = 0.0;
     for (double value : count) {
         if (!std::isnan(value)) {
@@ -434,50 +434,86 @@ HiddenFeatures base_hidden_features(
         }
     }
 
-    if (count.size() >= 2) {
-        const double scale = std::sqrt(features.valid_count_total + 1.0);
-        const double diff = finite_or_zero(count[0]) - finite_or_zero(count[1]);
-        features.count_imbalance = diff / scale;
-        features.count_imbalance_abs = std::abs(diff) / scale;
-    }
-
     return features;
 }
 
-HiddenFeatures qvalue_hidden_features(
-    HiddenFeatures features,
-    const HiddenState& state,
-    const std::vector<std::vector<double>>& qvalue
+void append_qvalue_statistics(
+    const DoubleMatrix& qvalue,
+    int chosen_index,
+    std::vector<double>& maximum,
+    std::vector<double>& mean,
+    std::vector<double>& range,
+    std::vector<double>& entropy,
+    std::vector<double>& chosen,
+    std::vector<double>& unchosen
 ) {
-    const std::vector<double> q = first_qvalue_row(qvalue);
-    const std::vector<double> finite = finite_qvalues(q);
+    maximum.clear();
+    mean.clear();
+    range.clear();
+    entropy.clear();
+    chosen.clear();
+    unchosen.clear();
 
-    if (!q.empty()) {
-        features.qvalue1 = finite_or_missing(q[0]);
+    for (const std::vector<double>& values : qvalue) {
+        const std::vector<double> finite = finite_qvalues(values);
+        if (finite.empty()) {
+            maximum.push_back(missing_real());
+            mean.push_back(missing_real());
+            range.push_back(missing_real());
+        } else {
+            const double max_value =
+                *std::max_element(finite.begin(), finite.end());
+            const double min_value =
+                *std::min_element(finite.begin(), finite.end());
+            maximum.push_back(max_value);
+            mean.push_back(
+                std::accumulate(finite.begin(), finite.end(), 0.0) /
+                static_cast<double>(finite.size())
+            );
+            range.push_back(max_value - min_value);
+        }
+        entropy.push_back(entropy_from_qvalues(values));
+        chosen.push_back(previous_chosen_q(values, chosen_index));
+        unchosen.push_back(previous_unchosen_q(values, chosen_index));
     }
-    if (q.size() >= 2) {
-        features.qvalue2 = finite_or_missing(q[1]);
-    }
-    if (!finite.empty()) {
-        features.q_max = *std::max_element(finite.begin(), finite.end());
-        features.q_mean =
-            std::accumulate(finite.begin(), finite.end(), 0.0) /
-            static_cast<double>(finite.size());
-    }
-    if (q.size() >= 2 && !std::isnan(q[0]) && !std::isnan(q[1])) {
-        features.q_abs_diff = std::abs(q[0] - q[1]);
-    }
+}
 
-    features.decision_entropy = entropy_from_qvalues(q);
-    features.q_chosen_prev = previous_chosen_q(
-        q,
-        state.prev_choice_index
+void set_before_qvalue_features(
+    HiddenFeatures& features,
+    const HiddenState& state,
+    const DoubleMatrix& qvalue
+) {
+    features.before_qvalue = qvalue;
+    append_qvalue_statistics(
+        qvalue,
+        state.prev_choice_index,
+        features.before_q_max,
+        features.before_q_mean,
+        features.before_q_range,
+        features.before_q_entropy,
+        features.before_q_chosen,
+        features.before_q_unchosen
     );
-    features.q_unchosen_prev = previous_unchosen_q(
-        q,
-        state.prev_choice_index
+}
+
+void set_after_qvalue_features(
+    HiddenFeatures& features,
+    const DoubleMatrix& qvalue,
+    std::size_t choice_index,
+    const std::vector<double>& count
+) {
+    features.after_qvalue = qvalue;
+    features.after_count = count;
+    append_qvalue_statistics(
+        qvalue,
+        static_cast<int>(choice_index),
+        features.after_q_max,
+        features.after_q_mean,
+        features.after_q_range,
+        features.after_q_entropy,
+        features.after_q_chosen,
+        features.after_q_unchosen
     );
-    return features;
 }
 
 void reset_hidden_state(HiddenState& state) {
@@ -489,7 +525,17 @@ void reset_hidden_state(HiddenState& state) {
     state.pe_prev = 0.0;
     state.alpha_prev = 0.0;
     state.beta_prev = 0.0;
-    state.kappa_prev = 0.0;
+    state.gamma_prev = 0.0;
+    state.delta_prev = 0.0;
+    state.epsilon_prev = 0.0;
+    state.zeta_prev = 0.0;
+    state.q0_prev = 0.0;
+    state.lapse_prev = 0.0;
+    state.sticky_prev = 0.0;
+    state.weight_prev = 0.0;
+    state.threshold_prev = 0.0;
+    state.bonus_prev = 0.0;
+    state.reset_prev = 0.0;
 }
 
 double parameter_or_zero(const Params& params, const std::string& name) {
@@ -497,6 +543,37 @@ double parameter_or_zero(const Params& params, const std::string& name) {
         return 0.0;
     }
     return finite_or_zero(params.get(name));
+}
+
+double effective_alpha(
+    const RunTask& task,
+    const Process3Loop& output,
+    std::size_t row,
+    std::size_t cue_index
+) {
+    const double q0 = task.params.get("Q0");
+    if (std::isnan(q0) && output.count[row][cue_index] == 0.0) {
+        return 0.0;
+    }
+    if (task.params.has("alpha")) {
+        return parameter_or_zero(task.params, "alpha");
+    }
+    if (!task.params.has("alphaN") || !task.params.has("alphaP")) {
+        return 0.0;
+    }
+
+    for (std::size_t system_index = 0;
+         system_index < task.settings.system.size();
+         ++system_index) {
+        if (task.settings.system[system_index] != "RL") {
+            continue;
+        }
+        const double q_before = output.value[system_index][row][cue_index];
+        return output.utility[row] < q_before
+            ? parameter_or_zero(task.params, "alphaN")
+            : parameter_or_zero(task.params, "alphaP");
+    }
+    return 0.0;
 }
 
 void update_hidden_state(
@@ -521,13 +598,19 @@ void update_hidden_state(
 
     const double q_before = output.value[0][row][cue_index];
     state.pe_prev = output.utility[row] - q_before;
-    state.alpha_prev = parameter_or_zero(task.params, "alpha");
+    state.alpha_prev = effective_alpha(task, output, row, cue_index);
     state.beta_prev = parameter_or_zero(task.params, "beta");
-    if (task.params.has("kappa")) {
-        state.kappa_prev = finite_or_zero(task.params.get("kappa"));
-    } else {
-        state.kappa_prev = parameter_or_zero(task.params, "sticky");
-    }
+    state.gamma_prev = parameter_or_zero(task.params, "gamma");
+    state.delta_prev = parameter_or_zero(task.params, "delta");
+    state.epsilon_prev = parameter_or_zero(task.params, "epsilon");
+    state.zeta_prev = parameter_or_zero(task.params, "zeta");
+    state.q0_prev = parameter_or_zero(task.params, "Q0");
+    state.lapse_prev = parameter_or_zero(task.params, "lapse");
+    state.sticky_prev = parameter_or_zero(task.params, "sticky");
+    state.weight_prev = parameter_or_zero(task.params, "weight");
+    state.threshold_prev = parameter_or_zero(task.params, "threshold");
+    state.bonus_prev = parameter_or_zero(task.params, "bonus");
+    state.reset_prev = parameter_or_zero(task.params, "reset");
 }
 
 }  // namespace
@@ -621,12 +704,13 @@ Process3Loop process_3_loop(const RunTask& task) {
          * Choice probability function: prob_func                              *
          * ------------------------------------------------------------------ */
 
+        set_before_qvalue_features(features, hidden, qvalue);
         modify_context_qvalue(
             context,
             qvalue,
             output.exploration[row],
             settings.system,
-            qvalue_hidden_features(features, hidden, qvalue)
+            features
         );
 
         output.prob[row] = funcs.prob_func(
@@ -635,7 +719,7 @@ Process3Loop process_3_loop(const RunTask& task) {
         );
 
         int option_row = -1;
-        if (settings.policy == "off") {
+        if (!settings.generate) {
             output.latent[row] = input.action[row];
             output.simulation[row] = input.action[row];
             option_row = find_option_row(state_row, output.latent[row]);
@@ -691,6 +775,19 @@ Process3Loop process_3_loop(const RunTask& task) {
         const bool is_nb = input.trial[row] == 1;
         const bool is_fp = output.count[row][cue_index] == 0.0;
 
+        std::vector<double> after_count = output.count[row];
+        const double reset = params.get("reset");
+        if (is_nb && !std::isnan(reset)) {
+            after_count.assign(behrule.cue.size(), 0.0);
+        }
+        after_count[cue_index] += 1.0;
+        set_after_qvalue_features(
+            context.features,
+            qvalue,
+            cue_index,
+            after_count
+        );
+
         modify_context_outcome(
             context,
             output.reward[row],
@@ -719,7 +816,6 @@ Process3Loop process_3_loop(const RunTask& task) {
                 params
             );
 
-            const double reset = params.get("reset");
             if (is_nb && !std::isnan(reset)) {
                 context.qi = next_values[cue_index];
             }
@@ -750,7 +846,6 @@ Process3Loop process_3_loop(const RunTask& task) {
             cue_index
         );
 
-        const double reset = params.get("reset");
         if (is_nb && !std::isnan(reset)) {
             output.count[row + 1] =
                 std::vector<double>(behrule.cue.size(), 0.0);

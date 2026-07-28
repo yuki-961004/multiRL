@@ -151,7 +151,7 @@ Rcpp::List r_shell_rpl_e(
     Rcpp::NumericVector prior_param1,
     Rcpp::NumericVector prior_param2,
     bool prior_active,
-    std::string policy,
+    bool generate,
     std::string name,
     std::string mode,
     Rcpp::DataFrame fit,
@@ -175,7 +175,7 @@ Rcpp::List r_shell_rpl_e(
         prior_param1,
         prior_param2,
         prior_active,
-        policy,
+        generate,
         name,
         mode,
         "RPL_E"
@@ -192,7 +192,7 @@ Rcpp::List r_shell_rpl_e(
         Rcpp::_["diagnostics"] = Rcpp::List::create(
             Rcpp::_["n_models"] = result.n_models,
             Rcpp::_["n_subjects"] = result.n_subjects,
-            Rcpp::_["policy"] = result.policy,
+            Rcpp::_["generate"] = result.generate,
             Rcpp::_["replay_success"] = result.replay_success
         )
     );

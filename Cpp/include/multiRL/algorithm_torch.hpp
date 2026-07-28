@@ -16,17 +16,25 @@ struct TorchSequenceNetImpl : torch::nn::Module {
     torch::nn::Linear hidden{nullptr};
     torch::nn::Dropout dropout{nullptr};
     torch::nn::Linear output{nullptr};
+    torch::nn::Embedding subject_embedding{nullptr};
 
     std::string arch_type;
     bool is_bidirectional;
+    int subject_embedding_size = 0;
 
     TorchSequenceNetImpl(
         int n_features,
         int n_params,
-        const RNNControl& control
+        const RNNControl& control,
+        int n_subjects = 1
     );
 
     torch::Tensor forward(torch::Tensor x);
+    torch::Tensor forward(
+        torch::Tensor x,
+        torch::Tensor lengths,
+        torch::Tensor subject_indices
+    );
     
     torch::Tensor get_regularization_loss(
         const std::string& reg_type,
@@ -42,6 +50,7 @@ struct TrainedRnnModel {
     double final_loss = 0.0;
     int n_features = 0;
     int n_params = 0;
+    int n_subjects = 1;
 };
 
 // Custom Loss Function Compute

@@ -403,7 +403,7 @@ inline pybind11::dict py_wrap_task_sampler_result(
     metadata["n_draws"] = result.control.n_draws;
     metadata["seed"] = result.control.seed;
     metadata["threads"] = result.control.threads;
-    metadata["policy"] = result.policy;
+    metadata["generate"] = result.generate;
     metadata["parameter_names"] = result.parameter_names;
 
     pybind11::dict out;
@@ -516,7 +516,7 @@ inline pybind11::dict py_wrap_replay_result(
     pybind11::dict diagnostics;
     diagnostics["n_models"] = result.n_models;
     diagnostics["n_subjects"] = result.n_subjects;
-    diagnostics["policy"] = result.policy;
+    diagnostics["generate"] = result.generate;
     diagnostics["replay_success"] = result.replay_success;
 
     pybind11::dict out;
@@ -702,7 +702,7 @@ inline multiRL::RunTask py_make_task(
     const std::vector<double>& prior_param1,
     const std::vector<double>& prior_param2,
     bool prior_active,
-    const std::string& policy,
+    bool generate,
     const std::string& name,
     const std::string& mode,
     const std::string& estimate
@@ -732,7 +732,7 @@ inline multiRL::RunTask py_make_task(
     );
 
     multiRL::Settings settings;
-    settings.policy = policy;
+    settings.generate = generate;
     settings.name = name;
     settings.mode = mode;
     settings.estimate = estimate;

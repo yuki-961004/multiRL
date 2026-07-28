@@ -51,35 +51,53 @@ struct Process3Loop {
 
 struct HiddenFeatures {
     double progress = 0.0;
+    double block = 0.0;
+    double trial = 0.0;
     double block_progress = 0.0;
     double session_progress = 0.0;
     double log_trial_block = 0.0;
-    double qvalue1 = missing_real();
-    double qvalue2 = missing_real();
-    double q_max = missing_real();
-    double q_abs_diff = missing_real();
-    double q_mean = missing_real();
-    double decision_entropy = missing_real();
+    DoubleMatrix before_qvalue;
+    DoubleMatrix after_qvalue;
+    std::vector<double> before_count;
+    std::vector<double> after_count;
+    std::vector<double> before_q_max;
+    std::vector<double> before_q_mean;
+    std::vector<double> before_q_range;
+    std::vector<double> before_q_entropy;
+    std::vector<double> before_q_chosen;
+    std::vector<double> before_q_unchosen;
+    std::vector<double> after_q_max;
+    std::vector<double> after_q_mean;
+    std::vector<double> after_q_range;
+    std::vector<double> after_q_entropy;
+    std::vector<double> after_q_chosen;
+    std::vector<double> after_q_unchosen;
     double prev_reward = 0.0;
     double prev_repeat_sign = 0.0;
     double prev_switch = 0.0;
     double choice_streak = 0.0;
     double pe_prev = 0.0;
     double abs_pe_prev = 0.0;
-    double count_imbalance = 0.0;
-    double count_imbalance_abs = 0.0;
     double valid_count_total = 0.0;
     double first_trial_in_block = 0.0;
-    double q_chosen_prev = 0.0;
-    double q_unchosen_prev = 0.0;
     double reward = missing_real();
     double utility = missing_real();
     double pe = missing_real();
     double abs_pe = missing_real();
     double q_chosen = missing_real();
-    double alpha_prev = 0.0;
-    double beta_prev = 0.0;
-    double kappa_prev = 0.0;
+    double prev_alpha = 0.0;
+    double prev_beta = 0.0;
+    double prev_gamma = 0.0;
+    double prev_delta = 0.0;
+    double prev_epsilon = 0.0;
+    double prev_zeta = 0.0;
+    double prev_q0 = 0.0;
+    double prev_lapse = 0.0;
+    double prev_sticky = 0.0;
+    double prev_weight = 0.0;
+    double prev_threshold = 0.0;
+    double prev_bonus = 0.0;
+    double prev_reset = 0.0;
 };
 
 struct HiddenState {
@@ -91,7 +109,17 @@ struct HiddenState {
     double pe_prev = 0.0;
     double alpha_prev = 0.0;
     double beta_prev = 0.0;
-    double kappa_prev = 0.0;
+    double gamma_prev = 0.0;
+    double delta_prev = 0.0;
+    double epsilon_prev = 0.0;
+    double zeta_prev = 0.0;
+    double q0_prev = 0.0;
+    double lapse_prev = 0.0;
+    double sticky_prev = 0.0;
+    double weight_prev = 0.0;
+    double threshold_prev = 0.0;
+    double bonus_prev = 0.0;
+    double reset_prev = 0.0;
 };
 
 struct TrialContext {
@@ -165,7 +193,7 @@ struct Settings {
     std::string name = "unknown";
     std::string mode = "fitting";
     std::string estimate = "MLE";
-    std::string policy = "on";
+    bool generate = true;
     std::vector<std::string> system = {"RL"};
 };
 

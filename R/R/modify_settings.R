@@ -3,7 +3,7 @@
     name = "unknown",
     mode = "fitting",
     estimate = "MLE",
-    policy = "on",
+    generate = FALSE,
     system = "RL"
   )
 

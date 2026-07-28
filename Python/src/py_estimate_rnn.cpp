@@ -88,7 +88,7 @@ pybind11::dict py_estimate_rnn_data(
     const std::vector<double>& prior_param1,
     const std::vector<double>& prior_param2,
     bool prior_active,
-    const std::string& policy,
+    bool generate,
     const std::string& name,
     const std::string& mode,
     const int n_draws,
@@ -106,6 +106,7 @@ pybind11::dict py_estimate_rnn_data(
     const int verbose,
     const std::string& device,
     const std::string& scope,
+    const int subject_embedding_size,
     const std::vector<double>& lower_bounds,
     const std::vector<double>& upper_bounds
 ) {
@@ -126,7 +127,7 @@ pybind11::dict py_estimate_rnn_data(
         prior_param1,
         prior_param2,
         prior_active,
-        policy,
+        generate,
         name,
         mode,
         "RNN"
@@ -150,6 +151,7 @@ pybind11::dict py_estimate_rnn_data(
     control.verbose = verbose;
     control.device = device;
     control.scope = scope;
+    control.subject_embedding_size = subject_embedding_size;
     control.lower_bounds = lower_bounds;
     control.upper_bounds = upper_bounds;
 
@@ -175,7 +177,7 @@ void register_py_estimate_rnn(pybind11::module& module) {
         pybind11::arg("prior_param1") = std::vector<double>(),
         pybind11::arg("prior_param2") = std::vector<double>(),
         pybind11::arg("prior_active") = false,
-        pybind11::arg("policy") = "off",
+        pybind11::arg("generate") = false,
         pybind11::arg("name") = "TD",
         pybind11::arg("mode") = "fitting",
         pybind11::arg("n_draws") = 100,
@@ -193,6 +195,7 @@ void register_py_estimate_rnn(pybind11::module& module) {
         pybind11::arg("verbose") = 0,
         pybind11::arg("device") = "cpu",
         pybind11::arg("scope") = "individual",
+        pybind11::arg("subject_embedding_size") = 8,
         pybind11::arg("lower_bounds") = std::vector<double>(),
         pybind11::arg("upper_bounds") = std::vector<double>()
     );

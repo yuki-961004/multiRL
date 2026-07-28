@@ -170,7 +170,7 @@ RunTask sampled_task(
     const int draw
 ) {
     RunTask out = task;
-    out.settings.policy = "on";
+    out.settings.generate = true;
     out.params.values["seed"] =
         static_cast<double>(control.seed + draw + 1);
 
@@ -222,6 +222,7 @@ std::vector<TaskSamplerRow> rows_from_draw(
     for (std::size_t row = 0; row < task.input.n_rows; ++row) {
         TaskSamplerRow value;
         value.draw = draw + 1;
+        value.sequence = static_cast<int>(row);
         value.subid = subid;
         value.block = task.input.block[row];
         value.trial = task.input.trial[row];
@@ -281,7 +282,7 @@ TaskSamplerResult task_sampler(
     out.parameter_names = task.params.free_names;
     out.cue_names = task.behrule.cue;
     out.control = control;
-    out.policy = "on";
+    out.generate = true;
 
     std::size_t n_rows = 0;
     for (const auto& value : draw_rows) {
@@ -316,6 +317,9 @@ std::vector<TaskSamplerResult> task_sampler(
     for (int index = 0; index < static_cast<int>(tasks.size()); ++index) {
         out[static_cast<std::size_t>(index)] =
             task_sampler(tasks[static_cast<std::size_t>(index)], control);
+        for (TaskSamplerRow& row : out[static_cast<std::size_t>(index)].rows) {
+            row.subject_index = index;
+        }
     }
 
     return out;

@@ -338,7 +338,7 @@ def _rcv_d_simulate_model(
     settings = dict(spec.get("settings") or {})
     settings["name"] = name
     settings["mode"] = "simulating"
-    settings["policy"] = "on"
+    settings["generate"] = True
 
     request = _modify_request(
         data=data,
@@ -358,7 +358,7 @@ def _rcv_d_simulate_model(
         rsp=None,
         free_names=None,
         system=None,
-        policy="on",
+        generate=True,
         name=name,
         mode="simulating",
         estimate="RCV_D",
@@ -392,7 +392,7 @@ def _rcv_d_simulate_model(
         prior_param1=request["priors"]["param1"],
         prior_param2=request["priors"]["param2"],
         prior_active=request["priors"]["active"],
-        policy=request["settings"]["policy"],
+        generate=True,
         name=request["settings"]["name"],
         mode=request["settings"]["mode"],
         generating_model=name,

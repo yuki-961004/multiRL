@@ -19,7 +19,7 @@ std::string replay_task_subid(const RunTask& task) {
 
 RunTask replay_task(const RunTask& task, const ReplayFit& fit) {
     RunTask out = task;
-    out.settings.policy = "on";
+    out.settings.generate = true;
     out.settings.mode = "simulating";
     out.settings.name = fit.model;
 
@@ -185,7 +185,7 @@ ReplayResult shell_rpl_e(
     out.plot_data = make_plot_rows(counts, totals);
     out.n_models = static_cast<int>(models.size());
     out.n_subjects = static_cast<int>(subjects.size());
-    out.policy = "on";
+    out.generate = true;
     return out;
 }
 

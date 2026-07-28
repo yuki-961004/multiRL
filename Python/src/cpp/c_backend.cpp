@@ -78,6 +78,10 @@ extern "C" MULTIRL_EXPORT int rnn_backend_train(
     int n_features,
     const double* y_data,
     int n_params,
+    const int* lengths,
+    const int* subject_indices,
+    int n_subjects,
+    int subject_embedding_size,
     const char* architecture,
     const char* loss,
     const char* regularization,
@@ -101,7 +105,8 @@ extern "C" MULTIRL_EXPORT int rnn_backend_train(
         "multiRL_torch_backend was compiled without LibTorch support.");
     return -1;
 #else
-    if (!x_data || !y_data || !out_model_handle) {
+    if (!x_data || !y_data || !lengths || !subject_indices ||
+        !out_model_handle) {
         set_error(out_error_msg, error_msg_len, "Null pointer passed to rnn_backend_train.");
         return -1;
     }
@@ -127,6 +132,7 @@ extern "C" MULTIRL_EXPORT int rnn_backend_train(
         ctrl.device         = device ? device : "cpu";
         ctrl.n_draws        = n_draws;
         ctrl.sample         = n_draws;
+        ctrl.subject_embedding_size = subject_embedding_size;
 
         // Apply defaults / normalization.
         ctrl = multiRL::modify_control(ctrl, "rnn");
@@ -166,12 +172,29 @@ extern "C" MULTIRL_EXPORT int rnn_backend_train(
             yf.data(), {n_draws, n_params}, torch::kFloat32
         ).clone().to(torch_device);
 
+        std::vector<int64_t> length_values(
+            lengths, lengths + n_draws
+        );
+        std::vector<int64_t> subject_values(
+            subject_indices, subject_indices + n_draws
+        );
+        torch::Tensor length_train = torch::tensor(
+            length_values, torch::kInt64
+        ).to(torch_device);
+        torch::Tensor subject_train = torch::tensor(
+            subject_values, torch::kInt64
+        ).to(torch_device);
+        const int effective_subjects = std::max(1, n_subjects);
+
         // Build model.
         auto* trained = new multiRL::TrainedRnnModel();
-        trained->model   = multiRL::TorchSequenceNet(n_features, n_params, ctrl);
+        trained->model = multiRL::TorchSequenceNet(
+            n_features, n_params, ctrl, effective_subjects
+        );
         trained->device  = torch_device;
         trained->n_features = n_features;
         trained->n_params   = n_params;
+        trained->n_subjects = effective_subjects;
         trained->model->to(torch_device);
 
         // Optimizer.
@@ -193,7 +216,11 @@ extern "C" MULTIRL_EXPORT int rnn_backend_train(
                 torch::Tensor yb  = y_train.index_select(0, idx);
 
                 optimizer.zero_grad();
-                torch::Tensor pred = trained->model->forward(xb);
+                torch::Tensor pred = trained->model->forward(
+                    xb,
+                    length_train.index_select(0, idx),
+                    subject_train.index_select(0, idx)
+                );
                 torch::Tensor loss_val = multiRL::compute_rnn_loss(pred, yb, ctrl.loss, n_params);
                 torch::Tensor reg_val  = trained->model->get_regularization_loss(
                     ctrl.regularization, ctrl.penalty);
@@ -227,6 +254,8 @@ extern "C" MULTIRL_EXPORT int rnn_backend_predict(
     int n_trials,
     int n_features,
     int n_params,
+    int sequence_length,
+    int subject_index,
     const char* loss,
     double* out_predictions,
     char* out_error_msg,
@@ -254,10 +283,19 @@ extern "C" MULTIRL_EXPORT int rnn_backend_predict(
         torch::Tensor x_obs = torch::from_blob(
             xf.data(), {1, n_trials, n_features}, torch::kFloat32
         ).clone().to(trained->device);
+        torch::Tensor lengths = torch::tensor(
+            {std::max(1, sequence_length)}, torch::kInt64
+        ).to(trained->device);
+        torch::Tensor subjects = torch::tensor(
+            {std::clamp(subject_index, 0, trained->n_subjects - 1)},
+            torch::kInt64
+        ).to(trained->device);
 
         trained->model->eval();
         torch::NoGradGuard guard;
-        torch::Tensor pred = trained->model->forward(x_obs).squeeze(0);
+        torch::Tensor pred = trained->model->forward(
+            x_obs, lengths, subjects
+        ).squeeze(0);
 
         std::string ll = [](std::string s) {
             for (char& c : s) { c = static_cast<char>(std::tolower(static_cast<unsigned char>(c))); }

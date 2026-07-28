@@ -68,7 +68,7 @@ rpl_e <- function(
     diagnostics = list(
       n_models = base::length(raw),
       n_subjects = base::length(base::unique(plot_data$subid)),
-      policy = "on",
+      generate = TRUE,
       replay_success = base::all(base::vapply(
         raw,
         function(x) TRUE,
@@ -164,7 +164,7 @@ rpl_e <- function(
     prior_param1 = priors$param1,
     prior_param2 = priors$param2,
     prior_active = priors$active,
-    policy = settings$policy,
+    generate = TRUE,
     name = settings$name,
     mode = settings$mode,
     fit = fit,
